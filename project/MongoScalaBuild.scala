@@ -38,6 +38,7 @@ object MongoScalaBuild extends Build {
   val testSettings = Seq(
     testFrameworks += TestFrameworks.ScalaTest,
     testFrameworks in PerfTest := Seq(new TestFramework("org.scalameter.ScalaMeterFramework")),
+    testOptions in Test := Seq(Tests.Filter(testFilter)),
     testOptions in AccTest := Seq(Tests.Filter(accFilter)),
     testOptions in IntTest := Seq(Tests.Filter(itFilter)),
     testOptions in UnitTest := Seq(Tests.Filter(unitFilter)),
@@ -49,6 +50,7 @@ object MongoScalaBuild extends Build {
   def itFilter(name: String): Boolean = name endsWith "ISpec"
   def perfFilter(name: String): Boolean = name endsWith "Benchmark"
   def unitFilter(name: String): Boolean = !itFilter(name) && !accFilter(name) && !perfFilter(name)
+  def testFilter(name: String): Boolean = !perfFilter(name)
 
   lazy val IntTest = config("it") extend Test
   lazy val UnitTest = config("unit") extend Test
