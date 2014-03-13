@@ -60,7 +60,7 @@ object MongoScalaBuild extends Build {
    * DOCUMENTATION
    */
   val docSettings = SbtSite.site.settings ++ SbtSite.site.includeScaladoc() ++ SbtSite.site.sphinxSupport() ++ ghpages.settings ++ Seq(
-    siteSourceDirectory <<= target / "docs",
+    siteSourceDirectory := file("docs"),
     siteDirectory := file("target/site"),
     // depending on the version, copy the api files to a different directory
     siteMappings <++= (mappings in packageDoc in Compile, version) map { (m, v) =>
