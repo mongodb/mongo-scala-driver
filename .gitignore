@@ -1,0 +1,14 @@
+*.iml
+*.swp
+.cache
+.classpath
+.DS_Store
+.history
+.idea_
+.idea
+.idea/workspace.xml
+.lib
+.project
+target
+driver/src/examples/scala/lib
+driver/src/examples/scala/data
