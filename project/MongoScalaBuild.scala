@@ -23,7 +23,13 @@
  * https://github.com/mongodb/mongo-scala-driver
  *
  */
-import com.typesafe.sbt.SbtSite.{site, SiteKeys}
+import com.typesafe.sbt._
+import SbtSite._
+import SiteKeys._
+import SbtGit._
+import GitKeys._
+import SbtGhPages._
+import GhPagesKeys._
 import org.scalastyle.sbt.ScalastylePlugin
 import sbtassembly.Plugin._
 import sbt._
@@ -50,9 +56,24 @@ object MongoScalaBuild extends Build {
 
   val consoleSettings = Seq(initialCommands in console := """import org.mongodb.scala._""")
 
-  val docSettings = site.settings ++ site.includeScaladoc() ++ site.sphinxSupport("latest") ++ Seq(
-    SiteKeys.siteSourceDirectory := file("docs"),
-    SiteKeys.siteDirectory := file("target/site")
+  /**
+   * DOCUMENTATION
+   */
+  val docSettings = SbtSite.site.settings ++ SbtSite.site.includeScaladoc() ++ SbtSite.site.sphinxSupport() ++ ghpages.settings ++ Seq(
+    siteSourceDirectory <<= target / "docs",
+    siteDirectory := file("target/site"),
+    // depending on the version, copy the api files to a different directory
+    siteMappings <++= (mappings in packageDoc in Compile, version) map { (m, v) =>
+      for((f, d) <- m) yield (f, if (v.trim.endsWith("SNAPSHOT")) ("api/master/" + d) else ("api/"+v+"/"+d))
+    },
+    // override the synchLocal task to avoid removing the existing files
+    synchLocal <<= (privateMappings, updatedRepository, gitRunner, streams) map { (mappings, repo, git, s) =>
+      val betterMappings = mappings map { case (file, target) => (file, repo / target) }
+      IO.copy(betterMappings)
+      IO.touch(repo / ".nojekyll")
+      repo
+    },
+    gitRemoteRepo := "git@github.com:rozza/mongo-scala-driver.git"
   ) ++ inConfig(config("sphinx"))(Seq(sourceDirectory := file("docs")))
 
   val scalaStyleSettings = ScalastylePlugin.Settings ++ Seq(org.scalastyle.sbt.PluginKeys.config := file("project/scalastyle-config.xml"))
