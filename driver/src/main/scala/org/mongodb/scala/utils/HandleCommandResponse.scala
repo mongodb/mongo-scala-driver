@@ -23,7 +23,6 @@
  * https://github.com/mongodb/mongo-scala-driver
  *
  */
-
 package org.mongodb.scala.utils
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
