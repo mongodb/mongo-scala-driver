@@ -1,0 +1,18 @@
+# See http://about.travis-ci.org/docs/user/build-configuration/
+language: scala
+scala:
+  - "2.11.0-RC1"
+# Branches to test
+branches:
+  only:
+    - dev
+notifications:
+  email:
+    recipients:
+      - ross@mongodb.com
+    on_success: change
+    on_failure: always
+jdk:
+  - oraclejdk7
+services:
+  - mongodb
