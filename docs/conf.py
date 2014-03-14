@@ -34,7 +34,7 @@ extensions = []
 templates_path = ['_templates']
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = '.txt'
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
@@ -43,8 +43,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'MongoDB-Scala'
-copyright = u'2014, Ross Lawley'
+project = u'MongoDB-Scala-Driver'
+copyright = u'2014, MongoDB Inc'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -98,7 +98,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = 'mongodb'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -106,8 +106,7 @@ html_theme = 'default'
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
-
+html_theme_path = [ 'themes' ]
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 #html_title = None
@@ -176,7 +175,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'MongoDB-Scaladoc'
+htmlhelp_basename = 'MongoDB-Scala-Driver-doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -196,8 +195,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'MongoDB-Scala.tex', u'MongoDB-Scala Documentation',
-   u'Ross Lawley', 'manual'),
+  ('index', 'MongoDB-Scala-Driver.tex', u'MongoDB-Scala-Driver Documentation',
+   u'MongoDB, Inc.', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -226,8 +225,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'mongodb-scala', u'MongoDB-Scala Documentation',
-     [u'Ross Lawley'], 1)
+    ('index', 'mongodb-scala-driver', u'MongoDB-Scala-Driver Documentation',
+     [u'MongoDB, Inc.'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -240,8 +239,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'MongoDB-Scala', u'MongoDB-Scala Documentation',
-   u'Ross Lawley', 'MongoDB-Scala', 'One line description of project.',
+  ('index', 'MongoDB-Scala-Driver', u'MongoDB-Scala-Driver Documentation',
+   u'MongoDB, Inc.', 'MongoDB-Scala', 'One line description of project.',
    'Miscellaneous'),
 ]
 

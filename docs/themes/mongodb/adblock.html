@@ -1,0 +1,33 @@
+<script type='text/javascript'>
+$(function() {
+   $(window).on('resize', resizeAd);
+   var id = setInterval(function(){
+     if($('iframe').contents().find('.img_ad').length){
+       resizeAd();
+       clearInterval(id)
+     }
+   }, 100);
+   function resizeAd(){
+     if($('body').innerWidth() < 993){
+        $('iframe').css({widht: '0px', height: '0px'});
+
+     }else if($('body').innerWidth() < 1200){
+       $('iframe').contents().find('.img_ad').css({width: '243px',
+                                                   height: '202px'});
+       $('iframe').css({width: '243px', height: '202px'});
+     }else{
+       $('iframe').contents().find('.img_ad').css({width: '293px',
+                                                   height: '244px'});
+       $('iframe').css({width: '293px', height: '244px'});
+     }
+   }
+ });
+</script>
+
+<!-- Docs -->
+<div id='div-gpt-ad-1389988495352-0'>
+  <script type='text/javascript'>
+   googletag.cmd.push(function() {
+     googletag.display('div-gpt-ad-1389988495352-0'); });
+  </script>
+</div>

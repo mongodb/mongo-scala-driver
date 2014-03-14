@@ -57,7 +57,7 @@ object MongoScalaBuild extends Build {
   val consoleSettings = Seq(initialCommands in console := """import org.mongodb.scala._""")
 
   /**
-   * DOCUMENTATION
+   * Documentation
    */
   val docSettings = SbtSite.site.settings ++ SbtSite.site.includeScaladoc() ++ SbtSite.site.sphinxSupport() ++ ghpages.settings ++ Seq(
     siteSourceDirectory := file("docs"),

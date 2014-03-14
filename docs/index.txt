@@ -1,7 +1,8 @@
+
 MongoDB Scala Driver
 ====================
 
-This is an experimental reactive driver for Scala and MongoDB.
+This is an experimental reactive driver for Scala and MongoDB.::
 
                 Here be dragons
 
@@ -25,4 +26,18 @@ This is an experimental reactive driver for Scala and MongoDB.
             / /          ,-=='-`=-'  / /
       ,-=='-`=-.               ,-=='-`=-.
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 

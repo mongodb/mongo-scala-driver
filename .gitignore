@@ -12,3 +12,4 @@
 target
 driver/src/examples/scala/lib
 driver/src/examples/scala/data
+docs/_build
