@@ -5,7 +5,7 @@ scala:
 # Branches to test
 branches:
   only:
-    - dev
+    - master
 notifications:
   email:
     recipients:
