@@ -89,6 +89,7 @@ object MongoScalaBuild extends Build {
     testOptions in IntTest := Seq(Tests.Filter(itFilter)),
     testOptions in UnitTest := Seq(Tests.Filter(unitFilter)),
     testOptions in PerfTest := Seq(Tests.Filter(perfFilter)),
+    parallelExecution in PerfTest := false,
     logBuffered in PerfTest := false
   ) ++ Seq(AccTest, IntTest, UnitTest, PerfTest).flatMap { inConfig(_)(Defaults.testTasks) }
 

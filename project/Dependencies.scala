@@ -46,11 +46,9 @@ object Dependencies {
 
   // Testing Libraries
   val scalaTest     = "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
-
-  // Todo - waiting for 2.11.0-RC1 version
-  // val scalaMeter    = "com.github.axel22" % "scalameter_2.11.0-RC1" % scalaMeterVersion % "test"
+  val scalaMeter    = "com.github.axel22" %% "scalameter" % scalaMeterVersion % "test"
 
   // Projects
   val coreDependencies = Seq(scalaCompiler, scalaReflection, mongodbDriver, rxJavaScala)
-  val testDependencies = Seq(scalaTest)
+  val testDependencies = Seq(scalaTest, scalaMeter)
 }
