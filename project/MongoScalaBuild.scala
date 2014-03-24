@@ -134,4 +134,6 @@ object MongoScalaBuild extends Build {
     .settings(scalaStyleSettings: _*)
     .settings(publishSettings: _*)
     .settings(assemblyJarSettings: _*)
+
+    override def rootProject = Some(mongoScalaDriver)
 }
