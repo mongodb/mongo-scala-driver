@@ -3,7 +3,7 @@ MongoDB Scala Driver
 
 This is an experimental reactive driver for Scala and MongoDB.
 
-[![Build Status](https://travis-ci.org/rozza/mongo-scala-driver.png?branch=master)](https://travis-ci.org/rozza/mongo-scala-driver)
+[![Build Status](https://travis-ci.org/mongodb/mongo-scala-driver.png?branch=master)](https://travis-ci.org/mongodb/mongo-scala-driver)
 
                 Here be dragons
 
