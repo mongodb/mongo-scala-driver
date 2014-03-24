@@ -34,6 +34,7 @@ object Dependencies {
 
   val scalaTestVersion     = "2.1.0"
   val scalaMeterVersion    = "0.5-SNAPSHOT"
+  val logbackVersion       = "1.1.1"
 
 
   // Scala
@@ -44,11 +45,12 @@ object Dependencies {
   val mongodbDriver = "org.mongodb" % "mongodb-driver" % mongodbDriverVersion
   val rxJavaScala   = "com.netflix.rxjava" % "rxjava-scala" % rxJavaScalaVersion
 
-  // Testing Libraries
+  // Test
   val scalaTest     = "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
   val scalaMeter    = "com.github.axel22" %% "scalameter" % scalaMeterVersion % "test"
+  val logback       = "ch.qos.logback" % "logback-classic"  % logbackVersion % "test"
 
   // Projects
   val coreDependencies = Seq(scalaCompiler, scalaReflection, mongodbDriver, rxJavaScala)
-  val testDependencies = Seq(scalaTest, scalaMeter)
+  val testDependencies = Seq(scalaTest, scalaMeter, logback)
 }

@@ -189,14 +189,14 @@ class MongoClientUriSpec extends UnitTestSpec {
   }
 
   it should "log any unsupported keys" in withLogCapture("uri") {
-    customHandler =>
+    logger =>
 
       val uri = "mongodb://localhost/?minPoolSize=1&madeUp=2&socketThymeout=1&w=1"
       MongoClientURI(uri)
 
       val expectedMessages: Set[String] = Set(
-        s"WARNING: Unsupported option 'socketthymeout' on URI '$uri'.",
-        s"WARNING: Unsupported option 'madeup' on URI '$uri'."
+        s"WARN : Unsupported option 'socketthymeout' on URI '$uri'.",
+        s"WARN : Unsupported option 'madeup' on URI '$uri'."
       )
       getLogMessages should equal(expectedMessages)
   }

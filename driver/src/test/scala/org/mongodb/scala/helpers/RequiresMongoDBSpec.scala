@@ -34,8 +34,6 @@ import org.mongodb.scala.{MongoClient, MongoClientURI, MongoCollection, MongoDat
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
-import java.util.logging.{Level, Logger}
-
 
 trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
 
@@ -95,12 +93,6 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
 
     try testCode(mongoCollection) // "loan" the fixture to the test
     finally Await.result(mongoDatabase.admin.drop(), WAIT_DURATION) // clean up the fixture
-  }
-
-  override def beforeAll() {
-    // Turn off org.mongodb's noisy connection INFO logging - only works with the JULLogger
-    Logger.getLogger("org.mongodb.driver.cluster").setLevel(Level.WARNING)
-    Logger.getLogger("org.mongodb.driver.connection").setLevel(Level.WARNING)
   }
 
   override def afterAll() {

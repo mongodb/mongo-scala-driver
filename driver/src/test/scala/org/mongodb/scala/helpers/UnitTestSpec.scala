@@ -26,50 +26,53 @@
 package org.mongodb.scala.helpers
 
 import java.io.ByteArrayOutputStream
-import java.util.logging._
 
 import scala.language.implicitConversions
 
+import ch.qos.logback.classic.{Logger, LoggerContext}
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder
+import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.OutputStreamAppender
 import org.scalatest._
 import org.scalatest.prop.TableDrivenPropertyChecks
-
+import org.slf4j.LoggerFactory
 
 trait UnitTestSpec extends FlatSpec with Matchers with TableDrivenPropertyChecks {
 
   var logCapturingStream: ByteArrayOutputStream = null
-  var customLogHandler: StreamHandler = null
 
+  def withLogCapture(name: String)(testCode: Logger => Any) {
 
-  def withLogCapture(name: String)(testCode: StreamHandler => Any) {
-    val logger: Logger = Logger.getLogger(s"org.mongodb.driver.$name")
+    val context: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
+
+    val encoder: PatternLayoutEncoder = new PatternLayoutEncoder()
+    encoder.setContext(context)
+    encoder.setPattern("%-5level: %msg%n")
+    encoder.start()
+
     logCapturingStream = new ByteArrayOutputStream()
-    val handlers = logger.getParent.getHandlers
-    customLogHandler = new StreamHandler(logCapturingStream, new SimpleLineFormatter())
-    logger.addHandler(customLogHandler)
-    logger.setUseParentHandlers(false)
 
-    try testCode(customLogHandler) // "loan" the fixture to the test
+    val appender: OutputStreamAppender[ILoggingEvent] = new OutputStreamAppender[ILoggingEvent]()
+    appender.setName("OutputStream Appender")
+    appender.setContext(context)
+    appender.setEncoder(encoder)
+    appender.setOutputStream(logCapturingStream)
+    appender.start()
+
+    val logger: Logger = context.getLogger(s"org.mongodb.driver.$name")
+    logger.addAppender(appender)
+
+    try testCode(logger) // "loan" the fixture to the test
     finally {
-      for (handler <- handlers) logger.addHandler(handler)
-      logger.setUseParentHandlers(true)
-      customLogHandler.close()
       logCapturingStream.close()
+      appender.stop()
+      logger.detachAppender(appender)
     }
   }
 
   def getLogMessages: Set[String] = {
-    customLogHandler.flush()
     logCapturingStream.toString.split("\n").toSet
   }
 
 }
 
-class SimpleLineFormatter extends SimpleFormatter {
-
-  override def format(record: LogRecord) = {
-    val level = record.getLevel.getLocalizedName
-    val message = record.getMessage
-    s"$level: $message\n"
-  }
-
-}
