@@ -44,7 +44,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
 
   private val DEFAULT_URI: String = "mongodb://localhost:27017"
   private val MONGODB_URI_SYSTEM_PROPERTY_NAME: String = "org.mongodb.test.uri"
-  private val WAIT_DURATION = Duration(500, "millis")
+  private val WAIT_DURATION = Duration(1, "second")
   private var _currentTestName: Option[String] = None
 
   protected override def runTest(testName: String, args: Args): Status = {
