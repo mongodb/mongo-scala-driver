@@ -31,7 +31,6 @@ exec scala -cp "$cp" "$0" "$@"
  */
 
 
-import java.util.logging.Level
 
 import scala.Some
 import scala.collection.JavaConverters._
@@ -43,11 +42,10 @@ import scala.io.{BufferedSource, Source}
 
 import org.mongodb.{Document, WriteResult}
 import org.mongodb.codecs._
-import org.mongodb.diagnostics.Loggers
 import org.mongodb.json.JSONReader
-
 import org.mongodb.scala._
 
+import java.util.logging.{Level, Logger}
 /**
  * An example program providing similar functionality as the ``mongoimport`` program
  *
@@ -122,9 +120,9 @@ object mongoimport {
       sys.exit(1)
     }
 
-    // Turn off org.mongodb's noisy connection INFO logging
-    Loggers.getLogger("cluster").setLevel(Level.WARNING)
-    Loggers.getLogger("connection").setLevel(Level.WARNING)
+    // Turn off org.mongodb's noisy connection INFO logging - only works with the JULLogger
+    Logger.getLogger("org.mongodb.driver.cluster").setLevel(Level.WARNING)
+    Logger.getLogger("org.mongodb.driver.connection").setLevel(Level.WARNING)
 
     // Get the collection
     val mongoClient = MongoClient(mongoClientURI)

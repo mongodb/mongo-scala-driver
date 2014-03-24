@@ -30,24 +30,19 @@ exec scala -cp "$cp" "$0" "$@"
  *
  */
 
-import java.io.{ByteArrayOutputStream, PrintStream, PrintWriter}
+import java.io.PrintWriter
 
-import java.util.logging.Level
-import org.mongodb.codecs.{PrimitiveCodecs, DocumentCodec}
-import org.mongodb.diagnostics.Loggers
-import org.mongodb.json.JSONReader
-import org.mongodb.{ReadPreference, WriteResult, Document}
-import org.mongodb.scala.{MongoCollection, MongoClient, MongoClientURI}
-import rx.lang.scala.Notification.{OnCompleted, OnError, OnNext}
-import rx.lang.scala.{Subscription, Subject}
-import scala.collection.mutable.ListBuffer
-import scala.concurrent.duration.Duration
-import scala.io.{Source, BufferedSource}
+import java.util.logging.{Level, Logger}
 import scala.Some
-import scala.concurrent.{Await, Promise, Future}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.parsing.json.JSON
+import scala.concurrent.{Await, Future, Promise}
+import scala.concurrent.duration.Duration
 
+import org.mongodb.{Document, ReadPreference}
+import org.mongodb.codecs.{DocumentCodec, PrimitiveCodecs}
+import org.mongodb.json.JSONReader
+import org.mongodb.scala.{MongoClient, MongoClientURI, MongoCollection}
+import rx.lang.scala.Subject
+import rx.lang.scala.Notification.{OnCompleted, OnError, OnNext}
 
 /**
  * An example program providing similar functionality as the ``mongoexport`` program
@@ -127,8 +122,9 @@ object mongoexport {
     }
 
     // Turn off org.mongodb's noisy connection INFO logging
-    Loggers.getLogger("cluster").setLevel(Level.WARNING)
-    Loggers.getLogger("connection").setLevel(Level.WARNING)
+    // TODO - see if you can turn off logging
+    Logger.getLogger("org.mongodb.driver.cluster").setLevel(Level.WARNING)
+    Logger.getLogger("org.mongodb.driver.connection").setLevel(Level.WARNING)
 
     // Get the collection
     val mongoClient = MongoClient(mongoClientURI)

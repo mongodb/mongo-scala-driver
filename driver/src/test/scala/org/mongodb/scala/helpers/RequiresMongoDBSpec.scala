@@ -25,20 +25,16 @@
  */
 package org.mongodb.scala.helpers
 
-import java.util.logging.Level
-
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.util.Properties
 
+import org.mongodb.Document
+import org.mongodb.scala.{MongoClient, MongoClientURI, MongoCollection, MongoDatabase}
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
-
-import org.mongodb.Document
-import org.mongodb.diagnostics.Loggers
-
-import org.mongodb.scala.{MongoClientURI, MongoClient, MongoCollection, MongoDatabase}
 import org.scalatest.time.{Millis, Seconds, Span}
+import java.util.logging.{Level, Logger}
 
 
 trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
@@ -102,9 +98,9 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
   }
 
   override def beforeAll() {
-    // Turn off org.mongodb's noisy connection INFO logging
-    Loggers.getLogger("cluster").setLevel(Level.WARNING)
-    Loggers.getLogger("connection").setLevel(Level.WARNING)
+    // Turn off org.mongodb's noisy connection INFO logging - only works with the JULLogger
+    Logger.getLogger("org.mongodb.driver.cluster").setLevel(Level.WARNING)
+    Logger.getLogger("org.mongodb.driver.connection").setLevel(Level.WARNING)
   }
 
   override def afterAll() {

@@ -25,15 +25,15 @@
  */
 package org.mongodb.scala.perf
 
-import org.scalameter.api._
-import org.mongodb.{WriteResult, Document}
-import org.mongodb.scala._
-import scala.concurrent.{Future, Await}
-import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.collection.immutable.IndexedSeq
-import org.mongodb.diagnostics.Loggers
-import java.util.logging.Level
+import scala.concurrent.{Await, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+
+import org.mongodb.{Document, WriteResult}
+import org.mongodb.scala._
+import org.scalameter.api._
+import java.util.logging.{Level, Logger}
 
 
 class InsertBatchBenchmark extends PerformanceTest.Quickbenchmark {
@@ -49,9 +49,9 @@ class InsertBatchBenchmark extends PerformanceTest.Quickbenchmark {
         exec.benchRuns -> 10,
         exec.independentSamples -> 3
         ) beforeTests {
-        // Turn off org.mongodb's noisy connection INFO logging
-        Loggers.getLogger("cluster").setLevel(Level.WARNING)
-        Loggers.getLogger("connection").setLevel(Level.WARNING)
+        // Turn off org.mongodb's noisy connection INFO logging - only works with the JULLogger
+        Logger.getLogger("org.mongodb.driver.cluster").setLevel(Level.WARNING)
+        Logger.getLogger("org.mongodb.driver.connection").setLevel(Level.WARNING)
         Await.result(collection.admin.drop(), Duration.Inf)
       } afterTests {
         Await.result(collection.admin.drop(), Duration.Inf)

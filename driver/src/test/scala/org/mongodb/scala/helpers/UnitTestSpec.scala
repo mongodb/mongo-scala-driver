@@ -33,8 +33,6 @@ import scala.language.implicitConversions
 import org.scalatest._
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-import org.mongodb.diagnostics.Loggers
-
 
 trait UnitTestSpec extends FlatSpec with Matchers with TableDrivenPropertyChecks {
 
@@ -43,7 +41,7 @@ trait UnitTestSpec extends FlatSpec with Matchers with TableDrivenPropertyChecks
 
 
   def withLogCapture(name: String)(testCode: StreamHandler => Any) {
-    val logger: Logger = Loggers.getLogger(name)
+    val logger: Logger = Logger.getLogger(s"org.mongodb.driver.$name")
     logCapturingStream = new ByteArrayOutputStream()
     val handlers = logger.getParent.getHandlers
     customLogHandler = new StreamHandler(logCapturingStream, new SimpleLineFormatter())

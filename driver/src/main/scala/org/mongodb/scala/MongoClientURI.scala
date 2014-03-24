@@ -31,7 +31,8 @@ import org.mongodb.{AuthenticationMechanism, MongoCredential, ReadPreference, Wr
 import org.mongodb.AuthenticationMechanism.{GSSAPI, MONGODB_CR, MONGODB_X509, PLAIN}
 import org.mongodb.connection.Tags
 import org.mongodb.diagnostics.Loggers
-import java.util.logging.Logger
+import org.mongodb.diagnostics.logging.Logger
+
 
 // scalastyle:off cyclomatic.complexity method.length
 
@@ -478,7 +479,7 @@ object MongoClientURI {
       "ssl", "replicaset", "slaveok", "readpreference", "readpreferencetags", "safe", "w",
       "wtimeout", "fsync", "j", "authmechanism", "authsource", "gssapiservicename")
 
-    for (key <- optionsMap.keys.toSet[String] -- supportedKeys) LOGGER.warning(s"Unsupported option '$key' on URI '$uri'.")
+    for (key <- optionsMap.keys.toSet[String] -- supportedKeys) LOGGER.warn(s"Unsupported option '$key' on URI '$uri'.")
   }
 }
 
