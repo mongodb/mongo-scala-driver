@@ -28,3 +28,4 @@ This is an experimental reactive driver for Scala and MongoDB.
       ,-=='-`=-.               ,-=='-`=-.
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+[Documentation](http://mongodb.github.io/mongo-scala-driver/)
