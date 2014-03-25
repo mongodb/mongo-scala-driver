@@ -75,6 +75,16 @@ object MongoScalaBuild extends Build {
           (m, v) =>
             for ((f, d) <- m) yield (f, if (v.trim.endsWith("SNAPSHOT")) ("api/master/" + d) else ("api/" + v + "/" + d))
         },
+        // override the synchLocal task to avoid removing the existing files
+        synchLocal <<= (privateMappings, updatedRepository, ghpagesNoJekyll, gitRunner, streams) map {
+          (mappings, repo, noJekyll, git, s) =>
+            val betterMappings = mappings map {
+              case (file, target) => (file, repo / target)
+            }
+            IO.copy(betterMappings)
+            if (noJekyll) IO.touch(repo / ".nojekyll")
+            repo
+        },
         ghpagesNoJekyll := true,
         gitRemoteRepo := "git@github.com:mongodb/mongo-scala-driver.git"
       ) ++ inConfig(config("sphinx"))(Seq(sourceDirectory := file("docs")))
