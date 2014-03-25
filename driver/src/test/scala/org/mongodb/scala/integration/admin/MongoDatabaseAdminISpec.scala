@@ -27,7 +27,7 @@ package org.mongodb.scala.integration.admin
 
 import scala.concurrent._
 
-import org.mongodb.MongoCredential
+import org.mongodb.{Document, MongoCredential}
 import org.mongodb.scala.admin.MongoDatabaseAdmin
 import org.mongodb.scala.helpers.RequiresMongoDBSpec
 
@@ -49,8 +49,7 @@ class MongoDatabaseAdminISpec extends RequiresMongoDBSpec {
   it should "return collectionNames" in withDatabase {
     database =>
       database.admin.createCollection("checkNames").futureValue.isOk shouldBe true
-      database.admin.createCollection("test").futureValue.isOk shouldBe true
-      database.admin.collectionNames.futureValue should contain theSameElementsAs List("checkNames", "test", "system.indexes")
+      database.admin.collectionNames.futureValue should contain theSameElementsAs List("checkNames", "system.indexes")
   }
 
   it should "create collection" in withDatabase {

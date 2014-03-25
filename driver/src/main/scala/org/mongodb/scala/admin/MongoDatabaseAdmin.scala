@@ -76,7 +76,8 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResp
     val operation = new CommandOperation(name, createCollectionOptions.asDocument, null, commandCodec,
       commandCodec, client.cluster.getDescription(10, SECONDS), client.bufferProvider, client.session, false)
     // scalastyle:on null magic.number
-    handleErrors(MongoFuture(operation.executeAsync))
+    // TODO - CommandOperation.executeAsync - was sometimes returning true but when listing collectionNames it would return empty
+    handleErrors(Future(operation.execute))
   }
 
   def renameCollection(oldCollectionName: String, newCollectionName: String): Future[CommandResult] =
