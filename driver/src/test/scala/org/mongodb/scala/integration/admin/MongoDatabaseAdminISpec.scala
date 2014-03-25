@@ -41,31 +41,22 @@ class MongoDatabaseAdminISpec extends RequiresMongoDBSpec {
 
   it should "remove all collections once drop() is called" in withDatabase {
     database =>
-      whenReady(database.admin.drop()) {
-        f =>
-          f.isOk shouldBe true
-          val collectionNames = database.admin.collectionNames
-          collectionNames shouldBe a[Future[Seq[String]]]
-          collectionNames.futureValue should equal(List.empty)
-      }
+      database.admin.createCollection("test").futureValue.isOk shouldBe true
+      database.admin.drop().futureValue.isOk shouldBe true
+      database.admin.collectionNames.futureValue should equal(List.empty)
   }
 
   it should "return collectionNames" in withDatabase {
     database =>
-      whenReady(database.admin.createCollection("checkNames")) {
-        f =>
-          f.isOk shouldBe true
-          database.admin.collectionNames.futureValue should contain theSameElementsAs List("checkNames", "system.indexes")
-      }
+      database.admin.createCollection("checkNames").futureValue.isOk shouldBe true
+      Future(blocking(Thread.sleep(1000L))).futureValue
+      database.admin.collectionNames.futureValue should contain theSameElementsAs List("checkNames", "system.indexes")
   }
 
   it should "create collection" in withDatabase {
     database =>
-      whenReady(database.admin.createCollection("test")) {
-        f =>
-          f.isOk shouldBe true
-          database.admin.collectionNames.futureValue should contain theSameElementsAs List("test", "system.indexes")
-      }
+      database.admin.createCollection("test").futureValue.isOk shouldBe true
+      database.admin.collectionNames.futureValue should contain theSameElementsAs List("test", "system.indexes")
   }
 
   it should "rename collection" in withDatabase {

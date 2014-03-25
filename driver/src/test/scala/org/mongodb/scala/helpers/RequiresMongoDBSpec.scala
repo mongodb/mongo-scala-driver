@@ -35,25 +35,28 @@ import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
 
+
 trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
 
-  implicit val defaultPatience = PatienceConfig(timeout =  Span(30, Seconds), interval = Span(5, Millis))
+  implicit val defaultPatience = PatienceConfig(timeout = Span(30, Seconds), interval = Span(5, Millis))
   implicit val ec = scala.concurrent.ExecutionContext.Implicits.global
 
   private val DEFAULT_URI: String = "mongodb://localhost:27017"
   private val MONGODB_URI_SYSTEM_PROPERTY_NAME: String = "org.mongodb.test.uri"
   private val WAIT_DURATION = Duration(1, "second")
+  private val DB_PREFIX = "mongo-scala-"
   private var _currentTestName: Option[String] = None
 
   protected override def runTest(testName: String, args: Args): Status = {
-    _currentTestName = Some(testName)
+    _currentTestName = Some(testName.split("should")(1))
     super.runTest(testName, args)
   }
 
   /**
    * The database name to use for this test
    */
-  def databaseName: String = "mongo-scala-" + suiteName
+  def databaseName: String = DB_PREFIX + suiteName
+
   /**
    * The collection name to use for this test
    */
@@ -79,12 +82,15 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
     if (!mongoDbOnline) cancel("No Available Database")
   }
 
-  def withDatabase(testCode: MongoDatabase => Any) {
+  def withDatabase(dbName: String)(testCode: MongoDatabase => Any) {
     checkMongoDB()
+    val databaseName = if (dbName.startsWith(DB_PREFIX)) dbName.take(63) else s"$DB_PREFIX$dbName".take(63)
     val mongoDatabase = mongoClient(databaseName)
     try testCode(mongoDatabase) // "loan" the fixture to the test
     finally Await.result(mongoDatabase.admin.drop(), WAIT_DURATION) // clean up the fixture
   }
+
+  def withDatabase(testCode: MongoDatabase => Any): Unit = withDatabase(collectionName)(testCode: MongoDatabase => Any)
 
   def withCollection(testCode: MongoCollection[Document] => Any) {
     checkMongoDB()
