@@ -49,8 +49,8 @@ class MongoDatabaseAdminISpec extends RequiresMongoDBSpec {
   it should "return collectionNames" in withDatabase {
     database =>
       database.admin.createCollection("checkNames").futureValue.isOk shouldBe true
-      Future(blocking(Thread.sleep(1000L))).futureValue
-      database.admin.collectionNames.futureValue should contain theSameElementsAs List("checkNames", "system.indexes")
+      database.admin.createCollection("test").futureValue.isOk shouldBe true
+      database.admin.collectionNames.futureValue should contain theSameElementsAs List("checkNames", "test", "system.indexes")
   }
 
   it should "create collection" in withDatabase {
