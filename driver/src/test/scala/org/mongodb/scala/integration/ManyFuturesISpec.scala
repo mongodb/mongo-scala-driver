@@ -13,7 +13,7 @@ import org.mongodb.scala.helpers.RequiresMongoDBSpec
 class ManyFuturesISpec extends RequiresMongoDBSpec {
 
   "Collections" should "be able to insert many items" in {
-
+    checkMongoDB()
     val collection = mongoClient("test")("ManyFutures")
     Await.result(collection.admin.drop(), Duration.Inf)
 

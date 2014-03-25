@@ -96,7 +96,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
   }
 
   override def afterAll() {
-    Await.result(mongoClient(databaseName).admin.drop(), WAIT_DURATION)
+    if (mongoDbOnline) Await.result(mongoClient(databaseName).admin.drop(), WAIT_DURATION)
   }
 
 }
