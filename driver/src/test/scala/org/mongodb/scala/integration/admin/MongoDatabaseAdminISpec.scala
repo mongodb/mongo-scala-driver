@@ -52,10 +52,11 @@ class MongoDatabaseAdminISpec extends RequiresMongoDBSpec {
 
   it should "return collectionNames" in withDatabase {
     database =>
-      database.admin.createCollection("checkNames").futureValue.isOk shouldBe true
-      val collectionNames = database.admin.collectionNames
-      collectionNames shouldBe a[Future[List[String]]]
-      collectionNames.futureValue should contain theSameElementsAs List("checkNames", "system.indexes")
+      whenReady(database.admin.createCollection("checkNames")) {
+        f =>
+          f.isOk shouldBe true
+          database.admin.collectionNames.futureValue should contain theSameElementsAs List("checkNames", "system.indexes")
+      }
   }
 
   it should "create collection" in withDatabase {
