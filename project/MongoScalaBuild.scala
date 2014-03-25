@@ -23,6 +23,8 @@
  * https://github.com/mongodb/mongo-scala-driver
  *
  */
+
+
 import com.typesafe.sbt._
 import SbtSite._
 import SiteKeys._
@@ -40,8 +42,10 @@ import AssemblyKeys._
 
 object MongoScalaBuild extends Build {
 
+
   import Dependencies._
   import Resolvers._
+
 
   val buildSettings = Seq(
     organization := "org.mongodb",
@@ -59,22 +63,21 @@ object MongoScalaBuild extends Build {
   /**
    * Documentation
    */
-  val docSettings = SbtSite.site.settings ++ SbtSite.site.includeScaladoc() ++ SbtSite.site.sphinxSupport() ++ ghpages.settings ++ Seq(
-    siteSourceDirectory := file("docs"),
-    siteDirectory := file("target/site"),
-    // depending on the version, copy the api files to a different directory
-    siteMappings <++= (mappings in packageDoc in Compile, version) map { (m, v) =>
-      for((f, d) <- m) yield (f, if (v.trim.endsWith("SNAPSHOT")) ("api/master/" + d) else ("api/"+v+"/"+d))
-    },
-    // override the synchLocal task to avoid removing the existing files
-    synchLocal <<= (privateMappings, updatedRepository, gitRunner, streams) map { (mappings, repo, git, s) =>
-      val betterMappings = mappings map { case (file, target) => (file, repo / target) }
-      IO.copy(betterMappings)
-      IO.touch(repo / ".nojekyll")
-      repo
-    },
-    gitRemoteRepo := "git@github.com:rozza/mongo-scala-driver.git"
-  ) ++ inConfig(config("sphinx"))(Seq(sourceDirectory := file("docs")))
+  val docSettings =
+    SbtSite.site.settings ++
+      SbtSite.site.sphinxSupport() ++
+      ghpages.settings ++
+      Seq(
+        siteSourceDirectory := file("docs"),
+        siteDirectory := file("target/site"),
+        // depending on the version, copy the api files to a different directory
+        siteMappings <++= (mappings in packageDoc in Compile, version) map {
+          (m, v) =>
+            for ((f, d) <- m) yield (f, if (v.trim.endsWith("SNAPSHOT")) ("api/master/" + d) else ("api/" + v + "/" + d))
+        },
+        ghpagesNoJekyll := true,
+        gitRemoteRepo := "git@github.com:mongodb/mongo-scala-driver.git"
+      ) ++ inConfig(config("sphinx"))(Seq(sourceDirectory := file("docs")))
 
   val scalaStyleSettings = ScalastylePlugin.Settings ++ Seq(org.scalastyle.sbt.PluginKeys.config := file("project/scalastyle-config.xml"))
   val publishSettings = Publish.settings
@@ -91,12 +94,18 @@ object MongoScalaBuild extends Build {
     testOptions in PerfTest := Seq(Tests.Filter(perfFilter)),
     parallelExecution in PerfTest := false,
     logBuffered in PerfTest := false
-  ) ++ Seq(AccTest, IntTest, UnitTest, PerfTest).flatMap { inConfig(_)(Defaults.testTasks) }
+  ) ++ Seq(AccTest, IntTest, UnitTest, PerfTest).flatMap {
+    inConfig(_)(Defaults.testTasks)
+  }
 
   def accFilter(name: String): Boolean = name endsWith "ASpec"
+
   def itFilter(name: String): Boolean = name endsWith "ISpec"
+
   def perfFilter(name: String): Boolean = name endsWith "Benchmark"
+
   def unitFilter(name: String): Boolean = !itFilter(name) && !accFilter(name) && !perfFilter(name)
+
   def testFilter(name: String): Boolean = !perfFilter(name)
 
   lazy val IntTest = config("it") extend Test
@@ -112,11 +121,12 @@ object MongoScalaBuild extends Build {
   /**
    * depend on compile to make sure the sources pass the compiler
    */
-  val styleCheckSetting = styleCheck <<= (compile in Compile, sources in Compile, streams) map { (_, sourceFiles, s) =>
-    val logger = s.log
-    val (feedback, score) = StyleChecker.assess(sourceFiles)
-    logger.info(feedback)
-    logger.info(s"Style Score: $score out of ${StyleChecker.maxResult}")
+  val styleCheckSetting = styleCheck <<= (compile in Compile, sources in Compile, streams) map {
+    (_, sourceFiles, s) =>
+      val logger = s.log
+      val (feedback, score) = StyleChecker.assess(sourceFiles)
+      logger.info(feedback)
+      logger.info(s"Style Score: $score out of ${StyleChecker.maxResult}")
   }
 
   lazy val mongoScalaDriver = Project(
@@ -135,5 +145,6 @@ object MongoScalaBuild extends Build {
     .settings(publishSettings: _*)
     .settings(assemblyJarSettings: _*)
 
-    override def rootProject = Some(mongoScalaDriver)
+  override def rootProject = Some(mongoScalaDriver)
+
 }
