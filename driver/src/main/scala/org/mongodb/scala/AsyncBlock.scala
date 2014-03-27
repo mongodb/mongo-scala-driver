@@ -25,20 +25,22 @@
  */
 package org.mongodb.scala
 
-import scala.concurrent.ExecutionContext
-
 import rx.lang.scala.Subject
+import rx.lang.scala.subjects.ReplaySubject
 
 import org.mongodb.{AsyncBlock => JAsyncBlock}
 
 /**
- * An AsyncBlock that uses a `Subject` to add new documents into
+ * An AsyncBlock that uses a `Subject` to add new documents into.
  *
- * @param executor the implicit execution context for the query
+ * Currently using a `ReplaySubject` as a PublishSubject could start emitting items
+ * before a subscription has taken hold.
+ *
+ * TODO: Investigate a buffered ReplaySubject once released (https://github.com/Netflix/RxJava/issues/865)
+ *
  * @tparam T the type of document
  */
-case class AsyncBlock[T](implicit executor: ExecutionContext) extends JAsyncBlock[T] {
-  val subject = Subject[T]()
+case class AsyncBlock[T](subject: Subject[T] = ReplaySubject[T]()) extends JAsyncBlock[T] {
 
   def done(): Unit = subject.onCompleted()
 
