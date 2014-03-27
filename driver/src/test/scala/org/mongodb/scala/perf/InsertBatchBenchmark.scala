@@ -25,16 +25,18 @@
  */
 package org.mongodb.scala.perf
 
+import java.util.logging.{Level, Logger}
+
 import scala.collection.immutable.IndexedSeq
 import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
-import org.mongodb.{Document, WriteResult}
-import org.mongodb.scala._
 import org.scalameter.api._
-import java.util.logging.{Level, Logger}
 
+import org.mongodb.{Document, WriteResult}
+
+import org.mongodb.scala._
 
 class InsertBatchBenchmark extends PerformanceTest.Quickbenchmark {
 

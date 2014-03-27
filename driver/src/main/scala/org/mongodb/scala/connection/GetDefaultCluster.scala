@@ -25,14 +25,14 @@
  */
 package org.mongodb.scala.connection
 
-import java.util.concurrent.Executors
 import scala.collection.JavaConverters._
 
-import org.mongodb.connection._
 import org.mongodb.MongoCredential
-import org.mongodb.management.JMXConnectionPoolListener;
+import org.mongodb.connection._
+import org.mongodb.management.JMXConnectionPoolListener
 
 import org.mongodb.scala.MongoClientOptions
+
 
 trait GetDefaultCluster {
 

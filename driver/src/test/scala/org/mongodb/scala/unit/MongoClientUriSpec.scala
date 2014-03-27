@@ -26,17 +26,14 @@
 package org.mongodb.scala.unit
 
 
-import org.mongodb.{ReadPreference, WriteConcern}
 import scala.collection.JavaConverters._
-import org.mongodb.connection.Tags
+
+import org.mongodb.{ReadPreference, WriteConcern}
 import org.mongodb.ReadPreference.secondaryPreferred
+import org.mongodb.connection.Tags
 
 import org.mongodb.scala.MongoClientURI
-import org.scalatest.FlatSpec
-import java.util.logging.Logger
-import org.mongodb.diagnostics.Loggers
 import org.mongodb.scala.helpers.UnitTestSpec
-
 
 class MongoClientUriSpec extends UnitTestSpec {
 

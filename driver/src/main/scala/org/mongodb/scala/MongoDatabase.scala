@@ -25,13 +25,9 @@
  */
 package org.mongodb.scala
 
-import _root_.scala.concurrent.duration.Duration
-import _root_.scala.concurrent.Future
-import java.util.concurrent.TimeUnit.SECONDS
 
 import org.mongodb._
 import org.mongodb.codecs.{CollectibleDocumentCodec, ObjectIdGenerator}
-import org.mongodb.operation.CommandOperation
 
 import org.mongodb.scala.admin.MongoDatabaseAdmin
 

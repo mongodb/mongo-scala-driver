@@ -29,12 +29,13 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.util.Properties
 
-import org.mongodb.Document
-import org.mongodb.scala.{MongoClient, MongoClientURI, MongoCollection, MongoDatabase}
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
 
+import org.mongodb.Document
+
+import org.mongodb.scala.{MongoClient, MongoClientURI, MongoCollection, MongoDatabase}
 
 trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
 

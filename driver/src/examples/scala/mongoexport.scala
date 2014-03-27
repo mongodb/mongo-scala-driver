@@ -31,18 +31,20 @@ exec scala -cp "$cp" "$0" "$@"
  */
 
 import java.io.PrintWriter
-
 import java.util.logging.{Level, Logger}
+
 import scala.Some
 import scala.concurrent.{Await, Future, Promise}
 import scala.concurrent.duration.Duration
 
+import rx.lang.scala.Subject
+import rx.lang.scala.Notification.{OnCompleted, OnError, OnNext}
+
 import org.mongodb.{Document, ReadPreference}
 import org.mongodb.codecs.{DocumentCodec, PrimitiveCodecs}
 import org.mongodb.json.JSONReader
+
 import org.mongodb.scala.{MongoClient, MongoClientURI, MongoCollection}
-import rx.lang.scala.Subject
-import rx.lang.scala.Notification.{OnCompleted, OnError, OnNext}
 
 /**
  * An example program providing similar functionality as the ``mongoexport`` program

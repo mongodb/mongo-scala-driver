@@ -40,7 +40,6 @@ import org.mongodb.scala.{MongoCollection, MongoDatabase, MongoFuture}
 import org.mongodb.scala.AsyncImplicitHelpers._
 import org.mongodb.scala.utils.HandleCommandResponse
 
-
 case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResponse {
 
   private val DROP_DATABASE = new Document("dropDatabase", 1)

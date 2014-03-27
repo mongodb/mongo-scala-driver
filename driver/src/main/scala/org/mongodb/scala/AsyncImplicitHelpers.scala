@@ -26,14 +26,12 @@
 package org.mongodb.scala
 
 import scala.concurrent._
-import scala.concurrent.ExecutionContext.Implicits.global
 
 import rx.lang.scala._
 
 import org.mongodb.{MongoAsyncCursor, MongoException}
 import org.mongodb.connection.SingleResultCallback
 import org.mongodb.operation._
-
 
 /**
  * Async  to implicitly wrap QueryOperations to add extra methods to allow iteration of future cursor results

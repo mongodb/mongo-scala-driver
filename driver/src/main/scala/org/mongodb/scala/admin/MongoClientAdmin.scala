@@ -39,7 +39,6 @@ import org.mongodb.operation.CommandOperation
 import org.mongodb.scala.{MongoClient, MongoFuture}
 import org.mongodb.scala.utils.HandleCommandResponse
 
-
 case class MongoClientAdmin(client: MongoClient) extends HandleCommandResponse {
 
   private val ADMIN_DATABASE = "admin"

@@ -29,12 +29,13 @@ import java.io.ByteArrayOutputStream
 
 import scala.language.implicitConversions
 
+import org.scalatest._
+import org.scalatest.prop.TableDrivenPropertyChecks
+
 import ch.qos.logback.classic.{Logger, LoggerContext}
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.OutputStreamAppender
-import org.scalatest._
-import org.scalatest.prop.TableDrivenPropertyChecks
 import org.slf4j.LoggerFactory
 
 trait UnitTestSpec extends FlatSpec with Matchers with TableDrivenPropertyChecks {

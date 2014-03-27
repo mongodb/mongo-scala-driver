@@ -27,9 +27,9 @@ package org.mongodb.scala
 
 import scala.concurrent.ExecutionContext
 
-import org.mongodb.{AsyncBlock => JAsyncBlock}
-
 import rx.lang.scala.Subject
+
+import org.mongodb.{AsyncBlock => JAsyncBlock}
 
 /**
  * An AsyncBlock that uses a `Subject` to add new documents into

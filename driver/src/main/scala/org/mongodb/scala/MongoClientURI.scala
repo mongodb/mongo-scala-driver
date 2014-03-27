@@ -26,13 +26,14 @@
 package org.mongodb.scala
 
 import java.net.URLDecoder
+
 import scala.collection.JavaConverters._
+
 import org.mongodb.{AuthenticationMechanism, MongoCredential, ReadPreference, WriteConcern}
 import org.mongodb.AuthenticationMechanism.{GSSAPI, MONGODB_CR, MONGODB_X509, PLAIN}
 import org.mongodb.connection.Tags
 import org.mongodb.diagnostics.Loggers
 import org.mongodb.diagnostics.logging.Logger
-
 
 // scalastyle:off cyclomatic.complexity method.length
 

@@ -25,13 +25,11 @@
  */
 package org.mongodb.scala
 
-import org.mongodb.codecs.PrimitiveCodecs
-import org.mongodb.connection.ConnectionPoolSettings
-import org.mongodb.connection.SSLSettings
-import org.mongodb.connection.ServerSettings
-import org.mongodb.connection.SocketSettings
 import java.util.concurrent.TimeUnit.MILLISECONDS
-import org.mongodb.{WriteConcern, ReadPreference}
+
+import org.mongodb.{ReadPreference, WriteConcern}
+import org.mongodb.codecs.PrimitiveCodecs
+import org.mongodb.connection.{ConnectionPoolSettings, SSLSettings, ServerSettings, SocketSettings}
 
 // scalastyle:off magic.number
 
@@ -73,7 +71,7 @@ import org.mongodb.{WriteConcern, ReadPreference}
  * @param socketTimeout The socket timeout in milliseconds. It is used for I/O socket read and write operations
  *                      `java.net.Socket#setSoTimeout(int)`. Default is `0` and means no timeout.
  * @param socketKeepAlive This flag controls the socket keep alive feature that keeps a connection alive through
- *                        firewalls. `java.net.Socket#setKeepAlive(boolean)`. Default is false`.
+ *                        firewalls. `java.net.Socket#setKeepAlive(boolean)`. Default is `false`.
  * @param autoConnectRetry If true, the driver will keep trying to connect to the same server in case that the socket
  *                         cannot be established. There is maximum amount of time to keep retrying, which is `15s` by
  *                         default. This can be useful to avoid some exceptions being thrown when a server is down

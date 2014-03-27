@@ -25,8 +25,8 @@
  */
 package org.mongodb.scala
 
-import org.mongodb.codecs.{DocumentCodec, PrimitiveCodecs}
 import org.mongodb.{Codec, Document, ReadPreference, WriteConcern}
+import org.mongodb.codecs.{DocumentCodec, PrimitiveCodecs}
 
 object MongoCollectionOptions {
   def apply(options: MongoDatabaseOptions): MongoCollectionOptions = {

@@ -32,6 +32,8 @@ exec scala -cp "$cp" "$0" "$@"
 
 
 
+import java.util.logging.{Level, Logger}
+
 import scala.Some
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
@@ -43,9 +45,9 @@ import scala.io.{BufferedSource, Source}
 import org.mongodb.{Document, WriteResult}
 import org.mongodb.codecs._
 import org.mongodb.json.JSONReader
+
 import org.mongodb.scala._
 
-import java.util.logging.{Level, Logger}
 /**
  * An example program providing similar functionality as the ``mongoimport`` program
  *

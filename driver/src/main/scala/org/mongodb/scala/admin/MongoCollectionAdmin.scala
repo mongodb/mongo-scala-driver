@@ -30,12 +30,10 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import org.mongodb._
-import org.mongodb.codecs.DocumentCodec
 import org.mongodb.operation.{CreateIndexesOperation, DropIndexOperation, GetIndexesOperation}
 
 import org.mongodb.scala.MongoCollection
 import org.mongodb.scala.utils.HandleCommandResponse
-
 
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends HandleCommandResponse {
 
