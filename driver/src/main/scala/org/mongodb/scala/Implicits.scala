@@ -36,7 +36,7 @@ import org.mongodb.operation._
 /**
  * Async  to implicitly wrap QueryOperations to add extra methods to allow iteration of future cursor results
  */
-object AsyncImplicitHelpers {
+object Implicits {
 
   /**
    * Implicit QueryOperation Extension that converts the operation into a reactive
@@ -76,7 +76,7 @@ object AsyncImplicitHelpers {
      * @throws IllegalArgumentException if 0 or more than 1 item in the observable
      * @return Observable.head
      */
-    def single: Observable[T] =
+    private [Implicits] def single: Observable[T] =
       obs.toSeq.map(seq => seq.size match {
         case 0 => throw new IllegalArgumentException("single on empty Observable")
         case 1 => seq.head

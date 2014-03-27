@@ -34,11 +34,9 @@ import rx.lang.scala.{Observable, Subject}
 import org.mongodb.{CollectibleCodec, ConvertibleToDocument, Document, Get, MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
 import org.mongodb.operation._
 
-import org.mongodb.scala.AsyncImplicitHelpers._
+import org.mongodb.scala.Implicits._
 import org.mongodb.scala.admin.MongoCollectionAdmin
 import org.mongodb.scala.utils.HandleCommandResponse
-import java.util
-import scala.collection.script.Update
 
 // scalastyle:off number.of.methods
 

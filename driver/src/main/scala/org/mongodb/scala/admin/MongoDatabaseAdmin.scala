@@ -37,7 +37,7 @@ import org.mongodb.connection.NativeAuthenticationHelper.createAuthenticationHas
 import org.mongodb.operation._
 
 import org.mongodb.scala.{MongoCollection, MongoDatabase, MongoFuture}
-import org.mongodb.scala.AsyncImplicitHelpers._
+import org.mongodb.scala.Implicits._
 import org.mongodb.scala.utils.HandleCommandResponse
 
 case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResponse {
