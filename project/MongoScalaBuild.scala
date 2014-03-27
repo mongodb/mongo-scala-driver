@@ -51,7 +51,7 @@ object MongoScalaBuild extends Build {
     organization := "org.mongodb",
     organizationHomepage := Some(url("http://www.mongodb.org")),
     version := "0.1-SNAPSHOT",
-    scalaVersion := "2.11.0-RC1",
+    scalaVersion := "2.11.0-RC3",
     libraryDependencies ++= coreDependencies ++ testDependencies,
     resolvers := mongoScalaResolvers,
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature" /*, "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer" */),
