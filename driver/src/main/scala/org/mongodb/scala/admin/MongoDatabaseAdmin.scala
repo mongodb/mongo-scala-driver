@@ -28,7 +28,6 @@ package org.mongodb.scala.admin
 import java.util.concurrent.TimeUnit.SECONDS
 
 import scala.concurrent._
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.implicitConversions
 
 import org.mongodb.{CommandResult, CreateCollectionOptions, Document, MongoNamespace}
@@ -36,7 +35,7 @@ import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.NativeAuthenticationHelper.createAuthenticationHash
 import org.mongodb.operation._
 
-import org.mongodb.scala.{MongoCollection, MongoDatabase, MongoFuture}
+import org.mongodb.scala.{MongoCollection, MongoDatabase}
 import org.mongodb.scala.Implicits._
 import org.mongodb.scala.utils.HandleCommandResponse
 
@@ -47,15 +46,18 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResp
   private val commandCodec = new DocumentCodec()
   private val client = database.client
 
-  def drop(): Future[CommandResult] = handleNameSpaceErrors(executeAsync(DROP_DATABASE))
+  def drop(): Future[CommandResult] = {
+    val futureDrop: Future[CommandResult] = database.executeAsyncCommand(DROP_DATABASE)
+    handleNameSpaceErrors(futureDrop)
+  }
 
   def collectionNames: Future[List[String]] = {
     val namespacesCollection: MongoNamespace = new MongoNamespace(name, "system.namespaces")
     val findAll = new Find().readPreference(org.mongodb.ReadPreference.primary)
-    val collectionNames = new QueryOperation[Document](namespacesCollection, findAll, commandCodec,
-      commandCodec, client.bufferProvider, client.session, false)
     val lengthOfDatabaseName = name.length()
 
+    val operation = new QueryOperation[Document](namespacesCollection, findAll, commandCodec, commandCodec)
+    val collectionNames = client.executeAsyncRaw(operation)
     collectionNames.cursor.foldLeft(List[String]())({
       case (names, doc) =>
         doc.getString("name") match {
@@ -73,24 +75,21 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResp
   def createCollection(createCollectionOptions: CreateCollectionOptions): Future[CommandResult] = {
     // scalastyle:off null magic.number
     val operation = new CommandOperation(name, createCollectionOptions.asDocument, null, commandCodec,
-      commandCodec, client.cluster.getDescription(10, SECONDS), client.bufferProvider, client.session, false)
+      commandCodec, client.cluster.getDescription(10, SECONDS))
     // scalastyle:on null magic.number
-    // TODO - CommandOperation.executeAsync - was sometimes returning true but when listing collectionNames it would return empty
-    handleErrors(Future(operation.execute))
+    handleErrors(client.executeAsync(operation))
   }
 
   def renameCollection(oldCollectionName: String, newCollectionName: String): Future[CommandResult] =
-    renameCollection(oldCollectionName, newCollectionName, dropTarget=false)
+    renameCollection(oldCollectionName, newCollectionName, dropTarget = false)
 
   def renameCollection(oldCollectionName: String, newCollectionName: String, dropTarget: Boolean): Future[CommandResult] = {
-    val renameCollectionOptions = new RenameCollectionOperation(client.bufferProvider, client.session, false,
-      name, oldCollectionName, newCollectionName, dropTarget)
+    val renameCollectionOptions = new RenameCollectionOperation(name, oldCollectionName, newCollectionName, dropTarget)
     renameCollection(renameCollectionOptions)
   }
 
-  def renameCollection(operation: RenameCollectionOperation): Future[CommandResult] = {
-    handleErrors(Future(operation.execute))
-  }
+  def renameCollection(operation: RenameCollectionOperation): Future[CommandResult] =
+    handleErrors(client.execute(operation))
 
   def addUser(userName: String, password: Array[Char], readOnly: Boolean) {
     // TODO - collection save
@@ -107,16 +106,6 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResp
     // TODO - new Document
     val collection: MongoCollection[Document] = database("system.users")
     // collection.filter(new Document("user", userName)).remove
-  }
-
-  private[scala] def executeAsync(document: Document): Future[CommandResult] = executeAsync(operation(document))
-  private[scala] def executeAsync(operation: CommandOperation): Future[CommandResult] = MongoFuture(operation.executeAsync())
-
-  private def operation(command: Document) = {
-    // scalastyle:off magic.number
-    new CommandOperation(name, command, database.readPreference, database.documentCodec, database.documentCodec,
-      client.cluster.getDescription(10, SECONDS), client.bufferProvider, client.session, false)
-    // scalastyle:on magic.number
   }
 
 }

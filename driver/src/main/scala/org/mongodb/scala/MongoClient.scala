@@ -28,10 +28,14 @@ package org.mongodb.scala
 import java.io.Closeable
 import java.util.concurrent._
 
+import scala.Some
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
-import org.mongodb.MongoCredential
+import org.mongodb.{MongoCredential, MongoFuture => JMongoFuture}
 import org.mongodb.connection._
+import org.mongodb.operation.{AsyncOperation, Operation}
 import org.mongodb.session.ClusterSession
 
 import org.mongodb.scala.admin.MongoClientAdmin
@@ -307,6 +311,17 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProv
   val admin: MongoClientAdmin = MongoClientAdmin(this)
 
   private[scala] def session: ClusterSession = new ClusterSession(cluster, executorService)
+
+  private[scala] def executeAsync[T](operation: AsyncOperation[T]): Future[T] =
+    MongoFuture(operation.executeAsync(session))
+
+  private[scala] def executeAsyncRaw[T](operation: AsyncOperation[T]): JMongoFuture[T] =
+    operation.executeAsync(session)
+
+  private[scala] def execute[T](operation: Operation[T]): Future[T] = {
+  // TODO - Async all operations using this
+    Future(operation.execute(session))
+  }
 
   private val executorService: ExecutorService = Executors.newCachedThreadPool()
 }

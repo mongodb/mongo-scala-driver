@@ -29,9 +29,8 @@ import scala.concurrent._
 
 import rx.lang.scala._
 
-import org.mongodb.{MongoAsyncCursor, MongoException}
+import org.mongodb.{MongoAsyncCursor, MongoException, MongoFuture => JMongoFuture}
 import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation._
 
 /**
  * Async  to implicitly wrap QueryOperations to add extra methods to allow iteration of future cursor results
@@ -42,17 +41,16 @@ object Implicits {
    * Implicit QueryOperation Extension that converts the operation into a reactive
    * `Subject` allowing a stream of documents an processed without blocking
    *
-   * @param operation the query operation that to return a reactive cursor
+   * @param mongoAsyncCursor the future AsyncCursor that to return a reactive cursor
    * @tparam T the Type of the resulting documents
    */
-  implicit class OperationObservableCursor[T](val operation: QueryOperation[T]) {
+  implicit class OperationObservableCursor[T](val mongoAsyncCursor: JMongoFuture[MongoAsyncCursor[T]]) {
     def cursor: Subject[T] = {
       val block = AsyncBlock[T]()
-      val futureOp = operation.executeAsync
-      futureOp.register(new SingleResultCallback[MongoAsyncCursor[T]] {
+      mongoAsyncCursor.register(new SingleResultCallback[MongoAsyncCursor[T]] {
         def onResult(cursor: MongoAsyncCursor[T], e: MongoException) {
           if (Option(e) != None) throw e
-          cursor.start(block)
+          if (Option(cursor) != None) cursor.start(block)
         }
       })
       block.subject
@@ -76,7 +74,7 @@ object Implicits {
      * @throws IllegalArgumentException if 0 or more than 1 item in the observable
      * @return Observable.head
      */
-    private [Implicits] def single: Observable[T] =
+    private[Implicits] def single: Observable[T] =
       obs.toSeq.map(seq => seq.size match {
         case 0 => throw new IllegalArgumentException("single on empty Observable")
         case 1 => seq.head

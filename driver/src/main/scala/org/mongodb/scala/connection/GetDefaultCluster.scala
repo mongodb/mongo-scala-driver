@@ -33,7 +33,6 @@ import org.mongodb.management.JMXConnectionPoolListener
 
 import org.mongodb.scala.MongoClientOptions
 
-
 trait GetDefaultCluster {
 
   protected def getDefaultCluster(clusterSettings: ClusterSettings,
@@ -53,7 +52,6 @@ trait GetDefaultCluster {
       streamFactory,
       heartbeatStreamFactory,
       credentialList.asJava,
-      bufferProvider,
       null,
       connectionPoolListener,
       null)

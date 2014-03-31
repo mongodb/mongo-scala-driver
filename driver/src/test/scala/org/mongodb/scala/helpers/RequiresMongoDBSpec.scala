@@ -72,7 +72,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
 
   lazy val mongoDbOnline: Boolean = {
     try {
-      Await.result(mongoClient.admin.databaseNames, WAIT_DURATION)
+      Await.result(mongoClient.admin.ping, WAIT_DURATION)
       true
     } catch {
       case t: Throwable => false
@@ -99,7 +99,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
     val mongoCollection = mongoDatabase(collectionName)
 
     try testCode(mongoCollection) // "loan" the fixture to the test
-    finally Await.result(mongoDatabase.admin.drop(), WAIT_DURATION) // clean up the fixture
+    finally Await.result(mongoCollection.admin.drop(), WAIT_DURATION) // clean up the fixture
   }
 
   override def afterAll() {

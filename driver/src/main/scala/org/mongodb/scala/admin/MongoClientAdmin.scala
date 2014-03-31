@@ -32,11 +32,11 @@ import scala.collection.JavaConverters._
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import org.mongodb.{CommandResult, Document}
+import org.mongodb.Document
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.operation.CommandOperation
 
-import org.mongodb.scala.{MongoClient, MongoFuture}
+import org.mongodb.scala.MongoClient
 import org.mongodb.scala.utils.HandleCommandResponse
 
 case class MongoClientAdmin(client: MongoClient) extends HandleCommandResponse {
@@ -47,13 +47,13 @@ case class MongoClientAdmin(client: MongoClient) extends HandleCommandResponse {
   private val commandCodec: DocumentCodec = new DocumentCodec()
 
   def ping: Future[Double] = {
-    val asyncOperation = operation(PING_COMMAND)
-    handleErrors(execute(asyncOperation)) map { result => result.getResponse.getDouble("ok") }
+    val operation = createOperation(PING_COMMAND)
+    handleErrors(client.executeAsync(operation)) map { result => result.getResponse.getDouble("ok") }
   }
 
   def databaseNames: Future[Seq[String]] = {
-    val asyncOperation = operation(LIST_DATABASES)
-    handleErrors(execute(asyncOperation)) map {
+    val operation = createOperation(LIST_DATABASES)
+    handleErrors(client.executeAsync(operation)) map {
       result =>  {
         val databases = result.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
         databases.asScala.map(doc => doc.getString("name")).toSeq
@@ -61,12 +61,10 @@ case class MongoClientAdmin(client: MongoClient) extends HandleCommandResponse {
     }
   }
 
-  private def execute(operation: CommandOperation): Future[CommandResult] = MongoFuture(operation.executeAsync)
-
-  private def operation(command: Document) = {
+  private def createOperation(command: Document) = {
     // scalastyle:off null magic.number
     new CommandOperation(ADMIN_DATABASE, command, null, commandCodec, commandCodec,
-      client.cluster.getDescription(10, SECONDS), client.bufferProvider, client.session, false)
+      client.cluster.getDescription(10, SECONDS))
     // scalastyle:on null magic.number
   }
 }

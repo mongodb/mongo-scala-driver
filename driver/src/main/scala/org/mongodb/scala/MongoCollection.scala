@@ -25,6 +25,7 @@
  */
 package org.mongodb.scala
 
+import scala.Some
 import scala.collection.JavaConverters._
 import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -105,6 +106,7 @@ case class MongoCollection[T](name: String,
   def map[A](f: T => A): Observable[A] = MongoCollectionView[T]().map(f)
 
   def find(filter: ConvertibleToDocument): MongoCollectionView[T] = MongoCollectionView[T]().find(filter.toDocument)
+
   def find(filter: Document): MongoCollectionView[T] = MongoCollectionView[T]().find(filter)
 
   /**
@@ -121,7 +123,7 @@ case class MongoCollection[T](name: String,
       val findOp: Find = new Find()
       findOp.readPreference(mongoCollectionOptions.readPreference)
       val writeConcern: WriteConcern = mongoCollectionOptions.writeConcern
-      MongoCollectionView[D](findOp, writeConcern, limitSet=false, doUpsert=false)
+      MongoCollectionView[D](findOp, writeConcern, limitSet = false, doUpsert = false)
     }
   }
 
@@ -148,17 +150,17 @@ case class MongoCollection[T](name: String,
      * @param documents the documents to be inserted
      */
     def insert(documents: Iterable[D]): Future[WriteResult] = {
-      val insertRequestList = documents.map( new InsertRequest[D](_)).toList.asJava
-      val operation = new InsertOperation[D](namespace, true, writeConcern, insertRequestList, getCodec, client.bufferProvider, client.session, false)
-      MongoFuture(operation.executeAsync)
+      val insertRequestList = documents.map(new InsertRequest[D](_)).toList.asJava
+      val operation = new InsertOperation[D](namespace, true, writeConcern, insertRequestList, getCodec)
+      client.executeAsync(operation)
     }
 
     /**
      * Count the number of documents
      */
     def count(): Future[Long] = {
-      val operation = new CountOperation(namespace, findOp, database.documentCodec, client.bufferProvider, client.session, false)
-      MongoFuture(operation.executeAsync) map { result => result }
+      val operation = new CountOperation(namespace, findOp, database.documentCodec)
+      client.executeAsync(operation).asInstanceOf[Future[Long]]
     }
 
     /**
@@ -202,6 +204,7 @@ case class MongoCollection[T](name: String,
      * @param selector the fields to include / exclude
      */
     def fields(selector: ConvertibleToDocument): MongoCollectionView[D] = fields(selector.toDocument)
+
     /**
      * Fields to include / exclude with the output
      *
@@ -215,7 +218,7 @@ case class MongoCollection[T](name: String,
     /**
      * Create a new document when no document matches the query criteria when doing an insert.
      */
-    def upsert: MongoCollectionView[D] = MongoCollectionView(findOp, writeConcern, limitSet, doUpsert=true)
+    def upsert: MongoCollectionView[D] = MongoCollectionView(findOp, writeConcern, limitSet, doUpsert = true)
 
     /**
      * Set custom query options for the query
@@ -240,7 +243,7 @@ case class MongoCollection[T](name: String,
      * Limit the resulting results
      * @param limit the number to limit to
      */
-    def limit(limit: Int): MongoCollectionView[D] = MongoCollectionView(findOp.limit(limit), writeConcern, limitSet=true, doUpsert)
+    def limit(limit: Int): MongoCollectionView[D] = MongoCollectionView(findOp.limit(limit), writeConcern, limitSet = true, doUpsert)
 
     /**
      * Use a custom read preference to determine how MongoDB clients route read operations to members of a replica set
@@ -255,8 +258,10 @@ case class MongoCollection[T](name: String,
     /**
      * Execute the operation and return the result.
      */
-    def cursor: Subject[D] =
-      new QueryOperation[D](namespace, findOp, documentCodec, getCodec, client.bufferProvider, client.session, false).cursor
+    def cursor: Subject[D] = {
+      val operation = new QueryOperation[D](namespace, findOp, documentCodec, getCodec)
+      client.executeAsyncRaw(operation).cursor
+    }
 
     /**
      * Run a transforming operation foreach resulting document.
@@ -268,27 +273,28 @@ case class MongoCollection[T](name: String,
     def map[A](f: D => A): Observable[A] = cursor.map(doc => f(doc))
 
     def get: Observable[D] = cursor
+
     def getOne: Observable[D] = copy().limit(1).cursor.first
 
-//    def mapReduce(map: String, reduce: String): MongoIterable[T] = {
-//      val commandOperation: MapReduceCommand = new MapReduceCommand(findOp, name, map, reduce)
-//      val commandResult: CommandResult = database.execute(commandOperation.toDocument, commandOperation.getReadPreference)
-//      new SingleShotCommandIterable[T](commandResult)
-//    }
+    //    def mapReduce(map: String, reduce: String): MongoIterable[T] = {
+    //      val commandOperation: MapReduceCommand = new MapReduceCommand(findOp, name, map, reduce)
+    //      val commandResult: CommandResult = database.execute(commandOperation.toDocument, commandOperation.getReadPreference)
+    //      new SingleShotCommandIterable[T](commandResult)
+    //    }
 
-//    def into(target: A): A = {
-//      forEach(new Block[T] {
-//        def run(t: T): Boolean = {
-//          target.add(t)
-//          return true
-//        }
-//      })
-//      return target
-//    }
+    //    def into(target: A): A = {
+    //      forEach(new Block[T] {
+    //        def run(t: T): Boolean = {
+    //          target.add(t)
+    //          return true
+    //        }
+    //      })
+    //      return target
+    //    }
 
-//    def map(mapper: Function[T, U]): MongoIterable[U] = {
-//      return new MappingIterable[T, U](this, mapper)
-//    }
+    //    def map(mapper: Function[T, U]): MongoIterable[U] = {
+    //      return new MappingIterable[T, U](this, mapper)
+    //    }
 
     def withWriteConcern(writeConcernForThisOperation: WriteConcern): MongoCollectionView[T] =
       MongoCollectionView(findOp, writeConcernForThisOperation, limitSet, doUpsert)
@@ -302,40 +308,42 @@ case class MongoCollection[T](name: String,
 
     def remove(): Future[WriteResult] = {
       val removeRequest: List[RemoveRequest] = List(new RemoveRequest(findOp.getFilter).multi(getMultiFromLimit))
-      val operation = new RemoveOperation(namespace, true, writeConcern, removeRequest.asJava, documentCodec, client.bufferProvider, client.session, false)
-      MongoFuture(operation.executeAsync())
+      val operation = new RemoveOperation(namespace, true, writeConcern, removeRequest.asJava, documentCodec)
+      client.executeAsync(operation)
     }
 
     def removeOne(): Future[WriteResult] = {
       val removeRequest: List[RemoveRequest] = List(new RemoveRequest(findOp.getFilter).multi(false))
-      val operation = new RemoveOperation(namespace, true, writeConcern, removeRequest.asJava, documentCodec, client.bufferProvider, client.session, false)
-      MongoFuture(operation.executeAsync())
+      val operation = new RemoveOperation(namespace, true, writeConcern, removeRequest.asJava, documentCodec)
+      client.executeAsync(operation)
     }
 
     def update(updateOperations: ConvertibleToDocument): Future[WriteResult] = update(updateOperations.toDocument)
+
     def update(updateOperations: Document): Future[WriteResult] = {
       val updateRequest: List[UpdateRequest] = List(new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(getMultiFromLimit))
-      val operation = new UpdateOperation(namespace, true, writeConcern, updateRequest.asJava, documentCodec, client.bufferProvider, client.session, false)
-      MongoFuture(operation.executeAsync())
+      val operation = new UpdateOperation(namespace, true, writeConcern, updateRequest.asJava, documentCodec)
+      client.executeAsync(operation)
     }
 
     def updateOne(updateOperations: ConvertibleToDocument): Future[WriteResult] = updateOne(updateOperations.toDocument)
+
     def updateOne(updateOperations: Document): Future[WriteResult] = {
       val updateRequest: List[UpdateRequest] = List(new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(false))
-      val operation = new UpdateOperation(namespace, true, writeConcern, updateRequest.asJava, documentCodec,
-                                          client.bufferProvider, client.session, false)
-      MongoFuture(operation.executeAsync())
+      val operation = new UpdateOperation(namespace, true, writeConcern, updateRequest.asJava, documentCodec)
+      client.executeAsync(operation)
     }
 
     def replace(replacement: D): Future[WriteResult] = {
       val replaceRequest: List[ReplaceRequest[D]] = List(new ReplaceRequest[D](findOp.getFilter, replacement).upsert(doUpsert))
-      val operation = new ReplaceOperation(namespace, true, writeConcern, replaceRequest.asJava, documentCodec, getCodec,
-                                           client.bufferProvider, client.session, false)
-      MongoFuture(operation.executeAsync())
+      val operation = new ReplaceOperation(namespace, true, writeConcern, replaceRequest.asJava, documentCodec, getCodec)
+      client.executeAsync(operation)
     }
 
     def updateOneAndGet(updateOperations: Document): Future[D] = updateOneAndGet(updateOperations, Get.AfterChangeApplied)
+
     def updateOneAndGet(updateOperations: ConvertibleToDocument): Future[D] = updateOneAndGet(updateOperations.toDocument)
+
     def updateOneAndGet(updateOperations: Document, beforeOrAfter: Get): Future[D] = {
       val findAndUpdate: FindAndUpdate[D] = new FindAndUpdate[D]()
         .where(findOp.getFilter)
@@ -344,17 +352,18 @@ case class MongoCollection[T](name: String,
         .select(findOp.getFields)
         .sortBy(findOp.getOrder)
         .upsert(doUpsert)
-      val operation = new FindAndUpdateOperation[D](namespace, findAndUpdate, getCodec, client.bufferProvider, client.session, false)
-      // TODO needs executeAsync + MongoFuture
-      Future(operation.execute())
+      val operation = new FindAndUpdateOperation[D](namespace, findAndUpdate, getCodec)
+      client.execute(operation)
     }
 
     def getOneAndUpdate(updateOperations: Document): Future[D] = updateOneAndGet(updateOperations, Get.BeforeChangeApplied)
+
     def getOneAndUpdate(updateOperations: ConvertibleToDocument): Future[D] = getOneAndUpdate(updateOperations.toDocument)
 
     def getOneAndReplace(replacement: D): Future[D] = replaceOneAndGet(replacement, Get.BeforeChangeApplied)
 
     def replaceOneAndGet(replacement: D): Future[D] = replaceOneAndGet(replacement, Get.AfterChangeApplied)
+
     def replaceOneAndGet(replacement: D, beforeOrAfter: Get): Future[D] = {
       val findAndReplace: FindAndReplace[D] = new FindAndReplace[D](replacement)
         .where(findOp.getFilter)
@@ -362,16 +371,14 @@ case class MongoCollection[T](name: String,
         .select(findOp.getFields)
         .sortBy(findOp.getOrder)
         .upsert(doUpsert)
-      val operation = new FindAndReplaceOperation[D](namespace, findAndReplace, getCodec, getCodec, client.bufferProvider, client.session, false)
-      // TODO needs executeAsync + MongoFuture
-      Future(operation.execute())
+      val operation = new FindAndReplaceOperation[D](namespace, findAndReplace, getCodec, getCodec)
+      client.execute(operation)
     }
 
     def getOneAndRemove: Future[D] = {
       val findAndRemove: FindAndRemove[D] = new FindAndRemove[D]().where(findOp.getFilter).select(findOp.getFields).sortBy(findOp.getOrder)
-      val operation = new FindAndRemoveOperation[D](namespace, findAndRemove, getCodec, client.bufferProvider, client.session, false)
-      // TODO needs executeAsync + MongoFuture
-      Future(operation.execute())
+      val operation = new FindAndRemoveOperation[D](namespace, findAndRemove, getCodec)
+      client.execute(operation)
     }
 
     private def asBoolean(get: Get): Boolean = get eq Get.AfterChangeApplied
@@ -384,6 +391,7 @@ case class MongoCollection[T](name: String,
       }
     }
   }
+
 }
 
 // scalastyle:on number.of.methods
