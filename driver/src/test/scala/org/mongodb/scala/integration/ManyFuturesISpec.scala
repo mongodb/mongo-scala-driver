@@ -23,8 +23,7 @@ class ManyFuturesISpec extends RequiresMongoDBSpec {
 
   it should "be able to insert many items" in withCollection {
     collection =>
-
-      val size = 50
+      val size = 500
       val futures: IndexedSeq[Future[WriteResult]] = for (i <- 0 until size) yield {
         val doc = new Document()
         doc.put("_id", i)
