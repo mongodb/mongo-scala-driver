@@ -41,7 +41,7 @@ trait GetDefaultCluster {
                                   bufferProvider: BufferProvider): Cluster = {
 
     val streamFactory = new AsynchronousSocketChannelStreamFactory(options.socketSettings, options.sslSettings)
-    val heartbeatStreamFactory = streamFactory
+    val heartbeatStreamFactory = new AsynchronousSocketChannelStreamFactory(options.heartbeatSocketSettings, options.sslSettings)
     val connectionPoolListener = new JMXConnectionPoolListener()
 
     // scalastyle:off null
