@@ -33,6 +33,7 @@ exec scala -cp "$cp" "$0" "$@"
 import java.io.PrintWriter
 import java.util.logging.{Level, Logger}
 
+import org.mongodb.connection.SingleResultCallback
 import scala.Some
 import scala.concurrent.{Await, Future, Promise}
 import scala.concurrent.duration.Duration
@@ -40,11 +41,12 @@ import scala.concurrent.duration.Duration
 import rx.lang.scala.Subject
 import rx.lang.scala.Notification.{OnCompleted, OnError, OnNext}
 
-import org.mongodb.{Document, ReadPreference}
+import org.mongodb.{MongoException, Block, MongoAsyncCursor, Document, ReadPreference}
 import org.mongodb.codecs.{DocumentCodec, PrimitiveCodecs}
 import org.mongodb.json.JSONReader
 
 import org.mongodb.scala.{MongoClient, MongoClientURI, MongoCollection}
+import scala.util.{Failure, Success}
 
 /**
  * An example program providing similar functionality as the ``mongoexport`` program
@@ -180,7 +182,7 @@ object mongoexport {
       case Some(value) => operation.sort(value)
     }
 
-    val cursor: Subject[Document] = operation.cursor
+    val futureCursor: Future[MongoAsyncCursor[Document]] = operation.cursor()
 
     val (startString, endString, lineEndString) = options.jsonArray match {
       case true => ("[", "]\r\n", ",")
@@ -188,22 +190,28 @@ object mongoexport {
     }
     val promiseExport = Promise[Boolean]()
     var firstLine = false
-    cursor.materialize.subscribe( n => n match {
-      case OnNext(document: Document) => {
-        firstLine match {
-          case true => output.write(lineEndString)
-          case false => output.write(startString)
-        }
-        output.write(document.toString)
-        firstLine = true
-      }
-      case OnCompleted =>
-        output.write(endString)
-        output.close()
-        promiseExport.success(true)
-      case OnError(err) =>
+    futureCursor.onComplete({
+      case Success(cursor) =>
+        cursor.forEach(new Block[Document] {
+          override def apply(document: Document): Unit = {
+            firstLine match {
+              case true => output.write(lineEndString)
+              case false => output.write(startString)
+            }
+            output.write(document.toString)
+            firstLine = true
+          }
+        }).register(new SingleResultCallback[Void] {
+          def onResult(result: Void, e: MongoException) {
+            output.write(endString)
+            output.close()
+            promiseExport.success(true)
+          }
+        })
+      case Failure(err) => {
         Console.err.println(s"Error: ${err.getMessage}")
         promiseExport.failure(err)
+      }
     })
     promiseExport.future
   }

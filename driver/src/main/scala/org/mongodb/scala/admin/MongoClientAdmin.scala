@@ -26,18 +26,18 @@
 package org.mongodb.scala.admin
 
 import java.util
-import java.util.concurrent.TimeUnit.SECONDS
 
 import scala.collection.JavaConverters._
-import scala.concurrent._
+import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import org.mongodb.Document
 import org.mongodb.codecs.DocumentCodec
-import org.mongodb.operation.CommandOperation
+import org.mongodb.operation.CommandReadOperation
 
 import org.mongodb.scala.MongoClient
 import org.mongodb.scala.utils.HandleCommandResponse
+
 
 case class MongoClientAdmin(client: MongoClient) extends HandleCommandResponse {
 
@@ -48,12 +48,14 @@ case class MongoClientAdmin(client: MongoClient) extends HandleCommandResponse {
 
   def ping: Future[Double] = {
     val operation = createOperation(PING_COMMAND)
-    handleErrors(client.executeAsync(operation)) map { result => result.getResponse.getDouble("ok") }
+    handleErrors(client.executeAsync(operation,  client.options.readPreference)) map {
+      result => result.getResponse.getDouble("ok")
+    }
   }
 
   def databaseNames: Future[Seq[String]] = {
     val operation = createOperation(LIST_DATABASES)
-    handleErrors(client.executeAsync(operation)) map {
+    handleErrors(client.executeAsync(operation,  client.options.readPreference)) map {
       result =>  {
         val databases = result.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
         databases.asScala.map(doc => doc.getString("name")).toSeq
@@ -63,8 +65,7 @@ case class MongoClientAdmin(client: MongoClient) extends HandleCommandResponse {
 
   private def createOperation(command: Document) = {
     // scalastyle:off null magic.number
-    new CommandOperation(ADMIN_DATABASE, command, null, commandCodec, commandCodec,
-      client.cluster.getDescription(10, SECONDS))
+    new CommandReadOperation(ADMIN_DATABASE, command, commandCodec, commandCodec)
     // scalastyle:on null magic.number
   }
 }

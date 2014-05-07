@@ -1,7 +1,7 @@
 # See http://about.travis-ci.org/docs/user/build-configuration/
 language: scala
 scala:
-  - "2.11.0-RC3"
+  - "2.11.0"
 # Branches to test
 branches:
   only:

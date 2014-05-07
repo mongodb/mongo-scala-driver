@@ -27,12 +27,12 @@ import sbt._
 
 object Dependencies {
   // Versions
-  val scalaCoreVersion     = "2.11.0-RC3"
+  val scalaCoreVersion     = "2.11.0"
 
   val mongodbDriverVersion = "3.0.0-SNAPSHOT"
-  val rxJavaScalaVersion   = "0.17.2"
+  val rxJavaScalaVersion   = "0.18.1"
 
-  val scalaTestVersion     = "2.1.2"
+  val scalaTestVersion     = "2.1.5"
   val scalaMeterVersion    = "0.5-SNAPSHOT"
   val logbackVersion       = "1.1.1"
 

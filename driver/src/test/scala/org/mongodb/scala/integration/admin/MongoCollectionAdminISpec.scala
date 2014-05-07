@@ -96,52 +96,34 @@ class MongoCollectionAdminISpec extends RequiresMongoDBSpec {
 
   it should "drop index for non-existent collection" in withCollection {
     collection =>
-
-      whenReady(collection.admin.dropIndex(Index.builder().addKeys("test").build)) {
-        result =>
-          result.getDouble("ok") should equal(0.0)
-          result.getString("errmsg") should equal("ns not found")
-      }
-
-      whenReady(collection.admin.dropIndex("test_1")) {
-        result =>
-          result.getDouble("ok") should equal(0.0)
-          result.getString("errmsg") should equal("ns not found")
-      }
+      collection.admin.dropIndex(Index.builder().addKeys("test").build).futureValue
+      collection.admin.dropIndex("test_1").futureValue
   }
 
   it should "drop index" in withCollection {
     collection =>
       collection.admin.createIndex(Index.builder().addKeys("test").build).futureValue
-      collection.admin.dropIndex(Index.builder().addKeys("test").build).futureValue.getDouble("ok") should equal(1.0)
-
+      collection.admin.dropIndex(Index.builder().addKeys("test").build).futureValue
 
       collection.admin.createIndex(Index.builder().addKeys("test").build).futureValue
-      collection.admin.dropIndex("test_1").futureValue.getDouble("ok") should equal(1.0)
-
+      collection.admin.dropIndex("test_1").futureValue
   }
 
   it should "drop indexes for non-existent collection" in withCollection {
     collection =>
-      whenReady(collection.admin.dropIndexes()) {
-        result =>
-          result.getDouble("ok") should equal(0.0)
-          result.getString("errmsg") should equal("ns not found")
-      }
+      collection.admin.dropIndexes().futureValue
   }
 
   it should "drop indexes new collection" in withCollection {
     collection =>
-      whenReady(collection.database.admin.createCollection(collection.name)) {
-        f =>
-          collection.admin.dropIndexes().futureValue.getDouble("ok") should equal(1.0)
-      }
+      collection.database.admin.createCollection(collection.name).futureValue
+      collection.admin.dropIndexes().futureValue
   }
 
   it should "drop indexes existing collection" in withCollection {
     collection =>
       collection.admin.createIndex(Index.builder().addKeys("test").build).futureValue
-      collection.admin.dropIndexes().futureValue.getDouble("ok") should equal(1.0)
+      collection.admin.dropIndexes().futureValue
   }
 
 }

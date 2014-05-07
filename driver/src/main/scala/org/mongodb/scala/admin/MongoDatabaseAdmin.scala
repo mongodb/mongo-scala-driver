@@ -25,19 +25,20 @@
  */
 package org.mongodb.scala.admin
 
-import java.util.concurrent.TimeUnit.SECONDS
-
 import scala.concurrent._
-import scala.language.implicitConversions
+import scala.concurrent.ExecutionContext.Implicits.global
 
-import org.mongodb.{CommandResult, CreateCollectionOptions, Document, MongoNamespace}
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.NativeAuthenticationHelper.createAuthenticationHash
-import org.mongodb.operation._
 
-import org.mongodb.scala.{MongoCollection, MongoDatabase}
-import org.mongodb.scala.Implicits._
 import org.mongodb.scala.utils.HandleCommandResponse
+import org.mongodb.scala.MongoDatabase
+import org.mongodb.scala.MongoCollection
+import org.mongodb.operation.{RenameCollectionOperation, CreateCollectionOperation, Find, QueryOperation}
+import org.mongodb.{MongoAsyncCursor, MongoException, CommandResult, CreateCollectionOptions, ReadPreference, Block, MongoNamespace, Document}
+import scala.util.{Failure, Success}
+import org.mongodb.connection.SingleResultCallback
+
 
 case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResponse {
 
@@ -53,43 +54,49 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResp
 
   def collectionNames: Future[List[String]] = {
     val namespacesCollection: MongoNamespace = new MongoNamespace(name, "system.namespaces")
-    val findAll = new Find().readPreference(org.mongodb.ReadPreference.primary)
+    val findAll = new Find()
     val lengthOfDatabaseName = name.length()
-
     val operation = new QueryOperation[Document](namespacesCollection, findAll, commandCodec, commandCodec)
-    val collectionNames = client.executeAsyncRaw(operation)
-    collectionNames.cursor.foldLeft(List[String]())({
-      case (names, doc) =>
-        doc.getString("name") match {
-          case dollarCollectionName: String if dollarCollectionName.contains("$") => names
-          case collectionName: String => collectionName.substring(lengthOfDatabaseName + 1) :: names
-        }
-    }).map({
-      names => names.reverse
-    }).toFuture
+
+    val promise = Promise[List[String]]()
+    var list = List[String]()
+    val futureCursor: Future[MongoAsyncCursor[Document]] = client.executeAsync(operation, ReadPreference.primary)
+    futureCursor.onComplete({
+      case Success(cursor) =>
+        cursor.forEach(new Block[Document] {
+          override def apply(doc: Document): Unit = {
+            doc.getString("name") match {
+              case dollarCollectionName: String if dollarCollectionName.contains("$") => list
+              case collectionName: String => list ::= collectionName.substring(lengthOfDatabaseName + 1)
+            }
+          }
+        }).register(new SingleResultCallback[Void] {
+          def onResult(result: Void, e: MongoException) {
+            promise.success(list.reverse)
+          }
+        })
+      case Failure(e) => promise.failure(e)
+    })
+    promise.future
   }
 
-  def createCollection(collectionName: String): Future[CommandResult] =
+  def createCollection(collectionName: String): Future[Unit] =
     createCollection(new CreateCollectionOptions(collectionName))
 
-  def createCollection(createCollectionOptions: CreateCollectionOptions): Future[CommandResult] = {
-    // scalastyle:off null magic.number
-    val operation = new CommandOperation(name, createCollectionOptions.asDocument, null, commandCodec,
-      commandCodec, client.cluster.getDescription(10, SECONDS))
-    // scalastyle:on null magic.number
-    handleErrors(client.executeAsync(operation))
+  def createCollection(createCollectionOptions: CreateCollectionOptions): Future[Unit] = {
+    client.executeAsync(new CreateCollectionOperation(name, createCollectionOptions)).asInstanceOf[Future[Unit]]
   }
 
-  def renameCollection(oldCollectionName: String, newCollectionName: String): Future[CommandResult] =
+  def renameCollection(oldCollectionName: String, newCollectionName: String): Future[Unit] =
     renameCollection(oldCollectionName, newCollectionName, dropTarget = false)
 
-  def renameCollection(oldCollectionName: String, newCollectionName: String, dropTarget: Boolean): Future[CommandResult] = {
+  def renameCollection(oldCollectionName: String, newCollectionName: String, dropTarget: Boolean): Future[Unit] = {
     val renameCollectionOptions = new RenameCollectionOperation(name, oldCollectionName, newCollectionName, dropTarget)
     renameCollection(renameCollectionOptions)
   }
 
-  def renameCollection(operation: RenameCollectionOperation): Future[CommandResult] =
-    handleErrors(client.execute(operation))
+  def renameCollection(operation: RenameCollectionOperation): Future[Unit] =
+    client.executeAsync(operation).asInstanceOf[Future[Unit]]
 
   def addUser(userName: String, password: Array[Char], readOnly: Boolean) {
     // TODO - collection save

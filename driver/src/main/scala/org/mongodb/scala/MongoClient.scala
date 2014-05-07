@@ -26,17 +26,16 @@
 package org.mongodb.scala
 
 import java.io.Closeable
-import java.util.concurrent._
+import java.util.concurrent.TimeUnit
 
 import scala.Some
 import scala.collection.JavaConverters._
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Future, Promise}
 
-import org.mongodb.{MongoCredential, MongoFuture => JMongoFuture}
-import org.mongodb.connection._
-import org.mongodb.operation.{AsyncOperation, Operation}
-import org.mongodb.session.ClusterSession
+import org.mongodb.{MongoCredential, MongoException, ReadPreference}
+import org.mongodb.binding.{AsyncClusterBinding, AsyncReadBinding, AsyncReadWriteBinding, AsyncWriteBinding}
+import org.mongodb.connection.{BufferProvider, Cluster, ClusterConnectionMode, ClusterSettings, PowerOfTwoBufferPool, ServerAddress, SingleResultCallback}
+import org.mongodb.operation.{AsyncReadOperation, AsyncWriteOperation}
 
 import org.mongodb.scala.admin.MongoClientAdmin
 import org.mongodb.scala.connection.GetDefaultCluster
@@ -302,7 +301,6 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProv
    */
   def close() {
     cluster.close()
-    executorService.shutdownNow()
   }
 
   /**
@@ -310,18 +308,54 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProv
    */
   val admin: MongoClientAdmin = MongoClientAdmin(this)
 
-  private[scala] def session: ClusterSession = new ClusterSession(cluster, executorService)
-
-  private[scala] def executeAsync[T](operation: AsyncOperation[T]): Future[T] =
-    MongoFuture(operation.executeAsync(session))
-
-  private[scala] def executeAsyncRaw[T](operation: AsyncOperation[T]): JMongoFuture[T] =
-    operation.executeAsync(session)
-
-  private[scala] def execute[T](operation: Operation[T]): Future[T] = {
-  // TODO - Async all operations using this
-    Future(operation.execute(session))
+  private[scala] def executeAsync[T](writeOperation: AsyncWriteOperation[T]): Future[T] = {
+    val promise = Promise[T]()
+    val binding = writeBinding
+    writeOperation.executeAsync(binding).register(new SingleResultCallback[T] {
+      override def onResult(result: T, e: MongoException): Unit = {
+        try {
+          Option(e) match {
+            case None => promise.success(result)
+            case _ => promise.failure(e)
+          }
+        }
+        finally {
+          binding.release()
+        }
+      }
+    })
+    promise.future
   }
 
-  private val executorService: ExecutorService = Executors.newCachedThreadPool()
+  private[scala] def executeAsync[T](readOperation: AsyncReadOperation[T], readPreference: ReadPreference): Future[T] = {
+    val promise = Promise[T]()
+    val binding = readBinding(readPreference)
+    readOperation.executeAsync(binding).register(new SingleResultCallback[T] {
+      override def onResult(result: T, e: MongoException): Unit = {
+        try {
+          Option(e) match {
+            case None => promise.success(result)
+            case _ => promise.failure(e)
+
+          }
+        }
+        finally {
+          binding.release()
+        }
+      }
+    })
+    promise.future
+  }
+
+  private def writeBinding: AsyncWriteBinding = {
+    readWriteBinding(ReadPreference.primary)
+  }
+
+  private def readBinding(readPreference: ReadPreference): AsyncReadBinding = {
+    readWriteBinding(readPreference)
+  }
+
+  private def readWriteBinding(readPreference: ReadPreference): AsyncReadWriteBinding = {
+    new AsyncClusterBinding(cluster, readPreference, options.maxWaitTime, TimeUnit.MILLISECONDS)
+  }
 }

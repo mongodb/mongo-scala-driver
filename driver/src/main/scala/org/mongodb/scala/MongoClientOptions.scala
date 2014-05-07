@@ -140,7 +140,7 @@ case class MongoClientOptions(description: String = "",
     .build()
   val serverSettings = ServerSettings.builder
     .heartbeatFrequency(heartbeatFrequency, MILLISECONDS)
-    .connectRetryFrequency(heartbeatConnectRetryFrequency, MILLISECONDS)
+    .heartbeatConnectRetryFrequency(heartbeatConnectRetryFrequency, MILLISECONDS)
     .build()
   val sslSettings = SSLSettings.builder
     .enabled(SSLEnabled)

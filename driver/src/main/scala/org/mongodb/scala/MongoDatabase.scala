@@ -26,11 +26,9 @@
 package org.mongodb.scala
 
 
-import java.util.concurrent.TimeUnit._
-
-import org.mongodb._
+import org.mongodb.{Codec, CollectibleCodec, CommandResult, Document, ReadPreference}
 import org.mongodb.codecs.{CollectibleDocumentCodec, ObjectIdGenerator}
-import org.mongodb.operation.CommandOperation
+import org.mongodb.operation.CommandReadOperation
 
 import org.mongodb.scala.admin.MongoDatabaseAdmin
 
@@ -64,13 +62,12 @@ case class MongoDatabase(name: String, client: MongoClient, options: MongoDataba
 
   def executeAsyncCommand(command: Document): Future[CommandResult] = executeAsyncCommand(command, readPreference)
   def executeAsyncCommand(command: Document, readPreference: ReadPreference): Future[CommandResult] = {
-    val operation = createOperation(command)
-    client.executeAsync(operation)
+    client.executeAsync(createReadOperation(command), readPreference)
    }
 
-  private def createOperation(command: Document) = {
+  private def createReadOperation(command: Document) = {
     // scalastyle:off magic.number
-    new CommandOperation(name, command, readPreference, documentCodec, documentCodec, client.cluster.getDescription(10, SECONDS))
+    new CommandReadOperation(name, command, documentCodec, documentCodec)
     // scalastyle:on magic.number
   }
 }

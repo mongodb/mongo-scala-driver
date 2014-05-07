@@ -25,6 +25,8 @@
  */
 package org.mongodb.scala.admin
 
+import java.util.ArrayList
+
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -39,16 +41,15 @@ case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends Handl
 
   private val COLLECTION_STATS = new Document("collStats", collection.name)
 
-  def drop(): Future[CommandResult] = {
+  def drop(): Future[Unit] = {
     val operation = new DropCollectionOperation(collection.namespace)
-    val futureDrop = collection.client.execute(operation)
-    handleNameSpaceErrors(futureDrop)
+    collection.client.executeAsync(operation).mapTo[Unit]
   }
 
   def isCapped: Future[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
 
   def statistics: Future[Document] = {
-    val futureStats = collection.database.executeAsyncCommand(COLLECTION_STATS)
+    val futureStats: Future[CommandResult] = collection.database.executeAsyncCommand(COLLECTION_STATS)
     handleNameSpaceErrors(futureStats) map { result => result.getResponse }
   }
 
@@ -56,23 +57,22 @@ case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends Handl
 
   def createIndex(index: Index): Future[Unit] = createIndexes(List(index))
   def createIndexes(indexes: Iterable[Index]): Future[Unit] = {
-    val operation = new CreateIndexesOperation(indexes.toList.asJava, collection.namespace)
-    collection.client.execute(operation).mapTo[Unit]
+    val operation = new CreateIndexesOperation(new ArrayList(indexes.toList.asJava), collection.namespace)
+    collection.client.executeAsync(operation).asInstanceOf[Future[Unit]]
   }
 
   def getIndexes: Future[Seq[Document]] = {
     val operation = new GetIndexesOperation(collection.namespace)
-    collection.client.execute(operation).map(docs => docs.asScala.toSeq)
+    collection.client.executeAsync(operation, collection.options.readPreference).map(docs => docs.asScala.toSeq)
   }
 
-  def dropIndex(index: String): Future[Document] = {
+  def dropIndex(index: String): Future[Unit] = {
     val operation = new DropIndexOperation(collection.namespace, index)
-    val namedErrors = Seq("index not found", "ns not found")
-    handleNamedErrors(collection.client.execute(operation), namedErrors) map { result => result.getResponse }
+    collection.client.executeAsync(operation).mapTo[Unit]
   }
 
-  def dropIndex(index: Index): Future[Document] = dropIndex(index.getName)
+  def dropIndex(index: Index): Future[Unit] = dropIndex(index.getName)
 
-  def dropIndexes(): Future[Document] = dropIndex("*")
+  def dropIndexes(): Future[Unit] = dropIndex("*")
 
 }

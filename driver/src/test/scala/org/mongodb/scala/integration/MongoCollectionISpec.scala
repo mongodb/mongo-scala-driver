@@ -31,13 +31,11 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-import rx.lang.scala.{Observable, Subject}
-
 import org.mongodb.Document
 
 import org.mongodb.scala._
-import org.mongodb.scala.Implicits._
 import org.mongodb.scala.helpers.RequiresMongoDBSpec
+
 
 class MongoCollectionISpec extends RequiresMongoDBSpec {
 
@@ -60,50 +58,29 @@ class MongoCollectionISpec extends RequiresMongoDBSpec {
       collection.count().futureValue should equal(1)
   }
 
-  it should "provide an Subject cursor" in withCollection {
-    collection =>
-      collection.cursor shouldBe a[Subject[Document]]
-  }
-
-  it should "aggregated observables should be convertible to a Future" in withCollection {
+  it should "cursor.toList() should return Future[List[Document]]" in withCollection {
     collection =>
       collection.insert(createDocuments(100)).futureValue
-      val result = collection.cursor.foldLeft(0)({
-        (total, doc) => total + 1
-      }).toFuture
-      result.futureValue should equal(100)
-  }
-
-  it should "cursor.toList should return Future[List[Document]]" in withCollection {
-    collection =>
-      collection.insert(createDocuments(100)).futureValue
-      val documents = collection.toList
+      val documents = collection.toList()
       documents shouldBe a[Future[List[Document]]]
       documents.futureValue.length should equal(100)
   }
 
-  it should "be a composable observer and provide the expected results" in withCollection {
+  it should "cursor should be non blocking and provide the expected results" in withCollection {
     collection =>
       collection.insert(createDocuments(100)).futureValue
-      collection.count().futureValue should equal(100)
-
       var total = 0
-      val counterObservable: Observable[Document] = collection.cursor.doOnEach(d => {
-        total += 1
-      })
+      val result = collection.toList()
       total should not equal 100 // Ensures foreach is non blocking
-      counterObservable.toBlockingObservable.toList
+      total = result.futureValue.size // Complete the future
       total should equal(100)
   }
 
   it should "allow scala like handling for filtered collections" in withCollection {
     collection =>
       collection.insert(createDocuments(100)).futureValue
-      val filtered = collection.find(new Document("_id", new Document("$gte", 50))).cursor
-      val result: Observable[Int] = filtered.foldLeft(0)({
-        (total, doc) => total + 1
-      })
-      result.toFuture.futureValue should equal(50)
+      val filtered = collection.find(new Document("_id", new Document("$gte", 50)))
+      filtered.toList().futureValue.size should equal(50)
   }
 
   def createDocuments(amount: Int = 100): IndexedSeq[Document] = {
