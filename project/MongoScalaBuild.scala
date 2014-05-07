@@ -24,7 +24,6 @@
  *
  */
 
-
 import com.typesafe.sbt._
 import SbtSite._
 import SiteKeys._
@@ -45,7 +44,6 @@ object MongoScalaBuild extends Build {
 
   import Dependencies._
   import Resolvers._
-
 
   val buildSettings = Seq(
     organization := "org.mongodb",
@@ -139,9 +137,15 @@ object MongoScalaBuild extends Build {
       logger.info(s"Style Score: $score out of ${StyleChecker.maxResult}")
   }
 
-  lazy val mongoScalaDriver = Project(
-    id = "mongo-scala-driver",
-    base = file("driver")
+  lazy val core = Project(
+    id = "core",
+    base = file("driver-core")
+  ).configs(UnitTest)
+   .settings(buildSettings: _*)
+
+  lazy val async = Project(
+    id = "async",
+    base = file("driver-async")
   ).configs(IntTest)
     .configs(AccTest)
     .configs(UnitTest)
@@ -153,8 +157,18 @@ object MongoScalaBuild extends Build {
     .settings(styleCheckSetting: _*)
     .settings(scalaStyleSettings: _*)
     .settings(publishSettings: _*)
-    .settings(assemblyJarSettings: _*)
+    .dependsOn(core)
 
-  override def rootProject = Some(mongoScalaDriver)
+  lazy val rxscala = Project(
+    id = "rxscala",
+    base = file("driver-rxscala")
+  ).configs(IntTest)
+    .configs(AccTest)
+    .configs(UnitTest)
+    .configs(PerfTest)
+    .settings(buildSettings: _*)
+    .dependsOn(core)
+
+  override def rootProject = Some(core)
 
 }

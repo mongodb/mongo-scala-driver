@@ -30,7 +30,7 @@ object Dependencies {
   val scalaCoreVersion     = "2.11.0"
 
   val mongodbDriverVersion = "3.0.0-SNAPSHOT"
-  val rxJavaScalaVersion   = "0.18.1"
+  val rxJavaScalaVersion   = "0.18.2"
 
   val scalaTestVersion     = "2.1.5"
   val scalaMeterVersion    = "0.5-SNAPSHOT"
