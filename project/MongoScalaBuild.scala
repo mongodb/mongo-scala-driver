@@ -32,15 +32,16 @@ import GitKeys._
 import SbtGhPages._
 import GhPagesKeys._
 import org.scalastyle.sbt.ScalastylePlugin
+import sbtunidoc.Plugin._
 import sbtassembly.Plugin._
 import sbt._
 import Keys._
 import scala.Some
+import UnidocKeys._
 import AssemblyKeys._
 
 
 object MongoScalaBuild extends Build {
-
 
   import Dependencies._
   import Resolvers._
@@ -53,10 +54,8 @@ object MongoScalaBuild extends Build {
     libraryDependencies ++= coreDependencies ++ testDependencies,
     resolvers := mongoScalaResolvers,
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature" /*, "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer" */),
-    scalacOptions in(Compile, doc) ++= Seq("-diagrams", "-implicits")
+    scalacOptions in(Compile, doc) ++= Seq("-diagrams")
   )
-
-  val consoleSettings = Seq(initialCommands in console := """import org.mongodb.scala._""")
 
   /**
    * Documentation
@@ -65,11 +64,12 @@ object MongoScalaBuild extends Build {
     SbtSite.site.settings ++
       SbtSite.site.sphinxSupport() ++
       ghpages.settings ++
+      unidocSettings ++
       Seq(
         siteSourceDirectory := file("docs"),
         siteDirectory := file("target/site"),
         // depending on the version, copy the api files to a different directory
-        siteMappings <++= (mappings in packageDoc in Compile, version) map {
+        siteMappings <++= (mappings in packageDoc in ScalaUnidoc, version) map {
           (m, v) =>
             for ((f, d) <- m) yield (f, if (v.trim.endsWith("SNAPSHOT")) ("api/master/" + d) else ("api/" + v + "/" + d))
         },
@@ -141,7 +141,9 @@ object MongoScalaBuild extends Build {
     id = "core",
     base = file("driver-core")
   ).configs(UnitTest)
-   .settings(buildSettings: _*)
+    .settings(buildSettings: _*)
+    .settings(styleCheckSetting: _*)
+    .settings(scalaStyleSettings: _*)
 
   lazy val async = Project(
     id = "async",
@@ -151,12 +153,11 @@ object MongoScalaBuild extends Build {
     .configs(UnitTest)
     .configs(PerfTest)
     .settings(buildSettings: _*)
-    .settings(consoleSettings: _*)
-    .settings(docSettings: _*)
     .settings(testSettings: _*)
     .settings(styleCheckSetting: _*)
     .settings(scalaStyleSettings: _*)
     .settings(publishSettings: _*)
+    .settings(initialCommands in console := """import org.mongodb.scala._""")
     .dependsOn(core)
 
   lazy val rxscala = Project(
@@ -167,8 +168,19 @@ object MongoScalaBuild extends Build {
     .configs(UnitTest)
     .configs(PerfTest)
     .settings(buildSettings: _*)
+    .settings(testSettings: _*)
+    .settings(styleCheckSetting: _*)
+    .settings(scalaStyleSettings: _*)
     .dependsOn(core)
 
-  override def rootProject = Some(core)
+  lazy val root = Project(
+    id = "root",
+    base = file(".")
+  ).aggregate(core, async, rxscala)
+    .dependsOn(core, async, rxscala)
+    .settings(buildSettings: _*)
+    .settings(docSettings: _*)
+
+  override def rootProject = Some(root)
 
 }

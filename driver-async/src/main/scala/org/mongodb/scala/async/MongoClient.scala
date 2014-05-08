@@ -41,7 +41,7 @@ import org.mongodb.scala.core.connection.GetDefaultCluster
 import org.mongodb.scala.async.admin.MongoClientAdmin
 
 /**
- * A factory for creating a [[org.mongodb.MongoClient MongoClient]] instance.
+ * A factory for creating a [[org.mongodb.scala.async.MongoClient MongoClient]] instance.
  */
 object MongoClient extends GetDefaultCluster {
 
@@ -55,7 +55,7 @@ object MongoClient extends GetDefaultCluster {
   /**
    * Create a MongoClient instance from a connection string
    *
-   * @param uri The [[org.mongodb.scala.MongoClientURI$ MongoClientURI]] connection string
+   * @param uri The [[org.mongodb.scala.core.MongoClientURI$ MongoClientURI]] connection string
    * @return MongoClient
    */
   def apply(uri: String): MongoClient = MongoClient(MongoClientURI(uri))
@@ -252,7 +252,7 @@ object MongoClient extends GetDefaultCluster {
 /**
  * The MongoClient
  *
- * Normally created via the [[org.mongodb.scala.MongoClient$ MongoClient]] companion object helpers
+ * Normally created via the [[org.mongodb.scala.async.MongoClient$ MongoClient]] companion object helpers
  *
  * @param options The connection options
  * @param cluster The underlying cluster

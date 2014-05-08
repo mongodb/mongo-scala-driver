@@ -123,7 +123,7 @@ import org.mongodb.diagnostics.logging.Logger
  *    mechanism (the default).
  *  - '''`gssapiServiceName=string`''': This option only applies to the GSSAPI mechanism and is used to alter the service name.
  *
- * @see [[org.mongodb.scala.MongoClientOptions]] for the default values for all options
+ * @see [[org.mongodb.scala.core.MongoClientOptions]] for the default values for all options
  */
 object MongoClientURI {
 
@@ -146,7 +146,7 @@ object MongoClientURI {
    *
    * @param uri     the URI
    * @param mongoClientOptions the default options to use for the MongoClient
-   * @see [[org.mongodb.scala.MongoClientOptions$]]
+   * @see [[org.mongodb.scala.core.MongoClientOptions]]
    * @since 0.1
    */
   def apply(uri: String, mongoClientOptions: MongoClientOptions): MongoClientURI = {
@@ -486,9 +486,9 @@ object MongoClientURI {
 /**
  * Represents a [[http://docs.mongodb.org/manual/reference/connection-string/ connection string (URI)]]
  * which can be used to create a MongoClient instance. The URI describes the hosts to
- * be used and options. See: [[org.mongodb.scala.MongoClientURI$ MongoClientURI]]
+ * be used and options. See: [[org.mongodb.scala.core.MongoClientURI$ MongoClientURI]]
  *
- * @note You will normally only use the factory function: [[org.mongodb.scala.MongoClientURI$ MongoClientURI]]
+ * @note You will normally only use the factory function: [[org.mongodb.scala.core.MongoClientURI$ MongoClientURI]]
  *
  * @param uri The connection string
  * @param hosts A list of hosts to connect to

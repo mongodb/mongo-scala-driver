@@ -56,7 +56,7 @@ object MongoClient extends GetDefaultCluster {
   /**
    * Create a MongoClient instance from a connection string
    *
-   * @param uri The [[org.mongodb.scala.rxscala.MongoClientURI$ MongoClientURI]] connection string
+   * @param uri The [[org.mongodb.scala.core.MongoClientURI$ MongoClientURI]] connection string
    * @return MongoClient
    */
   def apply(uri: String): MongoClient = MongoClient(MongoClientURI(uri))
