@@ -28,9 +28,9 @@ package org.mongodb.scala.async.integration
 import org.mongodb.Document
 import org.mongodb.connection.ServerAddress
 
-import org.mongodb.scala.async.{MongoClient, MongoDatabase, MongoCollection}
+import org.mongodb.scala.core.{MongoClientOptions, MongoClientURI}
+import org.mongodb.scala.async.{MongoClient, MongoCollection, MongoDatabase}
 import org.mongodb.scala.async.helpers.RequiresMongoDBSpec
-import org.mongodb.scala.core.{MongoClientURI, MongoClientOptions}
 
 class MongoClientISpec extends RequiresMongoDBSpec {
 

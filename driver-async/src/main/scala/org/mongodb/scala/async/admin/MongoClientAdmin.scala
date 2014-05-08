@@ -34,6 +34,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import org.mongodb.Document
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.operation.CommandReadOperation
+
 import org.mongodb.scala.async.MongoClient
 import org.mongodb.scala.async.utils.HandleCommandResponse
 

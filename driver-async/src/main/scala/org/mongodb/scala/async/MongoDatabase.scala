@@ -25,7 +25,6 @@
  */
 package org.mongodb.scala.async
 
-
 import scala.concurrent.Future
 
 import org.mongodb.{Codec, CollectibleCodec, CommandResult, Document, ReadPreference}
@@ -34,7 +33,6 @@ import org.mongodb.operation.CommandReadOperation
 
 import org.mongodb.scala.core.{MongoCollectionOptions, MongoDatabaseOptions}
 import org.mongodb.scala.async.admin.MongoDatabaseAdmin
-
 
 case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions) {
 

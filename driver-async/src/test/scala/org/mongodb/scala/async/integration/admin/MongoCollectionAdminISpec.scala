@@ -67,7 +67,6 @@ class MongoCollectionAdminISpec extends RequiresMongoDBSpec {
 
   it should "get statistics for non-existent collection" in withCollection {
     collection =>
-      pending
       collection.admin.statistics.futureValue.getDouble("ok") should equal(0.0)
   }
 

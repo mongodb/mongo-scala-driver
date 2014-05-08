@@ -28,14 +28,13 @@ package org.mongodb.scala.async.integration
 
 import scala.collection.immutable.IndexedSeq
 import scala.concurrent.Future
-import scala.concurrent.duration._
+import scala.concurrent.duration.Duration
 import scala.language.postfixOps
 
-import org.mongodb.Document
+import org.mongodb.{Document, WriteResult}
 
 import org.mongodb.scala.async.MongoCollection
 import org.mongodb.scala.async.helpers.RequiresMongoDBSpec
-
 
 class MongoCollectionISpec extends RequiresMongoDBSpec {
 
@@ -81,6 +80,19 @@ class MongoCollectionISpec extends RequiresMongoDBSpec {
       collection.insert(createDocuments(100)).futureValue
       val filtered = collection.find(new Document("_id", new Document("$gte", 50)))
       filtered.toList().futureValue.size should equal(50)
+  }
+
+  it should "be able to insert many items" in withCollection {
+    collection =>
+      val size = 500
+      val futures: IndexedSeq[Future[WriteResult]] = for (i <- 0 until size) yield {
+        val doc = new Document()
+        doc.put("_id", i)
+        doc.put("field", "Some value")
+        collection.insert(doc)
+      }
+      Future.sequence(futures).futureValue
+      collection.count().futureValue should be(size)
   }
 
   def createDocuments(amount: Int = 100): IndexedSeq[Document] = {

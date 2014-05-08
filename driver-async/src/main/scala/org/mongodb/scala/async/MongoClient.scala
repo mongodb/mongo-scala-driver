@@ -41,7 +41,6 @@ import org.mongodb.scala.core.{MongoClientOptions, MongoClientURI, MongoDatabase
 import org.mongodb.scala.core.connection.GetDefaultCluster
 import org.mongodb.scala.async.admin.MongoClientAdmin
 
-
 /**
  * A factory for creating a [[org.mongodb.MongoClient MongoClient]] instance.
  */

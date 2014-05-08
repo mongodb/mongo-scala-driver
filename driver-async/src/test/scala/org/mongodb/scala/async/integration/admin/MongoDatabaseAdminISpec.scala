@@ -25,9 +25,8 @@
  */
 package org.mongodb.scala.async.integration.admin
 
-import scala.concurrent._
+import org.mongodb.MongoCredential
 
-import org.mongodb.{Document, MongoCredential}
 import org.mongodb.scala.async.admin.MongoDatabaseAdmin
 import org.mongodb.scala.async.helpers.RequiresMongoDBSpec
 

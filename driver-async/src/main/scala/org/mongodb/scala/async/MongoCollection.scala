@@ -31,9 +31,13 @@ import scala.concurrent.{Future, Promise}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
-import org.mongodb.{Block, CollectibleCodec, ConvertibleToDocument, Document, MongoAsyncCursor, MongoException, MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
+import org.mongodb.{Block, CollectibleCodec, ConvertibleToDocument, Document, MongoAsyncCursor, MongoException,
+                    MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
 import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation._
+import org.mongodb.operation.{CountOperation, Find, FindAndRemove, FindAndRemoveOperation, FindAndReplace,
+                              FindAndReplaceOperation, FindAndUpdate, FindAndUpdateOperation, InsertOperation,
+                              InsertRequest, QueryOperation, RemoveOperation, RemoveRequest, ReplaceOperation,
+                              ReplaceRequest, UpdateOperation, UpdateRequest}
 
 import org.mongodb.scala.core.MongoCollectionOptions
 import org.mongodb.scala.async.admin.MongoCollectionAdmin
@@ -193,7 +197,8 @@ case class MongoCollection[T](name: String,
             }
           }).register(new SingleResultCallback[Void] {
             def onResult(result: Void, e: MongoException) {
-              promise.success(list.reverse)
+              if (e != null) promise.failure(e)
+              else promise.success(list.reverse)
             }
           })
         case Failure(e) => promise.failure(e)

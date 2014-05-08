@@ -34,9 +34,9 @@ import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.SingleResultCallback
 import org.mongodb.connection.NativeAuthenticationHelper.createAuthenticationHash
 import org.mongodb.operation.{CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation}
+
 import org.mongodb.scala.async.{MongoCollection, MongoDatabase}
 import org.mongodb.scala.async.utils.HandleCommandResponse
-
 
 case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResponse {
 

@@ -31,8 +31,9 @@ import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import org.mongodb._
+import org.mongodb.{CommandResult, Document, Index}
 import org.mongodb.operation.{CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation}
+
 import org.mongodb.scala.async.MongoCollection
 import org.mongodb.scala.async.utils.HandleCommandResponse
 

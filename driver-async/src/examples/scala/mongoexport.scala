@@ -33,20 +33,18 @@ exec scala -cp "$cp" "$0" "$@"
 import java.io.PrintWriter
 import java.util.logging.{Level, Logger}
 
-import org.mongodb.connection.SingleResultCallback
 import scala.Some
 import scala.concurrent.{Await, Future, Promise}
 import scala.concurrent.duration.Duration
+import scala.util.{Failure, Success}
 
-import rx.lang.scala.Subject
-import rx.lang.scala.Notification.{OnCompleted, OnError, OnNext}
-
-import org.mongodb.{MongoException, Block, MongoAsyncCursor, Document, ReadPreference}
+import org.mongodb.{Block, Document, MongoAsyncCursor, MongoException, ReadPreference}
 import org.mongodb.codecs.{DocumentCodec, PrimitiveCodecs}
+import org.mongodb.connection.SingleResultCallback
 import org.mongodb.json.JSONReader
 
-import org.mongodb.scala.{MongoClient, MongoClientURI, MongoCollection}
-import scala.util.{Failure, Success}
+import org.mongodb.scala.core.MongoClientURI
+import org.mongodb.scala.async._
 
 /**
  * An example program providing similar functionality as the ``mongoexport`` program

@@ -38,7 +38,6 @@ import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
 
-
 trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
 
   implicit val defaultPatience = PatienceConfig(timeout = Span(30, Seconds), interval = Span(5, Millis))
@@ -90,7 +89,11 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
     val databaseName = if (dbName.startsWith(DB_PREFIX)) dbName.take(63) else s"$DB_PREFIX$dbName".take(63)
     val mongoDatabase = mongoClient(databaseName)
     try testCode(mongoDatabase) // "loan" the fixture to the test
-    finally Await.result(mongoDatabase.admin.drop(), WAIT_DURATION) // clean up the fixture
+    finally {
+      // clean up the fixture
+      Await.result(mongoDatabase.admin.drop(), WAIT_DURATION)
+      mongoClient.close()
+    }
   }
 
   def withDatabase(testCode: MongoDatabase => Any): Unit = withDatabase(collectionName)(testCode: MongoDatabase => Any)
@@ -101,11 +104,19 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
     val mongoCollection = mongoDatabase(collectionName)
 
     try testCode(mongoCollection) // "loan" the fixture to the test
-    finally Await.result(mongoCollection.admin.drop(), WAIT_DURATION) // clean up the fixture
+    finally {
+      // clean up the fixture
+      Await.result(mongoCollection.admin.drop(), WAIT_DURATION)
+      mongoClient.close()
+    }
   }
 
   override def afterAll() {
-    if (mongoDbOnline) Await.result(mongoClient(databaseName).admin.drop(), WAIT_DURATION)
+    if (mongoDbOnline) {
+      Await.result(mongoClient(databaseName).admin.drop(), WAIT_DURATION)
+      mongoClient.close()
+    }
+
   }
 
 }

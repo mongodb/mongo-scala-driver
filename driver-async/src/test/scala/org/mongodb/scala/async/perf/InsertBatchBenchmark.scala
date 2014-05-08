@@ -32,11 +32,11 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
-import org.scalameter.api._
-
 import org.mongodb.{Document, WriteResult}
 
-import org.mongodb.scala.async._
+import org.mongodb.scala.async.MongoClient
+
+import org.scalameter.api._
 
 class InsertBatchBenchmark extends PerformanceTest.Quickbenchmark {
 
