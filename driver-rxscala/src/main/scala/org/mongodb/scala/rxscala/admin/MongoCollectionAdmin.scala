@@ -25,7 +25,7 @@
  */
 package org.mongodb.scala.rxscala.admin
 
-import java.util.ArrayList
+import java.util
 
 import scala.collection.JavaConverters._
 
@@ -34,6 +34,7 @@ import org.mongodb.operation.{CreateIndexesOperation, DropCollectionOperation, D
 
 import org.mongodb.scala.rxscala.MongoCollection
 import org.mongodb.scala.rxscala.utils.HandleCommandResponse
+
 import rx.lang.scala.Observable
 
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends HandleCommandResponse {
@@ -56,8 +57,8 @@ case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends Handl
 
   def createIndex(index: Index): Observable[Unit] = createIndexes(List(index))
   def createIndexes(indexes: Iterable[Index]): Observable[Unit] = {
-    val operation = new CreateIndexesOperation(new ArrayList(indexes.toList.asJava), collection.namespace)
-    collection.client.executeAsync(operation).asInstanceOf[Observable[Unit]]
+    val operation = new CreateIndexesOperation(new util.ArrayList(indexes.toList.asJava), collection.namespace)
+    collection.client.executeAsync(operation) map { v => Unit }
   }
 
   def getIndexes: Observable[Seq[Document]] = {

@@ -29,24 +29,19 @@ exec scala -cp "$cp" "$0" "$@"
  * https://github.com/mongodb/mongo-scala-driver
  *
  */
-
 import java.io.PrintWriter
 import java.util.logging.{Level, Logger}
 
-import org.mongodb.connection.SingleResultCallback
 import scala.Some
-import scala.concurrent.{Await, Future, Promise}
-import scala.concurrent.duration.Duration
 
-import rx.lang.scala.Subject
-import rx.lang.scala.Notification.{OnCompleted, OnError, OnNext}
-
-import org.mongodb.{MongoException, Block, MongoAsyncCursor, Document, ReadPreference}
+import org.mongodb.{Document, ReadPreference}
 import org.mongodb.codecs.{DocumentCodec, PrimitiveCodecs}
 import org.mongodb.json.JSONReader
 
-import org.mongodb.scala.{MongoClient, MongoClientURI, MongoCollection}
-import scala.util.{Failure, Success}
+import org.mongodb.scala.core.MongoClientURI
+import org.mongodb.scala.rxscala.{MongoClient, MongoCollection}
+
+import rx.lang.scala.Observable
 
 /**
  * An example program providing similar functionality as the ``mongoexport`` program
@@ -143,9 +138,9 @@ object mongoexport {
     if (!options.quiet) Console.err.print("Exporting...")
 
     // Export JSON
-    val exported: Future[Boolean] = exportJson(collection, output, options)
+    val exported: Observable[Document] = exportJson(collection, output, options)
     if (!options.quiet) showPinWheel(exported)
-    Await.result(exported, Duration.Inf)
+    exported.toBlockingObservable.last
 
     // Close the client
     collection.client.close()
@@ -162,7 +157,7 @@ object mongoexport {
    * @param output the data source
    * @param options the configuration options
    */
-  private def exportJson(collection: MongoCollection[Document], output: PrintWriter, options: Options): Future[Boolean] = {
+  private def exportJson(collection: MongoCollection[Document], output: PrintWriter, options: Options): Observable[Document] = {
 
     val operation = collection.find(options.query)
     options.slaveOK match {
@@ -182,38 +177,31 @@ object mongoexport {
       case Some(value) => operation.sort(value)
     }
 
-    val futureCursor: Future[MongoAsyncCursor[Document]] = operation.cursor()
+    val documents: Observable[Document] = operation.cursor()
 
     val (startString, endString, lineEndString) = options.jsonArray match {
       case true => ("[", "]\r\n", ",")
       case false => ("", "\r\n", "\r\n")
     }
-    val promiseExport = Promise[Boolean]()
+
     var firstLine = false
-    futureCursor.onComplete({
-      case Success(cursor) =>
-        cursor.forEach(new Block[Document] {
-          override def apply(document: Document): Unit = {
-            firstLine match {
-              case true => output.write(lineEndString)
-              case false => output.write(startString)
-            }
-            output.write(document.toString)
-            firstLine = true
-          }
-        }).register(new SingleResultCallback[Void] {
-          def onResult(result: Void, e: MongoException) {
-            output.write(endString)
-            output.close()
-            promiseExport.success(true)
-          }
-        })
-      case Failure(err) => {
-        Console.err.println(s"Error: ${err.getMessage}")
-        promiseExport.failure(err)
-      }
+    documents.doOnEach(
+      document => {
+        firstLine match {
+          case true => output.write(lineEndString)
+          case false => output.write(startString)
+        }
+        output.write(document.toString)
+        firstLine = true
+
+    }, err => {
+      Console.err.println(s"Error: ${err.getMessage}")
+      output.close()
+    },
+    () => {
+      output.write(endString)
+      output.close()
     })
-    promiseExport.future
   }
 
   /**
@@ -327,12 +315,16 @@ object mongoexport {
 
   /**
    * Shows a pinWheel in the console.err
-   * @param someFuture the future we are all waiting for
+   * @param observable the observable we are all waiting for
    */
-  private def showPinWheel(someFuture: Future[_]) {
-    // Let the user know something is happening until futureOutput isCompleted
+  private def showPinWheel(observable: Observable[_]) {
+    // Let the user know something is happening until observable isCompleted
+    var spin = true
+    observable.doOnCompleted(() => spin=false)
+    observable.doOnError(e => spin=false)
+
     val spinChars = List("|", "/", "-", "\\")
-    while (!someFuture.isCompleted) {
+    while (spin) {
       spinChars.foreach({
         case char =>
           Console.err.print(char)

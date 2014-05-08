@@ -29,16 +29,11 @@ exec scala -cp "$cp" "$0" "$@"
  * https://github.com/mongodb/mongo-scala-driver
  *
  */
-
-
-
 import java.util.logging.{Level, Logger}
 
 import scala.Some
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
-import scala.concurrent._
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.io.{BufferedSource, Source}
 
@@ -46,7 +41,10 @@ import org.mongodb.{Document, WriteResult}
 import org.mongodb.codecs._
 import org.mongodb.json.JSONReader
 
-import org.mongodb.scala._
+import org.mongodb.scala.core.MongoClientURI
+import org.mongodb.scala.rxscala.{MongoClient, MongoCollection}
+
+import rx.lang.scala.Observable
 
 /**
  * An example program providing similar functionality as the ``mongoimport`` program
@@ -134,20 +132,19 @@ object mongoimport {
     if (options.drop) {
       val name = collection.name
       if (!options.quiet) Console.err.print(s"Dropping: $name ")
-      val dropFuture = collection.admin.drop()
-      if (!options.quiet) showPinWheel(dropFuture)
-      Await.result(dropFuture, Duration.Inf)
+      val dropObservable = collection.admin.drop()
+      if (!options.quiet) showPinWheel(dropObservable)
+      dropObservable.timeout(Duration.Inf).toSeq.toBlockingObservable.first
     }
 
     // Import JSON in a future so we can output a spinner
     if (!options.quiet) Console.err.print("Importing...")
 
     // Import the JSON
-    val importPromise = Promise[ListBuffer[WriteResult]]()
-    val promisedFuture = importPromise.future
-    Future(importPromise completeWith Future.sequence(importJson(collection, importSource, options)))
-    if (!options.quiet) showPinWheel(promisedFuture)
-    Await.result(promisedFuture, Duration.Inf)
+
+    val importObservable = importJson(collection, importSource, options).toObservable.flatten
+    if (!options.quiet) showPinWheel(importObservable)
+    importObservable.timeout(Duration.Inf).last.toBlockingObservable.first
 
     // Close the client
     collection.client.close()
@@ -164,7 +161,7 @@ object mongoimport {
    * @param importSource the data source
    * @param options the configuration options
    */
-  private def importJson(collection: MongoCollection[Document], importSource: BufferedSource, options: Options): ListBuffer[Future[WriteResult]] = {
+  private def importJson(collection: MongoCollection[Document], importSource: BufferedSource, options: Options): ListBuffer[Observable[WriteResult]] = {
     options.jsonArray match {
       case true =>
         // Import all
@@ -176,16 +173,16 @@ object mongoimport {
         // Import in batches of 1000
         val documentCodec = new DocumentCodec(PrimitiveCodecs.createDefault)
         val lines = importSource.getLines()
-        val futures = ListBuffer[Future[WriteResult]]()
+        val observables = ListBuffer[Observable[WriteResult]]()
         while (lines.hasNext) {
           val batch = lines.take(1000)
           val documents: Iterable[Document] = batch.map {case line =>
             val jsonReader: JSONReader = new JSONReader(line)
             documentCodec.decode(jsonReader)
           }.toIterable
-          futures += collection.insert(documents)
+          observables += collection.insert(documents)
         }
-        futures
+        observables
     }
   }
 
@@ -247,12 +244,16 @@ object mongoimport {
 
   /**
    * Shows a pinWheel in the console.err
-   * @param someFuture the future we are all waiting for
+   * @param observable the observable we are all waiting for
    */
-  private def showPinWheel(someFuture: Future[_]) {
-    // Let the user know something is happening until futureOutput isCompleted
+  private def showPinWheel(observable: Observable[_]) {
+    // Let the user know something is happening until observable isCompleted
+    var spin = true
+    observable.doOnCompleted(() => spin=false)
+    observable.doOnError(e => spin=false)
+
     val spinChars = List("|", "/", "-", "\\")
-    while (!someFuture.isCompleted) {
+    while (spin) {
       spinChars.foreach({
         case char =>
           Console.err.print(char)

@@ -29,8 +29,9 @@ import org.mongodb.{Codec, CollectibleCodec, CommandResult, Document, ReadPrefer
 import org.mongodb.codecs.{CollectibleDocumentCodec, ObjectIdGenerator}
 import org.mongodb.operation.CommandReadOperation
 
-import org.mongodb.scala.core.{MongoDatabaseOptions, MongoCollectionOptions}
+import org.mongodb.scala.core.{MongoCollectionOptions, MongoDatabaseOptions}
 import org.mongodb.scala.rxscala.admin.MongoDatabaseAdmin
+
 import rx.lang.scala.Observable
 
 case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions) {

@@ -25,15 +25,14 @@
  */
 package org.mongodb.scala.rxscala.admin
 
-import org.mongodb.{Block, CommandResult, CreateCollectionOptions, Document, MongoNamespace, ReadPreference}
+import org.mongodb.{CommandResult, CreateCollectionOptions, Document, MongoNamespace, ReadPreference}
 import org.mongodb.codecs.DocumentCodec
-import org.mongodb.connection.NativeAuthenticationHelper.createAuthenticationHash
 import org.mongodb.operation.{CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation}
 
-import org.mongodb.scala.rxscala.{MongoCollection, MongoDatabase}
+import org.mongodb.scala.rxscala.MongoDatabase
 import org.mongodb.scala.rxscala.utils.HandleCommandResponse
 
-import rx.lang.scala.{Observable, Subscriber}
+import rx.lang.scala.Observable
 
 case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResponse {
 
@@ -48,20 +47,10 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResp
   }
 
   def collectionNames: Observable[String] = {
-    Observable((subscriber: Subscriber[Document]) => {
-      val namespacesCollection: MongoNamespace = new MongoNamespace(name, "system.namespaces")
-      val findAll = new Find()
-      val operation = new QueryOperation[Document](namespacesCollection, findAll, commandCodec, commandCodec)
-      client.executeAsync(operation, ReadPreference.primary) map {
-        cursor => {
-          cursor.forEach(new Block[Document] {
-            override def apply(t: Document): Unit = {
-              subscriber.onNext(t)
-            }
-          })
-        }
-      }
-    }) map (doc => doc.getString("name") match {
+    val namespacesCollection: MongoNamespace = new MongoNamespace(name, "system.namespaces")
+    val findAll = new Find()
+    val operation = new QueryOperation[Document](namespacesCollection, findAll, commandCodec, commandCodec)
+    client.executeAsync(operation, ReadPreference.primary) map (doc => doc.getString("name") match {
       case dollarCollectionName: String if dollarCollectionName.contains("$") => ""
       case collectionName: String => collectionName.substring(name.length() + 1)
     }) filter (s => s.length > 0)
@@ -71,7 +60,7 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResp
     createCollection(new CreateCollectionOptions(collectionName))
 
   def createCollection(createCollectionOptions: CreateCollectionOptions): Observable[Unit] = {
-    client.executeAsync(new CreateCollectionOperation(name, createCollectionOptions)).asInstanceOf[Observable[Unit]]
+    client.executeAsync(new CreateCollectionOperation(name, createCollectionOptions)) map { v => Unit }
   }
 
   def renameCollection(oldCollectionName: String, newCollectionName: String): Observable[Unit] =
@@ -83,23 +72,5 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResp
   }
 
   def renameCollection(operation: RenameCollectionOperation): Observable[Unit] =
-    client.executeAsync(operation).asInstanceOf[Observable[Unit]]
-
-  def addUser(userName: String, password: Array[Char], readOnly: Boolean) {
-    // TODO - collection save
-    // TODO - new Document
-    val collection: MongoCollection[Document] = database("system.users")
-    val doc: Document = new Document("user", userName)
-      .append("pwd", createAuthenticationHash(userName, password))
-      .append("readOnly", readOnly)
-    // collection.save(doc)
-  }
-
-  def removeUser(userName: String) {
-    // TODO - collection remove
-    // TODO - new Document
-    val collection: MongoCollection[Document] = database("system.users")
-    // collection.filter(new Document("user", userName)).remove
-  }
-
+    client.executeAsync(operation) map { v => Unit }
 }

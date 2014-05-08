@@ -25,7 +25,7 @@
  */
 package org.mongodb.scala.rxscala.utils
 
-import scala.util.{Failure, Success}
+import scala.util.Failure
 
 import org.mongodb.{CommandResult, MongoCommandFailureException}
 import rx.lang.scala.Observable

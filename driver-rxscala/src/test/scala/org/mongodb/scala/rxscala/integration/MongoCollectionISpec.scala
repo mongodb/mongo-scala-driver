@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2014 MongoDB, Inc. <http://www.mongodb.org>
+ * Copyright (c) 2014 MongoDB, Inc.
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,18 +25,16 @@
  */
 package org.mongodb.scala.rxscala.integration
 
-
 import scala.collection.immutable.IndexedSeq
-import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-import org.mongodb.Document
+import org.mongodb.{Document, WriteResult}
 
 import org.mongodb.scala.rxscala._
 import org.mongodb.scala.rxscala.helpers.RequiresMongoDBSpec
-import rx.lang.scala.Observable
 
+import rx.lang.scala.Observable
 
 class MongoCollectionISpec extends RequiresMongoDBSpec {
 
@@ -49,39 +47,52 @@ class MongoCollectionISpec extends RequiresMongoDBSpec {
 
   it should "be able to get a count" in withCollection {
     collection =>
-      collection.count().toBlockingObservable.first should equal(0)
+      collection.count().observableValue should equal(0)
   }
 
   it should "be able to insert a document" in withCollection {
     collection =>
-      collection.admin.drop().toBlockingObservable.first
-      collection.insert(new Document("Hello", "World")).toBlockingObservable.first
-      collection.count().toBlockingObservable.first should equal(1)
+      collection.admin.drop().observableValue
+      collection.insert(new Document("Hello", "World")).observableValue
+      collection.count().observableValue should equal(1)
   }
 
-  it should "cursor.toList() should return Future[List[Document]]" in withCollection {
+  it should "cursor.toList() should return Observable[List[Document]]" in withCollection {
     collection =>
-      collection.insert(createDocuments(100)).toBlockingObservable.first
+      collection.insert(createDocuments(100)).observableValue
       val documents = collection.toList()
-      documents shouldBe a[Observable[Document]]
-      documents.toBlockingObservable.first.length should equal(100)
+      documents shouldBe a[Observable[List[Document]]]
+      documents.observableValue.length should equal(100)
   }
 
   it should "cursor should be non blocking and provide the expected results" in withCollection {
     collection =>
-      collection.insert(createDocuments(100)).toBlockingObservable.first
+      collection.insert(createDocuments(100)).observableValue
       var total = 0
       val result = collection.toList()
       total should not equal 100 // Ensures foreach is non blocking
-      total = result.toBlockingObservable.first.size // Complete the future
+      total = result.observableValue.size // Complete the future
       total should equal(100)
   }
 
   it should "allow scala like handling for filtered collections" in withCollection {
     collection =>
-      collection.insert(createDocuments(100)).toBlockingObservable.first
+      collection.insert(createDocuments(100)).observableValue
       val filtered = collection.find(new Document("_id", new Document("$gte", 50)))
-      filtered.toList().toBlockingObservable.first.size should equal(50)
+      filtered.toList().observableValue.size should equal(50)
+  }
+
+  it should "be able to insert many items" in withCollection {
+    collection =>
+      val size = 500
+      val observables: IndexedSeq[Observable[WriteResult]] = for (i <- 0 until size) yield {
+        val doc = new Document()
+        doc.put("_id", i)
+        doc.put("field", "Some value")
+        collection.insert(doc)
+      }
+      observables.toObservable.flatten.toSeq.observableValue
+      collection.count().observableValue should be(size)
   }
 
   def createDocuments(amount: Int = 100): IndexedSeq[Document] = {

@@ -31,10 +31,10 @@ import java.util.concurrent.TimeUnit
 import scala.Some
 import scala.collection.JavaConverters._
 
-import org.mongodb.{MongoCredential, MongoException, ReadPreference}
+import org.mongodb.{Block, MongoAsyncCursor, MongoCredential, MongoException, ReadPreference}
 import org.mongodb.binding.{AsyncClusterBinding, AsyncReadBinding, AsyncReadWriteBinding, AsyncWriteBinding}
 import org.mongodb.connection.{BufferProvider, Cluster, ClusterConnectionMode, ClusterSettings, PowerOfTwoBufferPool, ServerAddress, SingleResultCallback}
-import org.mongodb.operation.{AsyncReadOperation, AsyncWriteOperation}
+import org.mongodb.operation.{AsyncReadOperation, AsyncWriteOperation, QueryOperation}
 
 import org.mongodb.scala.core.{MongoClientOptions, MongoClientURI, MongoDatabaseOptions}
 import org.mongodb.scala.core.connection.GetDefaultCluster
@@ -332,6 +332,36 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProv
     })
   }
 
+
+  private[scala] def executeAsync[T](queryOperation: QueryOperation[T], readPreference: ReadPreference): Observable[T] = {
+    Observable((subscriber: Subscriber[T]) => {
+      val binding = readBinding(readPreference)
+      queryOperation.executeAsync(binding).register(new SingleResultCallback[MongoAsyncCursor[T]] {
+        override def onResult(cursor: MongoAsyncCursor[T], e: MongoException): Unit = {
+          Option(e) match {
+            case Some(err) => subscriber.onError(err)
+            case None =>
+              cursor.forEach(new Block[T] {
+                override def apply(t: T): Unit = {
+                  if (subscriber.isUnsubscribed) {
+                    subscriber.onCompleted()
+                  } else {
+                    subscriber.onNext(t)
+                  }
+                }
+              }).register(new SingleResultCallback[Void] {
+                def onResult(result: Void, e: MongoException) {
+                  binding.release()
+                  if (e != null) subscriber.onError(e)
+                  subscriber.onCompleted()
+                }
+              })
+          }
+        }
+      })
+    })
+  }
+
   private[scala] def executeAsync[T](readOperation: AsyncReadOperation[T], readPreference: ReadPreference): Observable[T] = {
     Observable((subscriber: Subscriber[T]) => {
           val binding = readBinding(readPreference)
@@ -339,9 +369,8 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProv
             override def onResult(result: T, e: MongoException): Unit = {
               try {
                 Option(e) match {
+                  case Some(err) => subscriber.onError(err)
                   case None => subscriber.onNext(result)
-                  case _ => subscriber.onError(e)
-
                 }
               }
               finally {

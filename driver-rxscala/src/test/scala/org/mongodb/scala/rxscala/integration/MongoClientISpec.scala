@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2014 MongoDB, Inc. <http://www.mongodb.org>
+ * Copyright (c) 2014 MongoDB, Inc.
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,14 +25,12 @@
  */
 package org.mongodb.scala.rxscala.integration
 
-
 import org.mongodb.Document
 import org.mongodb.connection.ServerAddress
 
+import org.mongodb.scala.core.{MongoClientOptions, MongoClientURI}
 import org.mongodb.scala.rxscala._
 import org.mongodb.scala.rxscala.helpers.RequiresMongoDBSpec
-import org.mongodb.scala.core.{MongoClientURI, MongoClientOptions}
-
 
 class MongoClientISpec extends RequiresMongoDBSpec {
 

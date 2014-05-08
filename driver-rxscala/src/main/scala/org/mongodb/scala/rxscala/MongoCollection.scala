@@ -27,19 +27,15 @@ package org.mongodb.scala.rxscala
 
 import scala.Some
 import scala.collection.JavaConverters._
-import scala.concurrent.{Future, Promise}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
 
-import org.mongodb.{Block, CollectibleCodec, ConvertibleToDocument, Document, MongoAsyncCursor, MongoException,
-                    MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
-import org.mongodb.connection.SingleResultCallback
+import org.mongodb.{CollectibleCodec, ConvertibleToDocument, Document, MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
 import org.mongodb.operation._
 
-import org.mongodb.scala.rxscala.admin.MongoCollectionAdmin
 import org.mongodb.scala.core.MongoCollectionOptions
+import org.mongodb.scala.rxscala.admin.MongoCollectionAdmin
 import org.mongodb.scala.rxscala.utils.HandleCommandResponse
-import rx.lang.scala.{Subscriber, Observable}
+
+import rx.lang.scala.Observable
 
 // scalastyle:off number.of.methods
 
@@ -181,7 +177,7 @@ case class MongoCollection[T](name: String,
     }
 
     /**
-     * Return a list of results (memory hungry)
+     * Return a single list of results (memory hungry)
      */
     def toList(): Observable[List[D]] = cursor().foldLeft(List[D]()){(docs, doc) => docs :+ doc  }
 
@@ -253,18 +249,8 @@ case class MongoCollection[T](name: String,
      * Execute the operation and return the result.
      */
     def cursor(): Observable[D] = {
-      Observable((subscriber: Subscriber[D]) => {
-        val operation = new QueryOperation[D](namespace, findOp, documentCodec, getCodec)
-        client.executeAsync(operation, ReadPreference.primary) map {
-          cursor => {
-            cursor.forEach(new Block[D] {
-              override def apply(t: D): Unit = {
-                subscriber.onNext(t)
-              }
-            })
-          }
-        }
-      })
+      val operation = new QueryOperation[D](namespace, findOp, documentCodec, getCodec)
+      client.executeAsync(operation, ReadPreference.primary)
     }
 
     def one(): Observable[Option[D]] = {

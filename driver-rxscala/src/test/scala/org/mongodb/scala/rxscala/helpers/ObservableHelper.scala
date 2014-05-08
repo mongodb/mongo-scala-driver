@@ -21,43 +21,14 @@
  * For questions and comments about this product, please see the project page at:
  *
  * https://github.com/mongodb/mongo-scala-driver
- *
  */
 
-package org.mongodb.scala.rxscala.integration.admin
+package org.mongodb.scala.rxscala.helpers
 
-import org.mongodb.scala.rxscala.MongoClient
-import org.mongodb.scala.rxscala.admin.MongoClientAdmin
-import org.mongodb.scala.rxscala.helpers.RequiresMongoDBSpec
+import scala.concurrent.duration.Duration
 
 import rx.lang.scala.Observable
 
-class MongoClientAdminISpec extends RequiresMongoDBSpec {
-
-  "MongoClientAdmin" should "be accessible via MongoClient().admin" in {
-    val admin = MongoClient().admin
-    admin shouldBe a[MongoClientAdmin]
-  }
-
-  it should "Return a ping" in {
-    checkMongoDB()
-    val ping = mongoClient.admin.ping
-    ping shouldBe a[Observable[Double]]
-    ping.observableValue === 1.0
-  }
-
-  it should "Return an IllegalStateException exception on a closed MongoClient" in {
-    val client = MongoClient()
-    client.close()
-    intercept[IllegalStateException] {
-      client.admin.ping.observableValue
-    }
-  }
-
-  it should "Return a seq of database names" in {
-    checkMongoDB()
-    val dbNames = mongoClient.admin.databaseNames
-    dbNames shouldBe a[Observable[String]]
-  }
-
+case class ObservableHelper[T](observable: Observable[T]) extends AnyVal {
+  def observableValue: T = observable.timeout(Duration(1, "second")).toBlockingObservable.first
 }

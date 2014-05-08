@@ -28,8 +28,6 @@ package org.mongodb.scala.rxscala.admin
 import java.util
 
 import scala.collection.JavaConverters._
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
 import org.mongodb.Document
 import org.mongodb.codecs.DocumentCodec
@@ -37,8 +35,8 @@ import org.mongodb.operation.CommandReadOperation
 
 import org.mongodb.scala.rxscala.MongoClient
 import org.mongodb.scala.rxscala.utils.HandleCommandResponse
-import rx.lang.scala.Observable
 
+import rx.lang.scala.Observable
 
 case class MongoClientAdmin(client: MongoClient) extends HandleCommandResponse {
 

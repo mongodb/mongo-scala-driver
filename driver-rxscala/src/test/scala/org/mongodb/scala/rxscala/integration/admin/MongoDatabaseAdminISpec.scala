@@ -23,13 +23,10 @@
  * https://github.com/mongodb/mongo-scala-driver
  *
  */
-package org.mongodb.scala.integration.admin
+package org.mongodb.scala.rxscala.integration.admin
 
-import scala.concurrent._
-
-import org.mongodb.{Document, MongoCredential}
-import org.mongodb.scala.admin.MongoDatabaseAdmin
-import org.mongodb.scala.helpers.RequiresMongoDBSpec
+import org.mongodb.scala.rxscala.admin.MongoDatabaseAdmin
+import org.mongodb.scala.rxscala.helpers.RequiresMongoDBSpec
 
 class MongoDatabaseAdminISpec extends RequiresMongoDBSpec {
 
@@ -41,39 +38,28 @@ class MongoDatabaseAdminISpec extends RequiresMongoDBSpec {
 
   it should "remove all collections once drop() is called" in withDatabase {
     database =>
-      database.admin.createCollection("test").futureValue
-      database.admin.drop().futureValue.isOk shouldBe true
-      database.admin.collectionNames.futureValue should equal(List.empty)
+      database.admin.createCollection("test").observableValue
+      database.admin.drop().observableValue.isOk shouldBe true
+      database.admin.collectionNames.toSeq.observableValue should equal(Seq.empty)
   }
 
   it should "return collectionNames" in withDatabase {
     database =>
-      database.admin.createCollection("checkNames").futureValue
-      database.admin.collectionNames.futureValue should contain theSameElementsAs List("checkNames", "system.indexes")
+      database.admin.createCollection("checkNames").observableValue
+      database.admin.collectionNames.toSeq.observableValue should contain theSameElementsAs List("checkNames", "system.indexes")
   }
 
   it should "create collection" in withDatabase {
     database =>
-      database.admin.createCollection("test").futureValue
-      database.admin.collectionNames.futureValue should contain theSameElementsAs List("test", "system.indexes")
+      database.admin.createCollection("test").observableValue
+      database.admin.collectionNames.toSeq.observableValue should contain theSameElementsAs List("test", "system.indexes")
   }
 
   it should "rename collection" in withDatabase {
     database =>
-      database.admin.createCollection("test").futureValue
-      database.admin.collectionNames.futureValue should contain theSameElementsAs List("test", "system.indexes")
-      database.admin.renameCollection("test", "new").futureValue
-      database.admin.collectionNames.futureValue should contain theSameElementsAs List("new", "system.indexes")
-  }
-
-  it should "allow you to add a user then authenticate" in {
-    pending
-    val credential: MongoCredential = MongoCredential.createMongoCRCredential("xx", "test", "e".toCharArray)
-    // MongoClient()("mongoScalaTest").admin.addUser(credential.getUserName(), credential.getPassword(), true)
-
-    // Todo confirm this works
-    // MongoClient(List(credential))("test")("test").one()
-    // RemoveUser
-    // Close connection
+      database.admin.createCollection("test").observableValue
+      database.admin.collectionNames.toSeq.observableValue should contain theSameElementsAs List("test", "system.indexes")
+      database.admin.renameCollection("test", "new").observableValue
+      database.admin.collectionNames.toSeq.observableValue should contain theSameElementsAs List("new", "system.indexes")
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2014 MongoDB, Inc. <http://www.mongodb.org>
+ * Copyright (c) 2014 MongoDB, Inc.
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,8 +23,10 @@
  * https://github.com/mongodb/mongo-scala-driver
  *
  */
+
 package org.mongodb.scala.rxscala.helpers
 import scala.concurrent.duration.Duration
+import scala.language.implicitConversions
 import scala.util.Properties
 
 import org.mongodb.Document
@@ -34,16 +36,13 @@ import org.mongodb.scala.rxscala.{MongoClient, MongoCollection, MongoDatabase}
 
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.time.{Millis, Seconds, Span}
+import rx.lang.scala.Observable
 
 trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
 
-  implicit val defaultPatience = PatienceConfig(timeout = Span(30, Seconds), interval = Span(5, Millis))
-  implicit val ec = scala.concurrent.ExecutionContext.Implicits.global
-
+  val WAIT_DURATION: Duration = Duration(1, "seconds")
   private val DEFAULT_URI: String = "mongodb://localhost:27017"
   private val MONGODB_URI_SYSTEM_PROPERTY_NAME: String = "org.mongodb.test.uri"
-  private val WAIT_DURATION = Duration(1, "second")
   private val DB_PREFIX = "mongo-scala-"
   private var _currentTestName: Option[String] = None
 
@@ -71,7 +70,8 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
 
   lazy val mongoDbOnline: Boolean = {
     try {
-      mongoClient.admin.ping.timeout(WAIT_DURATION).toBlockingObservable
+      mongoClient.admin.ping.observableValue
+      mongoClient.close()
       true
     } catch {
       case t: Throwable => false
@@ -87,7 +87,11 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
     val databaseName = if (dbName.startsWith(DB_PREFIX)) dbName.take(63) else s"$DB_PREFIX$dbName".take(63)
     val mongoDatabase = mongoClient(databaseName)
     try testCode(mongoDatabase) // "loan" the fixture to the test
-    finally mongoDatabase.admin.drop().timeout(WAIT_DURATION).toBlockingObservable // clean up the fixture
+    finally {
+      // clean up the fixture
+      mongoDatabase.admin.drop().observableValue
+      mongoClient.close()
+    }
   }
 
   def withDatabase(testCode: MongoDatabase => Any): Unit = withDatabase(collectionName)(testCode: MongoDatabase => Any)
@@ -98,11 +102,27 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
     val mongoCollection = mongoDatabase(collectionName)
 
     try testCode(mongoCollection) // "loan" the fixture to the test
-    finally mongoCollection.admin.drop().timeout(WAIT_DURATION).toBlockingObservable // clean up the fixture
+    finally {
+      // clean up the fixture
+      mongoCollection.admin.drop().observableValue
+      mongoClient.close()
+    }
+  }
+
+  override def beforeAll() {
+    if (mongoDbOnline) {
+      mongoClient(databaseName).admin.drop().observableValue
+      mongoClient.close()
+    }
   }
 
   override def afterAll() {
-    if (mongoDbOnline) mongoClient(databaseName).admin.drop().timeout(WAIT_DURATION).toBlockingObservable
+    if (mongoDbOnline) {
+      mongoClient(databaseName).admin.drop().observableValue
+      mongoClient.close()
+    }
   }
+
+  implicit def ObservableToHelper[T](observable: Observable[T]): ObservableHelper[T] = ObservableHelper(observable)
 
 }
