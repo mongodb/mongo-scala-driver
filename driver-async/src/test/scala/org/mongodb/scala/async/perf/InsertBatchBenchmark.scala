@@ -1,5 +1,5 @@
 /**
- * Copyright 2010-2014 MongoDB, Inc. <http://www.mongodb.org>
+ * Copyright (c) 2014 MongoDB, Inc.
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,8 +20,7 @@
  *
  * For questions and comments about this product, please see the project page at:
  *
- * [Project URL - TODO]
- *
+ * https://github.com/mongodb/mongo-scala-driver
  */
 package org.mongodb.scala.async.perf
 

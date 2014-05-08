@@ -27,7 +27,6 @@ exec scala -cp "$cp" "$0" "$@"
  * For questions and comments about this product, please see the project page at:
  *
  * https://github.com/mongodb/mongo-scala-driver
- *
  */
 
 import java.io.PrintWriter

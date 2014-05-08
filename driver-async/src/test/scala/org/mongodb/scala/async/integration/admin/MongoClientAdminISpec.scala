@@ -21,7 +21,6 @@
  * For questions and comments about this product, please see the project page at:
  *
  * https://github.com/mongodb/mongo-scala-driver
- *
  */
 package org.mongodb.scala.async.integration.admin
 
