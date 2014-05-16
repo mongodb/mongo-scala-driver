@@ -288,7 +288,7 @@ case class MongoCollection[T](name: String,
 
     def one(): Future[Option[D]] = {
       val promise = Promise[Option[D]]()
-      val futureCursor: Future[MongoAsyncCursor[D]] = limit(1).cursor
+      val futureCursor: Future[MongoAsyncCursor[D]] = limit(1).cursor()
       futureCursor.onComplete({
         case Success(cursor) =>
           cursor.forEach(new Block[D] {
