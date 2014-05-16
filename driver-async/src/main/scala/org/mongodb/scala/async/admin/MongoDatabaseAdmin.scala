@@ -34,18 +34,14 @@ import org.mongodb.connection.SingleResultCallback
 import org.mongodb.connection.NativeAuthenticationHelper.createAuthenticationHash
 import org.mongodb.operation.{CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation}
 
-import org.mongodb.scala.async.{MongoCollection, MongoDatabase}
+import org.mongodb.scala.async.{RequiredTypes, CommandResponseHandler, MongoCollection, MongoDatabase}
 import org.mongodb.scala.async.utils.HandleCommandResponse
+import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
 
-case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResponse {
-
-  private val DROP_DATABASE = new Document("dropDatabase", 1)
-  private val name = database.name
-  private val commandCodec = new DocumentCodec()
-  private val client = database.client
+case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider with CommandResponseHandler with RequiredTypes {
 
   def drop(): Future[CommandResult] = {
-    val futureDrop: Future[CommandResult] = database.executeAsyncCommand(DROP_DATABASE)
+    val futureDrop: Future[CommandResult] = database.executeAsyncWriteCommand(DROP_DATABASE)
     handleNameSpaceErrors(futureDrop)
   }
 
@@ -57,7 +53,7 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResp
 
     val promise = Promise[List[String]]()
     var list = List[String]()
-    val futureCursor: Future[MongoAsyncCursor[Document]] = client.executeAsync(operation, ReadPreference.primary)
+    val futureCursor = client.executeAsync(operation, ReadPreference.primary).asInstanceOf[Future[MongoAsyncCursor[Document]]]
     futureCursor.onComplete({
       case Success(cursor) =>
         cursor.forEach(new Block[Document] {
@@ -77,39 +73,11 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResp
     promise.future
   }
 
-  def createCollection(collectionName: String): Future[Unit] =
-    createCollection(new CreateCollectionOptions(collectionName))
-
-  def createCollection(createCollectionOptions: CreateCollectionOptions): Future[Unit] = {
+  def createCollection(createCollectionOptions: CreateCollectionOptions): Future[Unit] =
     client.executeAsync(new CreateCollectionOperation(name, createCollectionOptions)).asInstanceOf[Future[Unit]]
-  }
-
-  def renameCollection(oldCollectionName: String, newCollectionName: String): Future[Unit] =
-    renameCollection(oldCollectionName, newCollectionName, dropTarget = false)
-
-  def renameCollection(oldCollectionName: String, newCollectionName: String, dropTarget: Boolean): Future[Unit] = {
-    val renameCollectionOptions = new RenameCollectionOperation(name, oldCollectionName, newCollectionName, dropTarget)
-    renameCollection(renameCollectionOptions)
-  }
 
   def renameCollection(operation: RenameCollectionOperation): Future[Unit] =
     client.executeAsync(operation).asInstanceOf[Future[Unit]]
 
-  def addUser(userName: String, password: Array[Char], readOnly: Boolean) {
-    // TODO - collection save
-    // TODO - new Document
-    val collection: MongoCollection[Document] = database("system.users")
-    val doc: Document = new Document("user", userName)
-      .append("pwd", createAuthenticationHash(userName, password))
-      .append("readOnly", readOnly)
-    // collection.save(doc)
-  }
-
-  def removeUser(userName: String) {
-    // TODO - collection remove
-    // TODO - new Document
-    val collection: MongoCollection[Document] = database("system.users")
-    // collection.filter(new Document("user", userName)).remove
-  }
 
 }

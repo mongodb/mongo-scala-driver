@@ -24,17 +24,13 @@
  */
 package org.mongodb.scala.async
 
-import org.mongodb.CollectibleCodec
+import scala.concurrent.Future
+import org.mongodb.scala.core.RequiredTypesProvider
 
-import org.mongodb.scala.core.{MongoCollectionOptions, MongoDatabaseOptions, MongoDatabaseProvider}
-import org.mongodb.scala.async.admin.MongoDatabaseAdmin
-
-case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
-  extends MongoDatabaseProvider with RequiredTypes {
-
-  def collection[T](collectionName: String, codec: CollectibleCodec[T],
-                    collectionOptions: MongoCollectionOptions): MongoCollection[T] =
-    MongoCollection(collectionName, this, codec, collectionOptions)
-
-  val admin: MongoDatabaseAdmin = MongoDatabaseAdmin(this)
+trait RequiredTypes extends RequiredTypesProvider {
+  type Client = MongoClient
+  type Database = MongoDatabase
+  type Collection[T] = MongoCollection[T]
+  type ResultType[T] = Future[T]
+  type ListResultType[T] = List[T]
 }

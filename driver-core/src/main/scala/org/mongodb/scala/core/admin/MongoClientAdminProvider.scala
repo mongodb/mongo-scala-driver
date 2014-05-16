@@ -22,19 +22,27 @@
  *
  * https://github.com/mongodb/mongo-scala-driver
  */
-package org.mongodb.scala.async
+package org.mongodb.scala.core.admin
 
-import org.mongodb.CollectibleCodec
+import scala.language.higherKinds
+import org.mongodb.Document
+import org.mongodb.codecs.DocumentCodec
+import org.mongodb.operation.CommandReadOperation
+import org.mongodb.scala.core.{RequiredTypesProvider, CommandResponseHandlerProvider, MongoClientProvider}
 
-import org.mongodb.scala.core.{MongoCollectionOptions, MongoDatabaseOptions, MongoDatabaseProvider}
-import org.mongodb.scala.async.admin.MongoDatabaseAdmin
+trait MongoClientAdminProvider {
 
-case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
-  extends MongoDatabaseProvider with RequiredTypes {
+  this: CommandResponseHandlerProvider with RequiredTypesProvider =>
 
-  def collection[T](collectionName: String, codec: CollectibleCodec[T],
-                    collectionOptions: MongoCollectionOptions): MongoCollection[T] =
-    MongoCollection(collectionName, this, codec, collectionOptions)
+  val client: MongoClientProvider
+  def ping: ResultType[Double]
+  def databaseNames: ResultType[Seq[String]]
 
-  val admin: MongoDatabaseAdmin = MongoDatabaseAdmin(this)
+  protected val ADMIN_DATABASE = "admin"
+  protected val PING_COMMAND = new Document("ping", 1)
+  protected val LIST_DATABASES = new Document("listDatabases", 1)
+  protected val commandCodec: DocumentCodec = new DocumentCodec()
+
+  protected def createOperation(command: Document) =
+    new CommandReadOperation(ADMIN_DATABASE, command, commandCodec, commandCodec)
 }

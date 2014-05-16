@@ -48,7 +48,8 @@ case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends Handl
   def isCapped: Future[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
 
   def statistics: Future[Document] = {
-    val futureStats: Future[CommandResult] = collection.database.executeAsyncCommand(COLLECTION_STATS)
+    val futureStats: Future[CommandResult] =
+      collection.database.executeAsyncReadCommand(COLLECTION_STATS, collection.database.readPreference)
     handleNameSpaceErrors(futureStats) map { result => result.getResponse }
   }
 

@@ -64,14 +64,4 @@ class MongoDatabaseAdminISpec extends RequiresMongoDBSpec {
       database.admin.collectionNames.futureValue should contain theSameElementsAs List("new", "system.indexes")
   }
 
-  it should "allow you to add a user then authenticate" in {
-    pending
-    val credential: MongoCredential = MongoCredential.createMongoCRCredential("xx", "test", "e".toCharArray)
-    // MongoClient()("mongoScalaTest").admin.addUser(credential.getUserName(), credential.getPassword(), true)
-
-    // Todo confirm this works
-    // MongoClient(List(credential))("test")("test").one()
-    // RemoveUser
-    // Close connection
-  }
 }

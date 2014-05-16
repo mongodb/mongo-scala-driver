@@ -31,18 +31,11 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import org.mongodb.Document
-import org.mongodb.codecs.DocumentCodec
-import org.mongodb.operation.CommandReadOperation
 
-import org.mongodb.scala.async.MongoClient
-import org.mongodb.scala.async.utils.HandleCommandResponse
+import org.mongodb.scala.core.admin.MongoClientAdminProvider
+import org.mongodb.scala.async.{CommandResponseHandler, MongoClient}
 
-case class MongoClientAdmin(client: MongoClient) extends HandleCommandResponse {
-
-  private val ADMIN_DATABASE = "admin"
-  private val PING_COMMAND = new Document("ping", 1)
-  private val LIST_DATABASES = new Document("listDatabases", 1)
-  private val commandCodec: DocumentCodec = new DocumentCodec()
+case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with CommandResponseHandler {
 
   def ping: Future[Double] = {
     val operation = createOperation(PING_COMMAND)
@@ -61,9 +54,4 @@ case class MongoClientAdmin(client: MongoClient) extends HandleCommandResponse {
     }
   }
 
-  private def createOperation(command: Document) = {
-    // scalastyle:off null magic.number
-    new CommandReadOperation(ADMIN_DATABASE, command, commandCodec, commandCodec)
-    // scalastyle:on null magic.number
-  }
 }
