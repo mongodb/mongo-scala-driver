@@ -23,11 +23,10 @@
  * https://github.com/mongodb/mongo-scala-driver
  */
 package org.mongodb.scala.core
-import _root_.scala.Some
-import _root_.scala.collection.JavaConverters._
+import scala.Some
+import scala.collection.JavaConverters._
 
-import _root_.scala.Some
-import org.mongodb._
+import org.mongodb.{CollectibleCodec, Document, MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
 import org.mongodb.operation._
 
 /**
@@ -56,7 +55,7 @@ trait MongoCollectionViewProvider[T] {
   /**
    * The command codec to use
    */
-  def getCodec: CollectibleCodec[T] = codec.asInstanceOf[CollectibleCodec[T]] // Compile Fix
+  def getCodec: CollectibleCodec[T] = codec
 
   /**
    * Insert a document into the database
@@ -70,23 +69,23 @@ trait MongoCollectionViewProvider[T] {
    */
   def insert(documents: Iterable[T]): ResultType[WriteResult] = {
     val insertRequestList = documents.map(new InsertRequest[T](_)).toList.asJava
-    val operation = new InsertOperation[T](namespace, true, writeConcern, insertRequestList, getCodec)
+    val operation = new InsertOperation[T](namespace, true, writeConcern, insertRequestList, codec)
     client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
 
   /**
    * Count the number of documents
    */
-  def count() = {
+  def count(): ResultType[Long] = {
     val operation = new CountOperation(namespace, findOp, documentCodec)
-    client.executeAsync(operation, options.readPreference)
+    client.executeAsync(operation, options.readPreference).asInstanceOf[ResultType[Long]]
   }
 
   /**
    * Filter the collection
    * @param filter the query to perform
    */
-  def find(filter: Document): MongoCollectionViewProvider[T] = copy(findOp = findOp.filter(filter))
+  def find(filter: Document): CollectionView[T] = copy(findOp = findOp.filter(filter))
 
   /**
    * Return a list of results (memory hungry)
@@ -97,53 +96,47 @@ trait MongoCollectionViewProvider[T] {
    * Sort the results
    * @param sortCriteria the sort criteria
    */
-  def sort(sortCriteria: ConvertibleToDocument): MongoCollectionViewProvider[T] = sort(sortCriteria.toDocument)
-
-  /**
-   * Sort the results
-   * @param sortCriteria the sort criteria
-   */
-  def sort(sortCriteria: Document): MongoCollectionViewProvider[T] = copy(findOp = findOp.order(sortCriteria))
+  def sort(sortCriteria: Document): CollectionView[T] = copy(findOp = findOp.order(sortCriteria))
 
   /**
    * Fields to include / exclude with the output
    *
    * @param selector the fields to include / exclude
    */
-  def fields(selector: Document): MongoCollectionViewProvider[T] = copy(findOp = findOp.select(selector))
+  def fields(selector: Document): CollectionView[T] = copy(findOp = findOp.select(selector))
 
   /**
    * Create a new document when no document matches the query criteria when doing an insert.
    */
-  def upsert: MongoCollectionViewProvider[T] = copy(doUpsert = true)
+  def upsert: CollectionView[T] = copy(doUpsert = true)
 
   /**
    * Set custom query options for the query
    * @param queryOptions the options to use for the cursor
    * @see [[http://docs.mongodb.org/manual/reference/method/cursor.addOption/#cursor-flags Cursor Options]]
    */
-  def withQueryOptions(queryOptions: QueryOptions): MongoCollectionViewProvider[T] = {
-    create().setQueryOptions(queryOptions)
+  def withQueryOptions(queryOptions: QueryOptions): CollectionView[T] = {
+    copy().setQueryOptions(queryOptions).asInstanceOf[CollectionView[T]]
   }
 
   /**
    * Skip a number of documents
    * @param skip the number to skip
    */
-  def skip(skip: Int): MongoCollectionViewProvider[T] = copy(findOp = findOp.skip(skip))
+  def skip(skip: Int): CollectionView[T] = copy(findOp = findOp.skip(skip))
 
   /**
    * Limit the resulting results
    * @param limit the number to limit to
    */
-  def limit(limit: Int): MongoCollectionViewProvider[T] = copy(findOp = findOp.limit(limit), limitSet = true)
+  def limit(limit: Int): CollectionView[T] = copy(findOp = findOp.limit(limit), limitSet = true)
 
   /**
    * Use a custom read preference to determine how MongoDB clients route read operations to members of a replica set
    * @param readPreference the read preference for the query
    * @see [[http://docs.mongodb.org/manual/core/read-preference read preference]]
    */
-  def withReadPreference(readPreference: ReadPreference): MongoCollectionViewProvider[T] =
+  def withReadPreference(readPreference: ReadPreference): CollectionView[T] =
     copy(readPreference = readPreference)
 
   /**
@@ -156,7 +149,7 @@ trait MongoCollectionViewProvider[T] {
 
   def one(): ResultType[Option[T]]
 
-  def withWriteConcern(writeConcernForThisOperation: WriteConcern): MongoCollectionViewProvider[T] =
+  def withWriteConcern(writeConcernForThisOperation: WriteConcern): CollectionView[T] =
     copy(writeConcern = writeConcernForThisOperation)
 
   def save(document: T): ResultType[WriteResult] = {
@@ -247,36 +240,36 @@ trait MongoCollectionViewProvider[T] {
     }
   }
 
-  private def setQueryOptions(queryOptions: QueryOptions): MongoCollectionViewProvider[T] = {
+  private def setQueryOptions(queryOptions: QueryOptions) = {
     this.findOp.options(queryOptions)
     this
   }
   
-  private def create(): MongoCollectionViewProvider[T] = {
+  private def copy(): CollectionView[T] = {
     copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
-  private def copy(findOp: Find): MongoCollectionViewProvider[T] = {
+  private def copy(findOp: Find): CollectionView[T] = {
     copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
-  private def copy(findOp: Find, limitSet: Boolean): MongoCollectionViewProvider[T] = {
+  private def copy(findOp: Find, limitSet: Boolean): CollectionView[T] = {
     copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
-  private def copy(doUpsert: Boolean): MongoCollectionViewProvider[T] = {
+  private def copy(doUpsert: Boolean): CollectionView[T] = {
     copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
-  private def copy(writeConcern: WriteConcern): MongoCollectionViewProvider[T] = {
+  private def copy(writeConcern: WriteConcern): CollectionView[T] = {
     copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
-  private def copy(readPreference: ReadPreference): MongoCollectionViewProvider[T] = {
+  private def copy(readPreference: ReadPreference): CollectionView[T] = {
     copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
   protected def copy(client: Client, namespace: MongoNamespace, codec: CollectibleCodec[T], options: MongoCollectionOptions,
            findOp: Find, writeConcern: WriteConcern, limitSet: Boolean, doUpsert: Boolean,
-           readPreference: ReadPreference): MongoCollectionViewProvider[T]
+           readPreference: ReadPreference): CollectionView[T]
 }

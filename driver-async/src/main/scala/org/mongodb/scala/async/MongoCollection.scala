@@ -24,10 +24,10 @@
  */
 package org.mongodb.scala.async
 
-import org.mongodb.CollectibleCodec
+import org.mongodb.{Document, CollectibleCodec}
 import org.mongodb.operation.Find
 
-import org.mongodb.scala.core.{MongoCollectionOptions, MongoCollectionProvider}
+import org.mongodb.scala.core.{MongoCollectionViewProvider, MongoCollectionOptions, MongoCollectionProvider}
 import org.mongodb.scala.async.admin.MongoCollectionAdmin
 
 /**
@@ -51,5 +51,4 @@ case class MongoCollection[T](name: String,
   }
 
   override val admin: MongoCollectionAdmin[T] = MongoCollectionAdmin(this)
-
 }

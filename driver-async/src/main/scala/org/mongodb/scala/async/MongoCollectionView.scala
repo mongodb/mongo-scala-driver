@@ -40,8 +40,12 @@ protected case class MongoCollectionView[T](client: MongoClient, namespace: Mong
                                             limitSet: Boolean, doUpsert: Boolean, readPreference: ReadPreference)
   extends MongoCollectionViewProvider[T] with RequiredTypes {
 
-  override protected def copy(client: Client, namespace: MongoNamespace, codec: CollectibleCodec[T], options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern, limitSet: Boolean, doUpsert: Boolean, readPreference: ReadPreference): MongoCollectionViewProvider[T] = {
-    MongoCollectionView[T](client.asInstanceOf[MongoClient], namespace, codec, options, findOp: Find, writeConcern, limitSet, doUpsert, readPreference)
+  override protected def copy(client: Client, namespace: MongoNamespace, codec: CollectibleCodec[T],
+                              options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern,
+                              limitSet: Boolean, doUpsert: Boolean,
+                              readPreference: ReadPreference): MongoCollectionView[T] = {
+    MongoCollectionView[T](client.asInstanceOf[MongoClient], namespace, codec, options, findOp: Find, writeConcern,
+                           limitSet, doUpsert, readPreference)
   }
 
   /**

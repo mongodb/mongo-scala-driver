@@ -78,7 +78,7 @@ class MongoCollectionISpec extends RequiresMongoDBSpec {
     collection =>
       collection.insert(createDocuments(100)).futureValue
       val filtered = collection.find(new Document("_id", new Document("$gte", 50)))
-      filtered.toList().asInstanceOf[Future[List[Document]]].futureValue.size should equal(50)
+      filtered.toList().futureValue.size should equal(50)
   }
 
   it should "be able to insert many items" in withCollection {
@@ -92,6 +92,13 @@ class MongoCollectionISpec extends RequiresMongoDBSpec {
       }
       Future.sequence(futures).futureValue
       collection.count().futureValue should be(size)
+  }
+
+  it should "Should be able to call count on the view" in withCollection {
+    collection =>
+      collection.insert(createDocuments(100)).futureValue
+      val result = collection.find(new Document("_id", new Document("$gte", 50))).count().futureValue
+      result should be(50)
   }
 
   def createDocuments(amount: Int = 100): IndexedSeq[Document] = {

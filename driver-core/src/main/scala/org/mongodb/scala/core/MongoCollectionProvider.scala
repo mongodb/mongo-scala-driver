@@ -82,7 +82,7 @@ trait MongoCollectionProvider[T] {
    */
   def toList(): ResultType[List[T]] = collectionView.toList().asInstanceOf[ResultType[List[T]]]
 
-  def find(filter: Document) = collectionView.find(filter)
+  def find(filter: Document): CollectionView[T] = collectionView.find(filter).asInstanceOf[CollectionView[T]]
 
   protected def collectionView: MongoCollectionViewProvider[T]
 }
