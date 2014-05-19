@@ -24,55 +24,30 @@
  */
 package org.mongodb.scala.async.admin
 
-import java.util.ArrayList
-
 import scala.collection.JavaConverters._
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import org.mongodb.{CommandResult, Document, Index}
-import org.mongodb.operation.{CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation}
+import org.mongodb.{Document, Index}
+import org.mongodb.operation.DropIndexOperation
 
-import org.mongodb.scala.async.MongoCollection
-import org.mongodb.scala.async.utils.HandleCommandResponse
+import org.mongodb.scala.async.{CommandResponseHandler, RequiredTypes, MongoCollection}
+import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
 
-case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends HandleCommandResponse {
+case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
+  with CommandResponseHandler with RequiredTypes {
 
-  private val COLLECTION_STATS = new Document("collStats", collection.name)
+  override def drop(): ResultType[Unit] = dropRaw(result => result.mapTo[Unit])
 
-  def drop(): Future[Unit] = {
-    val operation = new DropCollectionOperation(collection.namespace)
-    collection.client.executeAsync(operation).mapTo[Unit]
-  }
+  override def statistics: ResultType[Document] = statisticsRaw(result => result map {res => res.getResponse })
 
-  def isCapped: Future[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
+  override def isCapped: ResultType[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
 
-  def statistics: Future[Document] = {
-    val futureStats: Future[CommandResult] =
-      collection.database.executeAsyncReadCommand(COLLECTION_STATS, collection.database.readPreference)
-    handleNameSpaceErrors(futureStats) map { result => result.getResponse }
-  }
+  override def getIndexes: ResultType[ListResultType[Document]] =
+    getIndexesRaw(result => result map {docs => docs.asScala.toList})
 
-  def getStatistics: Future[Document] = statistics
+  override def createIndexes(indexes: Iterable[Index]): ResultType[Unit] =
+    createIndexesRaw(indexes, result => result.mapTo[Unit])
 
-  def createIndex(index: Index): Future[Unit] = createIndexes(List(index))
-  def createIndexes(indexes: Iterable[Index]): Future[Unit] = {
-    val operation = new CreateIndexesOperation(new ArrayList(indexes.toList.asJava), collection.namespace)
-    collection.client.executeAsync(operation).asInstanceOf[Future[Unit]]
-  }
-
-  def getIndexes: Future[Seq[Document]] = {
-    val operation = new GetIndexesOperation(collection.namespace)
-    collection.client.executeAsync(operation, collection.options.readPreference).map(docs => docs.asScala.toSeq)
-  }
-
-  def dropIndex(index: String): Future[Unit] = {
-    val operation = new DropIndexOperation(collection.namespace, index)
-    collection.client.executeAsync(operation).mapTo[Unit]
-  }
-
-  def dropIndex(index: Index): Future[Unit] = dropIndex(index.getName)
-
-  def dropIndexes(): Future[Unit] = dropIndex("*")
-
+  override def dropIndex(index: String): ResultType[Unit] = dropIndexRaw(index, result => result.mapTo[Unit])
 }
+

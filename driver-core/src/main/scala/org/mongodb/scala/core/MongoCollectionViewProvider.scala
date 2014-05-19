@@ -23,10 +23,11 @@
  * https://github.com/mongodb/mongo-scala-driver
  */
 package org.mongodb.scala.core
-import scala.Some
-import scala.collection.JavaConverters._
+import _root_.scala.Some
+import _root_.scala.collection.JavaConverters._
 
-import org.mongodb.{CollectibleCodec, ConvertibleToDocument, Document, QueryOptions, ReadPreference, WriteConcern, WriteResult}
+import _root_.scala.Some
+import org.mongodb._
 import org.mongodb.operation._
 
 /**
@@ -34,7 +35,18 @@ import org.mongodb.operation._
  */
 trait MongoCollectionViewProvider[T] {
 
-  this: MongoCollectionViewCompanion[T] with RequiredTypesProvider =>
+  this: RequiredTypesProvider =>
+
+  val findOp: Find
+  val writeConcern: WriteConcern
+  val limitSet: Boolean
+  val doUpsert: Boolean
+  val readPreference: ReadPreference
+
+  val client: Client
+  val namespace: MongoNamespace
+  val codec: CollectibleCodec[T]
+  val options: MongoCollectionOptions
 
   /**
    * The document codec to use
@@ -50,16 +62,16 @@ trait MongoCollectionViewProvider[T] {
    * Insert a document into the database
    * @param document to be inserted
    */
-  def insert(document: T) = insert(List(document))
+  def insert(document: T): ResultType[WriteResult] = insert(List(document))
 
   /**
    * Insert a document into the database
    * @param documents the documents to be inserted
    */
-  def insert(documents: Iterable[T]) = {
+  def insert(documents: Iterable[T]): ResultType[WriteResult] = {
     val insertRequestList = documents.map(new InsertRequest[T](_)).toList.asJava
     val operation = new InsertOperation[T](namespace, true, writeConcern, insertRequestList, getCodec)
-    client.executeAsync(operation)
+    client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
 
   /**
@@ -111,7 +123,7 @@ trait MongoCollectionViewProvider[T] {
    * @see [[http://docs.mongodb.org/manual/reference/method/cursor.addOption/#cursor-flags Cursor Options]]
    */
   def withQueryOptions(queryOptions: QueryOptions): MongoCollectionViewProvider[T] = {
-    copy().setQueryOptions(queryOptions)
+    create().setQueryOptions(queryOptions)
   }
 
   /**
@@ -137,8 +149,10 @@ trait MongoCollectionViewProvider[T] {
   /**
    * Execute the operation and return the result.
    */
-  def cursor(): ResultType[CursorType[T]]
-
+  def cursor(): ResultType[CursorType[T]] =  {
+    val operation = new QueryOperation[T](namespace, findOp, documentCodec, getCodec)
+    client.executeAsync(operation, readPreference).asInstanceOf[ResultType[CursorType[T]]]
+  }
 
   def one(): ResultType[Option[T]]
 
@@ -165,26 +179,32 @@ trait MongoCollectionViewProvider[T] {
   }
 
   def update(updateOperations: Document) = {
-    val updateRequest: List[UpdateRequest] = List(new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(getMultiFromLimit))
+    val updateRequest: List[UpdateRequest] = List(
+      new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(getMultiFromLimit)
+    )
     val operation = new UpdateOperation(namespace, true, writeConcern, updateRequest.asJava, documentCodec)
     client.executeAsync(operation)
   }
 
   def updateOne(updateOperations: Document) = {
-    val updateRequest: List[UpdateRequest] = List(new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(false))
+    val updateRequest: List[UpdateRequest] = List(
+      new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(false)
+    )
     val operation = new UpdateOperation(namespace, true, writeConcern, updateRequest.asJava, documentCodec)
     client.executeAsync(operation)
   }
 
   def replace(replacement: T) = {
-    val replaceRequest: List[ReplaceRequest[T]] = List(new ReplaceRequest[T](findOp.getFilter, replacement).upsert(doUpsert))
+    val replaceRequest: List[ReplaceRequest[T]] = List(
+      new ReplaceRequest[T](findOp.getFilter, replacement).upsert(doUpsert)
+    )
     val operation = new ReplaceOperation(namespace, true, writeConcern, replaceRequest.asJava, documentCodec, getCodec)
     client.executeAsync(operation)
   }
 
-  def updateOneAndGet(updateOperations: Document) = updateOneAndGet(updateOperations, returnNew = true)
+  def updateOneAndGet(updateOperations: Document): ResultType[T] = updateOneAndGet(updateOperations, returnNew = true)
 
-  def updateOneAndGet(updateOperations: Document, returnNew: Boolean) = {
+  def updateOneAndGet(updateOperations: Document, returnNew: Boolean): ResultType[T] = {
     val findAndUpdate: FindAndUpdate = new FindAndUpdate()
       .where(findOp.getFilter)
       .updateWith(updateOperations)
@@ -193,16 +213,16 @@ trait MongoCollectionViewProvider[T] {
       .sortBy(findOp.getOrder)
       .upsert(doUpsert)
     val operation = new FindAndUpdateOperation[T](namespace, findAndUpdate, getCodec)
-    client.executeAsync(operation)
+    client.executeAsync(operation).asInstanceOf[ResultType[T]]
   }
 
-  def getOneAndUpdate(updateOperations: Document) = updateOneAndGet(updateOperations, returnNew = false)
+  def getOneAndUpdate(updateOperations: Document): ResultType[T] = updateOneAndGet(updateOperations, returnNew = false)
 
-  def getOneAndReplace(replacement: T) = replaceOneAndGet(replacement, returnNew = false)
+  def getOneAndReplace(replacement: T): ResultType[T] = replaceOneAndGet(replacement, returnNew = false)
 
-  def replaceOneAndGet(replacement: T) = replaceOneAndGet(replacement, returnNew = true)
+  def replaceOneAndGet(replacement: T): ResultType[T] = replaceOneAndGet(replacement, returnNew = true)
 
-  def replaceOneAndGet(replacement: T, returnNew: Boolean) = {
+  def replaceOneAndGet(replacement: T, returnNew: Boolean): ResultType[T] = {
     val findAndReplace: FindAndReplace[T] = new FindAndReplace[T](replacement)
       .where(findOp.getFilter)
       .returnNew(returnNew)
@@ -210,13 +230,13 @@ trait MongoCollectionViewProvider[T] {
       .sortBy(findOp.getOrder)
       .upsert(doUpsert)
     val operation = new FindAndReplaceOperation[T](namespace, findAndReplace, getCodec, getCodec)
-    client.executeAsync(operation)
+    client.executeAsync(operation).asInstanceOf[ResultType[T]]
   }
 
-  def getOneAndRemove = {
+  def getOneAndRemove: ResultType[T] = {
     val findAndRemove: FindAndRemove[T] = new FindAndRemove[T]().where(findOp.getFilter).select(findOp.getFields).sortBy(findOp.getOrder)
     val operation = new FindAndRemoveOperation[T](namespace, findAndRemove, getCodec)
-    client.executeAsync(operation)
+    client.executeAsync(operation).asInstanceOf[ResultType[T]]
   }
 
   private def getMultiFromLimit: Boolean = {
@@ -232,27 +252,31 @@ trait MongoCollectionViewProvider[T] {
     this
   }
   
-  private def copy() = {
-    apply[T](client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
+  private def create(): MongoCollectionViewProvider[T] = {
+    copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
-  private def copy(findOp: Find) = {
-    apply[T](client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
+  private def copy(findOp: Find): MongoCollectionViewProvider[T] = {
+    copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
-  private def copy(findOp: Find, limitSet: Boolean) = {
-    apply[T](client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
+  private def copy(findOp: Find, limitSet: Boolean): MongoCollectionViewProvider[T] = {
+    copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
-  private def copy(doUpsert: Boolean) = {
-    apply[T](client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
+  private def copy(doUpsert: Boolean): MongoCollectionViewProvider[T] = {
+    copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
-  private def copy(writeConcern: WriteConcern) = {
-    apply[T](client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
+  private def copy(writeConcern: WriteConcern): MongoCollectionViewProvider[T] = {
+    copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
-  private def copy(readPreference: ReadPreference) = {
-    apply[T](client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
+  private def copy(readPreference: ReadPreference): MongoCollectionViewProvider[T] = {
+    copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
+
+  protected def copy(client: Client, namespace: MongoNamespace, codec: CollectibleCodec[T], options: MongoCollectionOptions,
+           findOp: Find, writeConcern: WriteConcern, limitSet: Boolean, doUpsert: Boolean,
+           readPreference: ReadPreference): MongoCollectionViewProvider[T]
 }

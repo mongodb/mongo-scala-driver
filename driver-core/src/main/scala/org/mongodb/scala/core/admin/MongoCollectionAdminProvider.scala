@@ -24,7 +24,8 @@
  */
 package org.mongodb.scala.core.admin
 
-import java.util.ArrayList
+import java.util
+
 import scala.collection.JavaConverters._
 
 import org.mongodb.{CommandResult, Document, Index}
@@ -53,33 +54,36 @@ trait MongoCollectionAdminProvider[T] {
 
   def dropIndexes(): ResultType[Unit] = dropIndex("*")
 
-  private val collection: MongoCollectionProvider
+  protected val collection: MongoCollectionProvider[T]
 
   private val COLLECTION_STATS = new Document("collStats", collection.name)
 
-  private def dropRaw: ResultType[CommandResult] = {
+  protected def dropRaw(transformer:  (ResultType[Void]) => ResultType[Unit]): ResultType[Unit]  = {
     val operation = new DropCollectionOperation(collection.namespace)
-    collection.client.executeAsync(operation).asInstanceOf[ResultType[CommandResult]]
+    transformer(collection.client.executeAsync(operation).asInstanceOf[ResultType[Void]])
   }
 
-  private def statsRaw: ResultType[CommandResult] = {
+  protected def statisticsRaw(transformer:  (ResultType[CommandResult]) => ResultType[Document]): ResultType[Document] = {
     val futureStats = collection.database.executeAsyncReadCommand(COLLECTION_STATS, collection.database.readPreference)
-    handleNameSpaceErrors(futureStats.asInstanceOf[ResultType[CommandResult]])
+    transformer(handleNamedErrors(futureStats.asInstanceOf[ResultType[CommandResult]], Seq("not found")))
   }
 
-  private def createIndexesRaw(indexes: Iterable[Index]): ResultType[Void] = {
-    val operation = new CreateIndexesOperation(new ArrayList(indexes.toList.asJava), collection.namespace)
-    collection.client.executeAsync(operation).asInstanceOf[ResultType[Void]]
+  protected def createIndexesRaw(indexes: Iterable[Index], transformer:  (ResultType[Void]) => ResultType[Unit]): ResultType[Unit] = {
+    val operation = new CreateIndexesOperation(new util.ArrayList(indexes.toList.asJava), collection.namespace)
+    transformer(collection.client.executeAsync(operation).asInstanceOf[ResultType[Void]])
   }
 
-  private def getIndexesRaw = {
+  protected def getIndexesRaw(transformer: (ResultType[util.List[Document]]) => ResultType[ListResultType[Document]]): ResultType[ListResultType[Document]] = {
     val operation = new GetIndexesOperation(collection.namespace)
-    collection.client.executeAsync(operation, collection.options.readPreference)
+    transformer(
+      collection.client.executeAsync(operation,
+        collection.options.readPreference).asInstanceOf[ResultType[util.List[Document]]]
+    )
   }
 
-  private def dropIndexRaw(index: String) = {
+  protected def dropIndexRaw(index: String, transformer: (ResultType[Void]) => ResultType[Unit]) = {
     val operation = new DropIndexOperation(collection.namespace, index)
-    collection.client.executeAsync(operation)
+    transformer(collection.client.executeAsync(operation).asInstanceOf[ResultType[Void]])
   }
 
 }

@@ -41,12 +41,6 @@ trait MongoClientCompanion extends GetDefaultCluster {
 
   this: RequiredTypesProvider =>
 
-  val findOp: Find
-  val writeConcern: WriteConcern
-  val limitSet: Boolean
-  val doUpsert: Boolean
-  val readPreference: ReadPreference
-
   def apply(options: MongoClientOptions, cluster: Cluster, bufferProvider: BufferProvider): Client
 
   /**

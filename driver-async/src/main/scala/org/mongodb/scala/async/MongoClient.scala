@@ -36,6 +36,7 @@ import org.mongodb.scala.async.admin.MongoClientAdmin
  * A factory for creating a [[org.mongodb.scala.async.MongoClient MongoClient]] instance.
  */
 object MongoClient extends MongoClientCompanion with RequiredTypes
+
 /**
  * The MongoClient
  *

@@ -26,6 +26,7 @@ package org.mongodb.scala.async
 
 import scala.concurrent.Future
 import org.mongodb.scala.core.RequiredTypesProvider
+import org.mongodb.MongoAsyncCursor
 
 trait RequiredTypes extends RequiredTypesProvider {
   type Client = MongoClient
@@ -33,4 +34,5 @@ trait RequiredTypes extends RequiredTypesProvider {
   type Collection[T] = MongoCollection[T]
   type ResultType[T] = Future[T]
   type ListResultType[T] = List[T]
+  type CursorType[T] = Future[MongoAsyncCursor[T]]
 }

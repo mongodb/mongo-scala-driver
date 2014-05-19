@@ -48,8 +48,8 @@ trait CommandResponseHandler extends CommandResponseHandlerProvider with Require
    *                    eg: `collection.admin.dropIndexes()` when a collection doesn't exist
    * @return a fixed Future[CommandResult]
    */
-  protected[scala] def handleNamedErrors(commandFuture: Future[CommandResult],
-                                         namedErrors: Seq[String]): Future[CommandResult] = {
+  override protected[scala] def handleNamedErrors(commandFuture: Future[CommandResult],
+                                                  namedErrors: Seq[String]): Future[CommandResult] = {
     val promise = Promise[CommandResult]()
     commandFuture onComplete {
       case Success(result) =>
@@ -60,7 +60,7 @@ trait CommandResponseHandler extends CommandResponseHandlerProvider with Require
         }
       case Failure(e: MongoCommandFailureException) =>
         e.getCommandResult.getErrorMessage match {
-          case error: String if namedErrors.contains(error) => promise success e.getCommandResult
+          case error: String if namedErrors.exists(err => error.contains(err)) => promise success e.getCommandResult
           case _ => promise failure e
         }
       case Failure(other) => promise failure other

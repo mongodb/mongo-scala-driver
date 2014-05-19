@@ -24,7 +24,11 @@
  */
 package org.mongodb.scala.core
 
-import org.mongodb.{CollectibleCodec, ConvertibleToDocument, Document, MongoNamespace}
+import java.lang.Long
+
+import org.mongodb._
+
+import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
 
 trait MongoCollectionProvider[T] {
 
@@ -39,10 +43,11 @@ trait MongoCollectionProvider[T] {
    * The MongoCollectionAdmin which provides admin methods for a collection
    */
   val admin: MongoCollectionAdminProvider[T]
+
   /**
    * The MongoClient
    */
-  val client: Client = database.client
+  val client: Client = database.client.asInstanceOf[Client]
 
   /**
    * The namespace for any operations
@@ -53,32 +58,31 @@ trait MongoCollectionProvider[T] {
    * Insert a document into the database
    * @param document to be inserted
    */
-  def insert(document: T) = collectionView.insert(document)
+  def insert(document: T): ResultType[WriteResult] = insert(List(document))
 
   /**
    * Insert a document into the database
    * @param documents the documents to be inserted
    */
-  def insert(documents: Iterable[T]) = collectionView.insert(documents)
+  def insert(documents: Iterable[T]): ResultType[WriteResult] =
+    collectionView.insert(documents).asInstanceOf[ResultType[WriteResult]]
 
   /**
    * Count the number of documents
    */
-  def count() = collectionView.count()
+  def count(): ResultType[Long] = collectionView.count().asInstanceOf[ResultType[Long]]
 
   /**
    * Get a cursor
    */
-  def cursor() = collectionView.cursor()
+  def cursor(): ResultType[CursorType[T]] = collectionView.cursor().asInstanceOf[ResultType[CursorType[T]]]
 
   /**
    * Return a list of results (memory hungry)
    */
-  def toList() = collectionView.toList()
+  def toList(): ResultType[List[T]] = collectionView.toList().asInstanceOf[ResultType[List[T]]]
 
-  def find(filter: ConvertibleToDocument): MongoCollectionViewProvider[T] = collectionView.find(filter.toDocument)
+  def find(filter: Document) = collectionView.find(filter)
 
-  def find(filter: Document): MongoCollectionViewProvider[T] = collectionView.find(filter)
-
-  private def collectionView: MongoCollectionViewProvider[T]
+  protected def collectionView: MongoCollectionViewProvider[T]
 }

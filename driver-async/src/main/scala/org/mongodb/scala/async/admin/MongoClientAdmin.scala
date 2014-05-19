@@ -30,7 +30,7 @@ import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import org.mongodb.Document
+import org.mongodb.{CommandResult, Document}
 
 import org.mongodb.scala.core.admin.MongoClientAdminProvider
 import org.mongodb.scala.async.{CommandResponseHandler, MongoClient}
@@ -39,7 +39,8 @@ case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvide
 
   def ping: Future[Double] = {
     val operation = createOperation(PING_COMMAND)
-    handleErrors(client.executeAsync(operation,  client.options.readPreference)) map {
+    val result = client.executeAsync(operation,  client.options.readPreference)
+    handleErrors(result) map {
       result => result.getResponse.getDouble("ok")
     }
   }

@@ -78,7 +78,7 @@ class MongoCollectionISpec extends RequiresMongoDBSpec {
     collection =>
       collection.insert(createDocuments(100)).futureValue
       val filtered = collection.find(new Document("_id", new Document("$gte", 50)))
-      filtered.toList().futureValue.size should equal(50)
+      filtered.toList().asInstanceOf[Future[List[Document]]].futureValue.size should equal(50)
   }
 
   it should "be able to insert many items" in withCollection {
