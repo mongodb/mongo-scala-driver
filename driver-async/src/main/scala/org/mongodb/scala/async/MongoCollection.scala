@@ -24,24 +24,11 @@
  */
 package org.mongodb.scala.async
 
-import scala.Some
-import scala.collection.JavaConverters._
-import scala.concurrent.{Future, Promise}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
+import org.mongodb.CollectibleCodec
+import org.mongodb.operation.Find
 
-import org.mongodb.{Block, CollectibleCodec, ConvertibleToDocument, Document, MongoAsyncCursor, MongoException,
-                    MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
-import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation.{CountOperation, Find, FindAndRemove, FindAndRemoveOperation, FindAndReplace,
-                              FindAndReplaceOperation, FindAndUpdate, FindAndUpdateOperation, InsertOperation,
-                              InsertRequest, QueryOperation, RemoveOperation, RemoveRequest, ReplaceOperation,
-                              ReplaceRequest, UpdateOperation, UpdateRequest}
-
-import org.mongodb.scala.core.{MongoCollectionViewProvider, MongoCollectionProvider, MongoCollectionOptions}
+import org.mongodb.scala.core.{MongoCollectionOptions, MongoCollectionProvider}
 import org.mongodb.scala.async.admin.MongoCollectionAdmin
-import org.mongodb.scala.async.utils.HandleCommandResponse
-import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
 
 /**
  * A MongoDB Collection

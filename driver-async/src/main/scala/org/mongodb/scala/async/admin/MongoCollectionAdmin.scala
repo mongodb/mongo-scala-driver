@@ -28,10 +28,9 @@ import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import org.mongodb.{Document, Index}
-import org.mongodb.operation.DropIndexOperation
 
-import org.mongodb.scala.async.{CommandResponseHandler, RequiredTypes, MongoCollection}
 import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
+import org.mongodb.scala.async.{CommandResponseHandler, MongoCollection, RequiredTypes}
 
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
   with CommandResponseHandler with RequiredTypes {

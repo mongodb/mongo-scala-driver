@@ -29,7 +29,7 @@ import scala.util.{Failure, Success}
 
 import org.mongodb.{CommandResult, MongoCommandFailureException}
 
-import org.mongodb.scala.core.{RequiredTypesProvider, CommandResponseHandlerProvider}
+import org.mongodb.scala.core.CommandResponseHandlerProvider
 
 /**
  * A special handler for command responses, to ensure the future result is a success or failure.
