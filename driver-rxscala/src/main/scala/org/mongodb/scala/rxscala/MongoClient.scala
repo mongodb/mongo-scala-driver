@@ -41,6 +41,8 @@ import org.mongodb.scala.rxscala.admin.MongoClientAdmin
 
 import rx.lang.scala.{Observable, Subscriber}
 
+
+
 /**
  * A factory for creating a [[org.mongodb.scala.rxscala.MongoClient MongoClient]] instance.
  */

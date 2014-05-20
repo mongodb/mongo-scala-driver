@@ -40,7 +40,7 @@ trait MongoDatabaseAdminProvider {
 
   def drop(): ResultType[CommandResult]
 
-  def collectionNames: ResultType[ListResultType[String]]
+  def collectionNames: ListResultType[String]
 
   def createCollection(createCollectionOptions: CreateCollectionOptions): ResultType[Unit]
 

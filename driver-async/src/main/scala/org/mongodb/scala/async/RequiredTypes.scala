@@ -34,6 +34,6 @@ trait RequiredTypes extends RequiredTypesProvider {
   type Collection[T] = MongoCollection[T]
   type CollectionView[T] = MongoCollectionView[T]
   type ResultType[T] = Future[T]
-  type ListResultType[T] = List[T]
+  type ListResultType[T] = Future[List[T]]
   type CursorType[T] = Future[MongoAsyncCursor[T]]
 }

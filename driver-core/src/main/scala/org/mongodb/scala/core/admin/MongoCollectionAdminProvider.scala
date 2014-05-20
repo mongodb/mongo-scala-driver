@@ -46,7 +46,7 @@ trait MongoCollectionAdminProvider[T] {
   def createIndex(index: Index): ResultType[Unit] = createIndexes(List(index))
   def createIndexes(indexes: Iterable[Index]): ResultType[Unit]
 
-  def getIndexes: ResultType[ListResultType[Document]]
+  def getIndexes: ListResultType[Document]
 
   def dropIndex(index: String): ResultType[Unit]
 
@@ -73,7 +73,7 @@ trait MongoCollectionAdminProvider[T] {
     transformer(collection.client.executeAsync(operation).asInstanceOf[ResultType[Void]])
   }
 
-  protected def getIndexesRaw(transformer: (ResultType[util.List[Document]]) => ResultType[ListResultType[Document]]): ResultType[ListResultType[Document]] = {
+  protected def getIndexesRaw(transformer: (ResultType[util.List[Document]]) => ListResultType[Document]): ListResultType[Document] = {
     val operation = new GetIndexesOperation(collection.namespace)
     transformer(
       collection.client.executeAsync(operation,

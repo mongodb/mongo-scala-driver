@@ -25,6 +25,7 @@
 package org.mongodb.scala.async.admin
 
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import org.mongodb.{Document, Index}
@@ -35,18 +36,18 @@ import org.mongodb.scala.async.{CommandResponseHandler, MongoCollection, Require
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
   with CommandResponseHandler with RequiredTypes {
 
-  def drop(): ResultType[Unit] = dropRaw(result => result.mapTo[Unit])
+  def drop(): Future[Unit] = dropRaw(result => result.mapTo[Unit])
 
-  def statistics: ResultType[Document] = statisticsRaw(result => result map {res => res.getResponse })
+  def statistics: Future[Document] = statisticsRaw(result => result map {res => res.getResponse })
 
-  def isCapped: ResultType[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
+  def isCapped: Future[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
 
-  def getIndexes: ResultType[ListResultType[Document]] =
+  def getIndexes: Future[List[Document]] =
     getIndexesRaw(result => result map {docs => docs.asScala.toList})
 
-  def createIndexes(indexes: Iterable[Index]): ResultType[Unit] =
+  def createIndexes(indexes: Iterable[Index]): Future[Unit] =
     createIndexesRaw(indexes, result => result.mapTo[Unit])
 
-  def dropIndex(index: String): ResultType[Unit] = dropIndexRaw(index, result => result.mapTo[Unit])
+  def dropIndex(index: String): Future[Unit] = dropIndexRaw(index, result => result.mapTo[Unit])
 }
 
