@@ -32,7 +32,7 @@ import scala.language.higherKinds
 import org.mongodb.ReadPreference
 import org.mongodb.binding.{AsyncClusterBinding, AsyncReadBinding, AsyncReadWriteBinding, AsyncWriteBinding}
 import org.mongodb.connection.{BufferProvider, Cluster}
-import org.mongodb.operation.{AsyncReadOperation, AsyncWriteOperation}
+import org.mongodb.operation.{QueryOperation, AsyncReadOperation, AsyncWriteOperation}
 import org.mongodb.scala.core.admin.MongoClientAdminProvider
 
 trait MongoClientProvider extends Closeable {
@@ -90,6 +90,8 @@ trait MongoClientProvider extends Closeable {
   val admin: MongoClientAdminProvider
 
   private[scala] def executeAsync[T](writeOperation: AsyncWriteOperation[T]): ResultType[T]
+
+  private[scala] def executeAsync[T](queryOperation: QueryOperation[T], readPreference: ReadPreference): CursorType[T]
 
   private[scala] def executeAsync[T](readOperation: AsyncReadOperation[T], readPreference: ReadPreference): ResultType[T]
 

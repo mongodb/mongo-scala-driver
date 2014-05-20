@@ -25,9 +25,9 @@
 package org.mongodb.scala.async
 import scala.concurrent.{Future, Promise}
 
-import org.mongodb.{MongoException, ReadPreference}
+import org.mongodb.{MongoAsyncCursor, MongoException, ReadPreference}
 import org.mongodb.connection.{BufferProvider, Cluster, SingleResultCallback}
-import org.mongodb.operation.{AsyncReadOperation, AsyncWriteOperation}
+import org.mongodb.operation.{QueryOperation, AsyncReadOperation, AsyncWriteOperation}
 
 import org.mongodb.scala.core._
 import org.mongodb.scala.async.admin.MongoClientAdmin
@@ -40,7 +40,7 @@ object MongoClient extends MongoClientCompanion with RequiredTypes
 /**
  * The MongoClient
  *
- * Normally created via the [[org.mongodb.scala.async.MongoClient MongoClient]] companion object helpers
+ * Normally created via the companion object helpers
  *
  * @param options The connection options
  * @param cluster The underlying cluster
@@ -60,7 +60,6 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProv
    */
   def database(databaseName: String, databaseOptions: MongoDatabaseOptions) =
     MongoDatabase(databaseName, this, databaseOptions)
-
 
   private[scala] def executeAsync[T](writeOperation: AsyncWriteOperation[T]): Future[T] = {
     val promise = Promise[T]()
@@ -86,6 +85,26 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProv
     val binding = readBinding(readPreference)
     readOperation.executeAsync(binding).register(new SingleResultCallback[T] {
       override def onResult(result: T, e: MongoException): Unit = {
+        try {
+          Option(e) match {
+            case None => promise.success(result)
+            case _ => promise.failure(e)
+
+          }
+        }
+        finally {
+          binding.release()
+        }
+      }
+    })
+    promise.future
+  }
+
+  private[scala] def executeAsync[T](queryOperation: QueryOperation[T], readPreference: ReadPreference): Future[MongoAsyncCursor[T]] = {
+    val promise = Promise[MongoAsyncCursor[T]]()
+    val binding = readBinding(readPreference)
+    queryOperation.executeAsync(binding).register(new SingleResultCallback[MongoAsyncCursor[T]] {
+      override def onResult(result: MongoAsyncCursor[T], e: MongoException): Unit = {
         try {
           Option(e) match {
             case None => promise.success(result)
