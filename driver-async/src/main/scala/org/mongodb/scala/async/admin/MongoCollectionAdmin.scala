@@ -35,18 +35,18 @@ import org.mongodb.scala.async.{CommandResponseHandler, MongoCollection, Require
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
   with CommandResponseHandler with RequiredTypes {
 
-  override def drop(): ResultType[Unit] = dropRaw(result => result.mapTo[Unit])
+  def drop(): ResultType[Unit] = dropRaw(result => result.mapTo[Unit])
 
-  override def statistics: ResultType[Document] = statisticsRaw(result => result map {res => res.getResponse })
+  def statistics: ResultType[Document] = statisticsRaw(result => result map {res => res.getResponse })
 
-  override def isCapped: ResultType[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
+  def isCapped: ResultType[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
 
-  override def getIndexes: ResultType[ListResultType[Document]] =
+  def getIndexes: ResultType[ListResultType[Document]] =
     getIndexesRaw(result => result map {docs => docs.asScala.toList})
 
-  override def createIndexes(indexes: Iterable[Index]): ResultType[Unit] =
+  def createIndexes(indexes: Iterable[Index]): ResultType[Unit] =
     createIndexesRaw(indexes, result => result.mapTo[Unit])
 
-  override def dropIndex(index: String): ResultType[Unit] = dropIndexRaw(index, result => result.mapTo[Unit])
+  def dropIndex(index: String): ResultType[Unit] = dropIndexRaw(index, result => result.mapTo[Unit])
 }
 

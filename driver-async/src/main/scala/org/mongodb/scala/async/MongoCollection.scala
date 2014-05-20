@@ -45,10 +45,10 @@ case class MongoCollection[T](name: String,
                                options: MongoCollectionOptions) extends MongoCollectionProvider[T] with RequiredTypes {
 
 
-  override protected def collectionView: MongoCollectionView[T] = {
+  protected def collectionView: MongoCollectionView[T] = {
     MongoCollectionView[T](client.asInstanceOf[MongoClient], namespace, codec, options, new Find(), options.writeConcern, limitSet=false,
                            doUpsert=false, options.readPreference)
   }
 
-  override val admin: MongoCollectionAdmin[T] = MongoCollectionAdmin(this)
+  val admin: MongoCollectionAdmin[T] = MongoCollectionAdmin(this)
 }
