@@ -22,15 +22,11 @@
  *
  * https://github.com/mongodb/mongo-scala-driver
  */
-package org.mongodb.scala.async
+package org.mongodb.scala.rxscala
 
-import scala.Some
-import scala.concurrent.{Future, Promise}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
+import rx.lang.scala.Observable
 
-import org.mongodb.{Block, CollectibleCodec, MongoException, MongoNamespace, ReadPreference, WriteConcern}
-import org.mongodb.connection.SingleResultCallback
+import org.mongodb.{CollectibleCodec, MongoNamespace, ReadPreference, WriteConcern}
 import org.mongodb.operation.Find
 
 import org.mongodb.scala.core.{MongoCollectionOptions, MongoCollectionViewProvider}
@@ -50,49 +46,11 @@ protected case class MongoCollectionView[T](client: MongoClient, namespace: Mong
   /**
    * Return a list of results (memory hungry)
    */
-  def toList(): Future[List[T]] = {
-    toListHelper(result => {
-      val promise = Promise[List[T]]()
-      var list = List[T]()
-      result.onComplete({
-        case Success(cursor) =>
-          cursor.forEach(new Block[T] {
-            override def apply(d: T): Unit = {
-              list ::= d
-            }
-          }).register(new SingleResultCallback[Void] {
-            def onResult(result: Void, e: MongoException) {
-              if (e != null) promise.failure(e)
-              else promise.success(list.reverse)
-            }
-          })
-        case Failure(e) => promise.failure(e)
-      })
-      promise.future
-    })
+  def toList(): Observable[List[T]] = {
+    toListHelper(result => result.foldLeft(List[T]()){(docs, doc) => docs :+ doc })
   }
 
-  def one(): Future[Option[T]] = {
-    toOneHelper(result => {
-      val promise = Promise[Option[T]]()
-      result.onComplete({
-        case Success(cursor) =>
-          cursor.forEach(new Block[T] {
-            override def apply(d: T): Unit = {
-              if (!promise.future.isCompleted) {
-                promise.success(Some(d))
-              }
-            }
-          }).register(new SingleResultCallback[Void] {
-            def onResult(result: Void, e: MongoException) {
-              if (!promise.future.isCompleted) {
-                promise.success(None)
-              }
-            }
-          })
-        case Failure(e) => promise.failure(e)
-      })
-      promise.future
-    })
+  def one(): Observable[Option[T]] = {
+    toOneHelper(result => result.take(1).foldLeft[Option[T]](None)((v: Option[T], doc: T) => Some(doc)))
   }
 }

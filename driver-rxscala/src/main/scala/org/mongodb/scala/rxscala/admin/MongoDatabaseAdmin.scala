@@ -23,53 +23,30 @@
  * https://github.com/mongodb/mongo-scala-driver
  */
 package org.mongodb.scala.rxscala.admin
-
-import org.mongodb.{CommandResult, CreateCollectionOptions, Document, MongoNamespace, ReadPreference}
-import org.mongodb.codecs.DocumentCodec
-import org.mongodb.operation.{CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation}
-
-import org.mongodb.scala.rxscala.MongoDatabase
-import org.mongodb.scala.rxscala.utils.HandleCommandResponse
-
 import rx.lang.scala.Observable
 
-case class MongoDatabaseAdmin(database: MongoDatabase) extends HandleCommandResponse {
+import org.mongodb._
+import org.mongodb.operation.RenameCollectionOperation
 
-  private val DROP_DATABASE = new Document("dropDatabase", 1)
-  private val name = database.name
-  private val commandCodec = new DocumentCodec()
-  private val client = database.client
+import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
+import org.mongodb.scala.rxscala.{MongoDatabase, CommandResponseHandler, RequiredTypes}
 
-  def drop(): Observable[CommandResult] = {
-    val futureDrop: Observable[CommandResult] = database.executeAsyncCommand(DROP_DATABASE)
-    handleNameSpaceErrors(futureDrop)
-  }
+case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider
+  with CommandResponseHandler with RequiredTypes {
 
   def collectionNames: Observable[String] = {
-    val namespacesCollection: MongoNamespace = new MongoNamespace(name, "system.namespaces")
-    val findAll = new Find()
-    val operation = new QueryOperation[Document](namespacesCollection, findAll, commandCodec, commandCodec)
-    client.executeAsync(operation, ReadPreference.primary) map (doc => doc.getString("name") match {
+    collectionNamesRaw(result => result map (doc => doc.getString("name") match {
       case dollarCollectionName: String if dollarCollectionName.contains("$") => ""
       case collectionName: String => collectionName.substring(name.length() + 1)
     }) filter (s => s.length > 0)
+    )
   }
-
-  def createCollection(collectionName: String): Observable[Unit] =
-    createCollection(new CreateCollectionOptions(collectionName))
 
   def createCollection(createCollectionOptions: CreateCollectionOptions): Observable[Unit] = {
-    client.executeAsync(new CreateCollectionOperation(name, createCollectionOptions)) map { v => Unit }
+    createCollectionRaw(createCollectionOptions, result => result map { v => Unit })
   }
 
-  def renameCollection(oldCollectionName: String, newCollectionName: String): Observable[Unit] =
-    renameCollection(oldCollectionName, newCollectionName, dropTarget = false)
-
-  def renameCollection(oldCollectionName: String, newCollectionName: String, dropTarget: Boolean): Observable[Unit] = {
-    val renameCollectionOptions = new RenameCollectionOperation(name, oldCollectionName, newCollectionName, dropTarget)
-    renameCollection(renameCollectionOptions)
+  def renameCollection(operation: RenameCollectionOperation): Observable[Unit] = {
+   renameCollectionRaw(operation, result => result map { v => Unit })
   }
-
-  def renameCollection(operation: RenameCollectionOperation): Observable[Unit] =
-    client.executeAsync(operation) map { v => Unit }
 }

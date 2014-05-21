@@ -69,19 +69,19 @@ class MongoCollectionAdminISpec extends RequiresMongoDBSpec {
 
   it should "get indexes for non-existent collection" in withCollection {
     collection =>
-      collection.admin.getIndexes.observableValue shouldBe empty
+      collection.admin.getIndexes.observableList shouldBe empty
   }
 
   it should "get indexes for a new collection" in withCollection {
     collection =>
       collection.database.admin.createCollection(collection.name).observableValue
-      collection.admin.getIndexes.observableValue.length should equal(1)
+      collection.admin.getIndexes.observableList.length should equal(1)
   }
 
   it should "add index" in withCollection {
     collection =>
       collection.admin.createIndex(Index.builder().addKeys("test").build).observableValue
-      collection.admin.getIndexes.observableValue.length should equal(2)
+      collection.admin.getIndexes.observableList.length should equal(2)
   }
 
   it should "add index must throw an error for bad indexes" in withCollection {

@@ -37,22 +37,17 @@ import org.mongodb.scala.async.{CommandResponseHandler, MongoClient}
 
 case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with CommandResponseHandler {
 
-  def ping: Future[Double] = {
-    val operation = createOperation(PING_COMMAND)
-    val result = client.executeAsync(operation,  client.options.readPreference)
-    handleErrors(result) map {
-      result => result.getResponse.getDouble("ok")
-    }
+  def databaseNames: Future[List[String]] = {
+    databaseNamesRaw(results => results map {
+      result => {
+        val databases = result.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
+        databases.asScala.map(doc => doc.getString("name")).toList
+      }
+    })
   }
 
-  def databaseNames: Future[Seq[String]] = {
-    val operation = createOperation(LIST_DATABASES)
-    handleErrors(client.executeAsync(operation,  client.options.readPreference)) map {
-      result =>  {
-        val databases = result.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
-        databases.asScala.map(doc => doc.getString("name")).toSeq
-      }
-    }
+  def ping: Future[Double] = {
+    pingRaw(result => result map { result => result.getResponse.getDouble("ok")})
   }
 
 }

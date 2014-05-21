@@ -54,7 +54,7 @@ trait CommandResponseHandler extends CommandResponseHandlerProvider with Require
     commandFuture onComplete {
       case Success(result) =>
         result.getErrorMessage match {
-          case error: String if !namedErrors.contains(error) =>
+          case error: String if !namedErrors.exists(err => error.contains(err)) =>
             promise failure new MongoCommandFailureException(result)
           case _ => promise success result
         }

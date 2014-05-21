@@ -142,9 +142,9 @@ trait MongoCollectionViewProvider[T] {
   /**
    * Execute the operation and return the result.
    */
-  def cursor(): ResultType[CursorType[T]] =  {
+  def cursor(): CursorType[T] =  {
     val operation = new QueryOperation[T](namespace, findOp, documentCodec, getCodec)
-    client.executeAsync(operation, readPreference).asInstanceOf[ResultType[CursorType[T]]]
+    client.executeAsync(operation, readPreference).asInstanceOf[CursorType[T]]
   }
 
   def one(): ResultType[Option[T]]
@@ -230,6 +230,14 @@ trait MongoCollectionViewProvider[T] {
     val findAndRemove: FindAndRemove[T] = new FindAndRemove[T]().where(findOp.getFilter).select(findOp.getFields).sortBy(findOp.getOrder)
     val operation = new FindAndRemoveOperation[T](namespace, findAndRemove, getCodec)
     client.executeAsync(operation).asInstanceOf[ResultType[T]]
+  }
+
+  def toListHelper(f: CursorType[T] => ResultType[List[T]]): ResultType[List[T]] = {
+    f(cursor())
+  }
+
+  def toOneHelper(f: CursorType[T] => ResultType[Option[T]]): ResultType[Option[T]] = {
+    f(limit(1).cursor().asInstanceOf[CursorType[T]]) // Help the compiler by forcing to type
   }
 
   private def getMultiFromLimit: Boolean = {

@@ -25,10 +25,12 @@
 package org.mongodb.scala.core.admin
 
 import scala.language.higherKinds
-import org.mongodb.Document
+
+import org.mongodb.{CommandResult, Document}
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.operation.CommandReadOperation
-import org.mongodb.scala.core.{RequiredTypesProvider, CommandResponseHandlerProvider, MongoClientProvider}
+
+import org.mongodb.scala.core.{CommandResponseHandlerProvider, MongoClientProvider, RequiredTypesProvider}
 
 trait MongoClientAdminProvider {
 
@@ -36,12 +38,24 @@ trait MongoClientAdminProvider {
 
   val client: MongoClientProvider
   def ping: ResultType[Double]
-  def databaseNames: ResultType[Seq[String]]
+  def databaseNames: ListResultType[String]
 
-  protected val ADMIN_DATABASE = "admin"
-  protected val PING_COMMAND = new Document("ping", 1)
-  protected val LIST_DATABASES = new Document("listDatabases", 1)
-  protected val commandCodec: DocumentCodec = new DocumentCodec()
+  private val ADMIN_DATABASE = "admin"
+  private val PING_COMMAND = new Document("ping", 1)
+  private val LIST_DATABASES = new Document("listDatabases", 1)
+  private val commandCodec: DocumentCodec = new DocumentCodec()
+
+  protected def pingRaw(transformer: ResultType[CommandResult] => ResultType[Double]): ResultType[Double] = {
+    val operation = createOperation(PING_COMMAND)
+    val result = client.executeAsync(operation,  client.options.readPreference).asInstanceOf[ResultType[CommandResult]]
+    transformer(handleErrors(result))
+  }
+
+  def databaseNamesRaw(transformer: ResultType[CommandResult] => ListResultType[String]): ListResultType[String] = {
+    val operation = createOperation(LIST_DATABASES)
+    val result = client.executeAsync(operation,  client.options.readPreference).asInstanceOf[ResultType[CommandResult]]
+    transformer(handleErrors(result))
+  }
 
   protected def createOperation(command: Document) =
     new CommandReadOperation(ADMIN_DATABASE, command, commandCodec, commandCodec)

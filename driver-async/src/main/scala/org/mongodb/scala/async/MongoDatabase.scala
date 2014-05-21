@@ -33,8 +33,9 @@ case class MongoDatabase(name: String, client: MongoClient, options: MongoDataba
   extends MongoDatabaseProvider with RequiredTypes {
 
   def collection[T](collectionName: String, codec: CollectibleCodec[T],
-                    collectionOptions: MongoCollectionOptions): MongoCollection[T] =
+                    collectionOptions: MongoCollectionOptions): MongoCollection[T] = {
     MongoCollection(collectionName, this, codec, collectionOptions)
+  }
 
   val admin: MongoDatabaseAdmin = MongoDatabaseAdmin(this)
 }

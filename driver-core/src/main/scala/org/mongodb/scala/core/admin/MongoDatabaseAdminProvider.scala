@@ -24,13 +24,14 @@
  */
 package org.mongodb.scala.core.admin
 
-import scala.language.higherKinds
+import _root_.scala.language.higherKinds
 
-import org.mongodb.{CommandResult, CreateCollectionOptions, Document}
+import org.mongodb._
 import org.mongodb.codecs.DocumentCodec
-import org.mongodb.operation.RenameCollectionOperation
+import org.mongodb.operation._
 
 import org.mongodb.scala.core.{RequiredTypesProvider, CommandResponseHandlerProvider, MongoDatabaseProvider}
+import rx.lang.scala.Observable
 
 trait MongoDatabaseAdminProvider {
 
@@ -38,7 +39,9 @@ trait MongoDatabaseAdminProvider {
 
   val database: MongoDatabaseProvider
 
-  def drop(): ResultType[CommandResult]
+  def drop(): ResultType[CommandResult] = {
+    handleNameSpaceErrors(database.executeAsyncWriteCommand(DROP_DATABASE).asInstanceOf[ResultType[CommandResult]])
+  }
 
   def collectionNames: ListResultType[String]
 
@@ -46,22 +49,40 @@ trait MongoDatabaseAdminProvider {
 
   def renameCollection(operation: RenameCollectionOperation): ResultType[Unit]
 
-  def createCollection(collectionName: String): ResultType[Unit] =
+  def createCollection(collectionName: String): ResultType[Unit] = {
     createCollection(new CreateCollectionOptions(collectionName))
+  }
 
-
-  def renameCollection(oldCollectionName: String, newCollectionName: String): ResultType[Unit] =
+  def renameCollection(oldCollectionName: String, newCollectionName: String): ResultType[Unit] = {
     renameCollection(oldCollectionName, newCollectionName, dropTarget = false)
+  }
 
   def renameCollection(oldCollectionName: String, newCollectionName: String, dropTarget: Boolean): ResultType[Unit] = {
     val renameCollectionOptions = new RenameCollectionOperation(name, oldCollectionName, newCollectionName, dropTarget)
     renameCollection(renameCollectionOptions)
   }
 
-  protected val DROP_DATABASE = new Document("dropDatabase", 1)
   protected val name = database.name
-  protected val commandCodec = new DocumentCodec()
-  protected val client = database.client
+  private val DROP_DATABASE = new Document("dropDatabase", 1)
+  private val commandCodec = new DocumentCodec()
+  private val client = database.client
+
+  protected def collectionNamesRaw(transformer: (CursorType[Document]) => ListResultType[String]): ListResultType[String] = {
+    val namespacesCollection: MongoNamespace = new MongoNamespace(name, "system.namespaces")
+    val findAll = new Find()
+    val operation = new QueryOperation[Document](namespacesCollection, findAll, commandCodec, commandCodec)
+    transformer(client.executeAsync(operation, ReadPreference.primary).asInstanceOf[CursorType[Document]])
+  }
+
+  protected def createCollectionRaw(createCollectionOptions: CreateCollectionOptions,
+                                    transformer: (ResultType[Void]) => ResultType[Unit]): ResultType[Unit] = {
+    transformer(client.executeAsync(new CreateCollectionOperation(name, createCollectionOptions)).asInstanceOf[ResultType[Void]])
+  }
+
+  protected def renameCollectionRaw(operation: RenameCollectionOperation,
+                                    transformer: (ResultType[Void]) => ResultType[Unit]): ResultType[Unit] = {
+    transformer(client.executeAsync(operation).asInstanceOf[ResultType[Void]])
+  }
 
 }
 

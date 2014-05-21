@@ -37,7 +37,7 @@ import org.mongodb.scala.async.admin.MongoCollectionAdmin
  * @param database The database that this collection belongs to
  * @param codec The collectable codec to use for operations
  * @param options The options to use with this collection
- * @tparam T
+ * @tparam T the collection type (usually document)
  */
 case class MongoCollection[T](name: String,
                                database: MongoDatabase,

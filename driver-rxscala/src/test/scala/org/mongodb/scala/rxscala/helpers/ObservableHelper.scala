@@ -31,4 +31,5 @@ import rx.lang.scala.Observable
 
 case class ObservableHelper[T](observable: Observable[T]) extends AnyVal {
   def observableValue: T = observable.timeout(Duration(1, "second")).toBlockingObservable.first
+  def observableList: List[T] = observable.timeout(Duration(1, "second")).toBlockingObservable.toList
 }

@@ -58,7 +58,7 @@ trait MongoCollectionAdminProvider[T] {
 
   private val COLLECTION_STATS = new Document("collStats", collection.name)
 
-  protected def dropRaw(transformer:  (ResultType[Void]) => ResultType[Unit]): ResultType[Unit]  = {
+  protected def dropRaw(transformer:  (ResultType[Void]) => ResultType[Unit]): ResultType[Unit] = {
     val operation = new DropCollectionOperation(collection.namespace)
     transformer(collection.client.executeAsync(operation).asInstanceOf[ResultType[Void]])
   }
@@ -75,10 +75,12 @@ trait MongoCollectionAdminProvider[T] {
 
   protected def getIndexesRaw(transformer: (ResultType[util.List[Document]]) => ListResultType[Document]): ListResultType[Document] = {
     val operation = new GetIndexesOperation(collection.namespace)
-    transformer(
+    val x = transformer(
       collection.client.executeAsync(operation,
         collection.options.readPreference).asInstanceOf[ResultType[util.List[Document]]]
     )
+    println(x)
+    x
   }
 
   protected def dropIndexRaw(index: String, transformer: (ResultType[Void]) => ResultType[Unit]) = {

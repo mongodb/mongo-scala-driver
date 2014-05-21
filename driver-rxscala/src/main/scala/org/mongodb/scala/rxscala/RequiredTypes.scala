@@ -23,23 +23,16 @@
  * https://github.com/mongodb/mongo-scala-driver
  */
 package org.mongodb.scala.rxscala
-
-import org.mongodb.{Codec, CollectibleCodec, CommandResult, Document, ReadPreference}
-import org.mongodb.codecs.{CollectibleDocumentCodec, ObjectIdGenerator}
-import org.mongodb.operation.CommandReadOperation
-
-import org.mongodb.scala.core.{MongoDatabaseProvider, MongoCollectionOptions, MongoDatabaseOptions}
-import org.mongodb.scala.rxscala.admin.MongoDatabaseAdmin
+import org.mongodb.scala.core.RequiredTypesProvider
 
 import rx.lang.scala.Observable
 
-case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
-  extends MongoDatabaseProvider with RequiredTypes {
-
-  def collection[T](collectionName: String, codec: CollectibleCodec[T],
-                    collectionOptions: MongoCollectionOptions): MongoCollection[T] =
-    MongoCollection(collectionName, this, codec, collectionOptions)
-
-  val admin: MongoDatabaseAdmin = MongoDatabaseAdmin(this)
+trait RequiredTypes extends RequiredTypesProvider {
+  type Client = MongoClient
+  type Database = MongoDatabase
+  type Collection[T] = MongoCollection[T]
+  type CollectionView[T] = MongoCollectionView[T]
+  type ResultType[T] = Observable[T]
+  type ListResultType[T] = Observable[T]
+  type CursorType[T] = Observable[T]
 }
-

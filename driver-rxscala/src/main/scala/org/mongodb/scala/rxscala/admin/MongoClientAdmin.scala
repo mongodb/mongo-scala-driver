@@ -28,42 +28,25 @@ import java.util
 
 import scala.collection.JavaConverters._
 
-import org.mongodb.Document
-import org.mongodb.codecs.DocumentCodec
-import org.mongodb.operation.CommandReadOperation
-
-import org.mongodb.scala.rxscala.MongoClient
-import org.mongodb.scala.rxscala.utils.HandleCommandResponse
-
 import rx.lang.scala.Observable
 
-case class MongoClientAdmin(client: MongoClient) extends HandleCommandResponse {
+import org.mongodb.Document
 
-  private val ADMIN_DATABASE = "admin"
-  private val PING_COMMAND = new Document("ping", 1)
-  private val LIST_DATABASES = new Document("listDatabases", 1)
-  private val commandCodec: DocumentCodec = new DocumentCodec()
+import org.mongodb.scala.core.admin.MongoClientAdminProvider
+import org.mongodb.scala.rxscala.{CommandResponseHandler, MongoClient}
+
+case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with CommandResponseHandler {
+
+  def databaseNames: Observable[String] = {
+    databaseNamesRaw(result => {
+      result.map({ res =>
+        val databases = res.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
+        Observable.from(databases.asScala.map(doc => doc.getString("name")).toList)
+      }).concat
+    })
+  }
 
   def ping: Observable[Double] = {
-    val operation = createOperation(PING_COMMAND)
-    handleErrors(client.executeAsync(operation,  client.options.readPreference)) map {
-      result => result.getResponse.getDouble("ok")
-    }
-  }
-
-  def databaseNames: Observable[Seq[String]] = {
-    val operation = createOperation(LIST_DATABASES)
-    handleErrors(client.executeAsync(operation,  client.options.readPreference)) map {
-      result =>  {
-        val databases = result.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
-        databases.asScala.map(doc => doc.getString("name")).toSeq
-      }
-    }
-  }
-
-  private def createOperation(command: Document) = {
-    // scalastyle:off null magic.number
-    new CommandReadOperation(ADMIN_DATABASE, command, commandCodec, commandCodec)
-    // scalastyle:on null magic.number
+    pingRaw(result => result.map({result => result.getResponse.getDouble("ok")}))
   }
 }

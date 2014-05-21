@@ -24,54 +24,39 @@
  */
 package org.mongodb.scala.rxscala.admin
 
-import java.util
-
 import scala.collection.JavaConverters._
-
-import org.mongodb._
-import org.mongodb.operation.{CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation}
-
-import org.mongodb.scala.rxscala.MongoCollection
-import org.mongodb.scala.rxscala.utils.HandleCommandResponse
 
 import rx.lang.scala.Observable
 
-case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends HandleCommandResponse {
+import org.mongodb._
 
-  private val COLLECTION_STATS = new Document("collStats", collection.name)
+import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
+import org.mongodb.scala.rxscala.{CommandResponseHandler, MongoCollection, RequiredTypes}
+
+case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
+with CommandResponseHandler with RequiredTypes {
 
   def drop(): Observable[Unit] = {
-    val operation = new DropCollectionOperation(collection.namespace)
-    collection.client.executeAsync(operation) map { result => Unit }
+    dropRaw(result =>  result map { v => Unit })
   }
-
-  def isCapped: Observable[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
 
   def statistics: Observable[Document] = {
-    val futureStats: Observable[CommandResult] = collection.database.executeAsyncCommand(COLLECTION_STATS)
-    handleNameSpaceErrors(futureStats) map { result => result.getResponse }
+    statisticsRaw(result => result map {res => res.getResponse })
   }
 
-  def getStatistics: Observable[Document] = statistics
+  def isCapped: Observable[Boolean] = {
+    statistics map { result => result.get("capped").asInstanceOf[Boolean] }
+  }
 
-  def createIndex(index: Index): Observable[Unit] = createIndexes(List(index))
+  def getIndexes: Observable[Document] = {
+    getIndexesRaw(result => {result.map({ docs => Observable.from(docs.asScala.toList) }).concat})
+  }
+
   def createIndexes(indexes: Iterable[Index]): Observable[Unit] = {
-    val operation = new CreateIndexesOperation(new util.ArrayList(indexes.toList.asJava), collection.namespace)
-    collection.client.executeAsync(operation) map { v => Unit }
-  }
-
-  def getIndexes: Observable[Seq[Document]] = {
-    val operation = new GetIndexesOperation(collection.namespace)
-    collection.client.executeAsync(operation, collection.options.readPreference).map(docs => docs.asScala.toSeq)
+    createIndexesRaw(indexes, result => result map { v => Unit})
   }
 
   def dropIndex(index: String): Observable[Unit] = {
-    val operation = new DropIndexOperation(collection.namespace, index)
-    collection.client.executeAsync(operation)  map { result => Unit }
+    dropIndexRaw(index, result => result map { v => Unit })
   }
-
-  def dropIndex(index: Index): Observable[Unit] = dropIndex(index.getName)
-
-  def dropIndexes(): Observable[Unit] = dropIndex("*")
-
 }
