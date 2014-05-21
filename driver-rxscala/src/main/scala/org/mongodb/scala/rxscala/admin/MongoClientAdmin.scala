@@ -38,7 +38,7 @@ import org.mongodb.scala.rxscala.{CommandResponseHandler, MongoClient}
 case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with CommandResponseHandler {
 
   def databaseNames: Observable[String] = {
-    databaseNamesRaw(result => {
+    databaseNamesHelper(result => {
       result.map({ res =>
         val databases = res.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
         Observable.from(databases.asScala.map(doc => doc.getString("name")).toList)
@@ -46,7 +46,5 @@ case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvide
     })
   }
 
-  def ping: Observable[Double] = {
-    pingRaw(result => result.map({result => result.getResponse.getDouble("ok")}))
-  }
+  def ping: Observable[Double] = pingHelper(result => result.map({result => result.getResponse.getDouble("ok")}))
 }

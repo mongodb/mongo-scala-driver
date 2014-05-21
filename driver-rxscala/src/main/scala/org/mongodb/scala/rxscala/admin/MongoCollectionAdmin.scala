@@ -28,35 +28,27 @@ import scala.collection.JavaConverters._
 
 import rx.lang.scala.Observable
 
-import org.mongodb._
+import org.mongodb.{Document, Index}
 
 import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
 import org.mongodb.scala.rxscala.{CommandResponseHandler, MongoCollection, RequiredTypes}
 
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
-with CommandResponseHandler with RequiredTypes {
+  with CommandResponseHandler with RequiredTypes {
 
-  def drop(): Observable[Unit] = {
-    dropRaw(result =>  result map { v => Unit })
-  }
+  def drop(): Observable[Unit] = dropHelper(result =>  result map { v => Unit })
 
-  def statistics: Observable[Document] = {
-    statisticsRaw(result => result map {res => res.getResponse })
-  }
+  def statistics: Observable[Document] = statisticsHelper(result => result map {res => res.getResponse })
 
-  def isCapped: Observable[Boolean] = {
-    statistics map { result => result.get("capped").asInstanceOf[Boolean] }
-  }
+  def isCapped: Observable[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
 
   def getIndexes: Observable[Document] = {
-    getIndexesRaw(result => {result.map({ docs => Observable.from(docs.asScala.toList) }).concat})
+    getIndexesHelper(result => {result.map({ docs => Observable.from(docs.asScala.toList) }).concat})
   }
 
   def createIndexes(indexes: Iterable[Index]): Observable[Unit] = {
-    createIndexesRaw(indexes, result => result map { v => Unit})
+    createIndexesHelper(indexes, result => result map { v => Unit})
   }
 
-  def dropIndex(index: String): Observable[Unit] = {
-    dropIndexRaw(index, result => result map { v => Unit })
-  }
+  def dropIndex(index: String): Observable[Unit] = dropIndexHelper(index, result => result map { v => Unit })
 }

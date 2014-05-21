@@ -58,32 +58,30 @@ trait MongoCollectionAdminProvider[T] {
 
   private val COLLECTION_STATS = new Document("collStats", collection.name)
 
-  protected def dropRaw(transformer:  (ResultType[Void]) => ResultType[Unit]): ResultType[Unit] = {
+  protected def dropHelper(transformer:  (ResultType[Void]) => ResultType[Unit]): ResultType[Unit] = {
     val operation = new DropCollectionOperation(collection.namespace)
     transformer(collection.client.executeAsync(operation).asInstanceOf[ResultType[Void]])
   }
 
-  protected def statisticsRaw(transformer:  (ResultType[CommandResult]) => ResultType[Document]): ResultType[Document] = {
+  protected def statisticsHelper(transformer:  (ResultType[CommandResult]) => ResultType[Document]): ResultType[Document] = {
     val futureStats = collection.database.executeAsyncReadCommand(COLLECTION_STATS, collection.database.readPreference)
     transformer(handleNamedErrors(futureStats.asInstanceOf[ResultType[CommandResult]], Seq("not found")))
   }
 
-  protected def createIndexesRaw(indexes: Iterable[Index], transformer:  (ResultType[Void]) => ResultType[Unit]): ResultType[Unit] = {
+  protected def createIndexesHelper(indexes: Iterable[Index], transformer:  (ResultType[Void]) => ResultType[Unit]): ResultType[Unit] = {
     val operation = new CreateIndexesOperation(new util.ArrayList(indexes.toList.asJava), collection.namespace)
     transformer(collection.client.executeAsync(operation).asInstanceOf[ResultType[Void]])
   }
 
-  protected def getIndexesRaw(transformer: (ResultType[util.List[Document]]) => ListResultType[Document]): ListResultType[Document] = {
+  protected def getIndexesHelper(transformer: (ResultType[util.List[Document]]) => ListResultType[Document]): ListResultType[Document] = {
     val operation = new GetIndexesOperation(collection.namespace)
-    val x = transformer(
+    transformer(
       collection.client.executeAsync(operation,
         collection.options.readPreference).asInstanceOf[ResultType[util.List[Document]]]
     )
-    println(x)
-    x
   }
 
-  protected def dropIndexRaw(index: String, transformer: (ResultType[Void]) => ResultType[Unit]) = {
+  protected def dropIndexHelper(index: String, transformer: (ResultType[Void]) => ResultType[Unit]) = {
     val operation = new DropIndexOperation(collection.namespace, index)
     transformer(collection.client.executeAsync(operation).asInstanceOf[ResultType[Void]])
   }

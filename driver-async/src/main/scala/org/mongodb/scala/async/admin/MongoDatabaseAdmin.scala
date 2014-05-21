@@ -38,7 +38,7 @@ import org.mongodb.scala.async.{CommandResponseHandler, MongoDatabase, RequiredT
 case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider with CommandResponseHandler with RequiredTypes {
 
   def collectionNames: Future[List[String]] = {
-    collectionNamesRaw(result => {
+    collectionNamesHelper(result => {
       val promise = Promise[List[String]]()
       var list = List[String]()
       result.onComplete({
@@ -47,7 +47,7 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdmi
             override def apply(doc: Document): Unit = {
               doc.getString("name") match {
                 case dollarCollectionName: String if dollarCollectionName.contains("$") => list
-                case collectionName: String => list ::= collectionName.substring(name.length + 1)
+                case collectionName: String => list ::= collectionName.substring(database.name.length + 1)
               }
             }
           }).register(new SingleResultCallback[Void] {
@@ -62,11 +62,11 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdmi
   }
 
   def createCollection(createCollectionOptions: CreateCollectionOptions): Future[Unit] = {
-    createCollectionRaw(createCollectionOptions, result => result.mapTo[Unit])
+    createCollectionHelper(createCollectionOptions, result => result.mapTo[Unit])
   }
 
   def renameCollection(operation: RenameCollectionOperation): Future[Unit] = {
-    renameCollectionRaw(operation, result => result.mapTo[Unit])
+    renameCollectionHelper(operation, result => result.mapTo[Unit])
   }
 
 }

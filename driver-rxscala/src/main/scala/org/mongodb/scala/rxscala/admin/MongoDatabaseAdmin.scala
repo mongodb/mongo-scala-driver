@@ -35,18 +35,18 @@ case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdmi
   with CommandResponseHandler with RequiredTypes {
 
   def collectionNames: Observable[String] = {
-    collectionNamesRaw(result => result map (doc => doc.getString("name") match {
+    collectionNamesHelper(result => result map (doc => doc.getString("name") match {
       case dollarCollectionName: String if dollarCollectionName.contains("$") => ""
-      case collectionName: String => collectionName.substring(name.length() + 1)
+      case collectionName: String => collectionName.substring(database.name.length() + 1)
     }) filter (s => s.length > 0)
     )
   }
 
   def createCollection(createCollectionOptions: CreateCollectionOptions): Observable[Unit] = {
-    createCollectionRaw(createCollectionOptions, result => result map { v => Unit })
+    createCollectionHelper(createCollectionOptions, result => result map { v => Unit })
   }
 
   def renameCollection(operation: RenameCollectionOperation): Observable[Unit] = {
-   renameCollectionRaw(operation, result => result map { v => Unit })
+   renameCollectionHelper(operation, result => result map { v => Unit })
   }
 }

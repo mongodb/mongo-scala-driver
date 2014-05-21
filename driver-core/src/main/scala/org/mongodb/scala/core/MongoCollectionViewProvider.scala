@@ -232,11 +232,11 @@ trait MongoCollectionViewProvider[T] {
     client.executeAsync(operation).asInstanceOf[ResultType[T]]
   }
 
-  def toListHelper(f: CursorType[T] => ResultType[List[T]]): ResultType[List[T]] = {
+  protected def toListHelper(f: CursorType[T] => ResultType[List[T]]): ResultType[List[T]] = {
     f(cursor())
   }
 
-  def toOneHelper(f: CursorType[T] => ResultType[Option[T]]): ResultType[Option[T]] = {
+  protected def toOneHelper(f: CursorType[T] => ResultType[Option[T]]): ResultType[Option[T]] = {
     f(limit(1).cursor().asInstanceOf[CursorType[T]]) // Help the compiler by forcing to type
   }
 

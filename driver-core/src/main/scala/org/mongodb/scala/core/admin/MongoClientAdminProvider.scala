@@ -45,18 +45,19 @@ trait MongoClientAdminProvider {
   private val LIST_DATABASES = new Document("listDatabases", 1)
   private val commandCodec: DocumentCodec = new DocumentCodec()
 
-  protected def pingRaw(transformer: ResultType[CommandResult] => ResultType[Double]): ResultType[Double] = {
+  protected def pingHelper(transformer: ResultType[CommandResult] => ResultType[Double]): ResultType[Double] = {
     val operation = createOperation(PING_COMMAND)
     val result = client.executeAsync(operation,  client.options.readPreference).asInstanceOf[ResultType[CommandResult]]
     transformer(handleErrors(result))
   }
 
-  def databaseNamesRaw(transformer: ResultType[CommandResult] => ListResultType[String]): ListResultType[String] = {
+  protected def databaseNamesHelper(transformer: ResultType[CommandResult] => ListResultType[String]): ListResultType[String] = {
     val operation = createOperation(LIST_DATABASES)
     val result = client.executeAsync(operation,  client.options.readPreference).asInstanceOf[ResultType[CommandResult]]
     transformer(handleErrors(result))
   }
 
-  protected def createOperation(command: Document) =
+  private def createOperation(command: Document) = {
     new CommandReadOperation(ADMIN_DATABASE, command, commandCodec, commandCodec)
+  }
 }

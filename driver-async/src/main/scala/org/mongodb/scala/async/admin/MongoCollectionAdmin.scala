@@ -36,18 +36,16 @@ import org.mongodb.scala.async.{CommandResponseHandler, MongoCollection, Require
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
   with CommandResponseHandler with RequiredTypes {
 
-  def drop(): Future[Unit] = dropRaw(result => result.mapTo[Unit])
+  def drop(): Future[Unit] = dropHelper(result => result.mapTo[Unit])
 
-  def statistics: Future[Document] = statisticsRaw(result => result map {res => res.getResponse })
+  def statistics: Future[Document] = statisticsHelper(result => result map {res => res.getResponse })
 
   def isCapped: Future[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
 
-  def getIndexes: Future[List[Document]] =
-    getIndexesRaw(result => result map {docs => docs.asScala.toList})
+  def getIndexes: Future[List[Document]] = getIndexesHelper(result => result map {docs => docs.asScala.toList})
 
-  def createIndexes(indexes: Iterable[Index]): Future[Unit] =
-    createIndexesRaw(indexes, result => result.mapTo[Unit])
+  def createIndexes(indexes: Iterable[Index]): Future[Unit] = createIndexesHelper(indexes, result => result.mapTo[Unit])
 
-  def dropIndex(index: String): Future[Unit] = dropIndexRaw(index, result => result.mapTo[Unit])
+  def dropIndex(index: String): Future[Unit] = dropIndexHelper(index, result => result.mapTo[Unit])
 }
 
