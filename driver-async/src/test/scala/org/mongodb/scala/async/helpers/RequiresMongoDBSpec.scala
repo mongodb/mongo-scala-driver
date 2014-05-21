@@ -47,9 +47,11 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
   private val WAIT_DURATION = Duration(1, "second")
   private val DB_PREFIX = "mongo-scala-"
   private var _currentTestName: Option[String] = None
+  private var mongoDBOnline: Boolean = false
 
   protected override def runTest(testName: String, args: Args): Status = {
     _currentTestName = Some(testName.split("should")(1))
+    mongoDBOnline = isMongoDBOnline()
     super.runTest(testName, args)
   }
 
@@ -68,30 +70,34 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
     MongoClientURI(mongoURIString)
   }
 
-  def mongoClient = MongoClient(mongoClientURI)
+  def mongoClient() = MongoClient(mongoClientURI)
 
-  lazy val mongoDbOnline: Boolean = {
+  def isMongoDBOnline(): Boolean = {
+    val client = mongoClient()
     try {
-      Await.result(mongoClient.admin.ping, WAIT_DURATION)
+      Await.result(client.admin.ping, WAIT_DURATION)
       true
     } catch {
       case t: Throwable => false
+    } finally {
+      client.close()
     }
   }
 
   def checkMongoDB() {
-    if (!mongoDbOnline) cancel("No Available Database")
+    if (!mongoDBOnline) cancel("No Available Database")
   }
 
   def withDatabase(dbName: String)(testCode: MongoDatabase => Any) {
     checkMongoDB()
+    val client = mongoClient()
     val databaseName = if (dbName.startsWith(DB_PREFIX)) dbName.take(63) else s"$DB_PREFIX$dbName".take(63)
-    val mongoDatabase = mongoClient(databaseName)
+    val mongoDatabase = client(databaseName)
     try testCode(mongoDatabase) // "loan" the fixture to the test
     finally {
       // clean up the fixture
       Await.result(mongoDatabase.admin.drop(), WAIT_DURATION)
-      mongoClient.close()
+      client.close()
     }
   }
 
@@ -99,23 +105,31 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
 
   def withCollection(testCode: MongoCollection[Document] => Any) {
     checkMongoDB()
-    val mongoDatabase = mongoClient(databaseName)
+    val client = mongoClient()
+    val mongoDatabase = client(databaseName)
     val mongoCollection = mongoDatabase(collectionName)
-
     try testCode(mongoCollection) // "loan" the fixture to the test
     finally {
       // clean up the fixture
       Await.result(mongoCollection.admin.drop(), WAIT_DURATION)
-      mongoClient.close()
+      client.close()
+    }
+  }
+
+  override def beforeAll() {
+    if (mongoDBOnline) {
+      val client = mongoClient()
+      Await.result(client(databaseName).admin.drop(), WAIT_DURATION)
+      client.close()
     }
   }
 
   override def afterAll() {
-    if (mongoDbOnline) {
-      Await.result(mongoClient(databaseName).admin.drop(), WAIT_DURATION)
-      mongoClient.close()
+    if (mongoDBOnline) {
+      val client = mongoClient()
+      Await.result(client(databaseName).admin.drop(), WAIT_DURATION)
+      client.close()
     }
-
   }
 
 }

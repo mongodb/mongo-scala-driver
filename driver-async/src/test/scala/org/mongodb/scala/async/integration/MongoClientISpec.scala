@@ -37,30 +37,35 @@ class MongoClientISpec extends RequiresMongoDBSpec {
     val myClient = MongoClient()
     myClient shouldBe a[MongoClient]
     myClient.options shouldBe a[MongoClientOptions]
+    myClient.close()
   }
 
   it should "take a ServerAddress" in {
     val myClient = MongoClient(new ServerAddress("localhost:27017"))
     myClient shouldBe a[MongoClient]
     myClient.options shouldBe a[MongoClientOptions]
+    myClient.close()
   }
 
   it should "take a ServerAddress with Options" in {
     val myClient = MongoClient(new ServerAddress(),
       MongoClientOptions(description="test"))
     myClient.options.description shouldBe "test"
+    myClient.close()
   }
 
   it should "Take a List of servers" in {
     val myClient = MongoClient(List(new ServerAddress("localhost:27017")))
     myClient shouldBe a[MongoClient]
     myClient.options shouldBe a[MongoClientOptions]
+    myClient.close()
   }
 
   it should "take a mongo uri" in {
     val myClient = MongoClient(MongoClientURI("mongodb://localhost"))
     myClient shouldBe a[MongoClient]
     myClient.options shouldBe a[MongoClientOptions]
+    myClient.close()
   }
 
   it should "Be able to get a database" in {
@@ -68,6 +73,7 @@ class MongoClientISpec extends RequiresMongoDBSpec {
     val database = myClient("test")
     database shouldBe a[MongoDatabase]
     database.name shouldBe "test"
+    myClient.close()
   }
 
   it should "Be able to get a database via apply" in {
@@ -75,6 +81,7 @@ class MongoClientISpec extends RequiresMongoDBSpec {
     val database = myClient("test")
     database shouldBe a[MongoDatabase]
     database.name shouldBe "test"
+    myClient.close()
   }
 
   it should "Be able to get a collection" in {
@@ -82,6 +89,7 @@ class MongoClientISpec extends RequiresMongoDBSpec {
     val collection = database.collection("test")
     collection shouldBe a[MongoCollection[Document]]
     collection.name shouldBe "test"
+    collection.client.close()
   }
 
   it should "Be able to get a collection via apply" in {
@@ -89,6 +97,7 @@ class MongoClientISpec extends RequiresMongoDBSpec {
     val collection = database("test")
     collection shouldBe a[MongoCollection[Document]]
     collection.name shouldBe "test"
+    database.client.close()
   }
 
 }

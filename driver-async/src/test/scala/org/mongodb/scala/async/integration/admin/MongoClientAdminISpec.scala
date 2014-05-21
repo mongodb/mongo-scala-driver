@@ -35,13 +35,16 @@ class MongoClientAdminISpec extends RequiresMongoDBSpec {
   "MongoClientAdmin" should "be accessible via MongoClient().admin" in {
     val admin = MongoClient().admin
     admin shouldBe a[MongoClientAdmin]
+    admin.client.close()
   }
 
   it should "Return a ping" in {
     checkMongoDB()
-    val ping = mongoClient.admin.ping
+    val admin = MongoClient().admin
+    val ping = admin.ping
     ping shouldBe a[Future[Double]]
     ping.futureValue === 1.0
+    admin.client.close()
   }
 
   it should "Return an IllegalStateException exception on a closed MongoClient" in {
@@ -54,8 +57,10 @@ class MongoClientAdminISpec extends RequiresMongoDBSpec {
 
   it should "Return a seq of database names" in {
     checkMongoDB()
-    val dbNames = mongoClient.admin.databaseNames
+    val admin = MongoClient().admin
+    val dbNames = admin.databaseNames
     dbNames shouldBe a[Future[Seq[String]]]
+    admin.client.close()
   }
 
 }
