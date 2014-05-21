@@ -154,7 +154,7 @@ trait MongoCollectionViewProvider[T] {
 
   def save(document: T): ResultType[WriteResult] = {
     Option(getCodec.getId(document)) match {
-      case None => insert(document).asInstanceOf[ResultType[WriteResult]]
+      case None => insert(document)
       case Some(id) => upsert.find(new Document("_id", id)).replace(document).asInstanceOf[ResultType[WriteResult]]
     }
   }

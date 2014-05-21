@@ -24,13 +24,13 @@
  */
 package org.mongodb.scala.core.admin
 
-import org.mongodb._
+import scala.language.higherKinds
+
+import org.mongodb.{CommandResult, CreateCollectionOptions, Document, MongoNamespace, ReadPreference}
 import org.mongodb.codecs.DocumentCodec
-import org.mongodb.operation._
+import org.mongodb.operation.{CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation}
 
 import org.mongodb.scala.core.{CommandResponseHandlerProvider, MongoDatabaseProvider, RequiredTypesProvider}
-
-import _root_.scala.language.higherKinds
 
 trait MongoDatabaseAdminProvider {
 
@@ -61,27 +61,26 @@ trait MongoDatabaseAdminProvider {
     renameCollection(renameCollectionOptions)
   }
 
+  protected def collectionNamesHelper(f: CursorType[Document] => ListResultType[String]): ListResultType[String] = {
+    val namespacesCollection: MongoNamespace = new MongoNamespace(name, "system.namespaces")
+    val findAll = new Find()
+    val operation = new QueryOperation[Document](namespacesCollection, findAll, commandCodec, commandCodec)
+    f(client.executeAsync(operation, ReadPreference.primary).asInstanceOf[CursorType[Document]])
+  }
+
+  protected def createCollectionHelper(createCollectionOptions: CreateCollectionOptions,
+                                       f: ResultType[Void] => ResultType[Unit]): ResultType[Unit] = {
+    f(client.executeAsync(new CreateCollectionOperation(name, createCollectionOptions)).asInstanceOf[ResultType[Void]])
+  }
+
+  protected def renameCollectionHelper(operation: RenameCollectionOperation,
+                                       f: ResultType[Void] => ResultType[Unit]): ResultType[Unit] = {
+    f(client.executeAsync(operation).asInstanceOf[ResultType[Void]])
+  }
+
   private val name = database.name
   private val DROP_DATABASE = new Document("dropDatabase", 1)
   private val commandCodec = new DocumentCodec()
   private val client = database.client
-
-  protected def collectionNamesHelper(transformer: (CursorType[Document]) => ListResultType[String]): ListResultType[String] = {
-    val namespacesCollection: MongoNamespace = new MongoNamespace(name, "system.namespaces")
-    val findAll = new Find()
-    val operation = new QueryOperation[Document](namespacesCollection, findAll, commandCodec, commandCodec)
-    transformer(client.executeAsync(operation, ReadPreference.primary).asInstanceOf[CursorType[Document]])
-  }
-
-  protected def createCollectionHelper(createCollectionOptions: CreateCollectionOptions,
-                                    transformer: (ResultType[Void]) => ResultType[Unit]): ResultType[Unit] = {
-    transformer(client.executeAsync(new CreateCollectionOperation(name, createCollectionOptions)).asInstanceOf[ResultType[Void]])
-  }
-
-  protected def renameCollectionHelper(operation: RenameCollectionOperation,
-                                    transformer: (ResultType[Void]) => ResultType[Unit]): ResultType[Unit] = {
-    transformer(client.executeAsync(operation).asInstanceOf[ResultType[Void]])
-  }
-
 }
 
