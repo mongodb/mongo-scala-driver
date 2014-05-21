@@ -29,8 +29,8 @@ import java.util.concurrent.TimeUnit
 
 import scala.language.higherKinds
 
-import org.mongodb.ReadPreference
-import org.mongodb.binding.{AsyncClusterBinding, AsyncReadBinding, AsyncReadWriteBinding, AsyncWriteBinding}
+import org.mongodb.{MongoAsyncCursor, MongoFuture, ReadPreference}
+import org.mongodb.binding._
 import org.mongodb.connection.{BufferProvider, Cluster}
 import org.mongodb.operation.{QueryOperation, AsyncReadOperation, AsyncWriteOperation}
 import org.mongodb.scala.core.admin.MongoClientAdminProvider
@@ -89,11 +89,24 @@ trait MongoClientProvider extends Closeable {
    */
   val admin: MongoClientAdminProvider
 
-  private[scala] def executeAsync[T](writeOperation: AsyncWriteOperation[T]): ResultType[T]
+  protected def mongoFutureConverter[T]: (MongoFuture[T], ReferenceCounted) => ResultType[T]
 
-  private[scala] def executeAsync[T](queryOperation: QueryOperation[T], readPreference: ReadPreference): CursorType[T]
+  protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => CursorType[T]
 
-  private[scala] def executeAsync[T](readOperation: AsyncReadOperation[T], readPreference: ReadPreference): ResultType[T]
+  private[scala] def executeAsync[T](writeOperation: AsyncWriteOperation[T]): ResultType[T] = {
+    val binding = this.writeBinding
+    mongoFutureConverter[T](writeOperation.executeAsync(binding), binding)
+  }
+
+  private[scala] def executeAsync[T](queryOperation: QueryOperation[T], readPreference: ReadPreference): CursorType[T] = {
+    val binding = readBinding(readPreference)
+    mongoCursorConverter[T](queryOperation.executeAsync(binding), binding)
+  }
+
+  private[scala] def executeAsync[T](readOperation: AsyncReadOperation[T], readPreference: ReadPreference): ResultType[T] = {
+    val binding = readBinding(readPreference)
+    mongoFutureConverter[T](readOperation.executeAsync(binding), binding)
+  }
 
   private[scala] def writeBinding: AsyncWriteBinding = {
     readWriteBinding(ReadPreference.primary)

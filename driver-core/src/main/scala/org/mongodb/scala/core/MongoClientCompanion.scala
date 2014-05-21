@@ -35,12 +35,25 @@ import org.mongodb.scala.core.connection.GetDefaultCluster
 import org.mongodb.operation.Find
 
 /**
- * A factory for creating a [[org.mongodb.scala.core.MongoClientProvider MongoClient]] instance.
+ * A factory for creating a [[MongoClientProvider MongoClient]] instances.
+ *
+ * All that is needed is a `RequiredTypesProvider` implementation to be mixed in:
+ *
+ * {{{
+ *   object MongoClient extends MongoClientCompanion with RequiredTypes
+ * }}}
+ *
  */
 trait MongoClientCompanion extends GetDefaultCluster {
 
   this: RequiredTypesProvider =>
 
+  /**
+   * If you use a `case class` implementation of [[MongoClientProvider]] the this method is
+   * automatically provided, otherwise you will need to implement.
+   *
+   * @return MongoClient
+   */
   def apply(options: MongoClientOptions, cluster: Cluster, bufferProvider: BufferProvider): Client
 
   /**

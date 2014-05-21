@@ -28,10 +28,13 @@ package org.mongodb.scala.core
 import org.mongodb.CommandResult
 
 /**
- * A special handler for command responses, to ensure the future result is a success or failure.
+ * A special handler for command responses that ignores certain error conditions.
  *
  * In certain scenarios we may want to suppress an exception where the result of the operation is the same. For example:
- * {{MongoCollection.admin.dropIndexes()}} doesn't throw an exception if the collection doesn't exist.
+ * `MongoCollection.admin.dropIndexes()` doesn't throw an exception if the collection doesn't exist.
+ *
+ * Implementations of this trait must implement the `handleNamedErrors`
+ *
  */
 trait CommandResponseHandlerProvider {
 
@@ -58,10 +61,13 @@ trait CommandResponseHandlerProvider {
   /**
    * Sometimes we need to handle certain errors gracefully, without cause to throw an exception.
    *
-   * @param commandFuture the Future[CommandResult] to wrap
+   * This must be implemented by the implementer of the trait and should ignore any `CommandResult` errors
+   * if they include any of the `namedErrors`.
+   *
+   *@param commandFuture the ResultType[CommandResult] to wrap
    * @param namedErrors A sequence of errors that have the same end result as a successful operation
    *                    eg: `collection.admin.dropIndexes()` when a collection doesn't exist
-   * @return a fixed Future[CommandResult]
+   * @return a fixed ResultType[CommandResult]
    */
   protected[scala] def handleNamedErrors(commandFuture: ResultType[CommandResult],
                                          namedErrors: Seq[String]): ResultType[CommandResult]
