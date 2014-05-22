@@ -1,8 +1,7 @@
 package org.mongodb.scala.core
 
+import org.mongodb.{CollectibleCodec, MongoNamespace, ReadPreference, WriteConcern}
 import org.mongodb.operation.Find
-import org.mongodb.connection.{BufferProvider, Cluster}
-import org.mongodb._
 
 trait MongoCollectionViewCompanion {
 

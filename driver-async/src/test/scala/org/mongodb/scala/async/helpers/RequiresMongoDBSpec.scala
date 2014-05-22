@@ -24,7 +24,7 @@
  */
 package org.mongodb.scala.async.helpers
 
-import scala.concurrent.Await
+import scala.concurrent.{Future, Await}
 import scala.concurrent.duration.Duration
 import scala.util.Properties
 

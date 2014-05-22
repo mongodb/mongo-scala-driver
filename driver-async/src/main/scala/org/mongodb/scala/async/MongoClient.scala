@@ -25,16 +25,15 @@
 package org.mongodb.scala.async
 import scala.concurrent.{Future, Promise}
 
-import org.mongodb.{MongoFuture, MongoAsyncCursor, MongoException, ReadPreference}
-import org.mongodb.connection.{BufferProvider, Cluster, SingleResultCallback}
-import org.mongodb.operation.{QueryOperation, AsyncReadOperation, AsyncWriteOperation}
-
-import org.mongodb.scala.core._
-import org.mongodb.scala.async.admin.MongoClientAdmin
+import org.mongodb.{MongoAsyncCursor, MongoException, MongoFuture}
 import org.mongodb.binding.ReferenceCounted
+import org.mongodb.connection.{Cluster, SingleResultCallback}
+
+import org.mongodb.scala.core.{MongoClientCompanion, MongoClientOptions, MongoClientProvider, MongoDatabaseOptions}
+import org.mongodb.scala.async.admin.MongoClientAdmin
 
 /**
- * A factory for creating a [[org.mongodb.scala.async.MongoClient MongoClient]] instance.
+ * A factory for creating a [[MongoClient]] instance.
  */
 object MongoClient extends MongoClientCompanion with RequiredTypes
 
@@ -43,14 +42,20 @@ object MongoClient extends MongoClientCompanion with RequiredTypes
  *
  * Normally created via the companion object helpers
  *
+ * @inheritdoc
  * @param options The connection options
  * @param cluster The underlying cluster
- * @param bufferProvider The buffer provider to use
  */
-case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProvider: BufferProvider)
+case class MongoClient(options: MongoClientOptions, cluster: Cluster)
   extends MongoClientProvider with RequiredTypes {
 
-  val admin = MongoClientAdmin(this)
+
+  /**
+   * Provides the MongoClientAdmin for this MongoClient
+   *
+   * @return MongoClientAdmin
+   */
+  val admin: MongoClientAdmin = MongoClientAdmin(this)
 
   /**
    * an explicit helper to get a database
@@ -59,9 +64,12 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProv
    * @param databaseOptions the options to use with the database
    * @return MongoDatabase
    */
-  def database(databaseName: String, databaseOptions: MongoDatabaseOptions) =
+  protected def databaseProvider(databaseName: String, databaseOptions: MongoDatabaseOptions) =
     MongoDatabase(databaseName, this, databaseOptions)
 
+/**
+ * A type converter method that converts a `MongoFuture` to a native [[scala.concurrent.Future]] of `Future[T]`
+ */
   protected def mongoFutureConverter[T]: (MongoFuture[T], ReferenceCounted) => Future[T] = {
     (result, binding) => {
       val promise = Promise[T]()
@@ -83,6 +91,10 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProv
     }
   }
 
+  /**
+   * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T]]` to a native [[scala.concurrent.Future]]
+   * of `Future[MongoAsyncCursor[T]]`
+   */
   protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => Future[MongoAsyncCursor[T]] = {
     (result, binding) =>
       val promise = Promise[MongoAsyncCursor[T]]()

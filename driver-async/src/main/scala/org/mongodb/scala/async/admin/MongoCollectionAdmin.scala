@@ -28,24 +28,55 @@ import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import org.mongodb.{Document, Index}
+import org.mongodb.{CommandResult, Document, Index}
 
 import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
 import org.mongodb.scala.async.{CommandResponseHandler, MongoCollection, RequiredTypes}
+import java.util
 
+/**
+ * MongoCollectionAdmin
+ *
+ * @inheritdoc
+ * @param collection the MongoCollection instance
+ * @tparam T the type of collection
+ */
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
   with CommandResponseHandler with RequiredTypes {
 
-  def drop(): Future[Unit] = dropHelper(result => result.mapTo[Unit])
+  /**
+   * A type transformer that takes a `Future[Void]` and converts it to `Future[Unit]`
+   *
+   * @return Future[Unit]
+   */
+  protected def voidToUnitConverter: Future[Void] => Future[Unit] = result => result.mapTo[Unit]
 
-  def statistics: Future[Document] = statisticsHelper(result => result map {res => res.getResponse })
+  /**
+   * A helper that gets the `capped` field from the statistics document
+   *
+   * @return Future[Boolean]
+   */
+  protected def getCappedFromStatistics: Future[Document] => Future[Boolean] = { result =>
+    result map { doc => doc.get("capped").asInstanceOf[Boolean]}
+  }
 
-  def isCapped: Future[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
+  /**
+   * A helper that takes a `Future[CommandResult]` and picks out the `CommandResult.getResponse()` to return the
+   * response Document as `Future[Document]`.
+   *
+   * @return Future[Document]
+   */
+  protected def getResponseHelper: Future[CommandResult] => Future[Document] = { result =>
+    result map {cmdResult => cmdResult.getResponse }
+  }
 
-  def getIndexes: Future[List[Document]] = getIndexesHelper(result => result map {docs => docs.asScala.toList})
-
-  def createIndexes(indexes: Iterable[Index]): Future[Unit] = createIndexesHelper(indexes, result => result.mapTo[Unit])
-
-  def dropIndex(index: String): Future[Unit] = dropIndexHelper(index, result => result.mapTo[Unit])
+  /**
+   * A type transformer that takes a `Future[util.List[Document\]\]` and converts it to `Future[List[Document\]\]`
+   *
+   * @return Future[List[Document\]\]
+   */
+  protected def javaListToListResultTypeConverter: Future[util.List[Document]] => Future[List[Document]] = {
+    result => result map { docs => docs.asScala.toList }
+  }
 }
 

@@ -39,16 +39,21 @@ import org.mongodb.scala.async.admin.MongoCollectionAdmin
  * @param options The options to use with this collection
  * @tparam T the collection type (usually document)
  */
-case class MongoCollection[T](name: String,
-                               database: MongoDatabase,
-                               codec: CollectibleCodec[T],
+case class MongoCollection[T](name: String, database: MongoDatabase, codec: CollectibleCodec[T],
                                options: MongoCollectionOptions) extends MongoCollectionProvider[T] with RequiredTypes {
 
+  /**
+   * MongoCollection administration functionality
+   */
+  val admin: MongoCollectionAdmin[T] = MongoCollectionAdmin(this)
 
+  /**
+   * The MongoCollectionView to be used in chaining operations together
+   * @return the MongoCollectionView
+   */
   protected def collectionView: MongoCollectionView[T] = {
     MongoCollectionView[T](client.asInstanceOf[MongoClient], namespace, codec, options, new Find(), options.writeConcern, limitSet=false,
                            doUpsert=false, options.readPreference)
   }
 
-  val admin: MongoCollectionAdmin[T] = MongoCollectionAdmin(this)
 }

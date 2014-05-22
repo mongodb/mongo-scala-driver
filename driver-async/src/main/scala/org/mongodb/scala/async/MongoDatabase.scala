@@ -28,14 +28,27 @@ import org.mongodb.CollectibleCodec
 
 import org.mongodb.scala.core.{MongoCollectionOptions, MongoDatabaseOptions, MongoDatabaseProvider}
 import org.mongodb.scala.async.admin.MongoDatabaseAdmin
+import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
 
 case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
   extends MongoDatabaseProvider with RequiredTypes {
 
+  /**
+   * MongoDatabase administration functionality
+   */
+  val admin: MongoDatabaseAdmin = MongoDatabaseAdmin(this)
+
+  /**
+   * Provides a MongoCollection
+   *
+   * @param collectionName the name of the collection
+   * @param codec the codec to use with the collection
+   * @param collectionOptions the options to use with the collection
+   * @tparam T the document type
+   * @return the collection
+   */
   def collection[T](collectionName: String, codec: CollectibleCodec[T],
                     collectionOptions: MongoCollectionOptions): MongoCollection[T] = {
     MongoCollection(collectionName, this, codec, collectionOptions)
   }
-
-  val admin: MongoDatabaseAdmin = MongoDatabaseAdmin(this)
 }

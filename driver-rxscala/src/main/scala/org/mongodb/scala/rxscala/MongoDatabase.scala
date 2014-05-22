@@ -24,22 +24,30 @@
  */
 package org.mongodb.scala.rxscala
 
-import org.mongodb.{Codec, CollectibleCodec, CommandResult, Document, ReadPreference}
-import org.mongodb.codecs.{CollectibleDocumentCodec, ObjectIdGenerator}
-import org.mongodb.operation.CommandReadOperation
+import org.mongodb.CollectibleCodec
 
-import org.mongodb.scala.core.{MongoDatabaseProvider, MongoCollectionOptions, MongoDatabaseOptions}
+import org.mongodb.scala.core.{MongoCollectionOptions, MongoDatabaseOptions, MongoDatabaseProvider}
 import org.mongodb.scala.rxscala.admin.MongoDatabaseAdmin
-
-import rx.lang.scala.Observable
 
 case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
   extends MongoDatabaseProvider with RequiredTypes {
 
-  def collection[T](collectionName: String, codec: CollectibleCodec[T],
-                    collectionOptions: MongoCollectionOptions): MongoCollection[T] =
-    MongoCollection(collectionName, this, codec, collectionOptions)
-
+  /**
+   * MongoDatabase administration functionality
+   */
   val admin: MongoDatabaseAdmin = MongoDatabaseAdmin(this)
-}
 
+  /**
+   * Provides a MongoCollection
+   *
+   * @param collectionName the name of the collection
+   * @param codec the codec to use with the collection
+   * @param collectionOptions the options to use with the collection
+   * @tparam T the document type
+   * @return the collection
+   */
+  def collection[T](collectionName: String, codec: CollectibleCodec[T],
+                    collectionOptions: MongoCollectionOptions): MongoCollection[T] = {
+    MongoCollection(collectionName, this, codec, collectionOptions)
+  }
+}

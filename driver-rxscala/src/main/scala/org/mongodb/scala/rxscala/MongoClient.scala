@@ -24,24 +24,19 @@
  */
 package org.mongodb.scala.rxscala
 
-import _root_.scala.Some
+import scala.Some
 
-import _root_.scala.Some
 import rx.lang.scala.{Observable, Subscriber}
 
-import org.mongodb._
-import org.mongodb.connection.{BufferProvider, Cluster, SingleResultCallback}
-import org.mongodb.operation.{AsyncReadOperation, AsyncWriteOperation, QueryOperation}
-
-import org.mongodb.scala.core._
-import org.mongodb.scala.rxscala.admin.MongoClientAdmin
-import org.mongodb.scala.core.MongoDatabaseOptions
-import org.mongodb.scala.rxscala.admin.MongoClientAdmin
-import org.mongodb.scala.core.MongoClientOptions
+import org.mongodb.{Block, MongoAsyncCursor, MongoException, MongoFuture}
 import org.mongodb.binding.ReferenceCounted
+import org.mongodb.connection.{Cluster, SingleResultCallback}
+
+import org.mongodb.scala.core.{MongoClientCompanion, MongoClientOptions, MongoClientProvider, MongoDatabaseOptions}
+import org.mongodb.scala.rxscala.admin.MongoClientAdmin
 
 /**
- * A factory for creating a [[org.mongodb.scala.rxscala.MongoClient MongoClient]] instance.
+ * A factory for creating a [[MongoClient]] instance.
  */
 object MongoClient extends MongoClientCompanion with RequiredTypes
 
@@ -52,11 +47,15 @@ object MongoClient extends MongoClientCompanion with RequiredTypes
  *
  * @param options The connection options
  * @param cluster The underlying cluster
- * @param bufferProvider The buffer provider to use
  */
-case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProvider: BufferProvider)
+case class MongoClient(options: MongoClientOptions, cluster: Cluster)
   extends MongoClientProvider with RequiredTypes {
 
+  /**
+   * Provides the MongoClientAdmin for this MongoClient
+   *
+   * @return MongoClientAdmin
+   */
   val admin: MongoClientAdmin = MongoClientAdmin(this)
 
   /**
@@ -66,9 +65,12 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProv
    * @param databaseOptions the options to use with the database
    * @return MongoDatabase
    */
-  def database(databaseName: String, databaseOptions: MongoDatabaseOptions): MongoDatabase =
+  protected def databaseProvider(databaseName: String, databaseOptions: MongoDatabaseOptions) =
     MongoDatabase(databaseName, this, databaseOptions)
 
+  /**
+   * A type converter method that converts a `MongoFuture[T]` to a rxScala `Observable[T]`
+   */
   protected def mongoFutureConverter[T]: (MongoFuture[T], ReferenceCounted) => Observable[T] = {
     (result, binding) => {
       Observable((subscriber: Subscriber[T]) => {
@@ -90,6 +92,9 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster, bufferProv
     }
   }
 
+  /**
+   * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T]]` to a rxScala `Observable[T]`
+   */
   protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => Observable[T] = {
     (result, binding) => {
       Observable((subscriber: Subscriber[T]) => {

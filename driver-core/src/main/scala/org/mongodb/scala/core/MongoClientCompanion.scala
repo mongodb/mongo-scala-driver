@@ -28,18 +28,17 @@ import scala.Some
 import scala.collection.JavaConverters._
 import scala.language.higherKinds
 
-import org.mongodb.{ReadPreference, WriteConcern, MongoCredential}
+import org.mongodb.MongoCredential
 import org.mongodb.connection.{BufferProvider, Cluster, ClusterConnectionMode, ClusterSettings, PowerOfTwoBufferPool, ServerAddress}
 
 import org.mongodb.scala.core.connection.GetDefaultCluster
-import org.mongodb.operation.Find
 
 /**
  * A factory for creating a [[MongoClientProvider MongoClient]] instances.
  *
  * All that is needed is a `RequiredTypesProvider` implementation to be mixed in:
  *
- * {{{
+ * @example {{{
  *   object MongoClient extends MongoClientCompanion with RequiredTypes
  * }}}
  *
@@ -54,7 +53,7 @@ trait MongoClientCompanion extends GetDefaultCluster {
    *
    * @return MongoClient
    */
-  def apply(options: MongoClientOptions, cluster: Cluster, bufferProvider: BufferProvider): Client
+  def apply(options: MongoClientOptions, cluster: Cluster): Client
 
   /**
    * Create a default MongoClient at localhost:27017
@@ -144,7 +143,7 @@ trait MongoClientCompanion extends GetDefaultCluster {
     }
 
     val cluster = getDefaultCluster(clusterSettings, credentialList, options, bufferProvider)
-    this(options, cluster, bufferProvider)
+    this(options, cluster)
   }
 
   /**
@@ -218,7 +217,7 @@ trait MongoClientCompanion extends GetDefaultCluster {
       .build()
 
     val cluster = getDefaultCluster(clusterSettings, credentialList, options, bufferProvider)
-    this(options, cluster, bufferProvider)
+    this(options, cluster)
   }
 
   /**
@@ -254,7 +253,7 @@ trait MongoClientCompanion extends GetDefaultCluster {
           case replicaSet: String => clusterSettings.requiredReplicaSetName(replicaSet)
         }
         val cluster = getDefaultCluster(clusterSettings.build, credentialList, options, bufferProvider)
-        this(options, cluster, bufferProvider)
+        this(options, cluster)
       case _ =>
         val seedList: List[ServerAddress] = mongoClientURI.hosts.map(hostName => new ServerAddress(hostName))
         this(seedList, credentialList, options, bufferProvider)

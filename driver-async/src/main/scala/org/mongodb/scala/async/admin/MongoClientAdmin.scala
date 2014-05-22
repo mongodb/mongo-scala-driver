@@ -25,29 +25,39 @@
 package org.mongodb.scala.async.admin
 
 import java.util
+import scala.language.higherKinds
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import org.mongodb.Document
+import org.mongodb.{CommandResult, Document}
 
 import org.mongodb.scala.core.admin.MongoClientAdminProvider
-import org.mongodb.scala.async.{CommandResponseHandler, MongoClient}
+import org.mongodb.scala.async.{RequiredTypes, CommandResponseHandler, MongoClient}
 
-case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with CommandResponseHandler {
+case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with CommandResponseHandler with RequiredTypes {
 
-  def databaseNames: Future[List[String]] = {
-    databaseNamesHelper(results => results map {
-      result => {
-        val databases = result.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
+  /**
+   * A helper that takes the ping CommandResult and returns the ping response time from the "ok" field
+   *
+   * @return ping time
+   */
+  protected def pingHelper: Future[CommandResult] => Future[Double] = {result =>
+    result map { cmdResult => cmdResult.getResponse.getDouble("ok") }
+  }
+
+  /**
+   * A helper that gets the database list from the CommandResult and returns the names of the databases
+   *
+   * @return database names
+   */
+  protected def databaseNamesHelper: Future[CommandResult] => Future[List[String]] = { result =>
+    result map {
+      cmdResult => {
+        val databases = cmdResult.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
         databases.asScala.map(doc => doc.getString("name")).toList
       }
-    })
+    }
   }
-
-  def ping: Future[Double] = {
-    pingHelper(result => result map { result => result.getResponse.getDouble("ok")})
-  }
-
 }

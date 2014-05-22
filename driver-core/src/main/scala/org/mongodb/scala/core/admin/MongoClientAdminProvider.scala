@@ -32,31 +32,91 @@ import org.mongodb.operation.CommandReadOperation
 
 import org.mongodb.scala.core.{CommandResponseHandlerProvider, MongoClientProvider, RequiredTypesProvider}
 
+/**
+ * The MongoClientAdmin trait providing the core of a MongoClientAdmin implementation.
+ *
+ * To use the trait it requires a concrete implementation of [CommandResponseHandlerProvider] and
+ * [RequiredTypesProvider] to define handling of CommandResult errors and the types the concrete implementation uses.
+ *
+ * The core api remains the same between the implementations only the resulting types change based on the
+ * [RequiredTypesProvider] implementation. To do this the concrete implementation of this trait requires the following
+ * methods to be implemented:
+ *
+ * {{{
+ *    case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with
+ *      CommandResponseHandler {
+ *
+ *        protected def pingHelper: ResultType[CommandResult] => ResultType[Double]
+ *
+ *        protected def databaseNamesHelper:ResultType[CommandResult] => ListResultType[String]
+ *    }
+ * }}}
+ */
 trait MongoClientAdminProvider {
 
   this: CommandResponseHandlerProvider with RequiredTypesProvider =>
 
+  /**
+   * The MongoClient we are administrating
+   */
   val client: MongoClientProvider
-  def ping: ResultType[Double]
-  def databaseNames: ListResultType[String]
+
+  /**
+   * The ping time to the MongoDB Server
+   *
+   * @return ResultType[Double]
+   */
+  def ping: ResultType[Double] = {
+    val operation = createOperation(PING_COMMAND)
+    val result = client.executeAsync(operation,  client.options.readPreference).asInstanceOf[ResultType[CommandResult]]
+    pingHelper(handleErrors(result))
+  }
+
+  /**
+   * List the database names
+   *
+   * @return ListResultType[String]
+   */
+  def databaseNames: ListResultType[String] = {
+    val operation = createOperation(LIST_DATABASES)
+    val result = client.executeAsync(operation,  client.options.readPreference).asInstanceOf[ResultType[CommandResult]]
+    databaseNamesHelper(handleErrors(result)).asInstanceOf[ListResultType[String]]
+  }
+
+  /**
+   * A helper that takes the ping CommandResult and returns the ping response time from the "ok" field
+   *
+   * An example for Futures would be:
+   * {{{
+   *   result => result map { cmdResult => cmdResult.getResponse.getDouble("ok") }
+   * }}}
+   *
+   * @return the ping time
+   */
+  protected def pingHelper: ResultType[CommandResult] => ResultType[Double]
+
+  /**
+   * A helper that gets the database list from the CommandResult and returns the names of the databases
+   *
+   * An example for Futures would be:
+   * {{{
+   *    result =>
+   *       result map {
+   *         cmdResult => {
+   *           val databases = cmdResult.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
+   *           databases.asScala.map(doc => doc.getString("name")).toList
+   *         }
+   *       }
+   * }}}
+   *
+   * @return The database names
+   */
+  protected def databaseNamesHelper: ResultType[CommandResult] => ListResultType[String]
 
   private val ADMIN_DATABASE = "admin"
   private val PING_COMMAND = new Document("ping", 1)
   private val LIST_DATABASES = new Document("listDatabases", 1)
   private val commandCodec: DocumentCodec = new DocumentCodec()
-
-  protected def pingHelper(f: ResultType[CommandResult] => ResultType[Double]): ResultType[Double] = {
-    val operation = createOperation(PING_COMMAND)
-    val result = client.executeAsync(operation,  client.options.readPreference).asInstanceOf[ResultType[CommandResult]]
-    f(handleErrors(result))
-  }
-
-  protected def databaseNamesHelper(f: ResultType[CommandResult] => ListResultType[String]): ListResultType[String] = {
-    val operation = createOperation(LIST_DATABASES)
-    val result = client.executeAsync(operation,  client.options.readPreference).asInstanceOf[ResultType[CommandResult]]
-    f(handleErrors(result))
-  }
-
   private def createOperation(command: Document) = {
     new CommandReadOperation(ADMIN_DATABASE, command, commandCodec, commandCodec)
   }

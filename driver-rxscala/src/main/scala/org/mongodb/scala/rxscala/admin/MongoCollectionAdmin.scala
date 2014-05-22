@@ -24,11 +24,13 @@
  */
 package org.mongodb.scala.rxscala.admin
 
+import java.util
+
 import scala.collection.JavaConverters._
 
 import rx.lang.scala.Observable
 
-import org.mongodb.{Document, Index}
+import org.mongodb.{CommandResult, Document}
 
 import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
 import org.mongodb.scala.rxscala.{CommandResponseHandler, MongoCollection, RequiredTypes}
@@ -36,19 +38,38 @@ import org.mongodb.scala.rxscala.{CommandResponseHandler, MongoCollection, Requi
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
   with CommandResponseHandler with RequiredTypes {
 
-  def drop(): Observable[Unit] = dropHelper(result =>  result map { v => Unit })
+  /**
+   * A type transformer that takes a `Observable[Void]` and converts it to `Observable[Unit]`
+   *
+   * @return ResultType[Unit]
+   */
+  protected def voidToUnitConverter: Observable[Void] => Observable[Unit] = result => result map {v => Unit}
 
-  def statistics: Observable[Document] = statisticsHelper(result => result map {res => res.getResponse })
-
-  def isCapped: Observable[Boolean] = statistics map { result => result.get("capped").asInstanceOf[Boolean] }
-
-  def getIndexes: Observable[Document] = {
-    getIndexesHelper(result => {result.map({ docs => Observable.from(docs.asScala.toList) }).concat})
+  /**
+   * A helper that gets the `capped` field from the statistics document
+   *
+   * @return
+   */
+  protected def getCappedFromStatistics: Observable[Document] => Observable[Boolean] = {
+    result => result map { doc => doc.get("capped").asInstanceOf[Boolean] }
   }
 
-  def createIndexes(indexes: Iterable[Index]): Observable[Unit] = {
-    createIndexesHelper(indexes, result => result map { v => Unit})
+  /**
+   * A helper that takes a `Observable[CommandResult]` and picks out the `CommandResult.getResponse()` to return the
+   * response Document as `Observable[Document]`.
+   *
+   * @return Observable[Document]
+   */
+  protected def getResponseHelper: Observable[CommandResult] => Observable[Document] = {
+        result => result map { cmdResult => cmdResult.getResponse }
   }
 
-  def dropIndex(index: String): Observable[Unit] = dropIndexHelper(index, result => result map { v => Unit })
+
+  /**
+   * A type transformer that takes a `Observable[util.List[Document]]` and converts it to `Observable[Document]`
+   * @return  Observable[Document]
+   */
+  protected def javaListToListResultTypeConverter: Observable[util.List[Document]] => Observable[Document] = {
+    result => { result.map({ docs => Observable.from(docs.asScala.toList) }).concat }
+  }
 }

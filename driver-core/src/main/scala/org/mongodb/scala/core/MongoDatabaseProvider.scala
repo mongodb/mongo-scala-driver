@@ -24,47 +24,136 @@
  */
 package org.mongodb.scala.core
 
-import _root_.scala.language.higherKinds
+import scala.language.higherKinds
 
-import org.mongodb._
+import org.mongodb.{Document, CollectibleCodec, Codec, ReadPreference}
 import org.mongodb.codecs.{CollectibleDocumentCodec, ObjectIdGenerator}
 import org.mongodb.operation.{CommandWriteOperation, CommandReadOperation}
 
 import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
 
+/**
+ * The MongoDatabaseProvider trait providing the core of a MongoDatabase implementation.
+ *
+ * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the
+ * concrete implementation uses.
+ *
+ * The core api remains the same between the implementations only the resulting types change based on the
+ * [RequiredTypesProvider] implementation. To do this the concrete implementation of this trait requires the following
+ * methods to be implemented:
+ *
+ * {{{
+ *    case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
+ *      extends MongoDatabaseProvider with RequiredTypes {
+ *
+ *      val admin: MongoDatabaseAdminProvider
+ *
+ *      def collection[T](collectionName: String, codec: CollectibleCodec[T],
+ *                        collectionOptions: MongoCollectionOptions): Collection[T]
+ *
+ *    }
+ * }}}
+ *
+ */
 trait MongoDatabaseProvider {
 
   this: RequiredTypesProvider =>
 
-  val name: String
-  val client: MongoClientProvider
-  val options: MongoDatabaseOptions
+  /**
+   * A concrete implementation of [[MongoDatabaseAdminProvider]]
+   *
+   * @note Each MongoClient implementation must provide this.
+   */
   val admin: MongoDatabaseAdminProvider
 
+  /**
+   * The database name
+   *
+   * @note Its expected that the MongoDatabase implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoClient Implementation
+   */
+  val name: String
+
+  /**
+   * The MongoClient instance used to create the MongoDatabase instance
+   *
+   * @note Its expected that the MongoDatabase implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoClient Implementation
+   */
+  val client: MongoClientProvider
+
+  /**
+   * The MongoDatabaseOptions to be used with this MongoDatabase instance
+   *
+   * @note Its expected that the MongoDatabase implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoClient Implementation
+   */
+  val options: MongoDatabaseOptions
+
+  /**
+   * Helper to get a collection
+   *
+   * @param collectionName the name of the collection
+   * @return the collection
+   */
   def apply(collectionName: String): Collection[Document] = collection(collectionName)
 
+  /**
+   * Helper to get a collection
+   * @param collectionName  the name of the collection
+   * @param collectionOptions  the options to use with the collection
+   * @return the collection
+   */
   def apply(collectionName: String, collectionOptions: MongoCollectionOptions): Collection[Document] =
     collection(collectionName, collectionOptions)
 
+
+  /**
+   * An explicit helper to get a collection
+   *
+   * @param collectionName the name of the collection
+   * @return the collection
+   */
   def collection(collectionName: String): Collection[Document] =
     collection(collectionName, MongoCollectionOptions(options))
 
+  /**
+   * An explicit helper to get a collection
+   * @param collectionName  the name of the collection
+   * @param collectionOptions  the options to use with the collection
+   * @return the collection
+   */
   def collection(collectionName: String, collectionOptions: MongoCollectionOptions): Collection[Document] = {
     val codec = new CollectibleDocumentCodec(collectionOptions.primitiveCodecs, new ObjectIdGenerator())
     collection(collectionName, codec, collectionOptions)
   }
 
+  /**
+   * Helper to get a collection
+   * @param collectionName  the name of the collection
+   * @param codec  the codec to use with the collection
+   * @return the collection
+   */
   def collection[T](collectionName: String, codec: CollectibleCodec[T]): Collection[T] =
     collection(collectionName, codec, MongoCollectionOptions(options))
 
+  /**
+   * A concrete implementation of [[MongoCollectionProvider]]
+   *
+   * @note Each MongoClient implementation must provide this.
+   *
+   * @param collectionName the name of the collection
+   * @param codec the codec to use with the collection
+   * @param collectionOptions the options to use with the collection
+   * @tparam T the document type
+   * @return the collection
+   */
   def collection[T](collectionName: String, codec: CollectibleCodec[T],
                     collectionOptions: MongoCollectionOptions): Collection[T]
 
-  def documentCodec: Codec[Document] = options.documentCodec
-  def readPreference: ReadPreference = options.readPreference
-
-  def executeAsyncWriteCommand(command: Document) = client.executeAsync(createWriteOperation(command))
-  def executeAsyncReadCommand(command: Document, readPreference: ReadPreference) =
+  private def documentCodec: Codec[Document] = options.documentCodec
+  private [scala] def executeAsyncWriteCommand(command: Document) = client.executeAsync(createWriteOperation(command))
+  private [scala] def executeAsyncReadCommand(command: Document, readPreference: ReadPreference) =
     client.executeAsync(createReadOperation(command), readPreference)
 
   private def createWriteOperation(command: Document) =

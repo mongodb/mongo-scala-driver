@@ -26,23 +26,82 @@ package org.mongodb.scala.core
 
 import java.lang.Long
 
-import org.mongodb._
+import org.mongodb.{CollectibleCodec, Document, MongoNamespace, WriteResult}
 
 import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
 
+/**
+ * The MongoCollectionProvider trait providing the core of a MongoCollection implementation.
+ *
+ * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the
+ * concrete implementation uses.
+ *
+ * The core api remains the same between the implementations only the resulting types change based on the
+ * [RequiredTypesProvider] implementation. To do this the concrete implementation of this trait requires the following
+ * methods to be implemented:
+ *
+ * {{{
+ *    case class MongoCollection[T](name: String, database: MongoDatabase, codec: CollectibleCodec[T],
+ *                                  options: MongoCollectionOptions) extends MongoCollectionProvider[T] with RequiredTypes {
+ *
+ *      val admin: MongoCollectionAdmin[T] = MongoCollectionAdmin(this)
+ *
+ *      protected def collectionView: MongoCollectionViewProvider[T]
+
+ *    }
+ * }}}
+ *
+ */
 trait MongoCollectionProvider[T] {
 
   this: RequiredTypesProvider =>
 
-  val name: String
-  val database: Database
-  val codec: CollectibleCodec[T]
-  val options: MongoCollectionOptions
-
   /**
-   * The MongoCollectionAdmin which provides admin methods for a collection
+   * A concrete implementation of [[MongoCollectionAdminProvider]]
+   *
+   * @note Each MongoCollection implementation must provide this.
    */
   val admin: MongoCollectionAdminProvider[T]
+
+  /**
+   * A concrete implementation of [[MongoCollectionViewProvider]] to provide the MongoCollectionView for this
+   * MongoCollection
+   *
+   * @note Each MongoCollection implementation must provide this.
+   */
+  protected def collectionView: MongoCollectionViewProvider[T]
+
+  /**
+   * The name of the collection
+   *
+   * @note Its expected that the MongoCollection implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoDatabase Implementation
+   */
+  val name: String
+
+  /**
+   * The MongoDatabase
+   *
+   * @note Its expected that the MongoCollection implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoDatabase Implementation
+   */
+  val database: Database
+
+  /**
+   * The codec that is used with this collection
+   *
+   * @note Its expected that the MongoCollection implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoDatabase Implementation
+   */
+  val codec: CollectibleCodec[T]
+
+  /**
+   * The MongoCollectionOptions to be used with this MongoCollection instance
+   *
+   * @note Its expected that the MongoCollection implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoDatabase Implementation
+   */
+  val options: MongoCollectionOptions
 
   /**
    * The MongoClient
@@ -82,7 +141,11 @@ trait MongoCollectionProvider[T] {
    */
   def toList(): ResultType[List[T]] = collectionView.toList().asInstanceOf[ResultType[List[T]]]
 
+  /**
+   * Find documents in this collection
+   * @param filter the filter to be used to find the documents
+   * @return the collection view for further chaining
+   */
   def find(filter: Document): CollectionView[T] = collectionView.find(filter).asInstanceOf[CollectionView[T]]
 
-  protected def collectionView: MongoCollectionViewProvider[T]
 }
