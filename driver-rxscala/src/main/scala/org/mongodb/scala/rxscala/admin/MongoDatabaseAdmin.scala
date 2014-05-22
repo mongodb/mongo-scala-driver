@@ -23,30 +23,37 @@
  * https://github.com/mongodb/mongo-scala-driver
  */
 package org.mongodb.scala.rxscala.admin
+
 import rx.lang.scala.Observable
 
-import org.mongodb._
-import org.mongodb.operation.RenameCollectionOperation
+import org.mongodb.Document
 
 import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
-import org.mongodb.scala.rxscala.{MongoDatabase, CommandResponseHandler, RequiredTypes}
+import org.mongodb.scala.rxscala.{CommandResponseHandler, MongoDatabase, RequiredTypes}
 
+/**
+ * The MongoDatabaseAdmin
+ *
+ * @param database the MongoDatabase being administrated
+ */
 case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider
   with CommandResponseHandler with RequiredTypes {
 
-  def collectionNames: Observable[String] = {
-    collectionNamesHelper(result => result map (doc => doc.getString("name") match {
+  /**
+   * A helper function that takes the collection name documents and returns a list of names from those documents
+   *
+   * @return the collection names
+   */
+  protected def collectionNamesHelper: Observable[Document] => Observable[String] = { result =>
+    result map (doc => doc.getString("name") match {
       case dollarCollectionName: String if dollarCollectionName.contains("$") => ""
       case collectionName: String => collectionName.substring(database.name.length() + 1)
     }) filter (s => s.length > 0)
-    )
   }
 
-  def createCollection(createCollectionOptions: CreateCollectionOptions): Observable[Unit] = {
-    createCollectionHelper(createCollectionOptions, result => result map { v => Unit })
-  }
-
-  def renameCollection(operation: RenameCollectionOperation): Observable[Unit] = {
-   renameCollectionHelper(operation, result => result map { v => Unit })
-  }
+  /**
+   * A type transformer that takes a `Observable[Void]` and converts it to `Observable[Unit]`
+   * @return Observable[Unit]
+   */
+  protected def voidToUnitConverter: Observable[Void] => Observable[Unit] = result => result map { v => Unit }
 }

@@ -149,7 +149,6 @@ trait MongoCollectionAdminProvider[T] {
    */
   val collection: MongoCollectionProvider[T]
 
-
   /**
    * A type transformer that takes a `ResultType[Void]` and converts it to `ResultType[Unit]`
    *

@@ -24,21 +24,21 @@
  */
 package org.mongodb.scala.async.admin
 
+import java.util
+
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import org.mongodb.{CommandResult, Document, Index}
+import org.mongodb.{CommandResult, Document}
 
 import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
 import org.mongodb.scala.async.{CommandResponseHandler, MongoCollection, RequiredTypes}
-import java.util
 
 /**
  * MongoCollectionAdmin
  *
- * @inheritdoc
- * @param collection the MongoCollection instance
+ * @param collection the MongoCollection being administrated
  * @tparam T the type of collection
  */
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]

@@ -36,6 +36,11 @@ import org.mongodb.{CommandResult, Document}
 import org.mongodb.scala.core.admin.MongoClientAdminProvider
 import org.mongodb.scala.async.{RequiredTypes, CommandResponseHandler, MongoClient}
 
+/**
+ * The MongoClientAdmin
+ *
+ * @param client the MongoClient being administrated
+ */
 case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with CommandResponseHandler with RequiredTypes {
 
   /**

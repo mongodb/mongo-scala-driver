@@ -28,45 +28,51 @@ import scala.concurrent._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
-import org.mongodb.{Block, CommandResult, CreateCollectionOptions, Document, MongoAsyncCursor, MongoException, MongoNamespace, ReadPreference}
+import org.mongodb.{Block, Document, MongoAsyncCursor, MongoException}
 import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation.{CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation}
 
 import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
 import org.mongodb.scala.async.{CommandResponseHandler, MongoDatabase, RequiredTypes}
 
+/**
+ * MongoDatabaseAdmin
+ *
+ * @param database the MongoDatabase being administrated
+ */
 case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider with CommandResponseHandler with RequiredTypes {
 
-  def collectionNames: Future[List[String]] = {
-    collectionNamesHelper(result => {
-      val promise = Promise[List[String]]()
-      var list = List[String]()
-      result.onComplete({
-        case Success(cursor) =>
-          cursor.forEach(new Block[Document] {
-            override def apply(doc: Document): Unit = {
-              doc.getString("name") match {
-                case dollarCollectionName: String if dollarCollectionName.contains("$") => list
-                case collectionName: String => list ::= collectionName.substring(database.name.length + 1)
-              }
+  /**
+   * A helper function that takes a `Future[MongoAsyncCursor[Document\]\]` collection documents and returns a
+   * `Future[List[String\]\]` list of names.
+   *
+   * @return the collection names
+   */
+  protected def collectionNamesHelper: Future[MongoAsyncCursor[Document]] => Future[List[String]] = { result =>
+    val promise = Promise[List[String]]()
+    var list = List[String]()
+    result.onComplete({
+      case Success(cursor) =>
+        cursor.forEach(new Block[Document] {
+          override def apply(doc: Document): Unit = {
+            doc.getString("name") match {
+              case dollarCollectionName: String if dollarCollectionName.contains("$") => list
+              case collectionName: String => list ::= collectionName.substring(database.name.length + 1)
             }
-          }).register(new SingleResultCallback[Void] {
-            def onResult(result: Void, e: MongoException) {
-              promise.success(list.reverse)
-            }
-          })
-        case Failure(e) => promise.failure(e)
-      })
-      promise.future
+          }
+        }).register(new SingleResultCallback[Void] {
+          def onResult(result: Void, e: MongoException) {
+            promise.success(list.reverse)
+          }
+        })
+      case Failure(e) => promise.failure(e)
     })
+    promise.future
   }
 
-  def createCollection(createCollectionOptions: CreateCollectionOptions): Future[Unit] = {
-    createCollectionHelper(createCollectionOptions, result => result.mapTo[Unit])
-  }
-
-  def renameCollection(operation: RenameCollectionOperation): Future[Unit] = {
-    renameCollectionHelper(operation, result => result.mapTo[Unit])
-  }
-
+  /**
+   * A type transformer that takes a `Future[Void]` and converts it to `Future[Unit]`
+   *
+   * @return Future[Unit]
+   */
+  protected def voidToUnitConverter: Future[Void] => Future[Unit] = result => result.mapTo[Unit]
 }
