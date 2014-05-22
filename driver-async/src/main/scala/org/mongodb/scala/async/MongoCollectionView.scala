@@ -29,7 +29,7 @@ import scala.concurrent.{Future, Promise}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
-import org.mongodb.{Block, CollectibleCodec, MongoException, MongoNamespace, ReadPreference, WriteConcern}
+import org.mongodb.{MongoAsyncCursor, Block, CollectibleCodec, MongoException, MongoNamespace, ReadPreference, WriteConcern}
 import org.mongodb.connection.SingleResultCallback
 import org.mongodb.operation.Find
 
@@ -47,52 +47,45 @@ protected case class MongoCollectionView[T](client: MongoClient, namespace: Mong
                            readPreference)
   }
 
-  /**
-   * Return a list of results (memory hungry)
-   */
-  def toList(): Future[List[T]] = {
-    toListHelper(result => {
-      val promise = Promise[List[T]]()
-      var list = List[T]()
-      result.onComplete({
-        case Success(cursor) =>
-          cursor.forEach(new Block[T] {
-            override def apply(d: T): Unit = {
-              list ::= d
-            }
-          }).register(new SingleResultCallback[Void] {
-            def onResult(result: Void, e: MongoException) {
-              if (e != null) promise.failure(e)
-              else promise.success(list.reverse)
-            }
-          })
-        case Failure(e) => promise.failure(e)
-      })
-      promise.future
+  protected def toListHelper: Future[MongoAsyncCursor[T]] => Future[List[T]] = { result =>
+    val promise = Promise[List[T]]()
+    var list = List[T]()
+    result.onComplete({
+      case Success(cursor) =>
+        cursor.forEach(new Block[T] {
+          override def apply(d: T): Unit = {
+            list ::= d
+          }
+        }).register(new SingleResultCallback[Void] {
+          def onResult(result: Void, e: MongoException) {
+            if (e != null) promise.failure(e)
+            else promise.success(list.reverse)
+          }
+        })
+      case Failure(e) => promise.failure(e)
     })
+    promise.future
   }
 
-  def one(): Future[Option[T]] = {
-    toOneHelper(result => {
-      val promise = Promise[Option[T]]()
-      result.onComplete({
-        case Success(cursor) =>
-          cursor.forEach(new Block[T] {
-            override def apply(d: T): Unit = {
-              if (!promise.future.isCompleted) {
-                promise.success(Some(d))
-              }
+  protected def toOneHelper: Future[MongoAsyncCursor[T]] => Future[Option[T]] = { result =>
+    val promise = Promise[Option[T]]()
+    result.onComplete({
+      case Success(cursor) =>
+        cursor.forEach(new Block[T] {
+          override def apply(d: T): Unit = {
+            if (!promise.future.isCompleted) {
+              promise.success(Some(d))
             }
-          }).register(new SingleResultCallback[Void] {
-            def onResult(result: Void, e: MongoException) {
-              if (!promise.future.isCompleted) {
-                promise.success(None)
-              }
+          }
+        }).register(new SingleResultCallback[Void] {
+          def onResult(result: Void, e: MongoException) {
+            if (!promise.future.isCompleted) {
+              promise.success(None)
             }
-          })
-        case Failure(e) => promise.failure(e)
-      })
-      promise.future
+          }
+        })
+      case Failure(e) => promise.failure(e)
     })
+    promise.future
   }
 }

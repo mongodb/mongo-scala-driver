@@ -31,6 +31,7 @@ import org.mongodb.operation.Find
 
 import org.mongodb.scala.core.{MongoCollectionOptions, MongoCollectionViewProvider}
 
+
 protected case class MongoCollectionView[T](client: MongoClient, namespace: MongoNamespace, codec: CollectibleCodec[T],
                                             options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern,
                                             limitSet: Boolean, doUpsert: Boolean, readPreference: ReadPreference)
@@ -43,14 +44,11 @@ protected case class MongoCollectionView[T](client: MongoClient, namespace: Mong
                            readPreference)
   }
 
-  /**
-   * Return a list of results (memory hungry)
-   */
-  def toList(): Observable[List[T]] = {
-    toListHelper(result => result.foldLeft(List[T]()){(docs, doc) => docs :+ doc })
+  protected def toListHelper: Observable[T] => Observable[List[T]] = { result =>
+    result.foldLeft(List[T]()){(docs, doc) => docs :+ doc }
   }
 
-  def one(): Observable[Option[T]] = {
-    toOneHelper(result => result.take(1).foldLeft[Option[T]](None)((v: Option[T], doc: T) => Some(doc)))
+  protected def toOneHelper: Observable[T] => Observable[Option[T]] = { result =>
+    result.take(1).foldLeft[Option[T]](None)((v: Option[T], doc: T) => Some(doc))
   }
 }

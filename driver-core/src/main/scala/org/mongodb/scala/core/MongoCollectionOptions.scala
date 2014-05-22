@@ -27,6 +27,9 @@ package org.mongodb.scala.core
 import org.mongodb.{Codec, Document, ReadPreference, WriteConcern}
 import org.mongodb.codecs.{DocumentCodec, PrimitiveCodecs}
 
+/**
+ * The MongoCollection Options
+ */
 object MongoCollectionOptions {
   def apply(options: MongoDatabaseOptions): MongoCollectionOptions = {
     MongoCollectionOptions(options.primitiveCodecs, options.writeConcern,
@@ -34,8 +37,13 @@ object MongoCollectionOptions {
   }
 }
 
-case class MongoCollectionOptions(primitiveCodecs: PrimitiveCodecs,
-                                writeConcern: WriteConcern,
-                                readPreference: ReadPreference,
-                                documentCodec: Codec[Document]) {
-}
+/**
+ * The MongoCollection Options
+ *
+ * @param primitiveCodecs the primitiveCodecs to use with the database
+ * @param writeConcern the default writeConcern
+ * @param readPreference the default readPreference
+ * @param documentCodec the document codec
+ */
+case class MongoCollectionOptions(primitiveCodecs: PrimitiveCodecs, writeConcern: WriteConcern,
+                                  readPreference: ReadPreference, documentCodec: Codec[Document])

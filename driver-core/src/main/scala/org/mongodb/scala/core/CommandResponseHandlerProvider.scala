@@ -64,9 +64,11 @@ trait CommandResponseHandlerProvider {
    * This must be implemented by the implementer of the trait and should ignore any `CommandResult` errors
    * if they include any of the `namedErrors`.
    *
-   *@param commandFuture the ResultType[CommandResult] to wrap
+   * @param commandFuture the ResultType[CommandResult] to wrap
    * @param namedErrors A sequence of errors that have the same end result as a successful operation
    *                    eg: `collection.admin.dropIndexes()` when a collection doesn't exist
+   *
+   * @note the concrete `CommandResponseHandler` instance must implement this method
    * @return a fixed ResultType[CommandResult]
    */
   protected[scala] def handleNamedErrors(commandFuture: ResultType[CommandResult],

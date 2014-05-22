@@ -23,6 +23,7 @@
  * https://github.com/mongodb/mongo-scala-driver
  */
 package org.mongodb.scala.core
+
 import scala.Some
 import scala.collection.JavaConverters._
 
@@ -30,22 +31,102 @@ import org.mongodb.{CollectibleCodec, Document, MongoNamespace, QueryOptions, Re
 import org.mongodb.operation._
 
 /**
- * A MongoDB Collection
+ * The MongoCollectionViewProvider trait providing the core of a MongoCollectionView implementation.
+ *
+ * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the
+ * concrete implementation uses.
+ *
+ * The core api remains the same between the implementations only the resulting types change based on the
+ * [RequiredTypesProvider] implementation. To do this the concrete implementation of this trait requires the following
+ * methods to be implemented:
+ *
+ * {{{
+ *    protected case class MongoCollectionView[T](client: MongoClient, namespace: MongoNamespace, codec: CollectibleCodec[T],
+ *                                                options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern,
+ *                                                limitSet: Boolean, doUpsert: Boolean, readPreference: ReadPreference)
+ *      extends MongoCollectionViewProvider[T] with RequiredTypes {
+ *
+ *      protected def copy(client: MongoClient, namespace: MongoNamespace, codec: CollectibleCodec[T],
+ *                         options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern, limitSet: Boolean,
+ *                         doUpsert: Boolean, readPreference: ReadPreference): MongoCollectionView[T] = MongoCollectionView[T]
+ *
+ *      protected def toListHelper: CursorType[T] => ResultType[List[T]]
+ *
+ *      protected def toOneHelper: CursorType[T] => ResultType[Option[T]]
+ *    }
+ * }}}
+ *
  */
 trait MongoCollectionViewProvider[T] {
 
   this: RequiredTypesProvider =>
 
-  val findOp: Find
-  val writeConcern: WriteConcern
-  val limitSet: Boolean
-  val doUpsert: Boolean
-  val readPreference: ReadPreference
-
+  /**
+   * The MongoClient
+   *
+   * @note Its expected that the MongoCollectionView implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoCollection implementation
+   */
   val client: Client
+
+  /**
+   * The MongoNamespace of the collection
+   *
+   * @note Its expected that the MongoCollectionView implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoCollection implementation
+   */
   val namespace: MongoNamespace
+
+  /**
+   * The codec
+   *
+   * @note Its expected that the MongoCollectionView implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoCollection implementation
+   */
   val codec: CollectibleCodec[T]
+
+  /**
+   * The MongoCollectionOptions
+   *
+   * @note Its expected that the MongoCollectionView implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoCollection implementation
+   */
   val options: MongoCollectionOptions
+
+  /**
+   * The current Find operation
+   *
+   * @note Its expected that the MongoCollectionView implementation is a case class and this is one of the constructor params.
+   */
+  val findOp: Find
+
+  /**
+   * The current WriteConcern
+   *
+   * @note Its expected that the MongoCollectionView implementation is a case class and this is one of the constructor params.
+   */
+  val writeConcern: WriteConcern
+
+  /**
+   * Flag marking limit has been set
+   *
+   * @note Its expected that the MongoCollectionView implementation is a case class and this is one of the constructor params.
+   */
+  val limitSet: Boolean
+
+  /**
+   * Flag marking upsert has been set
+   *
+   * @note Its expected that the MongoCollectionView implementation is a case class and this is one of the constructor params.
+   */
+  val doUpsert: Boolean
+
+  /**
+   * The current ReadPreference
+   *
+   * @note Its expected that the MongoCollectionView implementation is a case class and this is one of the constructor params.
+   */
+  val readPreference: ReadPreference
 
   /**
    * The document codec to use
@@ -90,7 +171,7 @@ trait MongoCollectionViewProvider[T] {
   /**
    * Return a list of results (memory hungry)
    */
-  def toList(): ResultType[List[T]]
+  def toList(): ResultType[List[T]] = toListHelper(cursor())
 
   /**
    * Sort the results
@@ -141,17 +222,36 @@ trait MongoCollectionViewProvider[T] {
 
   /**
    * Execute the operation and return the result.
+   *
+   * @return CursorType[T]
    */
   def cursor(): CursorType[T] =  {
     val operation = new QueryOperation[T](namespace, findOp, documentCodec, getCodec)
     client.executeAsync(operation, readPreference).asInstanceOf[CursorType[T]]
   }
 
-  def one(): ResultType[Option[T]]
+  /**
+   * Get the result from the query
+   *
+   * @return ResultType[Option[T\]\]
+   */
+  def one(): ResultType[Option[T]] = toOneHelper(limit(1).cursor())
 
+  /**
+   * Change the writeconcern
+   *
+   * @param writeConcernForThisOperation the new writeconcern
+   */
   def withWriteConcern(writeConcernForThisOperation: WriteConcern): CollectionView[T] =
     copy(writeConcern = writeConcernForThisOperation)
 
+  /**
+   * Save a document
+   *
+   * Inserts if no `_id` or upserts and overwrites any existing documents
+   *
+   * @param document the document to save
+   */
   def save(document: T): ResultType[WriteResult] = {
     Option(getCodec.getId(document)) match {
       case None => insert(document)
@@ -159,44 +259,78 @@ trait MongoCollectionViewProvider[T] {
     }
   }
 
-  def remove() = {
+  /**
+   * Remove any matching documents
+   */
+  def remove(): ResultType[WriteResult] = {
     val removeRequest: List[RemoveRequest] = List(new RemoveRequest(findOp.getFilter).multi(getMultiFromLimit))
     val operation = new RemoveOperation(namespace, true, writeConcern, removeRequest.asJava, documentCodec)
-    client.executeAsync(operation)
+    client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
 
-  def removeOne() = {
+  /**
+   * Remove the first matching document
+   */
+  def removeOne(): ResultType[WriteResult] = {
     val removeRequest: List[RemoveRequest] = List(new RemoveRequest(findOp.getFilter).multi(false))
     val operation = new RemoveOperation(namespace, true, writeConcern, removeRequest.asJava, documentCodec)
-    client.executeAsync(operation)
+    client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
 
-  def update(updateOperations: Document) = {
+  /**
+   * Update matching documents
+   *
+   * @param updateOperations the update document
+   */
+  def update(updateOperations: Document): ResultType[WriteResult] = {
     val updateRequest: List[UpdateRequest] = List(
       new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(getMultiFromLimit)
     )
     val operation = new UpdateOperation(namespace, true, writeConcern, updateRequest.asJava, documentCodec)
-    client.executeAsync(operation)
+    client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
 
-  def updateOne(updateOperations: Document) = {
+  /**
+   * Update the first matching document
+   *
+   * @param updateOperations the update document
+   */
+  def updateOne(updateOperations: Document): ResultType[WriteResult] = {
     val updateRequest: List[UpdateRequest] = List(
       new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(false)
     )
     val operation = new UpdateOperation(namespace, true, writeConcern, updateRequest.asJava, documentCodec)
-    client.executeAsync(operation)
+    client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
 
-  def replace(replacement: T) = {
+  /**
+   * Replace any matching documents
+   *
+   * @param replacement the replacement
+   * @return
+   */
+  def replace(replacement: T): ResultType[WriteResult] = {
     val replaceRequest: List[ReplaceRequest[T]] = List(
       new ReplaceRequest[T](findOp.getFilter, replacement).upsert(doUpsert)
     )
     val operation = new ReplaceOperation(namespace, true, writeConcern, replaceRequest.asJava, documentCodec, getCodec)
-    client.executeAsync(operation)
+    client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
 
+  /**
+   * Update a single document, then return it
+   * @param updateOperations the update document
+   * @return the updated document
+   */
   def updateOneAndGet(updateOperations: Document): ResultType[T] = updateOneAndGet(updateOperations, returnNew = true)
 
+  /**
+   * Update a document and return either the original or updated document
+   *
+   * @param updateOperations the update document
+   * @param returnNew return the updated document
+   * @return document
+   */
   def updateOneAndGet(updateOperations: Document, returnNew: Boolean): ResultType[T] = {
     val findAndUpdate: FindAndUpdate = new FindAndUpdate()
       .where(findOp.getFilter)
@@ -209,12 +343,37 @@ trait MongoCollectionViewProvider[T] {
     client.executeAsync(operation).asInstanceOf[ResultType[T]]
   }
 
+  /**
+   * Get a document and then update
+   *
+   * @param updateOperations the update document
+   * @return the original document
+   */
   def getOneAndUpdate(updateOperations: Document): ResultType[T] = updateOneAndGet(updateOperations, returnNew = false)
 
+  /**
+   * Get a doucment and then replace
+   *
+   * @param replacement the replacement document
+   * @return the original document
+   */
   def getOneAndReplace(replacement: T): ResultType[T] = replaceOneAndGet(replacement, returnNew = false)
 
+  /**
+   * Replace a document and return the updated document
+   *
+   * @param replacement the replacement document
+   * @return the replaced document
+   */
   def replaceOneAndGet(replacement: T): ResultType[T] = replaceOneAndGet(replacement, returnNew = true)
 
+  /**
+   * Replace a document and either return the original or replaced document
+   *
+   * @param replacement the replacement document
+   * @param returnNew return the replaced document
+   * @return document
+   */
   def replaceOneAndGet(replacement: T, returnNew: Boolean): ResultType[T] = {
     val findAndReplace: FindAndReplace[T] = new FindAndReplace[T](replacement)
       .where(findOp.getFilter)
@@ -226,19 +385,28 @@ trait MongoCollectionViewProvider[T] {
     client.executeAsync(operation).asInstanceOf[ResultType[T]]
   }
 
+  /**
+   * Get a document then remove it
+   */
   def getOneAndRemove: ResultType[T] = {
     val findAndRemove: FindAndRemove[T] = new FindAndRemove[T]().where(findOp.getFilter).select(findOp.getFields).sortBy(findOp.getOrder)
     val operation = new FindAndRemoveOperation[T](namespace, findAndRemove, getCodec)
     client.executeAsync(operation).asInstanceOf[ResultType[T]]
   }
 
-  protected def toListHelper(f: CursorType[T] => ResultType[List[T]]): ResultType[List[T]] = {
-    f(cursor())
-  }
+  /**
+   * A helper that converts `CursorType[T]` to `ResultType[List[T\]\]`
+   *
+   * @note Each MongoCollectionView implementation must provide this.
+   */
+  protected def toListHelper: CursorType[T] => ResultType[List[T]]
 
-  protected def toOneHelper(f: CursorType[T] => ResultType[Option[T]]): ResultType[Option[T]] = {
-    f(limit(1).cursor().asInstanceOf[CursorType[T]]) // Help the compiler by forcing to type
-  }
+  /**
+   * A helper that converts `CursorType[T]` limited to a single result to a `ResultType[Option[T\]\]`
+   *
+   * @note Each MongoCollectionView implementation must provide this.
+   */
+  protected def toOneHelper: CursorType[T] => ResultType[Option[T]]
 
   private def getMultiFromLimit: Boolean = {
     findOp.getLimit match {

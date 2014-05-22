@@ -29,9 +29,9 @@ import scala.collection.JavaConverters._
 import scala.language.higherKinds
 
 import org.mongodb.MongoCredential
-import org.mongodb.connection.{BufferProvider, Cluster, ClusterConnectionMode, ClusterSettings, PowerOfTwoBufferPool, ServerAddress}
-
-import org.mongodb.scala.core.connection.GetDefaultCluster
+import org.mongodb.connection.{AsynchronousSocketChannelStreamFactory, BufferProvider, Cluster, ClusterConnectionMode,
+                               ClusterSettings, DefaultClusterFactory, PowerOfTwoBufferPool, ServerAddress}
+import org.mongodb.management.JMXConnectionPoolListener
 
 /**
  * A factory for creating a [[MongoClientProvider MongoClient]] instances.
@@ -43,7 +43,7 @@ import org.mongodb.scala.core.connection.GetDefaultCluster
  * }}}
  *
  */
-trait MongoClientCompanion extends GetDefaultCluster {
+trait MongoClientCompanion {
 
   this: RequiredTypesProvider =>
 
@@ -258,6 +258,29 @@ trait MongoClientCompanion extends GetDefaultCluster {
         val seedList: List[ServerAddress] = mongoClientURI.hosts.map(hostName => new ServerAddress(hostName))
         this(seedList, credentialList, options, bufferProvider)
     }
+  }
+
+  private def getDefaultCluster(clusterSettings: ClusterSettings,
+                                  credentialList: List[MongoCredential],
+                                  options: MongoClientOptions,
+                                  bufferProvider: BufferProvider): Cluster = {
+
+    val streamFactory = new AsynchronousSocketChannelStreamFactory(options.socketSettings, options.sslSettings)
+    val heartbeatStreamFactory = new AsynchronousSocketChannelStreamFactory(options.heartbeatSocketSettings, options.sslSettings)
+    val connectionPoolListener = new JMXConnectionPoolListener()
+
+    // scalastyle:off null
+    new DefaultClusterFactory().create(
+      clusterSettings,
+      options.serverSettings,
+      options.connectionPoolSettings,
+      streamFactory,
+      heartbeatStreamFactory,
+      credentialList.asJava,
+      null,
+      connectionPoolListener,
+      null)
+    // scalastyle:on null
   }
 
 }

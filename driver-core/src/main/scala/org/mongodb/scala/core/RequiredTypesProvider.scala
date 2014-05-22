@@ -7,6 +7,9 @@ import scala.language.higherKinds
  *
  * Defines the types used across the system.
  *
+ * - `Client`, `Database`, `Collection` and `CollectionView` are the implementation classes
+ * - `ResultType`, `ListResultType` and `CursorType` are the future data types
+ *
  */
 trait RequiredTypesProvider {
   type Client <: MongoClientProvider
