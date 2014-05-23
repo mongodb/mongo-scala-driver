@@ -24,13 +24,6 @@
  */
 package org.mongodb.scala.async.admin
 
-import scala.concurrent._
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
-
-import org.mongodb.{Block, Document, MongoAsyncCursor, MongoException}
-import org.mongodb.connection.SingleResultCallback
-
 import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
 import org.mongodb.scala.async.{CommandResponseHandler, MongoDatabase, RequiredTypes}
 
@@ -39,40 +32,6 @@ import org.mongodb.scala.async.{CommandResponseHandler, MongoDatabase, RequiredT
  *
  * @param database the MongoDatabase being administrated
  */
-case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider with CommandResponseHandler with RequiredTypes {
+case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider
+  with CommandResponseHandler with RequiredTypes
 
-  /**
-   * A helper function that takes a `Future[MongoAsyncCursor[Document\]\]` collection documents and returns a
-   * `Future[List[String\]\]` list of names.
-   *
-   * @return the collection names
-   */
-  protected def collectionNamesHelper: Future[MongoAsyncCursor[Document]] => Future[List[String]] = { result =>
-    val promise = Promise[List[String]]()
-    var list = List[String]()
-    result.onComplete({
-      case Success(cursor) =>
-        cursor.forEach(new Block[Document] {
-          override def apply(doc: Document): Unit = {
-            doc.getString("name") match {
-              case dollarCollectionName: String if dollarCollectionName.contains("$") => list
-              case collectionName: String => list ::= collectionName.substring(database.name.length + 1)
-            }
-          }
-        }).register(new SingleResultCallback[Void] {
-          def onResult(result: Void, e: MongoException) {
-            promise.success(list.reverse)
-          }
-        })
-      case Failure(e) => promise.failure(e)
-    })
-    promise.future
-  }
-
-  /**
-   * A type transformer that takes a `Future[Void]` and converts it to `Future[Unit]`
-   *
-   * @return Future[Unit]
-   */
-  protected def voidToUnitConverter: Future[Void] => Future[Unit] = result => result.mapTo[Unit]
-}

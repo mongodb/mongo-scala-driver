@@ -48,7 +48,8 @@ case class MongoCollection[T](name: String, database: MongoDatabase, codec: Coll
   val admin: MongoCollectionAdmin[T] = MongoCollectionAdmin(this)
 
   /**
-   * The MongoCollectionView to be used in chaining operations together
+   * The MongoCollectionView used in chaining CRUD operations together
+   *
    * @return the MongoCollectionView
    */
   protected def collectionView: MongoCollectionView[T] = {

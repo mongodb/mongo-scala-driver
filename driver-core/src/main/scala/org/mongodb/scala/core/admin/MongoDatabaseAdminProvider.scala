@@ -26,12 +26,28 @@ package org.mongodb.scala.core.admin
 
 import scala.language.higherKinds
 
-import org.mongodb.{CommandResult, CreateCollectionOptions, Document, MongoNamespace, ReadPreference}
+import org.mongodb.{Block, CommandResult, CreateCollectionOptions, Document, MongoAsyncCursor, MongoException, MongoFuture, MongoNamespace, ReadPreference}
 import org.mongodb.codecs.DocumentCodec
-import org.mongodb.operation.{CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation}
+import org.mongodb.connection.SingleResultCallback
+import org.mongodb.operation.{CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation, SingleResultFuture}
 
 import org.mongodb.scala.core.{CommandResponseHandlerProvider, MongoDatabaseProvider, RequiredTypesProvider}
 
+
+/**
+ * The MongoDatabaseAdminProvider trait providing the core of a MongoDatabaseAdmin implementation.
+ *
+ * To use the trait it requires a concrete implementation of [CommandResponseHandlerProvider] and
+ * [RequiredTypesProvider] to define handling of CommandResult errors and the types the concrete implementation uses.
+ *
+ * The core api remains the same between the implementations only the resulting types change based on the
+ * [RequiredTypesProvider] implementation.
+ *
+ * {{{
+ *    case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider
+ *      with CommandResponseHandler with RequiredTypes
+ * }}}
+ */
 trait MongoDatabaseAdminProvider {
 
   this: CommandResponseHandlerProvider with RequiredTypesProvider =>
@@ -61,7 +77,29 @@ trait MongoDatabaseAdminProvider {
     val namespacesCollection: MongoNamespace = new MongoNamespace(name, "system.namespaces")
     val findAll = new Find()
     val operation = new QueryOperation[Document](namespacesCollection, findAll, commandCodec, commandCodec)
-    collectionNamesHelper(client.executeAsync(operation, ReadPreference.primary).asInstanceOf[CursorType[Document]])
+    val transformer = { result: MongoFuture[MongoAsyncCursor[Document]] =>
+      val future: SingleResultFuture[List[String]] = new SingleResultFuture[List[String]]
+      var list = List[String]()
+      result.register(new SingleResultCallback[MongoAsyncCursor[Document]] {
+        def onResult(cursor: MongoAsyncCursor[Document], e: MongoException): Unit = {
+          cursor.forEach(new Block[Document] {
+            override def apply(doc: Document): Unit = {
+              doc.getString("name") match {
+                case dollarCollectionName: String if dollarCollectionName.contains("$") => list
+                case collectionName: String => list ::= collectionName.substring(database.name.length + 1)
+              }
+            }
+          }).register(new SingleResultCallback[Void] {
+            def onResult(result: Void, e: MongoException) {
+              future.init(list.reverse, null)
+            }
+          })
+        }
+      })
+      future
+    }
+    val results = client.executeAsync(operation, ReadPreference.primary, transformer)
+    listToListResultTypeConverter[String](results.asInstanceOf[ResultType[List[String]]])
   }
 
   /**
@@ -117,57 +155,6 @@ trait MongoDatabaseAdminProvider {
   def renameCollection(operation: RenameCollectionOperation): ResultType[Unit] = {
     voidToUnitConverter(client.executeAsync(operation).asInstanceOf[ResultType[Void]])
   }
-
-  /**
-   * A helper function that takes the collection name documents and returns a list of names from those documents
-   *
-   * This method should filter out any internal collection names (ones that contain a $)
-   *
-   * An example of `Future[MongoAsyncCursor[Document\]\] => Future[List[String\]\]` is:
-   * {{{
-   *   result =>
-   *      val promise = Promise[List[String]]()
-   *      var list = List[String]()
-   *      result.onComplete({
-   *        case Success(cursor) =>
-   *          cursor.forEach(new Block[Document] {
-   *            override def apply(doc: Document): Unit = {
-   *              doc.getString("name") match {
-   *                case dollarCollectionName: String if dollarCollectionName.contains("$") => list
-   *                case collectionName: String => list ::= collectionName.substring(database.name.length + 1)
-   *              }
-   *            }
-   *          }).register(new SingleResultCallback[Void] {
-   *            def onResult(result: Void, e: MongoException) {
-   *              promise.success(list.reverse)
-   *            }
-   *          })
-   *        case Failure(e) => promise.failure(e)
-   *      })
-   *      promise.future
-   * }}}
-   *
-   * @note Each MongoDatabaseAdmin implementation must provide this.
-   *
-   * @return the collection names
-   */
-  protected def collectionNamesHelper: CursorType[Document] => ListResultType[String]
-
-  /**
-   * A type transformer that takes a `ResultType[Void]` and converts it to `ResultType[Unit]`
-   *
-   * This is needed as returning `Void` is not idiomatic in scala whereas a `Unit` is more acceptable.
-   *
-   * For scala Futures an example is:
-   * {{{
-   *   result => result.mapTo[Unit]
-   * }}}
-   *
-   * @note Each MongoDatabaseAdmin implementation must provide this.
-   *
-   * @return ResultType[Unit]
-   */
-  protected def voidToUnitConverter: ResultType[Void] => ResultType[Unit]
 
   private val name = database.name
   private val DROP_DATABASE = new Document("dropDatabase", 1)

@@ -25,13 +25,16 @@
 package org.mongodb.scala.core.admin
 
 import java.util
+import java.lang.{Boolean => JBoolean}
 
 import scala.collection.JavaConverters._
 
-import org.mongodb.{CommandResult, Document, Index}
-import org.mongodb.operation.{CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation}
+import org.mongodb.{MongoCommandFailureException, ReadPreference, MongoException, MongoFuture, CommandResult, Document, Index}
+import org.mongodb.operation.{CommandReadOperation, SingleResultFuture, CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation}
 
 import org.mongodb.scala.core.{CommandResponseHandlerProvider, MongoCollectionProvider, RequiredTypesProvider}
+import org.mongodb.connection.SingleResultCallback
+import org.mongodb.codecs.DocumentCodec
 
 
 /**
@@ -41,20 +44,11 @@ import org.mongodb.scala.core.{CommandResponseHandlerProvider, MongoCollectionPr
  * [RequiredTypesProvider] to define handling of CommandResult errors and the types the concrete implementation uses.
  *
  * The core api remains the same between the implementations only the resulting types change based on the
- * [RequiredTypesProvider] implementation. To do this the concrete implementation of this trait requires the following
- * methods to be implemented:
+ * [RequiredTypesProvider] implementation.
  *
  * {{{
  *    case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
- *      with CommandResponseHandler with RequiredTypes {
- *
- *        protected def voidToUnitConverter: ResultType[Void] => ResultType[Unit]
- *
- *        protected def getResponseHelper: ResultType[CommandResult] => ResultType[Document]
- *
- *        protected def getCappedFromStatistics: ResultType[Document] => ResultType[Boolean]
- *
- *        protected def javaListToListResultTypeConverter: ResultType[util.List[Document]] => ListResultType[Document]
+ *      with CommandResponseHandler with RequiredTypes
  * }}}
  *
  *
@@ -76,17 +70,65 @@ trait MongoCollectionAdminProvider[T] {
 
   /**
    * Is the collection capped
-   * @return ResultType[Boolean]
+   * @return isCapped
    */
-  def isCapped: ResultType[Boolean] = getCappedFromStatistics(statistics)
+  def isCapped: ResultType[Boolean] = {
+    val operation = createOperation(COLLECTION_STATS)
+    val transformer = { result: MongoFuture[CommandResult] =>
+      // Use native Java type to avoid Scala implicit conversion of null error if there's an exception
+      val future: SingleResultFuture[JBoolean] = new SingleResultFuture[JBoolean]
+      result.register(new SingleResultCallback[CommandResult] {
+        def onResult(result: CommandResult, e: MongoException): Unit = {
+          Option(e) match {
+            case None => future.init(result.getResponse.get("capped").asInstanceOf[Boolean], null)
+            case _ =>
+              e.isInstanceOf[MongoCommandFailureException] match {
+                case false => future.init(null, e)
+                case true =>
+                  val err = e.asInstanceOf[MongoCommandFailureException]
+                  err.getCommandResult.getErrorMessage match {
+                    case namespaceError: String if namespaceError.contains("not found") =>
+                      future.init(false, null)
+                    case _ => future.init(null, e)
+                  }
+              }
+          }
+        }
+      })
+      future
+    }
+    collection.client.executeAsync(operation, collection.options.readPreference, transformer).asInstanceOf[ResultType[Boolean]]
+  }
 
   /**
    * Get statistics for the collection
    * @return ResultType[Document] of statistics
    */
   def statistics: ResultType[Document] = {
-    val futureStats = collection.database.executeAsyncReadCommand(COLLECTION_STATS, collection.options.readPreference)
-    getResponseHelper(handleNamedErrors(futureStats.asInstanceOf[ResultType[CommandResult]], Seq("not found")))
+    val operation = createOperation(COLLECTION_STATS)
+    val transformer = { result: MongoFuture[CommandResult] =>
+      val future: SingleResultFuture[Document] = new SingleResultFuture[Document]
+      result.register(new SingleResultCallback[CommandResult] {
+        def onResult(result: CommandResult, e: MongoException): Unit = {
+          Option(e) match {
+            case None => future.init(result.getResponse, null)
+            case _ =>
+              e.isInstanceOf[MongoCommandFailureException] match {
+                case false => future.init(null, e)
+                case true =>
+                  val err = e.asInstanceOf[MongoCommandFailureException]
+                  err.getCommandResult.getErrorMessage match {
+                    case namespaceError: String if namespaceError.contains("not found") =>
+                      future.init(err.getCommandResult.getResponse, null)
+                    case _ => future.init(null, e)
+                  }
+            }
+          }
+        }
+      })
+      future
+    }
+    collection.client.executeAsync(operation, ReadPreference.primary(), transformer).asInstanceOf[ResultType[Document]]
   }
 
   /**
@@ -112,10 +154,20 @@ trait MongoCollectionAdminProvider[T] {
    */
   def getIndexes: ListResultType[Document] = {
     val operation = new GetIndexesOperation(collection.namespace)
-    javaListToListResultTypeConverter(
-      collection.client.executeAsync(operation, collection.options.readPreference)
-        .asInstanceOf[ResultType[util.List[Document]]]
-    )
+    val transformer = { result: MongoFuture[util.List[Document]] =>
+      val future: SingleResultFuture[List[Document]] = new SingleResultFuture[List[Document]]
+      result.register(new SingleResultCallback[util.List[Document]] {
+        def onResult(result: util.List[Document], e: MongoException): Unit = {
+          Option(e) match {
+            case None => future.init(result.asScala.toList, null)
+            case _ => future.init(null, e)
+          }
+        }
+      })
+      future
+    }
+    val result = collection.client.executeAsync(operation, collection.options.readPreference, transformer)
+    listToListResultTypeConverter[Document](result.asInstanceOf[ResultType[List[Document]]])
   }
 
   /**
@@ -150,67 +202,13 @@ trait MongoCollectionAdminProvider[T] {
   val collection: MongoCollectionProvider[T]
 
   /**
-   * A type transformer that takes a `ResultType[Void]` and converts it to `ResultType[Unit]`
-   *
-   * This is needed as returning `Void` is not idiomatic in scala whereas a `Unit` is more acceptable.
-   *
-   * For scala Futures an example is:
-   * {{{
-   *   result => result.mapTo[Unit]
-   * }}}
-   *
-   * @note Each MongoCollectionAdmin implementation must provide this.
-   *
-   * @return ResultType[Unit]
-   */
-  protected def voidToUnitConverter: ResultType[Void] => ResultType[Unit]
-
-  /**
-   * A helper that takes a `ResultType[CommandResult]` and picks out the `CommandResult.getResponse()` to return the
-   * response Document as `ResultType[Document]`.
-   *
-   * For Futures an example is:
-   * {{{
-   *   result => result map { cmdResult => cmdResult.getResponse }
-   * }}}
-   *
-   * @note Each MongoCollectionAdmin implementation must provide this.
-   *
-   * @return ResultType[Document]
-   */
-  protected def getResponseHelper: ResultType[CommandResult] => ResultType[Document]
-
-  /**
-   * A helper that gets the `capped` field from the statistics document
-   *
-   * This is needed as we don't know before hand what shape or api a `ResultType[Document]` provides.
-   *
-   * For `Future[CommandResult] => Future[Document]`:
-   * {{{
-   *   result => result map { doc => doc.get("capped").asInstanceOf[Boolean] }
-   * }}}
-   *
-   * @note Each MongoCollectionAdmin implementation must provide this.
-   *
-   * @return
-   */
-  protected def getCappedFromStatistics: ResultType[Document] => ResultType[Boolean]
-
-  /**
-   * A type transformer that takes a `ResultType[util.List[Document]]` and converts it to `ListResultType[Document]`
-   *
-   * For `Future[util.List[Document\]\] => Future[List[Document\]\]`:
-   * {{{
-   *   result => result map { docs => docs.asScala.toList }
-   * }}}
-   *
-   * @return  ListResultType[Document]
-   */
-  protected def javaListToListResultTypeConverter: ResultType[util.List[Document]] => ListResultType[Document]
-
-  /**
    * The Collection stats command document
    */
   private val COLLECTION_STATS = new Document("collStats", collection.name)
+
+  private val commandCodec: DocumentCodec = new DocumentCodec()
+  private def createOperation(command: Document) = {
+    new CommandReadOperation(collection.database.name, command, commandCodec, commandCodec)
+  }
 
 }

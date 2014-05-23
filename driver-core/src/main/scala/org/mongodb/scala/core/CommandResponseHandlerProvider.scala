@@ -50,15 +50,6 @@ trait CommandResponseHandlerProvider {
     handleNamedErrors(commandFuture, Seq("ns not found"))
 
   /**
-   * Handles any command results correctly.
-   *
-   * @param commandFuture the Future[CommandResult] to wrap
-   * @return
-   */
-  protected[scala] def handleErrors(commandFuture: ResultType[CommandResult]): ResultType[CommandResult] =
-    handleNamedErrors(commandFuture, Seq.empty[String])
-
-  /**
    * Sometimes we need to handle certain errors gracefully, without cause to throw an exception.
    *
    * This must be implemented by the implementer of the trait and should ignore any `CommandResult` errors
@@ -74,18 +65,4 @@ trait CommandResponseHandlerProvider {
   protected[scala] def handleNamedErrors(commandFuture: ResultType[CommandResult],
                                          namedErrors: Seq[String]): ResultType[CommandResult]
 
-  /**
-   * Sometimes we need to handle certain errors gracefully, without cause to throw an exception.
-   *
-   * This must be implemented by the implementer of the trait and should ignore any `CommandResult` errors
-   * if they include any of the `namedErrors`.
-   *
-   * @param commandFuture the ResultType[CommandResult] to wrap
-   * @param namedErrors A sequence of errors that have the same end result as a successful operation
-   *                    eg: `collection.admin.dropIndexes()` when a collection doesn't exist
-   *
-   * @note the concrete `CommandResponseHandler` instance must implement this method
-   * @return a fixed ResultType[CommandResult]
-   */
-  //protected[scala] def handleNamedErrors(commandFuture: CommandResult, namedErrors: Seq[String]): CommandResult
 }

@@ -67,7 +67,8 @@ trait MongoClientAdminProvider {
   def ping: ResultType[Double] = {
     val operation = createOperation(PING_COMMAND)
     val transformer = { result: MongoFuture[CommandResult] =>
-      val future: SingleResultFuture[JDouble] = new SingleResultFuture[JDouble]
+    // Use native Java type to avoid Scala implicit conversion of null error if there's an exception
+    val future: SingleResultFuture[JDouble] = new SingleResultFuture[JDouble]
       result.register(new SingleResultCallback[CommandResult] {
         def onResult(result: CommandResult, e: MongoException): Unit = {
           Option(e) match {
@@ -102,7 +103,8 @@ trait MongoClientAdminProvider {
       })
       future
     }
-    client.executeAsync(operation,  client.options.readPreference, transformer).asInstanceOf[ListResultType[String]]
+    val results = client.executeAsync(operation,  client.options.readPreference, transformer)
+    listToListResultTypeConverter[String](results.asInstanceOf[ResultType[List[String]]])
   }
 
   private val ADMIN_DATABASE = "admin"

@@ -24,17 +24,25 @@
  */
 package org.mongodb.scala.async
 
-import scala.Some
-import scala.concurrent.{Future, Promise}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.{Failure, Success}
-
-import org.mongodb.{MongoAsyncCursor, Block, CollectibleCodec, MongoException, MongoNamespace, ReadPreference, WriteConcern}
-import org.mongodb.connection.SingleResultCallback
+import org.mongodb.{CollectibleCodec, MongoNamespace, ReadPreference, WriteConcern}
 import org.mongodb.operation.Find
 
 import org.mongodb.scala.core.{MongoCollectionOptions, MongoCollectionViewProvider}
 
+/**
+ * The MongoCollectionView used in chaining CRUD operations together
+ *
+ * @param client The MongoClient
+ * @param namespace The MongoNamespace of the collection
+ * @param codec The codec
+ * @param options The MongoCollectionOptions
+ * @param findOp The FindOp
+ * @param writeConcern The current WriteConcern
+ * @param limitSet flag indicating if `limit()` has been called
+ * @param doUpsert flag indicicating `upsert()` has been called
+ * @param readPreference the ReadPreference to use for this operation
+ * @tparam T the collection type (usually document)
+ */
 protected case class MongoCollectionView[T](client: MongoClient, namespace: MongoNamespace, codec: CollectibleCodec[T],
                                             options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern,
                                             limitSet: Boolean, doUpsert: Boolean, readPreference: ReadPreference)
@@ -45,47 +53,5 @@ protected case class MongoCollectionView[T](client: MongoClient, namespace: Mong
                      doUpsert: Boolean, readPreference: ReadPreference): MongoCollectionView[T] = {
     MongoCollectionView[T](client, namespace, codec, options, findOp: Find, writeConcern, limitSet, doUpsert,
                            readPreference)
-  }
-
-  protected def toListHelper: Future[MongoAsyncCursor[T]] => Future[List[T]] = { result =>
-    val promise = Promise[List[T]]()
-    var list = List[T]()
-    result.onComplete({
-      case Success(cursor) =>
-        cursor.forEach(new Block[T] {
-          override def apply(d: T): Unit = {
-            list ::= d
-          }
-        }).register(new SingleResultCallback[Void] {
-          def onResult(result: Void, e: MongoException) {
-            if (e != null) promise.failure(e)
-            else promise.success(list.reverse)
-          }
-        })
-      case Failure(e) => promise.failure(e)
-    })
-    promise.future
-  }
-
-  protected def toOneHelper: Future[MongoAsyncCursor[T]] => Future[Option[T]] = { result =>
-    val promise = Promise[Option[T]]()
-    result.onComplete({
-      case Success(cursor) =>
-        cursor.forEach(new Block[T] {
-          override def apply(d: T): Unit = {
-            if (!promise.future.isCompleted) {
-              promise.success(Some(d))
-            }
-          }
-        }).register(new SingleResultCallback[Void] {
-          def onResult(result: Void, e: MongoException) {
-            if (!promise.future.isCompleted) {
-              promise.success(None)
-            }
-          }
-        })
-      case Failure(e) => promise.failure(e)
-    })
-    promise.future
   }
 }

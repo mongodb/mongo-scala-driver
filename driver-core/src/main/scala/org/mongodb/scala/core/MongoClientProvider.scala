@@ -51,13 +51,10 @@ import org.mongodb.scala.core.admin.MongoClientAdminProvider
  *    case class MongoClient(options: MongoClientOptions, cluster: Cluster)
  *        extends MongoClientProvider with RequiredTypes
  *
- *         protected def mongoClientAdminProvider(): MongoClientAdminProvider
+ *         val admin: MongoClientAdminProvider
  *
  *         protected def databaseProvider(databaseName: String, databaseOptions: MongoDatabaseOptions): Database
  *
- *         protected def mongoFutureConverter[T]: (MongoFuture[T], ReferenceCounted) => ResultType[T]
- *
- *         protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => CursorType[T]
  * }}}
  *
  */
@@ -143,81 +140,6 @@ trait MongoClientProvider extends Closeable {
   protected def databaseProvider(databaseName: String, databaseOptions: MongoDatabaseOptions): Database
 
   /**
-   * A type converter method that converts a `MongoFuture[T]` to `ResultType[T]`
-   *
-   * Care should be taken to release the `binding` which is the [[ReferenceCounted]] type in the signature.
-   *
-   * @note `ResultType[T]` is defined by the concrete implementation of [[RequiredTypesProvider]]
-   *
-   * Converting to native Scala Futures:
-   *
-   * {{{
-   *    protected def mongoFutureConverter[T]: (MongoFuture[T], ReferenceCounted) => Future[T] = {
-   *     (result, binding) => {
-   *       val promise = Promise[T]()
-   *       result.register(new SingleResultCallback[T] {
-   *         override def onResult(result: T, e: MongoException): Unit = {
-   *           try {
-   *             Option(e) match {
-   *               case None => promise.success(result)
-   *               case _ => promise.failure(e)
-   *
-   *             }
-   *           }
-   *           finally {
-   *             binding.release()
-   *           }
-   *         }
-   *       })
-   *       promise.future
-   *     }
-   *   }
-   * }}}
-   *
-   * @tparam T the type of result eg CommandResult, Document etc..
-   * @return ResultType[T]
-   */
-  protected def mongoFutureConverter[T]: (MongoFuture[T], ReferenceCounted) => ResultType[T]
-
-  /**
-   * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T]]` to `CursorType[T]`
-   *
-   * Care should be taken to release the `binding` which is the [[ReferenceCounted]] type in the signature.
-   *
-   * @note `CursorType[T]` is defined by the concrete implementation of [[RequiredTypesProvider]]
-   *
-   * Converting to native Scala Futures:
-   *
-   * {{{
-   *  protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => Future[MongoAsyncCursor[T]] = {
-   *    (result, binding) =>
-   *      val promise = Promise[MongoAsyncCursor[T]]()
-   *
-   *      result.register(new SingleResultCallback[MongoAsyncCursor[T]] {
-   *        override def onResult(result: MongoAsyncCursor[T], e: MongoException): Unit = {
-   *          try {
-   *            Option(e) match {
-   *              case None => promise.success(result)
-   *              case _ => promise.failure(e)
-   *
-   *            }
-   *          }
-   *          finally {
-   *            binding.release()
-   *          }
-   *        }
-   *      })
-   *      promise.future
-   *  }
-   * }}}
-   *
-   * @tparam T the type of result eg CommandResult, Document etc..
-   * @return CursorType[T]
-   */
-  protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => CursorType[T]
-
-
-  /**
    * Executes a AsyncWriteOperation
    *
    * @param writeOperation the write operation to execute asynchronously
@@ -233,6 +155,7 @@ trait MongoClientProvider extends Closeable {
    * Executes a QueryOperation
    *
    * @param queryOperation the query operation to execute asynchronously
+   * @param readPreference the read preference
    * @tparam T the type of result eg Document
    * @return CursorType[T]
    */
@@ -242,9 +165,26 @@ trait MongoClientProvider extends Closeable {
   }
 
   /**
+   * Executes a QueryOperation and transforms the results
+   *
+   * @param queryOperation the query operation to execute asynchronously
+   * @param readPreference the read preference
+   * @param transformer the transformation
+   * @tparam T The original Type
+   * @tparam R The resulting Type
+   * @return The transformed results
+   */
+  private[scala] def executeAsync[T, R](queryOperation: QueryOperation[T], readPreference: ReadPreference,
+                                        transformer: MongoFuture[MongoAsyncCursor[T]] => MongoFuture[R]): ResultType[R] = {
+    val binding = readBinding(readPreference)
+    mongoFutureConverter[R](transformer(queryOperation.executeAsync(binding)), binding)
+  }
+
+  /**
    * Executes a AsyncReadOperation
    *
    * @param readOperation the query operation to execute asynchronously
+   * @param readPreference the read preference
    * @tparam T the type of result eg Document
    * @return ResultType[T]
    */
@@ -257,8 +197,11 @@ trait MongoClientProvider extends Closeable {
    * Executes a AsyncReadOperation
    *
    * @param readOperation the query operation to execute asynchronously
-   * @tparam T the type of result eg Document
-   * @return ResultType[T]
+   * @param readPreference the read preference
+   * @tparam T The original Type
+   * @tparam R The resulting Type
+   * @param transformer the transformation
+   * @return The transformed results
    */
   private[scala] def executeAsync[T, R](readOperation: AsyncReadOperation[T], readPreference: ReadPreference,
                                         transformer: MongoFuture[T] => MongoFuture[R]): ResultType[R] = {

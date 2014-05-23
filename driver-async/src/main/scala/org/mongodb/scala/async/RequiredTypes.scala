@@ -24,16 +24,91 @@
  */
 package org.mongodb.scala.async
 
-import scala.concurrent.Future
+import scala.concurrent.{Promise, Future}
 import org.mongodb.scala.core.RequiredTypesProvider
-import org.mongodb.MongoAsyncCursor
+import org.mongodb.{MongoException, MongoFuture, MongoAsyncCursor}
+import org.mongodb.binding.ReferenceCounted
+import org.mongodb.connection.SingleResultCallback
 
 trait RequiredTypes extends RequiredTypesProvider {
+  /* Concrete Implementations */
   type Client = MongoClient
   type Database = MongoDatabase
   type Collection[T] = MongoCollection[T]
   type CollectionView[T] = MongoCollectionView[T]
+
+  /* Desired Data Types */
   type ResultType[T] = Future[T]
   type ListResultType[T] = Future[List[T]]
   type CursorType[T] = Future[MongoAsyncCursor[T]]
+
+  /* Transformers (Not robots in disguise but apply-to-all functions) */
+
+
+  /**
+   * A type converter method that converts a `MongoFuture` to a native [[scala.concurrent.Future]] of `Future[T]`
+   */
+  protected def mongoFutureConverter[T]: (MongoFuture[T], ReferenceCounted) => Future[T] = {
+    (result, binding) => {
+      val promise = Promise[T]()
+      result.register(new SingleResultCallback[T] {
+        override def onResult(result: T, e: MongoException): Unit = {
+          try {
+            Option(e) match {
+              case None => promise.success(result)
+              case _ => promise.failure(e)
+
+            }
+          }
+          finally {
+            binding.release()
+          }
+        }
+      })
+      promise.future
+    }
+  }
+
+  /**
+   * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T\]\]` to a native [[scala.concurrent.Future]]
+   * of `Future[MongoAsyncCursor[T\]\]`
+   */
+  protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => Future[MongoAsyncCursor[T]] = {
+    (result, binding) =>
+      val promise = Promise[MongoAsyncCursor[T]]()
+
+      result.register(new SingleResultCallback[MongoAsyncCursor[T]] {
+        override def onResult(result: MongoAsyncCursor[T], e: MongoException): Unit = {
+          try {
+            Option(e) match {
+              case None => promise.success(result)
+              case _ => promise.failure(e)
+
+            }
+          }
+          finally {
+            binding.release()
+          }
+        }
+      })
+      promise.future
+  }
+
+  /**
+   * A type transformer that converts a `Future[List[T\]\]` to `Future[List[T\]\]`
+   *
+   * Nothing needed for `Futures`
+   *
+   * @tparam T List data type of item eg Document or String
+   * @return the future list
+   */
+  protected def listToListResultTypeConverter[T]: Future[List[T]] => Future[List[T]] = result => result
+
+  /**
+   * A type transformer that takes a `Future[Void]` and converts it to `Future[Unit]`
+   *
+   * @return Future[Unit]
+   */
+  protected def voidToUnitConverter: Future[Void] => Future[Unit] = result => result.mapTo[Unit]
+
 }

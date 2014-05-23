@@ -24,13 +24,6 @@
  */
 package org.mongodb.scala.async.admin
 
-import java.util
-
-import scala.collection.JavaConverters._
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import org.mongodb.{CommandResult, Document}
 
 import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
 import org.mongodb.scala.async.{CommandResponseHandler, MongoCollection, RequiredTypes}
@@ -42,41 +35,5 @@ import org.mongodb.scala.async.{CommandResponseHandler, MongoCollection, Require
  * @tparam T the type of collection
  */
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
-  with CommandResponseHandler with RequiredTypes {
-
-  /**
-   * A type transformer that takes a `Future[Void]` and converts it to `Future[Unit]`
-   *
-   * @return Future[Unit]
-   */
-  protected def voidToUnitConverter: Future[Void] => Future[Unit] = result => result.mapTo[Unit]
-
-  /**
-   * A helper that gets the `capped` field from the statistics document
-   *
-   * @return Future[Boolean]
-   */
-  protected def getCappedFromStatistics: Future[Document] => Future[Boolean] = { result =>
-    result map { doc => doc.get("capped").asInstanceOf[Boolean]}
-  }
-
-  /**
-   * A helper that takes a `Future[CommandResult]` and picks out the `CommandResult.getResponse()` to return the
-   * response Document as `Future[Document]`.
-   *
-   * @return Future[Document]
-   */
-  protected def getResponseHelper: Future[CommandResult] => Future[Document] = { result =>
-    result map {cmdResult => cmdResult.getResponse }
-  }
-
-  /**
-   * A type transformer that takes a `Future[util.List[Document\]\]` and converts it to `Future[List[Document\]\]`
-   *
-   * @return Future[List[Document\]\]
-   */
-  protected def javaListToListResultTypeConverter: Future[util.List[Document]] => Future[List[Document]] = {
-    result => result map { docs => docs.asScala.toList }
-  }
-}
+  with CommandResponseHandler with RequiredTypes
 

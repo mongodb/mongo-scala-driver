@@ -27,8 +27,9 @@ package org.mongodb.scala.core
 import scala.Some
 import scala.collection.JavaConverters._
 
-import org.mongodb.{CollectibleCodec, Document, MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
+import org.mongodb.{Block, MongoException, MongoAsyncCursor, MongoFuture, CollectibleCodec, Document, MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
 import org.mongodb.operation._
+import org.mongodb.connection.SingleResultCallback
 
 /**
  * The MongoCollectionViewProvider trait providing the core of a MongoCollectionView implementation.
@@ -49,10 +50,6 @@ import org.mongodb.operation._
  *      protected def copy(client: MongoClient, namespace: MongoNamespace, codec: CollectibleCodec[T],
  *                         options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern, limitSet: Boolean,
  *                         doUpsert: Boolean, readPreference: ReadPreference): MongoCollectionView[T] = MongoCollectionView[T]
- *
- *      protected def toListHelper: CursorType[T] => ResultType[List[T]]
- *
- *      protected def toOneHelper: CursorType[T] => ResultType[Option[T]]
  *    }
  * }}}
  *
@@ -171,7 +168,28 @@ trait MongoCollectionViewProvider[T] {
   /**
    * Return a list of results (memory hungry)
    */
-  def toList(): ResultType[List[T]] = toListHelper(cursor())
+  def toList(): ResultType[List[T]] = {
+    val operation = new QueryOperation[T](namespace, findOp, documentCodec, getCodec)
+    val transformer = { result: MongoFuture[MongoAsyncCursor[T]] =>
+      val future: SingleResultFuture[List[T]] = new SingleResultFuture[List[T]]
+      var list = List[T]()
+      result.register(new SingleResultCallback[MongoAsyncCursor[T]] {
+        def onResult(cursor: MongoAsyncCursor[T], e: MongoException): Unit = {
+          cursor.forEach(new Block[T] {
+            override def apply(result: T): Unit = {
+              list ::= result
+            }
+          }).register(new SingleResultCallback[Void] {
+            def onResult(result: Void, e: MongoException) {
+              future.init(list.reverse, null)
+            }
+          })
+        }
+      })
+      future
+    }
+    client.executeAsync(operation, readPreference, transformer).asInstanceOf[ResultType[List[T]]]
+  }
 
   /**
    * Sort the results
@@ -235,7 +253,28 @@ trait MongoCollectionViewProvider[T] {
    *
    * @return ResultType[Option[T\]\]
    */
-  def one(): ResultType[Option[T]] = toOneHelper(limit(1).cursor().asInstanceOf[CursorType[T]])
+  def one(): ResultType[Option[T]] = {
+    val operation = new QueryOperation[T](namespace, limit(1).findOp, documentCodec, getCodec)
+    val transformer = { result: MongoFuture[MongoAsyncCursor[T]] =>
+      val future: SingleResultFuture[Option[T]] = new SingleResultFuture[Option[T]]
+      var theOne: Option[T] = None
+      result.register(new SingleResultCallback[MongoAsyncCursor[T]] {
+        def onResult(cursor: MongoAsyncCursor[T], e: MongoException): Unit = {
+          cursor.forEach(new Block[T] {
+            override def apply(result: T): Unit = {
+              theOne = Some(result)
+            }
+          }).register(new SingleResultCallback[Void] {
+            def onResult(result: Void, e: MongoException) {
+              future.init(theOne, null)
+            }
+          })
+        }
+      })
+      future
+    }
+    client.executeAsync(operation, readPreference, transformer).asInstanceOf[ResultType[Option[T]]]
+  }
 
   /**
    * Change the writeconcern
@@ -394,20 +433,6 @@ trait MongoCollectionViewProvider[T] {
     client.executeAsync(operation).asInstanceOf[ResultType[T]]
   }
 
-  /**
-   * A helper that converts `CursorType[T]` to `ResultType[List[T\]\]`
-   *
-   * @note Each MongoCollectionView implementation must provide this.
-   */
-  protected def toListHelper: CursorType[T] => ResultType[List[T]]
-
-  /**
-   * A helper that converts `CursorType[T]` limited to a single result to a `ResultType[Option[T\]\]`
-   *
-   * @note Each MongoCollectionView implementation must provide this.
-   */
-  protected def toOneHelper: CursorType[T] => ResultType[Option[T]]
-
   private def getMultiFromLimit: Boolean = {
     findOp.getLimit match {
       case 1 => false
@@ -445,6 +470,20 @@ trait MongoCollectionViewProvider[T] {
     copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
 
+  /**
+   * A copy method to produce a new updated version of a `CollectionView`
+   *
+   * @param client The MongoClient
+   * @param namespace The MongoNamespace of the collection
+   * @param codec The codec
+   * @param options The MongoCollectionOptions
+   * @param findOp The FindOp
+   * @param writeConcern The current WriteConcern
+   * @param limitSet flag indicating if [[limit]] has been called
+   * @param doUpsert flag indicicating [[upsert]] has been called
+   * @param readPreference the ReadPreference to use for this operation
+   * @return an new CollectionView
+   */
   protected def copy(client: Client, namespace: MongoNamespace, codec: CollectibleCodec[T], options: MongoCollectionOptions,
            findOp: Find, writeConcern: WriteConcern, limitSet: Boolean, doUpsert: Boolean,
            readPreference: ReadPreference): CollectionView[T]

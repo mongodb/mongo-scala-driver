@@ -49,7 +49,6 @@ object MongoClient extends MongoClientCompanion with RequiredTypes
 case class MongoClient(options: MongoClientOptions, cluster: Cluster)
   extends MongoClientProvider with RequiredTypes {
 
-
   /**
    * Provides the MongoClientAdmin for this MongoClient
    *
@@ -67,52 +66,4 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster)
   protected def databaseProvider(databaseName: String, databaseOptions: MongoDatabaseOptions) =
     MongoDatabase(databaseName, this, databaseOptions)
 
-/**
- * A type converter method that converts a `MongoFuture` to a native [[scala.concurrent.Future]] of `Future[T]`
- */
-  protected def mongoFutureConverter[T]: (MongoFuture[T], ReferenceCounted) => Future[T] = {
-    (result, binding) => {
-      val promise = Promise[T]()
-      result.register(new SingleResultCallback[T] {
-        override def onResult(result: T, e: MongoException): Unit = {
-          try {
-            Option(e) match {
-              case None => promise.success(result)
-              case _ => promise.failure(e)
-
-            }
-          }
-          finally {
-            binding.release()
-          }
-        }
-      })
-      promise.future
-    }
-  }
-
-  /**
-   * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T]]` to a native [[scala.concurrent.Future]]
-   * of `Future[MongoAsyncCursor[T]]`
-   */
-  protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => Future[MongoAsyncCursor[T]] = {
-    (result, binding) =>
-      val promise = Promise[MongoAsyncCursor[T]]()
-
-      result.register(new SingleResultCallback[MongoAsyncCursor[T]] {
-        override def onResult(result: MongoAsyncCursor[T], e: MongoException): Unit = {
-          try {
-            Option(e) match {
-              case None => promise.success(result)
-              case _ => promise.failure(e)
-
-            }
-          }
-          finally {
-            binding.release()
-          }
-        }
-      })
-      promise.future
-  }
 }
