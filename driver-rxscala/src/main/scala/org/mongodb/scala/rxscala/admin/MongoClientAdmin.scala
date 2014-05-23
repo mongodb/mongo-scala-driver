@@ -24,14 +24,6 @@
  */
 package org.mongodb.scala.rxscala.admin
 
-import java.util
-
-import scala.collection.JavaConverters._
-
-import rx.lang.scala.Observable
-
-import org.mongodb.{CommandResult, Document}
-
 import org.mongodb.scala.core.admin.MongoClientAdminProvider
 import org.mongodb.scala.rxscala.{RequiredTypes, CommandResponseHandler, MongoClient}
 
@@ -41,28 +33,4 @@ import org.mongodb.scala.rxscala.{RequiredTypes, CommandResponseHandler, MongoCl
  * @param client the MongoClient being administrated
  */
 case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider
-  with CommandResponseHandler with RequiredTypes {
-
-  /**
-   * A helper that takes the ping CommandResult and returns the ping response time from the "ok" field
-   *
-   * @return ping times
-   */
-  protected def pingHelper: Observable[CommandResult] => Observable[Double] = {result =>
-    result map { cmdResult => cmdResult.getResponse.getDouble("ok") }
-  }
-
-  /**
-   * A helper that gets the database list from the CommandResult and returns the names of the databases
-   *
-   * @return database names
-   */
-  protected def databaseNamesHelper: Observable[CommandResult] => Observable[String] = {
-    result => {
-      result.map({ cmdResult =>
-        val databases = cmdResult.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
-        Observable.from(databases.asScala.map(doc => doc.getString("name")).toList)
-      }).concat
-    }
-  }
-}
+  with CommandResponseHandler with RequiredTypes

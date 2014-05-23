@@ -23,46 +23,15 @@
  * https://github.com/mongodb/mongo-scala-driver
  */
 package org.mongodb.scala.async.admin
-
-import java.util
 import scala.language.higherKinds
 
-import scala.collection.JavaConverters._
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import org.mongodb.{CommandResult, Document}
-
 import org.mongodb.scala.core.admin.MongoClientAdminProvider
-import org.mongodb.scala.async.{RequiredTypes, CommandResponseHandler, MongoClient}
+import org.mongodb.scala.async.{CommandResponseHandler, MongoClient, RequiredTypes}
 
 /**
  * The MongoClientAdmin
  *
  * @param client the MongoClient being administrated
  */
-case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with CommandResponseHandler with RequiredTypes {
-
-  /**
-   * A helper that takes the ping CommandResult and returns the ping response time from the "ok" field
-   *
-   * @return ping time
-   */
-  protected def pingHelper: Future[CommandResult] => Future[Double] = {result =>
-    result map { cmdResult => cmdResult.getResponse.getDouble("ok") }
-  }
-
-  /**
-   * A helper that gets the database list from the CommandResult and returns the names of the databases
-   *
-   * @return database names
-   */
-  protected def databaseNamesHelper: Future[CommandResult] => Future[List[String]] = { result =>
-    result map {
-      cmdResult => {
-        val databases = cmdResult.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
-        databases.asScala.map(doc => doc.getString("name")).toList
-      }
-    }
-  }
-}
+case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider
+  with CommandResponseHandler with RequiredTypes

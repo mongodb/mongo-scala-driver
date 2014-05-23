@@ -254,6 +254,19 @@ trait MongoClientProvider extends Closeable {
   }
 
   /**
+   * Executes a AsyncReadOperation
+   *
+   * @param readOperation the query operation to execute asynchronously
+   * @tparam T the type of result eg Document
+   * @return ResultType[T]
+   */
+  private[scala] def executeAsync[T, R](readOperation: AsyncReadOperation[T], readPreference: ReadPreference,
+                                        transformer: MongoFuture[T] => MongoFuture[R]): ResultType[R] = {
+    val binding = readBinding(readPreference)
+    mongoFutureConverter[R](transformer(readOperation.executeAsync(binding)), binding)
+  }
+
+  /**
    * Returns a AsyncClusterBinding with a primary ReadPreference
    *
    * @return AsyncClusterBinding

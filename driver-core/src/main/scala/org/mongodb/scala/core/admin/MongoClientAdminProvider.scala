@@ -26,11 +26,15 @@ package org.mongodb.scala.core.admin
 
 import scala.language.higherKinds
 
-import org.mongodb.{CommandResult, Document}
+import java.lang.{Double => JDouble}
+import scala.collection.JavaConverters._
+import org.mongodb.{MongoFuture, MongoException, CommandResult, Document}
 import org.mongodb.codecs.DocumentCodec
-import org.mongodb.operation.CommandReadOperation
+import org.mongodb.operation.{SingleResultFuture, CommandReadOperation}
 
 import org.mongodb.scala.core.{CommandResponseHandlerProvider, MongoClientProvider, RequiredTypesProvider}
+import org.mongodb.connection.SingleResultCallback
+import java.util
 
 /**
  * The MongoClientAdmin trait providing the core of a MongoClientAdmin implementation.
@@ -39,17 +43,11 @@ import org.mongodb.scala.core.{CommandResponseHandlerProvider, MongoClientProvid
  * [RequiredTypesProvider] to define handling of CommandResult errors and the types the concrete implementation uses.
  *
  * The core api remains the same between the implementations only the resulting types change based on the
- * [RequiredTypesProvider] implementation. To do this the concrete implementation of this trait requires the following
- * methods to be implemented:
+ * [RequiredTypesProvider] implementation.
  *
  * {{{
  *    case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with
- *      CommandResponseHandler {
- *
- *        protected def pingHelper: ResultType[CommandResult] => ResultType[Double]
- *
- *        protected def databaseNamesHelper:ResultType[CommandResult] => ListResultType[String]
- *    }
+ *      CommandResponseHandler with RequiredTypes
  * }}}
  */
 trait MongoClientAdminProvider {
@@ -68,8 +66,19 @@ trait MongoClientAdminProvider {
    */
   def ping: ResultType[Double] = {
     val operation = createOperation(PING_COMMAND)
-    val result = client.executeAsync(operation,  client.options.readPreference).asInstanceOf[ResultType[CommandResult]]
-    pingHelper(handleErrors(result))
+    val transformer = { result: MongoFuture[CommandResult] =>
+      val future: SingleResultFuture[JDouble] = new SingleResultFuture[JDouble]
+      result.register(new SingleResultCallback[CommandResult] {
+        def onResult(result: CommandResult, e: MongoException): Unit = {
+          Option(e) match {
+            case None => future.init(result.getResponse.getDouble("ok"), null)
+            case _ => future.init(null, e)
+          }
+        }
+      })
+      future
+    }
+    client.executeAsync(operation, client.options.readPreference, transformer).asInstanceOf[ResultType[Double]]
   }
 
   /**
@@ -79,39 +88,22 @@ trait MongoClientAdminProvider {
    */
   def databaseNames: ListResultType[String] = {
     val operation = createOperation(LIST_DATABASES)
-    val result = client.executeAsync(operation,  client.options.readPreference).asInstanceOf[ResultType[CommandResult]]
-    databaseNamesHelper(handleErrors(result)).asInstanceOf[ListResultType[String]]
+    val transformer = { result: MongoFuture[CommandResult] =>
+      val future: SingleResultFuture[List[String]] = new SingleResultFuture[List[String]]
+      result.register(new SingleResultCallback[CommandResult] {
+        def onResult(result: CommandResult, e: MongoException): Unit = {
+          Option(e) match {
+            case None =>
+              val databases = result.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
+              future.init(databases.asScala.map(doc => doc.getString("name")).toList, null)
+            case _ => future.init(null, e)
+          }
+        }
+      })
+      future
+    }
+    client.executeAsync(operation,  client.options.readPreference, transformer).asInstanceOf[ListResultType[String]]
   }
-
-  /**
-   * A helper that takes the ping CommandResult and returns the ping response time from the "ok" field
-   *
-   * An example for Futures would be:
-   * {{{
-   *   result => result map { cmdResult => cmdResult.getResponse.getDouble("ok") }
-   * }}}
-   *
-   * @return the ping time
-   */
-  protected def pingHelper: ResultType[CommandResult] => ResultType[Double]
-
-  /**
-   * A helper that gets the database list from the CommandResult and returns the names of the databases
-   *
-   * An example for Futures would be:
-   * {{{
-   *    result =>
-   *       result map {
-   *         cmdResult => {
-   *           val databases = cmdResult.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
-   *           databases.asScala.map(doc => doc.getString("name")).toList
-   *         }
-   *       }
-   * }}}
-   *
-   * @return The database names
-   */
-  protected def databaseNamesHelper: ResultType[CommandResult] => ListResultType[String]
 
   private val ADMIN_DATABASE = "admin"
   private val PING_COMMAND = new Document("ping", 1)

@@ -235,7 +235,7 @@ trait MongoCollectionViewProvider[T] {
    *
    * @return ResultType[Option[T\]\]
    */
-  def one(): ResultType[Option[T]] = toOneHelper(limit(1).cursor())
+  def one(): ResultType[Option[T]] = toOneHelper(limit(1).cursor().asInstanceOf[CursorType[T]])
 
   /**
    * Change the writeconcern
