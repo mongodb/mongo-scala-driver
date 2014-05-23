@@ -23,11 +23,8 @@
  * https://github.com/mongodb/mongo-scala-driver
  */
 package org.mongodb.scala.async
-import scala.concurrent.{Future, Promise}
 
-import org.mongodb.{MongoAsyncCursor, MongoException, MongoFuture}
-import org.mongodb.binding.ReferenceCounted
-import org.mongodb.connection.{Cluster, SingleResultCallback}
+import org.mongodb.connection.Cluster
 
 import org.mongodb.scala.core.{MongoClientCompanion, MongoClientOptions, MongoClientProvider, MongoDatabaseOptions}
 import org.mongodb.scala.async.admin.MongoClientAdmin
@@ -35,7 +32,7 @@ import org.mongodb.scala.async.admin.MongoClientAdmin
 /**
  * A factory for creating a [[MongoClient]] instance.
  */
-object MongoClient extends MongoClientCompanion with RequiredTypes
+object MongoClient extends MongoClientCompanion with RequiredTypesAndTransformers
 
 /**
  * The MongoClient
@@ -47,7 +44,7 @@ object MongoClient extends MongoClientCompanion with RequiredTypes
  * @param cluster The underlying cluster
  */
 case class MongoClient(options: MongoClientOptions, cluster: Cluster)
-  extends MongoClientProvider with RequiredTypes {
+  extends MongoClientProvider with RequiredTypesAndTransformers {
 
   /**
    * Provides the MongoClientAdmin for this MongoClient

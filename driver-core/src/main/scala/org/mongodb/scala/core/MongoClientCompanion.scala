@@ -36,16 +36,16 @@ import org.mongodb.management.JMXConnectionPoolListener
 /**
  * A factory for creating a [[MongoClientProvider MongoClient]] instances.
  *
- * All that is needed is a `RequiredTypesProvider` implementation to be mixed in:
+ * All that is needed is a `RequiredTypesAndTransformersProvider` implementation to be mixed in:
  *
  * @example {{{
- *   object MongoClient extends MongoClientCompanion with RequiredTypes
+ *   object MongoClient extends MongoClientCompanion with RequiredTypesAndTransformers
  * }}}
  *
  */
 trait MongoClientCompanion {
 
-  this: RequiredTypesProvider =>
+  this: RequiredTypesAndTransformersProvider =>
 
   /**
    * If you use a `case class` implementation of [[MongoClientProvider]] the this method is

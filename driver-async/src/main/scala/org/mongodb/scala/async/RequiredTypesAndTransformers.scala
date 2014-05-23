@@ -24,13 +24,16 @@
  */
 package org.mongodb.scala.async
 
-import scala.concurrent.{Promise, Future}
-import org.mongodb.scala.core.RequiredTypesProvider
-import org.mongodb.{MongoException, MongoFuture, MongoAsyncCursor}
+import scala.concurrent.{Future, Promise}
+
+import org.mongodb.{MongoAsyncCursor, MongoException, MongoFuture}
 import org.mongodb.binding.ReferenceCounted
 import org.mongodb.connection.SingleResultCallback
 
-trait RequiredTypes extends RequiredTypesProvider {
+import org.mongodb.scala.core.RequiredTypesAndTransformersProvider
+
+trait RequiredTypesAndTransformers extends RequiredTypesAndTransformersProvider {
+
   /* Concrete Implementations */
   type Client = MongoClient
   type Database = MongoDatabase
@@ -43,7 +46,6 @@ trait RequiredTypes extends RequiredTypesProvider {
   type CursorType[T] = Future[MongoAsyncCursor[T]]
 
   /* Transformers (Not robots in disguise but apply-to-all functions) */
-
 
   /**
    * A type converter method that converts a `MongoFuture` to a native [[scala.concurrent.Future]] of `Future[T]`

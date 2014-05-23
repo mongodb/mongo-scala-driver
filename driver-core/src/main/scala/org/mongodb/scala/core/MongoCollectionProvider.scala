@@ -33,16 +33,16 @@ import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
 /**
  * The MongoCollectionProvider trait providing the core of a MongoCollection implementation.
  *
- * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the
+ * To use the trait it requires a concrete implementation of [RequiredTypesAndTransformersProvider] to define the types the
  * concrete implementation uses.
  *
  * The core api remains the same between the implementations only the resulting types change based on the
- * [RequiredTypesProvider] implementation. To do this the concrete implementation of this trait requires the following
+ * [RequiredTypesAndTransformersProvider] implementation. To do this the concrete implementation of this trait requires the following
  * methods to be implemented:
  *
  * {{{
  *    case class MongoCollection[T](name: String, database: MongoDatabase, codec: CollectibleCodec[T],
- *                                  options: MongoCollectionOptions) extends MongoCollectionProvider[T] with RequiredTypes {
+ *                                  options: MongoCollectionOptions) extends MongoCollectionProvider[T] with RequiredTypesAndTransformers {
  *
  *      val admin: MongoCollectionAdmin[T] = MongoCollectionAdmin(this)
  *
@@ -54,7 +54,7 @@ import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
  */
 trait MongoCollectionProvider[T] {
 
-  this: RequiredTypesProvider =>
+  this: RequiredTypesAndTransformersProvider =>
 
   /**
    * A concrete implementation of [[MongoCollectionAdminProvider]]

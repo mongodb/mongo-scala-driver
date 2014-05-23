@@ -35,16 +35,16 @@ import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
 /**
  * The MongoDatabaseProvider trait providing the core of a MongoDatabase implementation.
  *
- * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the
+ * To use the trait it requires a concrete implementation of [RequiredTypesAndTransformersProvider] to define the types the
  * concrete implementation uses.
  *
  * The core api remains the same between the implementations only the resulting types change based on the
- * [RequiredTypesProvider] implementation. To do this the concrete implementation of this trait requires the following
+ * [RequiredTypesAndTransformersProvider] implementation. To do this the concrete implementation of this trait requires the following
  * methods to be implemented:
  *
  * {{{
  *    case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
- *      extends MongoDatabaseProvider with RequiredTypes {
+ *      extends MongoDatabaseProvider with RequiredTypesAndTransformers {
  *
  *      val admin: MongoDatabaseAdminProvider
  *
@@ -57,7 +57,7 @@ import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
  */
 trait MongoDatabaseProvider {
 
-  this: RequiredTypesProvider =>
+  this: RequiredTypesAndTransformersProvider =>
 
   /**
    * A concrete implementation of [[MongoDatabaseAdminProvider]]

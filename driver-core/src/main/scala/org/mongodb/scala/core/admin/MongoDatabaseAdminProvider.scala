@@ -31,24 +31,25 @@ import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.SingleResultCallback
 import org.mongodb.operation.{CommandReadOperation, CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation, SingleResultFuture}
 
-import org.mongodb.scala.core.{MongoDatabaseProvider, RequiredTypesProvider}
+import org.mongodb.scala.core.{MongoDatabaseProvider, RequiredTypesAndTransformersProvider}
 
 /**
  * The MongoDatabaseAdminProvider trait providing the core of a MongoDatabaseAdmin implementation.
  *
- * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the concrete
+ * To use the trait it requires a concrete implementation of [RequiredTypesAndTransformersProvider] to define the types the concrete
  * implementation uses.
  *
  * The core api remains the same between the implementations only the resulting types change based on the
- * [RequiredTypesProvider] implementation.
+ * [RequiredTypesAndTransformersProvider] implementation.
  *
  * {{{
- *    case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider with RequiredTypes
+ *    case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider
+ *      with RequiredTypesAndTransformers
  * }}}
  */
 trait MongoDatabaseAdminProvider {
 
-  this: RequiredTypesProvider =>
+  this: RequiredTypesAndTransformersProvider =>
 
   /**
    * The database which we administrating

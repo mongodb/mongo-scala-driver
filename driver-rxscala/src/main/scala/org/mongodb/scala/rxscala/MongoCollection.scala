@@ -40,7 +40,8 @@ import org.mongodb.scala.rxscala.admin.MongoCollectionAdmin
  * @tparam T the collection type (usually document)
  */
 case class MongoCollection[T](name: String, database: MongoDatabase, codec: CollectibleCodec[T],
-                              options: MongoCollectionOptions) extends MongoCollectionProvider[T] with RequiredTypes {
+                              options: MongoCollectionOptions)
+  extends MongoCollectionProvider[T] with RequiredTypesAndTransformers {
 
   /**
    * MongoCollection administration functionality

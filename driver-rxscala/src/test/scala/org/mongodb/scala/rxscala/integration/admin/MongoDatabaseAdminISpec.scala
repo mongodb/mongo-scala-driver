@@ -38,7 +38,7 @@ class MongoDatabaseAdminISpec extends RequiresMongoDBSpec {
   it should "remove all collections once drop() is called" in withDatabase {
     database =>
       database.admin.createCollection("test").observableValue
-      database.admin.drop().observableValue.isOk shouldBe true
+      database.admin.drop().observableValue
       database.admin.collectionNames.toSeq.observableValue should equal(Seq.empty)
   }
 

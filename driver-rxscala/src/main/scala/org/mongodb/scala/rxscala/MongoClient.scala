@@ -24,13 +24,7 @@
  */
 package org.mongodb.scala.rxscala
 
-import scala.Some
-
-import rx.lang.scala.{Observable, Subscriber}
-
-import org.mongodb.{Block, MongoAsyncCursor, MongoException, MongoFuture}
-import org.mongodb.binding.ReferenceCounted
-import org.mongodb.connection.{Cluster, SingleResultCallback}
+import org.mongodb.connection.Cluster
 
 import org.mongodb.scala.core.{MongoClientCompanion, MongoClientOptions, MongoClientProvider, MongoDatabaseOptions}
 import org.mongodb.scala.rxscala.admin.MongoClientAdmin
@@ -38,7 +32,7 @@ import org.mongodb.scala.rxscala.admin.MongoClientAdmin
 /**
  * A factory for creating a [[MongoClient]] instance.
  */
-object MongoClient extends MongoClientCompanion with RequiredTypes
+object MongoClient extends MongoClientCompanion with RequiredTypesAndTransformers
 
 /**
  * The MongoClient
@@ -48,8 +42,8 @@ object MongoClient extends MongoClientCompanion with RequiredTypes
  * @param options The connection options
  * @param cluster The underlying cluster
  */
-case class MongoClient(options: MongoClientOptions, cluster: Cluster)
-  extends MongoClientProvider with RequiredTypes {
+case class MongoClient(options: MongoClientOptions, cluster: Cluster) extends MongoClientProvider
+  with RequiredTypesAndTransformers {
 
   /**
    * Provides the MongoClientAdmin for this MongoClient
@@ -67,61 +61,4 @@ case class MongoClient(options: MongoClientOptions, cluster: Cluster)
    */
   protected def databaseProvider(databaseName: String, databaseOptions: MongoDatabaseOptions) =
     MongoDatabase(databaseName, this, databaseOptions)
-
-  /**
-   * A type converter method that converts a `MongoFuture[T]` to a rxScala `Observable[T]`
-   */
-  protected def mongoFutureConverter[T]: (MongoFuture[T], ReferenceCounted) => Observable[T] = {
-    (result, binding) => {
-      Observable((subscriber: Subscriber[T]) => {
-        result.register(new SingleResultCallback[T] {
-          override def onResult(result: T, e: MongoException): Unit = {
-            try {
-              Option(e) match {
-                case Some(err) => subscriber.onError(err)
-                case None => subscriber.onNext(result)
-              }
-            }
-            finally {
-              binding.release()
-              subscriber.onCompleted()
-            }
-          }
-        })
-      })
-    }
-  }
-
-  /**
-   * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T]]` to a rxScala `Observable[T]`
-   */
-  protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => Observable[T] = {
-    (result, binding) => {
-      Observable((subscriber: Subscriber[T]) => {
-        result.register(new SingleResultCallback[MongoAsyncCursor[T]] {
-          override def onResult(cursor: MongoAsyncCursor[T], e: MongoException): Unit = {
-            Option(e) match {
-              case Some(err) => subscriber.onError(err)
-              case None =>
-                cursor.forEach(new Block[T] {
-                  override def apply(t: T): Unit = {
-                    if (subscriber.isUnsubscribed) {
-                      subscriber.onCompleted()
-                    } else {
-                      subscriber.onNext(t)
-                    }
-                  }
-                }).register(new SingleResultCallback[Void] {
-                  def onResult(result: Void, e: MongoException) {
-                    binding.release()
-                    if (e != null) subscriber.onError(e)
-                    subscriber.onCompleted()
-                  }
-                })
-            }
-          }
-        })
-      })
-    }
-  }
 }

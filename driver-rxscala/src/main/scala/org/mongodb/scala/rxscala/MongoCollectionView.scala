@@ -24,31 +24,39 @@
  */
 package org.mongodb.scala.rxscala
 
-import rx.lang.scala.Observable
-
 import org.mongodb.{CollectibleCodec, MongoNamespace, ReadPreference, WriteConcern}
 import org.mongodb.operation.Find
 
 import org.mongodb.scala.core.{MongoCollectionOptions, MongoCollectionViewProvider}
 
-
+/**
+ * The MongoCollectionView used in chaining CRUD operations together
+ *
+ * @param client The MongoClient
+ * @param namespace The MongoNamespace of the collection
+ * @param codec The codec
+ * @param options The MongoCollectionOptions
+ * @param findOp The FindOp
+ * @param writeConcern The current WriteConcern
+ * @param limitSet flag indicating if `limit()` has been called
+ * @param doUpsert flag indicicating `upsert()` has been called
+ * @param readPreference the ReadPreference to use for this operation
+ * @tparam T the collection type (usually document)
+ */
 protected case class MongoCollectionView[T](client: MongoClient, namespace: MongoNamespace, codec: CollectibleCodec[T],
                                             options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern,
                                             limitSet: Boolean, doUpsert: Boolean, readPreference: ReadPreference)
-  extends MongoCollectionViewProvider[T] with RequiredTypes {
+  extends MongoCollectionViewProvider[T] with RequiredTypesAndTransformers {
 
+  /**
+   * Create a copy of MongoCollectionView[T]
+   *
+   * @inheritdoc
+   */
   protected def copy(client: MongoClient, namespace: MongoNamespace, codec: CollectibleCodec[T],
                      options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern, limitSet: Boolean,
                      doUpsert: Boolean, readPreference: ReadPreference): MongoCollectionView[T] = {
     MongoCollectionView[T](client, namespace, codec, options, findOp: Find, writeConcern, limitSet, doUpsert,
                            readPreference)
-  }
-
-  protected def toListHelper: Observable[T] => Observable[List[T]] = { result =>
-    result.foldLeft(List[T]()){(docs, doc) => docs :+ doc }
-  }
-
-  protected def toOneHelper: Observable[T] => Observable[Option[T]] = { result =>
-    result.take(1).foldLeft[Option[T]](None)((v: Option[T], doc: T) => Some(doc))
   }
 }

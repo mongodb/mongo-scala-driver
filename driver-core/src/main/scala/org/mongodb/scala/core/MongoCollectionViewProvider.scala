@@ -34,18 +34,18 @@ import org.mongodb.connection.SingleResultCallback
 /**
  * The MongoCollectionViewProvider trait providing the core of a MongoCollectionView implementation.
  *
- * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the
+ * To use the trait it requires a concrete implementation of [RequiredTypesAndTransformersProvider] to define the types the
  * concrete implementation uses.
  *
  * The core api remains the same between the implementations only the resulting types change based on the
- * [RequiredTypesProvider] implementation. To do this the concrete implementation of this trait requires the following
+ * [RequiredTypesAndTransformersProvider] implementation. To do this the concrete implementation of this trait requires the following
  * methods to be implemented:
  *
  * {{{
  *    protected case class MongoCollectionView[T](client: MongoClient, namespace: MongoNamespace, codec: CollectibleCodec[T],
  *                                                options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern,
  *                                                limitSet: Boolean, doUpsert: Boolean, readPreference: ReadPreference)
- *      extends MongoCollectionViewProvider[T] with RequiredTypes {
+ *      extends MongoCollectionViewProvider[T] with RequiredTypesAndTransformers {
  *
  *      protected def copy(client: MongoClient, namespace: MongoNamespace, codec: CollectibleCodec[T],
  *                         options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern, limitSet: Boolean,
@@ -56,7 +56,7 @@ import org.mongodb.connection.SingleResultCallback
  */
 trait MongoCollectionViewProvider[T] {
 
-  this: RequiredTypesProvider =>
+  this: RequiredTypesAndTransformersProvider =>
 
   /**
    * The MongoClient

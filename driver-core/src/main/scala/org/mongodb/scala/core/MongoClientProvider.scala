@@ -39,17 +39,17 @@ import org.mongodb.scala.core.admin.MongoClientAdminProvider
 /**
  * The MongoClientProvider trait providing the core of a MongoClient implementation.
  *
- * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the
+ * To use the trait it requires a concrete implementation of [RequiredTypesAndTransformersProvider] to define the types the
  * concrete implementation uses. The current supported implementations are native Scala `Futures` and RxScala
  * `Observables`.
  *
  * The core api remains the same between the implementations only the resulting types change based on the
- * [RequiredTypesProvider] implementation. To do this the concrete implementation of this trait requires the following
+ * [RequiredTypesAndTransformersProvider] implementation. To do this the concrete implementation of this trait requires the following
  * methods to be implemented:
  *
  * {{{
  *    case class MongoClient(options: MongoClientOptions, cluster: Cluster)
- *        extends MongoClientProvider with RequiredTypes
+ *        extends MongoClientProvider with RequiredTypesAndTransformers
  *
  *         val admin: MongoClientAdminProvider
  *
@@ -60,7 +60,7 @@ import org.mongodb.scala.core.admin.MongoClientAdminProvider
  */
 trait MongoClientProvider extends Closeable {
 
-  this: RequiredTypesProvider =>
+  this: RequiredTypesAndTransformersProvider =>
 
   /**
    * A concrete implementation of [[MongoClientAdminProvider]]

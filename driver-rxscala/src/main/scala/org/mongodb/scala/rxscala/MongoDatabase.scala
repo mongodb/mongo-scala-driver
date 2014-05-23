@@ -30,7 +30,7 @@ import org.mongodb.scala.core.{MongoCollectionOptions, MongoDatabaseOptions, Mon
 import org.mongodb.scala.rxscala.admin.MongoDatabaseAdmin
 
 case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
-  extends MongoDatabaseProvider with RequiredTypes {
+  extends MongoDatabaseProvider with RequiredTypesAndTransformers {
 
   /**
    * MongoDatabase administration functionality

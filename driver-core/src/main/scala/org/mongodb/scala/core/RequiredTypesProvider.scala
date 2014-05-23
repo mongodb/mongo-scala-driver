@@ -5,7 +5,7 @@ import org.mongodb.binding.ReferenceCounted
 import org.mongodb.{MongoAsyncCursor, MongoFuture}
 
 /**
- * The RequiredTypesProvider trait
+ * The RequiredTypesAndTransformersProvider trait
  *
  * Defines the types used across the system.
  *
@@ -13,7 +13,8 @@ import org.mongodb.{MongoAsyncCursor, MongoFuture}
  * - `ResultType`, `ListResultType` and `CursorType` are the future data types
  *
  */
-trait RequiredTypesProvider {
+trait RequiredTypesAndTransformersProvider {
+
   /* Concrete Implementations */
   type Client <: MongoClientProvider
   type Database <: MongoDatabaseProvider
@@ -32,7 +33,7 @@ trait RequiredTypesProvider {
    *
    * Care should be taken to release the `binding` which is the [[ReferenceCounted]] type in the signature.
    *
-   * @note `ResultType[T]` is defined by the concrete implementation of [[RequiredTypesProvider]]
+   * @note `ResultType[T]` is defined by the concrete implementation of [[RequiredTypesAndTransformersProvider]]
    *
    * Converting to native Scala Futures:
    *
@@ -69,7 +70,7 @@ trait RequiredTypesProvider {
    *
    * Care should be taken to release the `binding` which is the [[ReferenceCounted]] type in the signature.
    *
-   * @note `CursorType[T]` is defined by the concrete implementation of [[RequiredTypesProvider]]
+   * @note `CursorType[T]` is defined by the concrete implementation of [[RequiredTypesAndTransformersProvider]]
    *
    * Converting to native Scala Futures:
    *

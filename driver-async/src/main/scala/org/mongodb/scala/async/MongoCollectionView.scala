@@ -46,8 +46,13 @@ import org.mongodb.scala.core.{MongoCollectionOptions, MongoCollectionViewProvid
 protected case class MongoCollectionView[T](client: MongoClient, namespace: MongoNamespace, codec: CollectibleCodec[T],
                                             options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern,
                                             limitSet: Boolean, doUpsert: Boolean, readPreference: ReadPreference)
-  extends MongoCollectionViewProvider[T] with RequiredTypes {
+  extends MongoCollectionViewProvider[T] with RequiredTypesAndTransformers {
 
+  /**
+   * Create a copy of MongoCollectionView[T]
+   *
+   * @inheritdoc
+   */
   protected def copy(client: MongoClient, namespace: MongoNamespace, codec: CollectibleCodec[T],
                      options: MongoCollectionOptions, findOp: Find, writeConcern: WriteConcern, limitSet: Boolean,
                      doUpsert: Boolean, readPreference: ReadPreference): MongoCollectionView[T] = {

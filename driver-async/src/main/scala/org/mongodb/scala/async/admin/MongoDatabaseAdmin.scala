@@ -25,12 +25,13 @@
 package org.mongodb.scala.async.admin
 
 import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
-import org.mongodb.scala.async.{MongoDatabase, RequiredTypes}
+import org.mongodb.scala.async.{MongoDatabase, RequiredTypesAndTransformers}
 
 /**
  * MongoDatabaseAdmin
  *
  * @param database the MongoDatabase being administrated
  */
-case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider with RequiredTypes
+case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider
+  with RequiredTypesAndTransformers
 

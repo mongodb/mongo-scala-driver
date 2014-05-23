@@ -24,52 +24,14 @@
  */
 package org.mongodb.scala.rxscala.admin
 
-import java.util
-
-import scala.collection.JavaConverters._
-
-import rx.lang.scala.Observable
-
-import org.mongodb.{CommandResult, Document}
-
 import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
-import org.mongodb.scala.rxscala.{CommandResponseHandler, MongoCollection, RequiredTypes}
+import org.mongodb.scala.rxscala.{MongoCollection, RequiredTypesAndTransformers}
 
+/**
+ * MongoCollectionAdmin
+ *
+ * @param collection the MongoCollection being administrated
+ * @tparam T the type of collection
+ */
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
-  with CommandResponseHandler with RequiredTypes {
-
-  /**
-   * A type transformer that takes a `Observable[Void]` and converts it to `Observable[Unit]`
-   *
-   * @return ResultType[Unit]
-   */
-  protected def voidToUnitConverter: Observable[Void] => Observable[Unit] = result => result map {v => Unit}
-
-  /**
-   * A helper that gets the `capped` field from the statistics document
-   *
-   * @return
-   */
-  protected def getCappedFromStatistics: Observable[Document] => Observable[Boolean] = {
-    result => result map { doc => doc.get("capped").asInstanceOf[Boolean] }
-  }
-
-  /**
-   * A helper that takes a `Observable[CommandResult]` and picks out the `CommandResult.getResponse()` to return the
-   * response Document as `Observable[Document]`.
-   *
-   * @return Observable[Document]
-   */
-  protected def getResponseHelper: Observable[CommandResult] => Observable[Document] = {
-        result => result map { cmdResult => cmdResult.getResponse }
-  }
-
-
-  /**
-   * A type transformer that takes a `Observable[util.List[Document]]` and converts it to `Observable[Document]`
-   * @return  Observable[Document]
-   */
-  protected def javaListToListResultTypeConverter: Observable[util.List[Document]] => Observable[Document] = {
-    result => { result.map({ docs => Observable.from(docs.asScala.toList) }).concat }
-  }
-}
+  with RequiredTypesAndTransformers

@@ -34,20 +34,20 @@ import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.SingleResultCallback
 import org.mongodb.operation.{CommandReadOperation, CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation, SingleResultFuture}
 
-import org.mongodb.scala.core.{MongoCollectionProvider, RequiredTypesProvider}
+import org.mongodb.scala.core.{MongoCollectionProvider, RequiredTypesAndTransformersProvider}
 
 /**
  * The MongoCollectionAdminProvider trait providing the core of a MongoCollectionAdmin implementation.
  *
- * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the concrete
+ * To use the trait it requires a concrete implementation of [RequiredTypesAndTransformersProvider] to define the types the concrete
  * implementation uses..
  *
  * The core api remains the same between the implementations only the resulting types change based on the
- * [RequiredTypesProvider] implementation.
+ * [RequiredTypesAndTransformersProvider] implementation.
  *
  * {{{
  *    case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
- *      with RequiredTypes
+ *      with RequiredTypesAndTransformers
  * }}}
  *
  *
@@ -55,7 +55,7 @@ import org.mongodb.scala.core.{MongoCollectionProvider, RequiredTypesProvider}
  */
 trait MongoCollectionAdminProvider[T] {
 
-  this: RequiredTypesProvider =>
+  this: RequiredTypesAndTransformersProvider =>
 
   /**
    * Drops the collection

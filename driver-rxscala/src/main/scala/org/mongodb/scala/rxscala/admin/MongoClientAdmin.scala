@@ -25,12 +25,11 @@
 package org.mongodb.scala.rxscala.admin
 
 import org.mongodb.scala.core.admin.MongoClientAdminProvider
-import org.mongodb.scala.rxscala.{RequiredTypes, CommandResponseHandler, MongoClient}
+import org.mongodb.scala.rxscala.{MongoClient, RequiredTypesAndTransformers}
 
 /**
  * The MongoClientAdmin
  *
  * @param client the MongoClient being administrated
  */
-case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider
-  with CommandResponseHandler with RequiredTypes
+case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with RequiredTypesAndTransformers

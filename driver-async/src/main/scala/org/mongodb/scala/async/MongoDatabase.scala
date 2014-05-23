@@ -28,10 +28,9 @@ import org.mongodb.CollectibleCodec
 
 import org.mongodb.scala.core.{MongoCollectionOptions, MongoDatabaseOptions, MongoDatabaseProvider}
 import org.mongodb.scala.async.admin.MongoDatabaseAdmin
-import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
 
 case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
-  extends MongoDatabaseProvider with RequiredTypes {
+  extends MongoDatabaseProvider with RequiredTypesAndTransformers {
 
   /**
    * MongoDatabase administration functionality
