@@ -29,26 +29,25 @@ import java.lang.{Boolean => JBoolean}
 
 import scala.collection.JavaConverters._
 
-import org.mongodb.{MongoCommandFailureException, ReadPreference, MongoException, MongoFuture, CommandResult, Document, Index}
-import org.mongodb.operation.{CommandReadOperation, SingleResultFuture, CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation}
-
-import org.mongodb.scala.core.{CommandResponseHandlerProvider, MongoCollectionProvider, RequiredTypesProvider}
-import org.mongodb.connection.SingleResultCallback
+import org.mongodb.{CommandResult, Document, Index, MongoCommandFailureException, MongoException, MongoFuture, ReadPreference}
 import org.mongodb.codecs.DocumentCodec
+import org.mongodb.connection.SingleResultCallback
+import org.mongodb.operation.{CommandReadOperation, CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation, SingleResultFuture}
 
+import org.mongodb.scala.core.{MongoCollectionProvider, RequiredTypesProvider}
 
 /**
  * The MongoCollectionAdminProvider trait providing the core of a MongoCollectionAdmin implementation.
  *
- * To use the trait it requires a concrete implementation of [CommandResponseHandlerProvider] and
- * [RequiredTypesProvider] to define handling of CommandResult errors and the types the concrete implementation uses.
+ * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the concrete
+ * implementation uses..
  *
  * The core api remains the same between the implementations only the resulting types change based on the
  * [RequiredTypesProvider] implementation.
  *
  * {{{
  *    case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
- *      with CommandResponseHandler with RequiredTypes
+ *      with RequiredTypes
  * }}}
  *
  *
@@ -56,7 +55,7 @@ import org.mongodb.codecs.DocumentCodec
  */
 trait MongoCollectionAdminProvider[T] {
 
-  this: CommandResponseHandlerProvider with RequiredTypesProvider =>
+  this: RequiredTypesProvider =>
 
   /**
    * Drops the collection

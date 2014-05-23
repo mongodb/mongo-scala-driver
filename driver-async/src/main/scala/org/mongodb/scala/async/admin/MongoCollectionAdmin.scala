@@ -26,7 +26,7 @@ package org.mongodb.scala.async.admin
 
 
 import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
-import org.mongodb.scala.async.{CommandResponseHandler, MongoCollection, RequiredTypes}
+import org.mongodb.scala.async.{MongoCollection, RequiredTypes}
 
 /**
  * MongoCollectionAdmin
@@ -35,5 +35,5 @@ import org.mongodb.scala.async.{CommandResponseHandler, MongoCollection, Require
  * @tparam T the type of collection
  */
 case class MongoCollectionAdmin[T](collection: MongoCollection[T]) extends MongoCollectionAdminProvider[T]
-  with CommandResponseHandler with RequiredTypes
+  with RequiredTypes
 

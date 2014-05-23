@@ -24,35 +24,35 @@
  */
 package org.mongodb.scala.core.admin
 
+import java.util
+import java.lang.{Double => JDouble}
+
+import scala.collection.JavaConverters._
 import scala.language.higherKinds
 
-import java.lang.{Double => JDouble}
-import scala.collection.JavaConverters._
-import org.mongodb.{MongoFuture, MongoException, CommandResult, Document}
+import org.mongodb.{CommandResult, Document, MongoException, MongoFuture}
 import org.mongodb.codecs.DocumentCodec
-import org.mongodb.operation.{SingleResultFuture, CommandReadOperation}
-
-import org.mongodb.scala.core.{CommandResponseHandlerProvider, MongoClientProvider, RequiredTypesProvider}
 import org.mongodb.connection.SingleResultCallback
-import java.util
+import org.mongodb.operation.{CommandReadOperation, SingleResultFuture}
+
+import org.mongodb.scala.core.{MongoClientProvider, RequiredTypesProvider}
 
 /**
  * The MongoClientAdmin trait providing the core of a MongoClientAdmin implementation.
  *
- * To use the trait it requires a concrete implementation of [CommandResponseHandlerProvider] and
- * [RequiredTypesProvider] to define handling of CommandResult errors and the types the concrete implementation uses.
+ * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the concrete
+ * implementation uses.
  *
  * The core api remains the same between the implementations only the resulting types change based on the
  * [RequiredTypesProvider] implementation.
  *
  * {{{
- *    case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with
- *      CommandResponseHandler with RequiredTypes
+ *    case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with RequiredTypes
  * }}}
  */
 trait MongoClientAdminProvider {
 
-  this: CommandResponseHandlerProvider with RequiredTypesProvider =>
+  this: RequiredTypesProvider =>
 
   /**
    * The MongoClient we are administrating

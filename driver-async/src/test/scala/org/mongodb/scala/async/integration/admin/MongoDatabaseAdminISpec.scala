@@ -37,10 +37,16 @@ class MongoDatabaseAdminISpec extends RequiresMongoDBSpec {
       admin shouldBe a[MongoDatabaseAdmin]
   }
 
+  it should "allow drop to be called multiple times without error" in withDatabase {
+    database =>
+      database.admin.drop().futureValue
+      database.admin.drop().futureValue
+  }
+
   it should "remove all collections once drop() is called" in withDatabase {
     database =>
       database.admin.createCollection("test").futureValue
-      database.admin.drop().futureValue.isOk shouldBe true
+      database.admin.drop().futureValue
       database.admin.collectionNames.futureValue should equal(List.empty)
   }
 

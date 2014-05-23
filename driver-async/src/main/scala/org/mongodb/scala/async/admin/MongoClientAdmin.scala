@@ -26,12 +26,11 @@ package org.mongodb.scala.async.admin
 import scala.language.higherKinds
 
 import org.mongodb.scala.core.admin.MongoClientAdminProvider
-import org.mongodb.scala.async.{CommandResponseHandler, MongoClient, RequiredTypes}
+import org.mongodb.scala.async.{MongoClient, RequiredTypes}
 
 /**
  * The MongoClientAdmin
  *
  * @param client the MongoClient being administrated
  */
-case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider
-  with CommandResponseHandler with RequiredTypes
+case class MongoClientAdmin(client: MongoClient) extends MongoClientAdminProvider with RequiredTypes

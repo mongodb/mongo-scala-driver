@@ -26,31 +26,29 @@ package org.mongodb.scala.core.admin
 
 import scala.language.higherKinds
 
-import org.mongodb.{Block, CommandResult, CreateCollectionOptions, Document, MongoAsyncCursor, MongoException, MongoFuture, MongoNamespace, ReadPreference}
+import org.mongodb.{Block, CommandResult, CreateCollectionOptions, Document, MongoAsyncCursor, MongoCommandFailureException, MongoException, MongoFuture, MongoNamespace, ReadPreference}
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation.{CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation, SingleResultFuture}
+import org.mongodb.operation.{CommandReadOperation, CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation, SingleResultFuture}
 
-import org.mongodb.scala.core.{CommandResponseHandlerProvider, MongoDatabaseProvider, RequiredTypesProvider}
-
+import org.mongodb.scala.core.{MongoDatabaseProvider, RequiredTypesProvider}
 
 /**
  * The MongoDatabaseAdminProvider trait providing the core of a MongoDatabaseAdmin implementation.
  *
- * To use the trait it requires a concrete implementation of [CommandResponseHandlerProvider] and
- * [RequiredTypesProvider] to define handling of CommandResult errors and the types the concrete implementation uses.
+ * To use the trait it requires a concrete implementation of [RequiredTypesProvider] to define the types the concrete
+ * implementation uses.
  *
  * The core api remains the same between the implementations only the resulting types change based on the
  * [RequiredTypesProvider] implementation.
  *
  * {{{
- *    case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider
- *      with CommandResponseHandler with RequiredTypes
+ *    case class MongoDatabaseAdmin(database: MongoDatabase) extends MongoDatabaseAdminProvider with RequiredTypes
  * }}}
  */
 trait MongoDatabaseAdminProvider {
 
-  this: CommandResponseHandlerProvider with RequiredTypesProvider =>
+  this: RequiredTypesProvider =>
 
   /**
    * The database which we administrating
@@ -64,8 +62,18 @@ trait MongoDatabaseAdminProvider {
    *
    * @return the command result
    */
-  def drop(): ResultType[CommandResult] = {
-    handleNameSpaceErrors(database.executeAsyncWriteCommand(DROP_DATABASE).asInstanceOf[ResultType[CommandResult]])
+  def drop(): ResultType[Unit] = {
+    val operation = createOperation(DROP_DATABASE)
+    val transformer = { result: MongoFuture[CommandResult] =>
+      val future: SingleResultFuture[Unit] = new SingleResultFuture[Unit]
+      result.register(new SingleResultCallback[CommandResult] {
+        def onResult(result: CommandResult, e: MongoException): Unit = {
+          future.init(Unit, e)
+        }
+      })
+      future
+    }
+    client.executeAsync(operation, ReadPreference.primary, transformer).asInstanceOf[ResultType[Unit]]
   }
 
   /**
@@ -160,5 +168,8 @@ trait MongoDatabaseAdminProvider {
   private val DROP_DATABASE = new Document("dropDatabase", 1)
   private val commandCodec = new DocumentCodec()
   private val client = database.client
+  private def createOperation(command: Document) = {
+    new CommandReadOperation(name, command, commandCodec, commandCodec)
+  }
 }
 
