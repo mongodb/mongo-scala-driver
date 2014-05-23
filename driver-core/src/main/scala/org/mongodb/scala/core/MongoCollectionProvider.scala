@@ -57,7 +57,7 @@ trait MongoCollectionProvider[T] {
   this: RequiredTypesAndTransformersProvider =>
 
   /**
-   * A concrete implementation of [[MongoCollectionAdminProvider]]
+   * A concrete implementation of [[org.mongodb.scala.core.admin.MongoCollectionAdminProvider MongoCollectionAdminProvider]]
    *
    * @note Each MongoCollection implementation must provide this.
    */

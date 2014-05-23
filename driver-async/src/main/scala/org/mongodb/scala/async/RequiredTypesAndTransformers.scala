@@ -48,7 +48,7 @@ trait RequiredTypesAndTransformers extends RequiredTypesAndTransformersProvider 
   /* Transformers (Not robots in disguise but apply-to-all functions) */
 
   /**
-   * A type converter method that converts a `MongoFuture` to a native [[scala.concurrent.Future]] of `Future[T]`
+   * A type converter method that converts a `MongoFuture` to a of `Future[T]`
    */
   protected def mongoFutureConverter[T]: (MongoFuture[T], ReferenceCounted) => Future[T] = {
     (result, binding) => {
@@ -72,8 +72,7 @@ trait RequiredTypesAndTransformers extends RequiredTypesAndTransformersProvider 
   }
 
   /**
-   * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T\]\]` to a native [[scala.concurrent.Future]]
-   * of `Future[MongoAsyncCursor[T\]\]`
+   * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T]]` to `Future[MongoAsyncCursor[T]]`
    */
   protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => Future[MongoAsyncCursor[T]] = {
     (result, binding) =>

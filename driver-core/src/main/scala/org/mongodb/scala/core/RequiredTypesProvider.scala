@@ -31,7 +31,7 @@ trait RequiredTypesAndTransformersProvider {
   /**
    * A type converter method that converts a `MongoFuture[T]` to `ResultType[T]`
    *
-   * Care should be taken to release the `binding` which is the [[ReferenceCounted]] type in the signature.
+   * Care should be taken to release the `binding` which is the `ReferenceCounted` type in the signature.
    *
    * @note `ResultType[T]` is defined by the concrete implementation of [[RequiredTypesAndTransformersProvider]]
    *
@@ -68,7 +68,7 @@ trait RequiredTypesAndTransformersProvider {
   /**
    * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T]]` to `CursorType[T]`
    *
-   * Care should be taken to release the `binding` which is the [[ReferenceCounted]] type in the signature.
+   * Care should be taken to release the `binding` which is the `ReferenceCounted` type in the signature.
    *
    * @note `CursorType[T]` is defined by the concrete implementation of [[RequiredTypesAndTransformersProvider]]
    *
@@ -103,7 +103,7 @@ trait RequiredTypesAndTransformersProvider {
   protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => CursorType[T]
 
   /**
-   * A type transformer that converts a `ResultType[List[T\]\]` to `ListResultType[T]`
+   * A type transformer that converts a `ResultType[List[T]]` to `ListResultType[T]`
    *
    * Depending on the required `ListResultType` this may require no transformation:
    * {{{

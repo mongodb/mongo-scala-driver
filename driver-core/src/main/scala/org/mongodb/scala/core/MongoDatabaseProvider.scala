@@ -39,8 +39,8 @@ import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
  * concrete implementation uses.
  *
  * The core api remains the same between the implementations only the resulting types change based on the
- * [RequiredTypesAndTransformersProvider] implementation. To do this the concrete implementation of this trait requires the following
- * methods to be implemented:
+ * [RequiredTypesAndTransformersProvider] implementation. To do this the concrete implementation of this trait requires
+ * the following to be implemented:
  *
  * {{{
  *    case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
@@ -60,7 +60,7 @@ trait MongoDatabaseProvider {
   this: RequiredTypesAndTransformersProvider =>
 
   /**
-   * A concrete implementation of [[MongoDatabaseAdminProvider]]
+   * A concrete implementation of [[org.mongodb.scala.core.admin.MongoDatabaseAdminProvider MongoDatabaseAdminProvider]]
    *
    * @note Each MongoClient implementation must provide this.
    */

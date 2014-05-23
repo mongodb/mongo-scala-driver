@@ -63,7 +63,7 @@ trait MongoClientProvider extends Closeable {
   this: RequiredTypesAndTransformersProvider =>
 
   /**
-   * A concrete implementation of [[MongoClientAdminProvider]]
+   * A concrete implementation of [[org.mongodb.scala.core.admin.MongoClientAdminProvider MongoClientAdminProvider]]
    *
    * @note Each MongoClient implementation must provide this.
    */

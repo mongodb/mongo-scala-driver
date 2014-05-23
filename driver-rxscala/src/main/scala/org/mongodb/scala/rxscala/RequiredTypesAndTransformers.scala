@@ -48,7 +48,7 @@ trait RequiredTypesAndTransformers extends RequiredTypesAndTransformersProvider 
   /* Transformers (Not robots in disguise but apply-to-all functions) */
 
   /**
-   * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T\]\]` to `Observable[T]`
+   * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T]]` to `Observable[T]`
    *
    * @tparam T the type of result eg CommandResult, Document etc..
    * @return CursorType[T]
@@ -120,7 +120,7 @@ trait RequiredTypesAndTransformers extends RequiredTypesAndTransformersProvider 
   protected def voidToUnitConverter: Observable[Void] => Observable[Unit] = result => result map { v => Unit }
 
   /**
-   * A type transformer that converts a `Observable[List[T\]\]` to `Observable[T]`
+   * A type transformer that converts a `Observable[List[T]]` to `Observable[T]`
    *
    * @tparam T List data type of item eg Document or String
    * @return the correct ListResultType[T]
