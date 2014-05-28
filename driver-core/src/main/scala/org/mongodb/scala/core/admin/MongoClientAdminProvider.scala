@@ -28,7 +28,6 @@ import java.util
 import java.lang.{Double => JDouble}
 
 import scala.collection.JavaConverters._
-import scala.language.higherKinds
 
 import org.mongodb.{CommandResult, Document, MongoException, MongoFuture}
 import org.mongodb.codecs.DocumentCodec

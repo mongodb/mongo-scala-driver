@@ -24,8 +24,6 @@
  */
 package org.mongodb.scala.core
 
-import scala.language.higherKinds
-
 import org.mongodb.{Document, CollectibleCodec, Codec, ReadPreference}
 import org.mongodb.codecs.{CollectibleDocumentCodec, ObjectIdGenerator}
 import org.mongodb.operation.{CommandWriteOperation, CommandReadOperation}

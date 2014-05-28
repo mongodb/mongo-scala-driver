@@ -23,7 +23,6 @@
  * https://github.com/mongodb/mongo-scala-driver
  */
 package org.mongodb.scala.async.admin
-import scala.language.higherKinds
 
 import org.mongodb.scala.core.admin.MongoClientAdminProvider
 import org.mongodb.scala.async.{MongoClient, RequiredTypesAndTransformers}

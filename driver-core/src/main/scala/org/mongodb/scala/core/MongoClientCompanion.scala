@@ -26,7 +26,6 @@ package org.mongodb.scala.core
 
 import scala.Some
 import scala.collection.JavaConverters._
-import scala.language.higherKinds
 
 import org.mongodb.MongoCredential
 import org.mongodb.connection.{AsynchronousSocketChannelStreamFactory, BufferProvider, Cluster, ClusterConnectionMode,

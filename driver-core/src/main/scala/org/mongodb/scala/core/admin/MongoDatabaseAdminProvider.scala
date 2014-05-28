@@ -24,8 +24,6 @@
  */
 package org.mongodb.scala.core.admin
 
-import scala.language.higherKinds
-
 import org.mongodb.{Block, CommandResult, CreateCollectionOptions, Document, MongoAsyncCursor, MongoCommandFailureException, MongoException, MongoFuture, MongoNamespace, ReadPreference}
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.SingleResultCallback
