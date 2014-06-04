@@ -47,10 +47,11 @@ object Dependencies {
 
   // Test
   val scalaTest     = "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
-  val scalaMeter    = "com.github.axel22" %% "scalameter" % scalaMeterVersion % "test"
+  val scalaMeter    = "com.storm-enroute" %% "scalameter" % scalaMeterVersion % "test"
   val logback       = "ch.qos.logback" % "logback-classic"  % logbackVersion % "test"
 
   // Projects
-  val coreDependencies = Seq(scalaCompiler, scalaReflection, mongodbDriver, rxJavaScala)
+  val coreDependencies = Seq(scalaCompiler, scalaReflection, mongodbDriver)
+  val rxScalaDependencies = Seq(rxJavaScala)
   val testDependencies = Seq(scalaTest, scalaMeter, logback)
 }

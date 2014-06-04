@@ -47,7 +47,7 @@ object MongoScalaBuild extends Build {
   import Resolvers._
 
   val buildSettings = Seq(
-    organization := "org.mongodb",
+    organization := "org.mongodb.scala",
     organizationHomepage := Some(url("http://www.mongodb.org")),
     version := "0.1-SNAPSHOT",
     scalaVersion := "2.11.0",
@@ -89,7 +89,9 @@ object MongoScalaBuild extends Build {
 
   val scalaStyleSettings = ScalastylePlugin.Settings ++ Seq(org.scalastyle.sbt.PluginKeys.config := file("project/scalastyle-config.xml"))
   val publishSettings = Publish.settings
-  val assemblyJarSettings = assemblySettings ++ addArtifact(Artifact("mongo-scala-driver-alldep", "jar", "jar"), assembly) ++ Seq(test in assembly := {})
+  val asyncAssemblyJarSettings = assemblySettings ++ addArtifact(Artifact("mongo-scala-async-alldep", "jar", "jar"), assembly) ++ Seq(test in assembly := {})
+  val rxScalaAssemblyJarSettings = assemblySettings ++ addArtifact(Artifact("mongo-scala-rxscala-alldep", "jar", "jar"), assembly) ++ Seq(test in assembly := {})
+
 
   // Test configuration
   val testSettings = Seq(
@@ -157,6 +159,7 @@ object MongoScalaBuild extends Build {
     .settings(styleCheckSetting: _*)
     .settings(scalaStyleSettings: _*)
     .settings(publishSettings: _*)
+    .settings(asyncAssemblyJarSettings: _*)
     .settings(initialCommands in console := """import org.mongodb.scala._""")
     .dependsOn(core)
 
@@ -171,6 +174,8 @@ object MongoScalaBuild extends Build {
     .settings(testSettings: _*)
     .settings(styleCheckSetting: _*)
     .settings(scalaStyleSettings: _*)
+    .settings(libraryDependencies ++= rxScalaDependencies)
+    .settings(rxScalaAssemblyJarSettings: _*)
     .dependsOn(core)
 
   lazy val root = Project(
