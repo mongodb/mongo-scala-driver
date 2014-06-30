@@ -27,10 +27,10 @@ package org.mongodb.scala.core
 import java.io.Closeable
 import java.util.concurrent.TimeUnit
 
-import org.mongodb.{MongoAsyncCursor, MongoFuture, ReadPreference}
-import org.mongodb.binding.{AsyncClusterBinding, AsyncReadBinding, AsyncReadWriteBinding, AsyncWriteBinding, ReferenceCounted}
+import org.mongodb.{ MongoAsyncCursor, MongoFuture, ReadPreference }
+import org.mongodb.binding.{ AsyncClusterBinding, AsyncReadBinding, AsyncReadWriteBinding, AsyncWriteBinding, ReferenceCounted }
 import org.mongodb.connection.Cluster
-import org.mongodb.operation.{AsyncReadOperation, AsyncWriteOperation, QueryOperation}
+import org.mongodb.operation.{ AsyncReadOperation, AsyncWriteOperation, QueryOperation }
 
 import org.mongodb.scala.core.admin.MongoClientAdminProvider
 

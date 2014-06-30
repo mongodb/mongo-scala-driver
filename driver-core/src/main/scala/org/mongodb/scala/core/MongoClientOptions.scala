@@ -26,8 +26,8 @@ package org.mongodb.scala.core
 
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
-import org.mongodb.{ReadPreference, WriteConcern}
-import org.mongodb.connection.{ConnectionPoolSettings, SSLSettings, ServerSettings, SocketSettings}
+import org.mongodb.{ ReadPreference, WriteConcern }
+import org.mongodb.connection.{ ConnectionPoolSettings, SSLSettings, ServerSettings, SocketSettings }
 
 // scalastyle:off magic.number
 
@@ -141,7 +141,6 @@ case class MongoClientOptions(description: String = "",
   val sslSettings = SSLSettings.builder
     .enabled(SSLEnabled)
     .build()
-
 
   override lazy val toString: String = {
     s"""MongoClientOptions(description="$description",

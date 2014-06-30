@@ -28,8 +28,16 @@ import scala.Some
 import scala.collection.JavaConverters._
 
 import org.mongodb.MongoCredential
-import org.mongodb.connection.{AsynchronousSocketChannelStreamFactory, BufferProvider, Cluster, ClusterConnectionMode,
-                               ClusterSettings, DefaultClusterFactory, PowerOfTwoBufferPool, ServerAddress}
+import org.mongodb.connection.{
+  AsynchronousSocketChannelStreamFactory,
+  BufferProvider,
+  Cluster,
+  ClusterConnectionMode,
+  ClusterSettings,
+  DefaultClusterFactory,
+  PowerOfTwoBufferPool,
+  ServerAddress
+}
 import org.mongodb.management.JMXConnectionPoolListener
 
 /**
@@ -206,7 +214,7 @@ trait MongoClientCompanion {
             bufferProvider: BufferProvider): Client = {
     // scalastyle:off null
     val replicaSetName = options.requiredReplicaSetName match {
-      case None => null
+      case None       => null
       case Some(name) => name
     }
     // scalastyle:on null
@@ -241,7 +249,7 @@ trait MongoClientCompanion {
     val options = mongoClientURI.options
     val credentialList: List[MongoCredential] = mongoClientURI.mongoCredentials match {
       case Some(credential) => List(credential)
-      case None => List.empty[MongoCredential]
+      case None             => List.empty[MongoCredential]
     }
     mongoClientURI.hosts.size match {
       case 1 =>
@@ -260,9 +268,9 @@ trait MongoClientCompanion {
   }
 
   private def getDefaultCluster(clusterSettings: ClusterSettings,
-                                  credentialList: List[MongoCredential],
-                                  options: MongoClientOptions,
-                                  bufferProvider: BufferProvider): Cluster = {
+                                credentialList: List[MongoCredential],
+                                options: MongoClientOptions,
+                                bufferProvider: BufferProvider): Cluster = {
 
     val streamFactory = new AsynchronousSocketChannelStreamFactory(options.socketSettings, options.sslSettings)
     val heartbeatStreamFactory = new AsynchronousSocketChannelStreamFactory(options.heartbeatSocketSettings, options.sslSettings)

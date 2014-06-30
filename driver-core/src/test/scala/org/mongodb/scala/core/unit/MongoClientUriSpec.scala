@@ -24,10 +24,9 @@
  */
 package org.mongodb.scala.core.unit
 
-
 import scala.collection.JavaConverters._
 
-import org.mongodb.{ReadPreference, WriteConcern}
+import org.mongodb.{ ReadPreference, WriteConcern }
 import org.mongodb.ReadPreference.secondaryPreferred
 import org.mongodb.connection.Tags
 
@@ -47,26 +46,25 @@ class MongoClientUriSpec extends UnitTestSpec {
     val password = Some("pass".toCharArray)
     val uriExamples =
       Table(
-        ("uri"                                               , "hosts"                               , "database"  , "collection"   , "username"  , "password"),
-        ("mongodb://db.example.com"                          , List("db.example.com")                , None        , None           , None        , None      ),
-        ("mongodb://10.0.0.1"                                , List("10.0.0.1")                      , None        , None           , None        , None      ),
-        ("mongodb://[::1]"                                   , List("[::1]")                         , None        , None           , None        , None      ),
-        ("mongodb://foo/bar"                                 , List("foo")                           , Some("bar") , None           , None        , None      ),
-        ("mongodb://10.0.0.1/bar"                            , List("10.0.0.1")                      , Some("bar") , None           , None        , None      ),
-        ("mongodb://[::1]/bar"                               , List("[::1]")                         , Some("bar") , None           , None        , None      ),
-        ("mongodb://localhost/test.my.coll"                  , List("localhost")                     , Some("test"), Some("my.coll"), None        , None      ),
-        ("mongodb://foo/bar.goo"                             , List("foo")                           , Some("bar") , Some("goo")    , None        , None      ),
-        ("mongodb://user:pass@host/bar"                      , List("host")                          , Some("bar") , None           , Some("user"), password  ),
-        ("mongodb://user:pass@host:27011/bar"                , List("host:27011")                    , Some("bar") , None           , Some("user"), password  ),
-        ("mongodb://user:pass@10.0.0.1:27011/bar"            , List("10.0.0.1:27011")                , Some("bar") , None           , Some("user"), password  ),
-        ("mongodb://user:pass@[::1]:27011/bar"               , List("[::1]:27011")                   , Some("bar") , None           , Some("user"), password  ),
-        ("mongodb://user:pass@host:7,host2:8,host3:9/bar"    , List("host:7", "host2:8", "host3:9")  , Some("bar") , None           , Some("user"), password  ),
-        ("mongodb://user:pass@10.0.0.1:7,[::1]:8,host3:9/bar", List("10.0.0.1:7","[::1]:8","host3:9"), Some("bar") , None           , Some("user"), password  )
-      )
+        ("uri", "hosts", "database", "collection", "username", "password"),
+        ("mongodb://db.example.com", List("db.example.com"), None, None, None, None),
+        ("mongodb://10.0.0.1", List("10.0.0.1"), None, None, None, None),
+        ("mongodb://[::1]", List("[::1]"), None, None, None, None),
+        ("mongodb://foo/bar", List("foo"), Some("bar"), None, None, None),
+        ("mongodb://10.0.0.1/bar", List("10.0.0.1"), Some("bar"), None, None, None),
+        ("mongodb://[::1]/bar", List("[::1]"), Some("bar"), None, None, None),
+        ("mongodb://localhost/test.my.coll", List("localhost"), Some("test"), Some("my.coll"), None, None),
+        ("mongodb://foo/bar.goo", List("foo"), Some("bar"), Some("goo"), None, None),
+        ("mongodb://user:pass@host/bar", List("host"), Some("bar"), None, Some("user"), password),
+        ("mongodb://user:pass@host:27011/bar", List("host:27011"), Some("bar"), None, Some("user"), password),
+        ("mongodb://user:pass@10.0.0.1:27011/bar", List("10.0.0.1:27011"), Some("bar"), None, Some("user"), password),
+        ("mongodb://user:pass@[::1]:27011/bar", List("[::1]:27011"), Some("bar"), None, Some("user"), password),
+        ("mongodb://user:pass@host:7,host2:8,host3:9/bar", List("host:7", "host2:8", "host3:9"), Some("bar"), None, Some("user"), password),
+        ("mongodb://user:pass@10.0.0.1:7,[::1]:8,host3:9/bar", List("10.0.0.1:7", "[::1]:8", "host3:9"), Some("bar"), None, Some("user"), password))
 
     forAll(uriExamples) {
       (uri: String, hosts: List[String], database: Option[String], collection: Option[String], username: Option[String],
-       password: Option[Array[Char]]) =>
+      password: Option[Array[Char]]) =>
         val mongoClientURI = MongoClientURI(uri)
 
         mongoClientURI.hosts should equal(hosts)
@@ -79,7 +77,7 @@ class MongoClientUriSpec extends UnitTestSpec {
             credential.getUserName should equal(username.get)
             password match {
               case Some(pass) => credential.getPassword should equal(pass)
-              case None => credential.getPassword should equal(null)
+              case None       => credential.getPassword should equal(null)
             }
           }
           case None =>
@@ -115,16 +113,15 @@ class MongoClientUriSpec extends UnitTestSpec {
 
   it should "return the correct write concern" in {
     val writeConcernExamples = Table(
-      ("uri"                                                          , "writeConcern"                             ),
-      ("mongodb://localhost"                                          , WriteConcern.ACKNOWLEDGED                  ),
-      ("mongodb://localhost/?safe=true"                               , WriteConcern.ACKNOWLEDGED                  ),
-      ("mongodb://localhost/?safe=false"                              , WriteConcern.UNACKNOWLEDGED                ),
-      ("mongodb://localhost/?wTimeout=5"                              , new WriteConcern(1, 5, false, false)       ),
-      ("mongodb://localhost/?fsync=true"                              , new WriteConcern(1, 0, true, false)        ),
-      ("mongodb://localhost/?j=true"                                  , new WriteConcern(1, 0, false, true)        ),
-      ("mongodb://localhost/?w=2&wtimeout=5&fsync=true&j=true"        , new WriteConcern(2, 5, true, true)         ),
-      ("mongodb://localhost/?w=majority&wtimeout=5&fsync=true&j=true" , new WriteConcern("majority", 5, true, true))
-    )
+      ("uri", "writeConcern"),
+      ("mongodb://localhost", WriteConcern.ACKNOWLEDGED),
+      ("mongodb://localhost/?safe=true", WriteConcern.ACKNOWLEDGED),
+      ("mongodb://localhost/?safe=false", WriteConcern.UNACKNOWLEDGED),
+      ("mongodb://localhost/?wTimeout=5", new WriteConcern(1, 5, false, false)),
+      ("mongodb://localhost/?fsync=true", new WriteConcern(1, 0, true, false)),
+      ("mongodb://localhost/?j=true", new WriteConcern(1, 0, false, true)),
+      ("mongodb://localhost/?w=2&wtimeout=5&fsync=true&j=true", new WriteConcern(2, 5, true, true)),
+      ("mongodb://localhost/?w=majority&wtimeout=5&fsync=true&j=true", new WriteConcern("majority", 5, true, true)))
 
     forAll(writeConcernExamples) {
       (uri: String, writeConcern: WriteConcern) =>
@@ -135,13 +132,12 @@ class MongoClientUriSpec extends UnitTestSpec {
 
   it should "return the correct read preference" in {
     val readPreferenceExamples = Table(
-      ("uri"                                                       , "readPreference                                                 "),
-      ("mongodb://localhost/?readPreference=secondaryPreferred"    , ReadPreference.secondaryPreferred                                ),
+      ("uri", "readPreference                                                 "),
+      ("mongodb://localhost/?readPreference=secondaryPreferred", ReadPreference.secondaryPreferred),
       ("""mongodb://localhost/?readPreference=secondaryPreferred
           &readPreferenceTags=dc:ny,rack:1&readPreferenceTags=dc:ny
-          &readPreferenceTags=""".replaceAll("\n[ ]+", "")          ,  secondaryPreferred(List(new Tags("dc", "ny").append("rack", "1"),
-                                                                                              new Tags("dc", "ny"), new Tags()).asJava))
-    )
+          &readPreferenceTags=""".replaceAll("\n[ ]+", ""), secondaryPreferred(List(new Tags("dc", "ny").append("rack", "1"),
+        new Tags("dc", "ny"), new Tags()).asJava)))
     forAll(readPreferenceExamples) {
       (uri: String, readPreference: ReadPreference) =>
         val mongoClientURI = MongoClientURI(uri)
@@ -192,8 +188,7 @@ class MongoClientUriSpec extends UnitTestSpec {
 
       val expectedMessages: Set[String] = Set(
         s"WARN : Unsupported option 'socketthymeout' on URI '$uri'.",
-        s"WARN : Unsupported option 'madeup' on URI '$uri'."
-      )
+        s"WARN : Unsupported option 'madeup' on URI '$uri'.")
       getLogMessages should equal(expectedMessages)
   }
 }

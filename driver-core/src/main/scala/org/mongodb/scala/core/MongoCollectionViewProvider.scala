@@ -27,12 +27,12 @@ package org.mongodb.scala.core
 import scala.collection.JavaConverters._
 import scala.language.implicitConversions
 
-import org.mongodb.{Block, Document, MongoAsyncCursor, MongoException, MongoFuture, MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
+import org.mongodb.{ Block, Document, MongoAsyncCursor, MongoException, MongoFuture, MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult }
 import org.mongodb.codecs.CollectibleCodec
 import org.mongodb.connection.SingleResultCallback
 import org.mongodb.operation._
 
-import org.bson.{BsonDocument, BsonDocumentWrapper}
+import org.bson.{ BsonDocument, BsonDocumentWrapper }
 
 /**
  * The MongoCollectionViewProvider trait providing the core of a MongoCollectionView implementation.
@@ -246,7 +246,7 @@ trait MongoCollectionViewProvider[T] {
    *
    * @return CursorType[T]
    */
-  def cursor(): CursorType[T] =  {
+  def cursor(): CursorType[T] = {
     val operation = new QueryOperation[T](namespace, findOp, getCodec)
     client.executeAsync(operation, readPreference).asInstanceOf[CursorType[T]]
   }
@@ -296,7 +296,7 @@ trait MongoCollectionViewProvider[T] {
    */
   def save(document: T): ResultType[WriteResult] = {
     Option(getCodec.getDocumentId(document)) match {
-      case None => insert(document)
+      case None     => insert(document)
       case Some(id) => upsert.find(new Document("_id", id)).replace(document).asInstanceOf[ResultType[WriteResult]]
     }
   }
@@ -326,8 +326,7 @@ trait MongoCollectionViewProvider[T] {
    */
   def update(updateOperations: Document): ResultType[WriteResult] = {
     val updateRequest: List[UpdateRequest] = List(
-      new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(getMultiFromLimit)
-    )
+      new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(getMultiFromLimit))
     val operation = new UpdateOperation(namespace, true, writeConcern, updateRequest.asJava, documentCodec)
     client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
@@ -339,8 +338,7 @@ trait MongoCollectionViewProvider[T] {
    */
   def updateOne(updateOperations: Document): ResultType[WriteResult] = {
     val updateRequest: List[UpdateRequest] = List(
-      new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(false)
-    )
+      new UpdateRequest(findOp.getFilter, updateOperations).upsert(doUpsert).multi(false))
     val operation = new UpdateOperation(namespace, true, writeConcern, updateRequest.asJava, documentCodec)
     client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
@@ -353,8 +351,7 @@ trait MongoCollectionViewProvider[T] {
    */
   def replace(replacement: T): ResultType[WriteResult] = {
     val replaceRequest: List[ReplaceRequest[T]] = List(
-      new ReplaceRequest[T](findOp.getFilter, replacement).upsert(doUpsert)
-    )
+      new ReplaceRequest[T](findOp.getFilter, replacement).upsert(doUpsert))
     val operation = new ReplaceOperation(namespace, true, writeConcern, replaceRequest.asJava, getCodec)
     client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
@@ -448,7 +445,7 @@ trait MongoCollectionViewProvider[T] {
     this.findOp.options(queryOptions)
     this
   }
-  
+
   private def copy(): CollectionView[T] = {
     copy(client, namespace, codec, options, findOp, writeConcern, limitSet, doUpsert, readPreference)
   }
@@ -488,8 +485,8 @@ trait MongoCollectionViewProvider[T] {
    * @return an new CollectionView
    */
   protected def copy(client: Client, namespace: MongoNamespace, codec: CollectibleCodec[T], options: MongoCollectionOptions,
-           findOp: Find, writeConcern: WriteConcern, limitSet: Boolean, doUpsert: Boolean,
-           readPreference: ReadPreference): CollectionView[T]
+                     findOp: Find, writeConcern: WriteConcern, limitSet: Boolean, doUpsert: Boolean,
+                     readPreference: ReadPreference): CollectionView[T]
 
   private implicit def wrap(command: Document): BsonDocument = {
     new BsonDocumentWrapper[Document](command, documentCodec)

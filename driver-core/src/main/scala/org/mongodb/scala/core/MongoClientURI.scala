@@ -28,8 +28,8 @@ import java.net.URLDecoder
 
 import scala.collection.JavaConverters._
 
-import org.mongodb.{AuthenticationMechanism, MongoCredential, ReadPreference, WriteConcern}
-import org.mongodb.AuthenticationMechanism.{GSSAPI, MONGODB_CR, MONGODB_X509, PLAIN}
+import org.mongodb.{ AuthenticationMechanism, MongoCredential, ReadPreference, WriteConcern }
+import org.mongodb.AuthenticationMechanism.{ GSSAPI, MONGODB_CR, MONGODB_X509, PLAIN }
 import org.mongodb.connection.Tags
 import org.mongodb.diagnostics.Loggers
 import org.mongodb.diagnostics.logging.Logger
@@ -138,7 +138,6 @@ object MongoClientURI {
    */
   def apply(uri: String): MongoClientURI = MongoClientURI(uri, MongoClientOptions())
 
-
   /**
    * Creates a MongoClientURI from the given URI string, and MongoClientOptions.
    * The mongoClientOptions can be configured with default options, which may be overridden by options specified in
@@ -169,31 +168,31 @@ object MongoClientURI {
     // Get the authentication information from the uri
     val authPart: Option[String] = authParamsPos match {
       case idx: Int if idx >= 0 => Some(unprefixedURI.substring(0, idx))
-      case _ => None
+      case _                    => None
     }
     // Get the server information from the uri
     val serverPart: Option[String] = lastSlashPos match {
       case idx: Int if idx >= 0 => Some(unprefixedURI.substring(authParamsPos + 1, idx))
-      case _ => Some(unprefixedURI.substring(authParamsPos + 1))
+      case _                    => Some(unprefixedURI.substring(authParamsPos + 1))
     }
     // Get the name space (database / collection name) information from the uri
     val nsPart: Option[String] = optionsPos match {
-      case idx: Int if idx >= 0 => Some(unprefixedURI.substring(lastSlashPos + 1, idx))
+      case idx: Int if idx >= 0           => Some(unprefixedURI.substring(lastSlashPos + 1, idx))
       case none: Int if lastSlashPos >= 0 => Some(unprefixedURI.substring(lastSlashPos + 1))
-      case _ => None
+      case _                              => None
     }
     // Get the options information from the uri
     val optionsPart: Option[String] = optionsPos match {
       case idx: Int if idx >= 0 => Some(unprefixedURI.substring(optionsPos + 1))
-      case _ => None
+      case _                    => None
     }
 
     // Get the username & password from the authentication part of the uri
     val (username, password) = authPart match {
       case Some(auth) =>
         auth.split(":") match {
-          case Array(s1) => (Some(URLDecoder.decode(s1, UTF_8)), None)
-          case Array(s1, s2@_*) => (Some(URLDecoder.decode(s1, UTF_8)), Some(URLDecoder.decode(s2.mkString(":"), UTF_8)))
+          case Array(s1)          => (Some(URLDecoder.decode(s1, UTF_8)), None)
+          case Array(s1, s2 @ _*) => (Some(URLDecoder.decode(s1, UTF_8)), Some(URLDecoder.decode(s2.mkString(":"), UTF_8)))
         }
       case _ => (None, None)
     }
@@ -201,15 +200,15 @@ object MongoClientURI {
     // Get the hosts list from the server part of the uri
     val hosts: List[String] = serverPart match {
       case Some(servers) => servers.split(",").toList
-      case None => List.empty[String]
+      case None          => List.empty[String]
     }
 
     // Get the database & collection from the namespace part of the uri
     val (database, collection) = nsPart match {
       case Some(nameSpace) =>
         nameSpace.split('.') match {
-          case Array(s1) => (Some(s1), None)
-          case Array(s1, s2@_*) => (Some(s1), Some(s2.mkString(".")))
+          case Array(s1)          => (Some(s1), None)
+          case Array(s1, s2 @ _*) => (Some(s1), Some(s2.mkString(".")))
         }
       case _ => (None, None)
     }
@@ -219,9 +218,9 @@ object MongoClientURI {
       case Some(options) => options.split("&|;").toList.map({
         str =>
           str.split('=') match {
-            case Array(s1) => (s1.toLowerCase, "")
+            case Array(s1)     => (s1.toLowerCase, "")
             case Array(s1, s2) => (s1.toLowerCase, s2)
-            case _ => throw new IllegalArgumentException(s"Bad uri options: $str")
+            case _             => throw new IllegalArgumentException(s"Bad uri options: $str")
           }
       }).groupBy(_._1).map({
         case (k, v) => (k, v.map(_._2))
@@ -233,7 +232,7 @@ object MongoClientURI {
     val mergedMongoClientOptions: MongoClientOptions = createOptions(optionsMap, mongoClientOptions)
     val mongoCredentials: Option[MongoCredential] = username match {
       case Some(user) => Some(createCredentials(optionsMap, database, user, password.getOrElse("").toCharArray))
-      case None => None
+      case None       => None
     }
 
     // Warn the user if they have used any unsupported keys in the uri
@@ -253,82 +252,82 @@ object MongoClientURI {
 
     val maxConnectionPoolSize = optionsMap.get("maxpoolsize") match {
       case Some(value) => value.reverse.head.toInt
-      case None => mongoClientOptions.maxConnectionPoolSize
+      case None        => mongoClientOptions.maxConnectionPoolSize
     }
 
     val minConnectionPoolSize = optionsMap.get("minpoolsize") match {
       case Some(value) => value.reverse.head.toInt
-      case None => mongoClientOptions.minConnectionPoolSize
+      case None        => mongoClientOptions.minConnectionPoolSize
     }
 
     val maxConnectionIdleTime = optionsMap.get("maxidletimems") match {
       case Some(value) => value.reverse.head.toInt
-      case None => mongoClientOptions.maxConnectionIdleTime
+      case None        => mongoClientOptions.maxConnectionIdleTime
     }
 
     val maxConnectionLifeTime = optionsMap.get("maxlifetimems") match {
       case Some(value) => value.reverse.head.toInt
-      case None => mongoClientOptions.maxConnectionLifeTime
+      case None        => mongoClientOptions.maxConnectionLifeTime
     }
 
     val threadsAllowedToBlockForConnectionMultiplier = optionsMap.get("waitqueuemultiple") match {
       case Some(value) => value.reverse.head.toInt
-      case None => mongoClientOptions.threadsAllowedToBlockForConnectionMultiplier
+      case None        => mongoClientOptions.threadsAllowedToBlockForConnectionMultiplier
     }
 
     val maxWaitTime = optionsMap.get("waitqueuetimeoutms") match {
       case Some(value) => value.reverse.head.toInt
-      case None => mongoClientOptions.maxWaitTime
+      case None        => mongoClientOptions.maxWaitTime
     }
 
     val connectTimeout = optionsMap.get("connecttimeoutms") match {
       case Some(value) => value.reverse.head.toInt
-      case None => mongoClientOptions.connectTimeout
+      case None        => mongoClientOptions.connectTimeout
     }
 
     val socketTimeout = optionsMap.get("sockettimeoutms") match {
       case Some(value) => value.reverse.head.toInt
-      case None => mongoClientOptions.socketTimeout
+      case None        => mongoClientOptions.socketTimeout
     }
 
     val autoConnectRetry = optionsMap.get("autoconnectretry") match {
       case Some(value) => value.reverse.head.toBoolean
-      case None => mongoClientOptions.autoConnectRetry
+      case None        => mongoClientOptions.autoConnectRetry
     }
 
     val SSLEnabled = optionsMap.get("ssl") match {
       case Some(value) => value.reverse.head.toBoolean
-      case None => mongoClientOptions.SSLEnabled
+      case None        => mongoClientOptions.SSLEnabled
     }
 
     val requiredReplicaSetName = optionsMap.get("replicaset") match {
       case Some(value) => Some(value.reverse.head.toString)
-      case None => mongoClientOptions.requiredReplicaSetName
+      case None        => mongoClientOptions.requiredReplicaSetName
     }
 
     val writeConcern = createWriteConcern(optionsMap) match {
       case Some(value) => value
-      case None => mongoClientOptions.writeConcern
+      case None        => mongoClientOptions.writeConcern
     }
 
     val readPreference = createReadPreference(optionsMap) match {
       case Some(value) => value
-      case None => mongoClientOptions.readPreference
+      case None        => mongoClientOptions.readPreference
     }
 
-    mongoClientOptions.copy(maxConnectionPoolSize=maxConnectionPoolSize,
-                            minConnectionPoolSize=minConnectionPoolSize,
-                            maxConnectionIdleTime=maxConnectionIdleTime,
-                            maxConnectionLifeTime=maxConnectionLifeTime,
-                            threadsAllowedToBlockForConnectionMultiplier=threadsAllowedToBlockForConnectionMultiplier,
-                            maxWaitTime=maxWaitTime,
-                            connectTimeout=connectTimeout,
-                            socketTimeout=socketTimeout,
-                            autoConnectRetry=autoConnectRetry,
-                            SSLEnabled=SSLEnabled,
-                            requiredReplicaSetName=requiredReplicaSetName,
-                            writeConcern=writeConcern,
-                            readPreference=readPreference)
+    mongoClientOptions.copy(maxConnectionPoolSize = maxConnectionPoolSize,
+      minConnectionPoolSize = minConnectionPoolSize,
+      maxConnectionIdleTime = maxConnectionIdleTime,
+      maxConnectionLifeTime = maxConnectionLifeTime,
+      threadsAllowedToBlockForConnectionMultiplier = threadsAllowedToBlockForConnectionMultiplier,
+      maxWaitTime = maxWaitTime,
+      connectTimeout = connectTimeout,
+      socketTimeout = socketTimeout,
+      autoConnectRetry = autoConnectRetry,
+      SSLEnabled = SSLEnabled,
+      requiredReplicaSetName = requiredReplicaSetName,
+      writeConcern = writeConcern,
+      readPreference = readPreference)
   }
 
   /**
@@ -340,27 +339,27 @@ object MongoClientURI {
 
     val safe: Option[Boolean] = optionsMap.get("safe") match {
       case Some(v) => Some(v.reverse.head.toBoolean)
-      case _ => None
+      case _       => None
     }
 
     val w: Option[String] = optionsMap.get("w") match {
       case Some(v) => Some(v.reverse.head)
-      case _ => None
+      case _       => None
     }
 
     val wTimeout: Int = optionsMap.get("wtimeout") match {
       case Some(v) => v.reverse.head.toInt
-      case _ => 0
+      case _       => 0
     }
 
     val fsync: Boolean = optionsMap.get("fsync") match {
       case Some(v) => v.reverse.head.toBoolean
-      case _ => false
+      case _       => false
     }
 
     val journal: Boolean = optionsMap.get("j") match {
       case Some(v) => v.reverse.head.toBoolean
-      case _ => false
+      case _       => false
     }
 
     // Determine if the user has supplied any custom write concerns
@@ -370,14 +369,14 @@ object MongoClientURI {
     hasCustomWriteConcern match {
       case true => w match {
         case Some(wInt) if wInt.matches("[+-]?\\d+") => Some(new WriteConcern(wInt.toInt, wTimeout, fsync, journal))
-        case Some(wString) => Some(new WriteConcern(wString, wTimeout, fsync, journal))
-        case _ => Some(new WriteConcern(1, wTimeout, fsync, journal))
+        case Some(wString)                           => Some(new WriteConcern(wString, wTimeout, fsync, journal))
+        case _                                       => Some(new WriteConcern(1, wTimeout, fsync, journal))
 
       }
       case false => safe match {
-        case Some(true) => Some(WriteConcern.ACKNOWLEDGED)
+        case Some(true)  => Some(WriteConcern.ACKNOWLEDGED)
         case Some(false) => Some(WriteConcern.UNACKNOWLEDGED)
-        case _ => None
+        case _           => None
       }
     }
   }
@@ -391,12 +390,12 @@ object MongoClientURI {
 
     val slaveOk: Option[Boolean] = optionsMap.get("slaveok") match {
       case Some(v) => Some(v.reverse.head.toBoolean)
-      case _ => None
+      case _       => None
     }
 
     val readPreferenceType: Option[String] = optionsMap.get("readpreference") match {
       case Some(v) => Some(v.reverse.head)
-      case _ => None
+      case _       => None
     }
 
     // Get the tag set from the URI
@@ -407,18 +406,19 @@ object MongoClientURI {
     val tagsList: List[Tags] = optionsMap.get("readpreferencetags") match {
       case Some(rawTagList) =>
         rawTagList.map({
-          rawTagString: String => {
-            val tags = new Tags()
-            rawTagString.split(",").foreach({
-              str: String =>
-                str.split(":") match {
-                  case Array(s1) => Unit
-                  case Array(s1, s2) => tags append(s1.trim(), s2.trim())
-                  case _ => throw new IllegalArgumentException(s"Bad read preference tags: $rawTagString")
-                }
-            })
-            tags
-          }
+          rawTagString: String =>
+            {
+              val tags = new Tags()
+              rawTagString.split(",").foreach({
+                str: String =>
+                  str.split(":") match {
+                    case Array(s1)     => Unit
+                    case Array(s1, s2) => tags append (s1.trim(), s2.trim())
+                    case _             => throw new IllegalArgumentException(s"Bad read preference tags: $rawTagString")
+                  }
+              })
+              tags
+            }
         })
       case _ => List.empty[Tags]
     }
@@ -427,7 +427,7 @@ object MongoClientURI {
       case Some(name) => Some(ReadPreference.valueOf(name, tagsList.asJava))
       case _ => slaveOk match {
         case Some(true) => Some(ReadPreference.secondaryPreferred)
-        case _ => None
+        case _          => None
       }
     }
   }
@@ -446,17 +446,17 @@ object MongoClientURI {
 
     val mechanism = optionsMap.get("authmechanism") match {
       case Some(names) => AuthenticationMechanism.fromMechanismName(names.reverse.head)
-      case None => MONGODB_CR
+      case None        => MONGODB_CR
     }
 
     val authSource: String = optionsMap.get("authsource") match {
       case Some(name) => name.reverse.head
-      case None => database getOrElse "admin"
+      case None       => database getOrElse "admin"
     }
 
     mechanism match {
-      case PLAIN => MongoCredential.createPlainCredential(username, authSource, password)
-      case MONGODB_CR => MongoCredential.createMongoCRCredential(username, authSource, password)
+      case PLAIN        => MongoCredential.createPlainCredential(username, authSource, password)
+      case MONGODB_CR   => MongoCredential.createMongoCRCredential(username, authSource, password)
       case MONGODB_X509 => MongoCredential.createMongoX509Credential(username)
       case GSSAPI =>
         val gssapiCredential: MongoCredential = MongoCredential.createGSSAPICredential(username)

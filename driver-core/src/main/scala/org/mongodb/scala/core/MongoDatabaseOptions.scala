@@ -24,8 +24,8 @@
  */
 package org.mongodb.scala.core
 
-import org.mongodb.{Document, ReadPreference, WriteConcern}
-import org.mongodb.codecs.{CollectibleCodec, DocumentCodec}
+import org.mongodb.{ Document, ReadPreference, WriteConcern }
+import org.mongodb.codecs.{ CollectibleCodec, DocumentCodec }
 
 /**
  * The MongoDatabaseOptions

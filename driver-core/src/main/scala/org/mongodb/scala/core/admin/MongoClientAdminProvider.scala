@@ -24,14 +24,14 @@
  */
 package org.mongodb.scala.core.admin
 
-import java.lang.{Double => JDouble}
+import java.lang.{ Double => JDouble }
 
 import org.bson.BsonDocumentWrapper
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation.{CommandReadOperation, SingleResultFuture}
-import org.mongodb.scala.core.{MongoClientProvider, RequiredTypesAndTransformersProvider}
-import org.mongodb.{CommandResult, Document, MongoException, MongoFuture}
+import org.mongodb.operation.{ CommandReadOperation, SingleResultFuture }
+import org.mongodb.scala.core.{ MongoClientProvider, RequiredTypesAndTransformersProvider }
+import org.mongodb.{ CommandResult, Document, MongoException, MongoFuture }
 
 import scala.collection.JavaConverters._
 
@@ -65,13 +65,13 @@ trait MongoClientAdminProvider {
   def ping: ResultType[Double] = {
     val operation = createOperation(PING_COMMAND)
     val transformer = { result: MongoFuture[CommandResult] =>
-    // Use native Java type to avoid Scala implicit conversion of null error if there's an exception
-    val future: SingleResultFuture[JDouble] = new SingleResultFuture[JDouble]
+      // Use native Java type to avoid Scala implicit conversion of null error if there's an exception
+      val future: SingleResultFuture[JDouble] = new SingleResultFuture[JDouble]
       result.register(new SingleResultCallback[CommandResult] {
         def onResult(result: CommandResult, e: MongoException): Unit = {
           Option(e) match {
             case None => future.init(result.getResponse.getDouble("ok").doubleValue(), null)
-            case _ => future.init(null, e)
+            case _    => future.init(null, e)
           }
         }
       })
@@ -94,14 +94,14 @@ trait MongoClientAdminProvider {
           Option(e) match {
             case None =>
               val databases = result.getResponse.getArray("databases").getValues
-              future.init(databases.asScala.map(doc =>  doc.asDocument.getString("name").getValue).toList, null)
+              future.init(databases.asScala.map(doc => doc.asDocument.getString("name").getValue).toList, null)
             case _ => future.init(null, e)
           }
         }
       })
       future
     }
-    val results = client.executeAsync(operation,  client.options.readPreference, transformer)
+    val results = client.executeAsync(operation, client.options.readPreference, transformer)
     listToListResultTypeConverter[String](results.asInstanceOf[ResultType[List[String]]])
   }
 

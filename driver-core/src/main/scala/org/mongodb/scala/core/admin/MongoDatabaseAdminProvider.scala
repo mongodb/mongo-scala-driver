@@ -24,14 +24,14 @@
  */
 package org.mongodb.scala.core.admin
 
-import org.bson.{BsonDocumentWrapper}
+import org.bson.{ BsonDocumentWrapper }
 
-import org.mongodb.{Block, CommandResult, CreateCollectionOptions, Document, MongoAsyncCursor, MongoException, MongoFuture, MongoNamespace, ReadPreference}
+import org.mongodb.{ Block, CommandResult, CreateCollectionOptions, Document, MongoAsyncCursor, MongoException, MongoFuture, MongoNamespace, ReadPreference }
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation.{CommandReadOperation, CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation, SingleResultFuture}
+import org.mongodb.operation.{ CommandReadOperation, CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation, SingleResultFuture }
 
-import org.mongodb.scala.core.{MongoDatabaseProvider, RequiredTypesAndTransformersProvider}
+import org.mongodb.scala.core.{ MongoDatabaseProvider, RequiredTypesAndTransformersProvider }
 
 /**
  * The MongoDatabaseAdminProvider trait providing the core of a MongoDatabaseAdmin implementation.

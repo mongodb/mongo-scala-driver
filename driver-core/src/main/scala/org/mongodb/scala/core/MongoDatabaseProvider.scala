@@ -24,13 +24,13 @@
  */
 package org.mongodb.scala.core
 
-import org.mongodb.{Document, ReadPreference}
-import org.mongodb.codecs.{CollectibleCodec, DocumentCodec}
-import org.mongodb.operation.{CommandReadOperation, CommandWriteOperation}
+import org.mongodb.{ Document, ReadPreference }
+import org.mongodb.codecs.{ CollectibleCodec, DocumentCodec }
+import org.mongodb.operation.{ CommandReadOperation, CommandWriteOperation }
 
 import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
 
-import org.bson.{BsonDocument, BsonDocumentWrapper}
+import org.bson.{ BsonDocument, BsonDocumentWrapper }
 
 /**
  * The MongoDatabaseProvider trait providing the core of a MongoDatabase implementation.
@@ -107,7 +107,6 @@ trait MongoDatabaseProvider {
   def apply(collectionName: String, collectionOptions: MongoCollectionOptions): Collection[Document] =
     collection(collectionName, collectionOptions)
 
-
   /**
    * An explicit helper to get a collection
    *
@@ -151,8 +150,8 @@ trait MongoDatabaseProvider {
   def collection[T](collectionName: String, codec: CollectibleCodec[T],
                     collectionOptions: MongoCollectionOptions): Collection[T]
 
-  private [scala] def executeAsyncWriteCommand(command: Document) = client.executeAsync(createWriteOperation(command))
-  private [scala] def executeAsyncReadCommand(command: Document, readPreference: ReadPreference) =
+  private[scala] def executeAsyncWriteCommand(command: Document) = client.executeAsync(createWriteOperation(command))
+  private[scala] def executeAsyncReadCommand(command: Document, readPreference: ReadPreference) =
     client.executeAsync(createReadOperation(command), readPreference)
 
   private def createWriteOperation(command: Document) =

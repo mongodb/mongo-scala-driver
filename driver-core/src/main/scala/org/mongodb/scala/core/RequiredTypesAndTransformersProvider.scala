@@ -2,7 +2,7 @@ package org.mongodb.scala.core
 
 import scala.language.higherKinds
 import org.mongodb.binding.ReferenceCounted
-import org.mongodb.{MongoAsyncCursor, MongoFuture}
+import org.mongodb.{ MongoAsyncCursor, MongoFuture }
 
 /**
  * The RequiredTypesAndTransformersProvider trait

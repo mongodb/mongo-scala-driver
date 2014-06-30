@@ -24,16 +24,16 @@
  */
 package org.mongodb.scala.core.admin
 
-import java.lang.{Boolean => JBoolean}
+import java.lang.{ Boolean => JBoolean }
 import java.util
 
 import org.bson.codecs.DecoderContext
-import org.bson.{BsonDocumentReader, BsonDocumentWrapper, BsonDocument}
+import org.bson.{ BsonDocumentReader, BsonDocumentWrapper, BsonDocument }
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation.{CommandReadOperation, CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation, SingleResultFuture}
-import org.mongodb.scala.core.{MongoCollectionProvider, RequiredTypesAndTransformersProvider}
-import org.mongodb.{CommandResult, Document, Index, MongoCommandFailureException, MongoException, MongoFuture, ReadPreference}
+import org.mongodb.operation.{ CommandReadOperation, CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation, SingleResultFuture }
+import org.mongodb.scala.core.{ MongoCollectionProvider, RequiredTypesAndTransformersProvider }
+import org.mongodb.{ CommandResult, Document, Index, MongoCommandFailureException, MongoException, MongoFuture, ReadPreference }
 
 import scala.collection.JavaConverters._
 
@@ -112,7 +112,6 @@ trait MongoCollectionAdminProvider[T] {
       val future: SingleResultFuture[Document] = new SingleResultFuture[Document]
       result.register(new SingleResultCallback[CommandResult] {
 
-
         def onResult(result: CommandResult, e: MongoException): Unit = {
           Option(e) match {
             case None =>
@@ -128,7 +127,7 @@ trait MongoCollectionAdminProvider[T] {
                       future.init(bsonDocumentToDocument(err.getCommandResult.getResponse), null)
                     case _ => future.init(null, e)
                   }
-            }
+              }
           }
         }
       })
@@ -162,16 +161,16 @@ trait MongoCollectionAdminProvider[T] {
     val operation = new GetIndexesOperation(collection.namespace, commandCodec)
     val transformer: MongoFuture[util.List[Document]] => MongoFuture[List[Document]] = {
       result: MongoFuture[util.List[Document]] =>
-      val future = new SingleResultFuture[List[Document]]
-      result.register(new SingleResultCallback[util.List[Document]] {
-        def onResult(result: util.List[Document], e: MongoException): Unit = {
-          Option(e) match {
-            case None => future.init(result.asScala.toList, null)
-            case _ => future.init(null, e)
+        val future = new SingleResultFuture[List[Document]]
+        result.register(new SingleResultCallback[util.List[Document]] {
+          def onResult(result: util.List[Document], e: MongoException): Unit = {
+            Option(e) match {
+              case None => future.init(result.asScala.toList, null)
+              case _    => future.init(null, e)
+            }
           }
-        }
-      })
-      future
+        })
+        future
     }
     val result = collection.client.executeAsync(operation, collection.options.readPreference, transformer)
     listToListResultTypeConverter[Document](result.asInstanceOf[ResultType[List[Document]]])

@@ -36,10 +36,8 @@ import sbtunidoc.Plugin._
 import sbtassembly.Plugin._
 import sbt._
 import Keys._
-import scala.Some
-import UnidocKeys._
 import AssemblyKeys._
-
+import SbtScalariform._
 
 object MongoScalaBuild extends Build {
 
@@ -57,7 +55,7 @@ object MongoScalaBuild extends Build {
     scalacOptions in(Compile, doc) ++= Seq("-diagrams")
   )
 
-  /**
+  /*
    * Documentation
    */
   val docSettings =
@@ -87,11 +85,32 @@ object MongoScalaBuild extends Build {
         gitRemoteRepo := "git@github.com:mongodb/mongo-scala-driver.git"
       ) ++ inConfig(config("sphinx"))(Seq(sourceDirectory := file("docs")))
 
-  val scalaStyleSettings = ScalastylePlugin.Settings ++ Seq(org.scalastyle.sbt.PluginKeys.config := file("project/scalastyle-config.xml"))
   val publishSettings = Publish.settings
+
+
+  /*
+   * Style and formatting
+   */
+
+  def scalariFormFormattingPreferences = {
+    import scalariform.formatter.preferences._
+    FormattingPreferences()
+      .setPreference(AlignParameters, true)
+      .setPreference(AlignSingleLineCaseStatements, true)
+      .setPreference(DoubleIndentClassDeclaration, true)
+  }
+
+  val customScalariformSettings = scalariformSettings ++ Seq(
+    ScalariformKeys.preferences in Compile := scalariFormFormattingPreferences,
+    ScalariformKeys.preferences in Test    := scalariFormFormattingPreferences
+  )
+  val scalaStyleSettings = ScalastylePlugin.Settings ++ Seq(org.scalastyle.sbt.PluginKeys.config := file("project/scalastyle-config.xml"))
+
+  /*
+   * Assembly Jar Settings
+   */
   val asyncAssemblyJarSettings = assemblySettings ++ addArtifact(Artifact("mongo-scala-async-alldep", "jar", "jar"), assembly) ++ Seq(test in assembly := {})
   val rxScalaAssemblyJarSettings = assemblySettings ++ addArtifact(Artifact("mongo-scala-rxscala-alldep", "jar", "jar"), assembly) ++ Seq(test in assembly := {})
-
 
   // Test configuration
   val testSettings = Seq(
@@ -146,6 +165,7 @@ object MongoScalaBuild extends Build {
     .settings(buildSettings: _*)
     .settings(styleCheckSetting: _*)
     .settings(scalaStyleSettings: _*)
+    .settings(customScalariformSettings: _*)
 
   lazy val async = Project(
     id = "async",
