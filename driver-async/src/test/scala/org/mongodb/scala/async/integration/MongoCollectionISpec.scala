@@ -86,7 +86,7 @@ class MongoCollectionISpec extends RequiresMongoDBSpec {
       val size = 500
       val futures: IndexedSeq[Future[WriteResult]] = for (i <- 0 until size) yield {
         val doc = new Document()
-        doc.put("_id", i)
+        doc.put("_id", s"async-$i")
         doc.put("field", "Some value")
         collection.insert(doc)
       }
