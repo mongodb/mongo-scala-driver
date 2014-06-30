@@ -84,12 +84,6 @@ class MongoCollectionAdminISpec extends RequiresMongoDBSpec {
       collection.admin.getIndexes.observableList.length should equal(2)
   }
 
-  it should "add index must throw an error for bad indexes" in withCollection {
-    collection =>
-      pending
-      collection.admin.createIndex(Index.builder().build).observableValue
-  }
-
   it should "drop index for non-existent collection" in withCollection {
     collection =>
       collection.admin.dropIndex(Index.builder().addKeys("test").build).observableValue

@@ -24,17 +24,18 @@
  */
 package org.mongodb.scala.core.admin
 
-import java.util
 import java.lang.{Boolean => JBoolean}
+import java.util
 
-import scala.collection.JavaConverters._
-
-import org.mongodb.{CommandResult, Document, Index, MongoCommandFailureException, MongoException, MongoFuture, ReadPreference}
+import org.bson.codecs.DecoderContext
+import org.bson.{BsonDocumentReader, BsonDocumentWrapper, BsonDocument}
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.SingleResultCallback
 import org.mongodb.operation.{CommandReadOperation, CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation, SingleResultFuture}
-
 import org.mongodb.scala.core.{MongoCollectionProvider, RequiredTypesAndTransformersProvider}
+import org.mongodb.{CommandResult, Document, Index, MongoCommandFailureException, MongoException, MongoFuture, ReadPreference}
+
+import scala.collection.JavaConverters._
 
 /**
  * The MongoCollectionAdminProvider trait providing the core of a MongoCollectionAdmin implementation.
@@ -79,7 +80,9 @@ trait MongoCollectionAdminProvider[T] {
       result.register(new SingleResultCallback[CommandResult] {
         def onResult(result: CommandResult, e: MongoException): Unit = {
           Option(e) match {
-            case None => future.init(result.getResponse.get("capped").asInstanceOf[Boolean], null)
+            case None =>
+              val response: BsonDocument = result.getResponse
+              future.init(response.containsKey("capped") && response.getBoolean("capped").getValue, null)
             case _ =>
               e.isInstanceOf[MongoCommandFailureException] match {
                 case false => future.init(null, e)
@@ -108,9 +111,13 @@ trait MongoCollectionAdminProvider[T] {
     val transformer = { result: MongoFuture[CommandResult] =>
       val future: SingleResultFuture[Document] = new SingleResultFuture[Document]
       result.register(new SingleResultCallback[CommandResult] {
+
+
         def onResult(result: CommandResult, e: MongoException): Unit = {
           Option(e) match {
-            case None => future.init(result.getResponse, null)
+            case None =>
+              val stats: Document = bsonDocumentToDocument(result.getResponse)
+              future.init(stats, null)
             case _ =>
               e.isInstanceOf[MongoCommandFailureException] match {
                 case false => future.init(null, e)
@@ -118,7 +125,7 @@ trait MongoCollectionAdminProvider[T] {
                   val err = e.asInstanceOf[MongoCommandFailureException]
                   err.getCommandResult.getErrorMessage match {
                     case namespaceError: String if namespaceError.contains("not found") =>
-                      future.init(err.getCommandResult.getResponse, null)
+                      future.init(bsonDocumentToDocument(err.getCommandResult.getResponse), null)
                     case _ => future.init(null, e)
                   }
             }
@@ -152,9 +159,10 @@ trait MongoCollectionAdminProvider[T] {
    * @return ListResultType[Document]
    */
   def getIndexes: ListResultType[Document] = {
-    val operation = new GetIndexesOperation(collection.namespace)
-    val transformer = { result: MongoFuture[util.List[Document]] =>
-      val future: SingleResultFuture[List[Document]] = new SingleResultFuture[List[Document]]
+    val operation = new GetIndexesOperation(collection.namespace, commandCodec)
+    val transformer: MongoFuture[util.List[Document]] => MongoFuture[List[Document]] = {
+      result: MongoFuture[util.List[Document]] =>
+      val future = new SingleResultFuture[List[Document]]
       result.register(new SingleResultCallback[util.List[Document]] {
         def onResult(result: util.List[Document], e: MongoException): Unit = {
           Option(e) match {
@@ -206,8 +214,12 @@ trait MongoCollectionAdminProvider[T] {
   private val COLLECTION_STATS = new Document("collStats", collection.name)
 
   private val commandCodec: DocumentCodec = new DocumentCodec()
+  private val decoderContext: DecoderContext = DecoderContext.builder().build()
   private def createOperation(command: Document) = {
-    new CommandReadOperation(collection.database.name, command, commandCodec, commandCodec)
+    new CommandReadOperation(collection.database.name, new BsonDocumentWrapper[Document](command, commandCodec))
   }
+
+  private def bsonDocumentToDocument(bsonDocument: BsonDocument): Document =
+    commandCodec.decode(new BsonDocumentReader(bsonDocument), decoderContext)
 
 }

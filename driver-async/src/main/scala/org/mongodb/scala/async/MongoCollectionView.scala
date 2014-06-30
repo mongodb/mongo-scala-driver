@@ -24,7 +24,8 @@
  */
 package org.mongodb.scala.async
 
-import org.mongodb.{CollectibleCodec, MongoNamespace, ReadPreference, WriteConcern}
+import org.mongodb.codecs.CollectibleCodec
+import org.mongodb.{MongoNamespace, ReadPreference, WriteConcern}
 import org.mongodb.operation.Find
 
 import org.mongodb.scala.core.{MongoCollectionOptions, MongoCollectionViewProvider}

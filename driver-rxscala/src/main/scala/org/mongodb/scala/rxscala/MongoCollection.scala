@@ -24,7 +24,7 @@
  */
 package org.mongodb.scala.rxscala
 
-import org.mongodb.CollectibleCodec
+import org.mongodb.codecs.CollectibleCodec
 import org.mongodb.operation.Find
 
 import org.mongodb.scala.core.{MongoCollectionOptions, MongoCollectionProvider}

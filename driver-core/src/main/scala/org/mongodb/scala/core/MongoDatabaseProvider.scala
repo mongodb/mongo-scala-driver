@@ -24,11 +24,13 @@
  */
 package org.mongodb.scala.core
 
-import org.mongodb.{Document, CollectibleCodec, Codec, ReadPreference}
-import org.mongodb.codecs.{CollectibleDocumentCodec, ObjectIdGenerator}
-import org.mongodb.operation.{CommandWriteOperation, CommandReadOperation}
+import org.mongodb.{Document, ReadPreference}
+import org.mongodb.codecs.{CollectibleCodec, DocumentCodec}
+import org.mongodb.operation.{CommandReadOperation, CommandWriteOperation}
 
 import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
+
+import org.bson.{BsonDocument, BsonDocumentWrapper}
 
 /**
  * The MongoDatabaseProvider trait providing the core of a MongoDatabase implementation.
@@ -122,7 +124,7 @@ trait MongoDatabaseProvider {
    * @return the collection
    */
   def collection(collectionName: String, collectionOptions: MongoCollectionOptions): Collection[Document] = {
-    val codec = new CollectibleDocumentCodec(collectionOptions.primitiveCodecs, new ObjectIdGenerator())
+    val codec = new DocumentCodec()
     collection(collectionName, codec, collectionOptions)
   }
 
@@ -149,15 +151,18 @@ trait MongoDatabaseProvider {
   def collection[T](collectionName: String, codec: CollectibleCodec[T],
                     collectionOptions: MongoCollectionOptions): Collection[T]
 
-  private def documentCodec: Codec[Document] = options.documentCodec
   private [scala] def executeAsyncWriteCommand(command: Document) = client.executeAsync(createWriteOperation(command))
   private [scala] def executeAsyncReadCommand(command: Document, readPreference: ReadPreference) =
     client.executeAsync(createReadOperation(command), readPreference)
 
   private def createWriteOperation(command: Document) =
-    new CommandWriteOperation(name, command, documentCodec, documentCodec)
+    new CommandWriteOperation(name, wrap(command))
 
   private def createReadOperation(command: Document) =
-    new CommandReadOperation(name, command, documentCodec, documentCodec)
+    new CommandReadOperation(name, wrap(command))
+
+  private def wrap(command: Document): BsonDocument = {
+    new BsonDocumentWrapper[Document](command, options.documentCodec)
+  }
 
 }

@@ -24,10 +24,9 @@
  */
 package org.mongodb.scala.async.integration.admin
 
-import org.mongodb.{CreateCollectionOptions, Document, Index}
-
 import org.mongodb.scala.async.admin.MongoCollectionAdmin
 import org.mongodb.scala.async.helpers.RequiresMongoDBSpec
+import org.mongodb.{CreateCollectionOptions, Document, Index}
 
 class MongoCollectionAdminISpec extends RequiresMongoDBSpec {
 
@@ -56,6 +55,7 @@ class MongoCollectionAdminISpec extends RequiresMongoDBSpec {
 
   it should "get statistics" in withDatabase {
     database =>
+      database.admin.drop().futureValue
       database.admin.createCollection("test").futureValue
       val collection = database("test")
       whenReady(collection.admin.statistics) {
@@ -84,12 +84,6 @@ class MongoCollectionAdminISpec extends RequiresMongoDBSpec {
     collection =>
       collection.admin.createIndex(Index.builder().addKeys("test").build).futureValue
       collection.admin.getIndexes.futureValue.length should equal(2)
-  }
-
-  it should "add index must throw an error for bad indexes" in withCollection {
-    collection =>
-      pending
-      collection.admin.createIndex(Index.builder().name("test").build).futureValue
   }
 
   it should "drop index for non-existent collection" in withCollection {

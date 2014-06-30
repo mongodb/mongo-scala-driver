@@ -27,7 +27,6 @@ package org.mongodb.scala.core
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
 import org.mongodb.{ReadPreference, WriteConcern}
-import org.mongodb.codecs.PrimitiveCodecs
 import org.mongodb.connection.{ConnectionPoolSettings, SSLSettings, ServerSettings, SocketSettings}
 
 // scalastyle:off magic.number
@@ -39,7 +38,6 @@ import org.mongodb.connection.{ConnectionPoolSettings, SSLSettings, ServerSettin
  * @param readPreference the read preference to use for queries, map-reduce, aggregation, and count.
  *                       Default `ReadPreference.Primary()`
  * @param writeConcern The write concern to use. Default is `WriteConcern.ACKNOWLEDGED`.
- * @param primitiveCodecs The primitive codecs to use. Default is `PrimitiveCodecs.createDefault()`
  * @param minConnectionPoolSize The minimum number of connections per server for this MongoClient instance.
  *                              Those connections will be kept in a pool when idle, and
  *                              the pool will ensure over time that it contains at least this minimum number.
@@ -100,7 +98,6 @@ import org.mongodb.connection.{ConnectionPoolSettings, SSLSettings, ServerSettin
 case class MongoClientOptions(description: String = "",
                               readPreference: ReadPreference = ReadPreference.primary,
                               writeConcern: WriteConcern = WriteConcern.ACKNOWLEDGED,
-                              primitiveCodecs: PrimitiveCodecs = PrimitiveCodecs.createDefault,
                               minConnectionPoolSize: Int = 0,
                               maxConnectionPoolSize: Int = 100,
                               threadsAllowedToBlockForConnectionMultiplier: Int = 5,
@@ -161,7 +158,6 @@ case class MongoClientOptions(description: String = "",
                             | maxAutoConnectRetryTime="$maxAutoConnectRetryTime",
                             | readPreference="$readPreference",
                             | writeConcern="$writeConcern",
-                            | primitiveCodecs="$primitiveCodecs",
                             | SSLEnabled="$SSLEnabled",
                             | heartbeatFrequency="$heartbeatFrequency",
                             | heartbeatConnectRetryFrequency="$heartbeatConnectRetryFrequency",

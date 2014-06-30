@@ -26,7 +26,8 @@ package org.mongodb.scala.core
 
 import java.lang.Long
 
-import org.mongodb.{CollectibleCodec, Document, MongoNamespace, WriteResult}
+import org.mongodb.codecs.CollectibleCodec
+import org.mongodb.{Document, MongoNamespace, WriteResult}
 
 import org.mongodb.scala.core.admin.MongoCollectionAdminProvider
 

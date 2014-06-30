@@ -24,8 +24,7 @@
  */
 package org.mongodb.scala.async
 
-import org.mongodb.CollectibleCodec
-
+import org.mongodb.codecs.CollectibleCodec
 import org.mongodb.scala.core.{MongoCollectionOptions, MongoDatabaseOptions, MongoDatabaseProvider}
 import org.mongodb.scala.async.admin.MongoDatabaseAdmin
 

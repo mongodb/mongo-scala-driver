@@ -24,17 +24,16 @@
  */
 package org.mongodb.scala.core.admin
 
-import java.util
 import java.lang.{Double => JDouble}
 
-import scala.collection.JavaConverters._
-
-import org.mongodb.{CommandResult, Document, MongoException, MongoFuture}
+import org.bson.BsonDocumentWrapper
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.SingleResultCallback
 import org.mongodb.operation.{CommandReadOperation, SingleResultFuture}
-
 import org.mongodb.scala.core.{MongoClientProvider, RequiredTypesAndTransformersProvider}
+import org.mongodb.{CommandResult, Document, MongoException, MongoFuture}
+
+import scala.collection.JavaConverters._
 
 /**
  * The MongoClientAdmin trait providing the core of a MongoClientAdmin implementation.
@@ -71,7 +70,7 @@ trait MongoClientAdminProvider {
       result.register(new SingleResultCallback[CommandResult] {
         def onResult(result: CommandResult, e: MongoException): Unit = {
           Option(e) match {
-            case None => future.init(result.getResponse.getDouble("ok"), null)
+            case None => future.init(result.getResponse.getDouble("ok").doubleValue(), null)
             case _ => future.init(null, e)
           }
         }
@@ -94,8 +93,8 @@ trait MongoClientAdminProvider {
         def onResult(result: CommandResult, e: MongoException): Unit = {
           Option(e) match {
             case None =>
-              val databases = result.getResponse.get("databases").asInstanceOf[util.ArrayList[Document]]
-              future.init(databases.asScala.map(doc => doc.getString("name")).toList, null)
+              val databases = result.getResponse.getArray("databases").getValues
+              future.init(databases.asScala.map(doc =>  doc.asDocument.getString("name").getValue).toList, null)
             case _ => future.init(null, e)
           }
         }
@@ -111,6 +110,6 @@ trait MongoClientAdminProvider {
   private val LIST_DATABASES = new Document("listDatabases", 1)
   private val commandCodec: DocumentCodec = new DocumentCodec()
   private def createOperation(command: Document) = {
-    new CommandReadOperation(ADMIN_DATABASE, command, commandCodec, commandCodec)
+    new CommandReadOperation(ADMIN_DATABASE, new BsonDocumentWrapper[Document](command, commandCodec))
   }
 }

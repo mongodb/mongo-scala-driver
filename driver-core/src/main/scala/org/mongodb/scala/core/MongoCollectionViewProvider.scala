@@ -24,12 +24,15 @@
  */
 package org.mongodb.scala.core
 
-import scala.Some
 import scala.collection.JavaConverters._
+import scala.language.implicitConversions
 
-import org.mongodb.{Block, MongoException, MongoAsyncCursor, MongoFuture, CollectibleCodec, Document, MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
-import org.mongodb.operation._
+import org.mongodb.{Block, Document, MongoAsyncCursor, MongoException, MongoFuture, MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult}
+import org.mongodb.codecs.CollectibleCodec
 import org.mongodb.connection.SingleResultCallback
+import org.mongodb.operation._
+
+import org.bson.{BsonDocument, BsonDocumentWrapper}
 
 /**
  * The MongoCollectionViewProvider trait providing the core of a MongoCollectionView implementation.
@@ -155,7 +158,7 @@ trait MongoCollectionViewProvider[T] {
    * Count the number of documents
    */
   def count(): ResultType[Long] = {
-    val operation = new CountOperation(namespace, findOp, documentCodec)
+    val operation = new CountOperation(namespace, findOp)
     client.executeAsync(operation, options.readPreference).asInstanceOf[ResultType[Long]]
   }
 
@@ -169,7 +172,7 @@ trait MongoCollectionViewProvider[T] {
    * Return a list of results (memory hungry)
    */
   def toList(): ResultType[List[T]] = {
-    val operation = new QueryOperation[T](namespace, findOp, documentCodec, getCodec)
+    val operation = new QueryOperation[T](namespace, findOp, getCodec)
     val transformer = { result: MongoFuture[MongoAsyncCursor[T]] =>
       val future: SingleResultFuture[List[T]] = new SingleResultFuture[List[T]]
       var list = List[T]()
@@ -244,7 +247,7 @@ trait MongoCollectionViewProvider[T] {
    * @return CursorType[T]
    */
   def cursor(): CursorType[T] =  {
-    val operation = new QueryOperation[T](namespace, findOp, documentCodec, getCodec)
+    val operation = new QueryOperation[T](namespace, findOp, getCodec)
     client.executeAsync(operation, readPreference).asInstanceOf[CursorType[T]]
   }
 
@@ -254,7 +257,7 @@ trait MongoCollectionViewProvider[T] {
    * @return ResultType[Option[T\]\]
    */
   def one(): ResultType[Option[T]] = {
-    val operation = new QueryOperation[T](namespace, limit(1).findOp, documentCodec, getCodec)
+    val operation = new QueryOperation[T](namespace, limit(1).findOp, getCodec)
     val transformer = { result: MongoFuture[MongoAsyncCursor[T]] =>
       val future: SingleResultFuture[Option[T]] = new SingleResultFuture[Option[T]]
       var theOne: Option[T] = None
@@ -292,7 +295,7 @@ trait MongoCollectionViewProvider[T] {
    * @param document the document to save
    */
   def save(document: T): ResultType[WriteResult] = {
-    Option(getCodec.getId(document)) match {
+    Option(getCodec.getDocumentId(document)) match {
       case None => insert(document)
       case Some(id) => upsert.find(new Document("_id", id)).replace(document).asInstanceOf[ResultType[WriteResult]]
     }
@@ -303,7 +306,7 @@ trait MongoCollectionViewProvider[T] {
    */
   def remove(): ResultType[WriteResult] = {
     val removeRequest: List[RemoveRequest] = List(new RemoveRequest(findOp.getFilter).multi(getMultiFromLimit))
-    val operation = new RemoveOperation(namespace, true, writeConcern, removeRequest.asJava, documentCodec)
+    val operation = new RemoveOperation(namespace, true, writeConcern, removeRequest.asJava)
     client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
 
@@ -312,7 +315,7 @@ trait MongoCollectionViewProvider[T] {
    */
   def removeOne(): ResultType[WriteResult] = {
     val removeRequest: List[RemoveRequest] = List(new RemoveRequest(findOp.getFilter).multi(false))
-    val operation = new RemoveOperation(namespace, true, writeConcern, removeRequest.asJava, documentCodec)
+    val operation = new RemoveOperation(namespace, true, writeConcern, removeRequest.asJava)
     client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
 
@@ -352,7 +355,7 @@ trait MongoCollectionViewProvider[T] {
     val replaceRequest: List[ReplaceRequest[T]] = List(
       new ReplaceRequest[T](findOp.getFilter, replacement).upsert(doUpsert)
     )
-    val operation = new ReplaceOperation(namespace, true, writeConcern, replaceRequest.asJava, documentCodec, getCodec)
+    val operation = new ReplaceOperation(namespace, true, writeConcern, replaceRequest.asJava, getCodec)
     client.executeAsync(operation).asInstanceOf[ResultType[WriteResult]]
   }
 
@@ -420,7 +423,7 @@ trait MongoCollectionViewProvider[T] {
       .select(findOp.getFields)
       .sortBy(findOp.getOrder)
       .upsert(doUpsert)
-    val operation = new FindAndReplaceOperation[T](namespace, findAndReplace, getCodec, getCodec)
+    val operation = new FindAndReplaceOperation[T](namespace, findAndReplace, getCodec)
     client.executeAsync(operation).asInstanceOf[ResultType[T]]
   }
 
@@ -487,4 +490,9 @@ trait MongoCollectionViewProvider[T] {
   protected def copy(client: Client, namespace: MongoNamespace, codec: CollectibleCodec[T], options: MongoCollectionOptions,
            findOp: Find, writeConcern: WriteConcern, limitSet: Boolean, doUpsert: Boolean,
            readPreference: ReadPreference): CollectionView[T]
+
+  private implicit def wrap(command: Document): BsonDocument = {
+    new BsonDocumentWrapper[Document](command, documentCodec)
+  }
+
 }

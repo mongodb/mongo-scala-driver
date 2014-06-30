@@ -1,7 +1,7 @@
 # See http://about.travis-ci.org/docs/user/build-configuration/
 language: scala
 scala:
-  - "2.11.0"
+  - "2.11.1"
 # Branches to test
 branches:
   only:
@@ -13,6 +13,7 @@ notifications:
     on_success: change
     on_failure: always
 jdk:
+  - openjdk7
   - oraclejdk7
 services:
   - mongodb

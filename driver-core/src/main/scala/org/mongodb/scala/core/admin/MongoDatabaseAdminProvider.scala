@@ -24,7 +24,9 @@
  */
 package org.mongodb.scala.core.admin
 
-import org.mongodb.{Block, CommandResult, CreateCollectionOptions, Document, MongoAsyncCursor, MongoCommandFailureException, MongoException, MongoFuture, MongoNamespace, ReadPreference}
+import org.bson.{BsonDocumentWrapper}
+
+import org.mongodb.{Block, CommandResult, CreateCollectionOptions, Document, MongoAsyncCursor, MongoException, MongoFuture, MongoNamespace, ReadPreference}
 import org.mongodb.codecs.DocumentCodec
 import org.mongodb.connection.SingleResultCallback
 import org.mongodb.operation.{CommandReadOperation, CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation, SingleResultFuture}
@@ -83,7 +85,7 @@ trait MongoDatabaseAdminProvider {
   def collectionNames: ListResultType[String] = {
     val namespacesCollection: MongoNamespace = new MongoNamespace(name, "system.namespaces")
     val findAll = new Find()
-    val operation = new QueryOperation[Document](namespacesCollection, findAll, commandCodec, commandCodec)
+    val operation = new QueryOperation[Document](namespacesCollection, findAll, commandCodec)
     val transformer = { result: MongoFuture[MongoAsyncCursor[Document]] =>
       val future: SingleResultFuture[List[String]] = new SingleResultFuture[List[String]]
       var list = List[String]()
@@ -168,7 +170,8 @@ trait MongoDatabaseAdminProvider {
   private val commandCodec = new DocumentCodec()
   private val client = database.client
   private def createOperation(command: Document) = {
-    new CommandReadOperation(name, command, commandCodec, commandCodec)
+    new CommandReadOperation(name, new BsonDocumentWrapper[Document](command, commandCodec))
   }
+
 }
 
