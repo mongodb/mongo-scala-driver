@@ -2,6 +2,16 @@
 language: scala
 scala:
   - "2.11.1"
+services: mongodb
+env:
+  - PROJECT=core
+  - PROJECT=async
+  - PROJECT=rxscala
+matrix:
+    fast_finish: true
+before_script: "mongo --eval 'db.runCommand({setParameter: 1, textSearchEnabled: true})' admin"
+script: sbt ++$TRAVIS_SCALA_VERSION $PROJECT/test
+
 # Branches to test
 branches:
   only:
@@ -15,5 +25,3 @@ notifications:
 jdk:
   - openjdk7
   - oraclejdk7
-services:
-  - mongodb
