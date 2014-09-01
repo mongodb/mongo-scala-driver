@@ -31,6 +31,11 @@ exec scala -cp "$cp" "$0" "$@"
 import java.io.PrintWriter
 import java.util.logging.{Level, Logger}
 
+import com.mongodb.ReadPreference
+import com.mongodb.codecs.DocumentCodec
+import org.bson.codecs.DecoderContext
+import org.bson.json.JsonReader
+
 import scala.Some
 
 import org.mongodb.{Document, ReadPreference}
@@ -300,9 +305,8 @@ object mongoexport {
    * @return a document
    */
   private def documentFromString(string: String): Document = {
-    val jsonReader: JSONReader = new JSONReader(string)
-    val documentCodec = new DocumentCodec(PrimitiveCodecs.createDefault)
-    documentCodec.decode(jsonReader)
+    val jsonReader: JsonReader = new JsonReader(string)
+    new DocumentCodec().decode(jsonReader, DecoderContext.builder().build())
   }
 
   case class Options(quiet: Boolean = false, uri: Option[String] = None, out: Option[String] = None,

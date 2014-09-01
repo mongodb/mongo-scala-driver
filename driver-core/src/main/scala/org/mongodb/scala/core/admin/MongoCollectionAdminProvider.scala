@@ -29,11 +29,15 @@ import java.util
 
 import org.bson.codecs.DecoderContext
 import org.bson.{ BsonDocumentReader, BsonDocumentWrapper, BsonDocument }
-import org.mongodb.codecs.DocumentCodec
-import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation.{ CommandReadOperation, CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation, SingleResultFuture }
+import com.mongodb.codecs.DocumentCodec
+import com.mongodb.async.SingleResultCallback
+import com.mongodb.operation.{ CommandReadOperation, CreateIndexesOperation, DropCollectionOperation, DropIndexOperation, GetIndexesOperation, Index }
+import com.mongodb.async.{ SingleResultFuture, MongoFuture }
+import com.mongodb.{ CommandFailureException, MongoException, ReadPreference }
+
+import org.mongodb.{ CommandResult, Document }
+
 import org.mongodb.scala.core.{ MongoCollectionProvider, RequiredTypesAndTransformersProvider }
-import org.mongodb.{ CommandResult, Document, Index, MongoCommandFailureException, MongoException, MongoFuture, ReadPreference }
 
 import scala.collection.JavaConverters._
 
@@ -84,11 +88,10 @@ trait MongoCollectionAdminProvider[T] {
               val response: BsonDocument = result.getResponse
               future.init(response.containsKey("capped") && response.getBoolean("capped").getValue, null)
             case _ =>
-              e.isInstanceOf[MongoCommandFailureException] match {
+              e.isInstanceOf[CommandFailureException] match {
                 case false => future.init(null, e)
                 case true =>
-                  val err = e.asInstanceOf[MongoCommandFailureException]
-                  err.getCommandResult.getErrorMessage match {
+                  e.asInstanceOf[CommandFailureException].getErrorMessage match {
                     case namespaceError: String if namespaceError.contains("not found") =>
                       future.init(false, null)
                     case _ => future.init(null, e)
@@ -118,13 +121,13 @@ trait MongoCollectionAdminProvider[T] {
               val stats: Document = bsonDocumentToDocument(result.getResponse)
               future.init(stats, null)
             case _ =>
-              e.isInstanceOf[MongoCommandFailureException] match {
+              e.isInstanceOf[CommandFailureException] match {
                 case false => future.init(null, e)
                 case true =>
-                  val err = e.asInstanceOf[MongoCommandFailureException]
-                  err.getCommandResult.getErrorMessage match {
+                  val err = e.asInstanceOf[CommandFailureException]
+                  err.getErrorMessage match {
                     case namespaceError: String if namespaceError.contains("not found") =>
-                      future.init(bsonDocumentToDocument(err.getCommandResult.getResponse), null)
+                      future.init(bsonDocumentToDocument(err.getResponse), null)
                     case _ => future.init(null, e)
                   }
               }
@@ -149,7 +152,7 @@ trait MongoCollectionAdminProvider[T] {
    * @return ResultType[Unit]
    */
   def createIndexes(indexes: Iterable[Index]): ResultType[Unit] = {
-    val operation = new CreateIndexesOperation(new util.ArrayList(indexes.toList.asJava), collection.namespace)
+    val operation = new CreateIndexesOperation(collection.namespace, new util.ArrayList(indexes.toList.asJava))
     voidToUnitConverter(collection.client.executeAsync(operation).asInstanceOf[ResultType[Void]])
   }
 

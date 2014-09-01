@@ -27,18 +27,19 @@ package org.mongodb.scala.core
 import scala.Some
 import scala.collection.JavaConverters._
 
-import org.mongodb.MongoCredential
-import org.mongodb.connection.{
+import com.mongodb.MongoCredential
+import com.mongodb.connection.{
   AsynchronousSocketChannelStreamFactory,
   BufferProvider,
   Cluster,
   ClusterConnectionMode,
   ClusterSettings,
   DefaultClusterFactory,
-  PowerOfTwoBufferPool,
-  ServerAddress
+  PowerOfTwoBufferPool
 }
-import org.mongodb.management.JMXConnectionPoolListener
+import com.mongodb.ServerAddress
+
+import com.mongodb.management.JMXConnectionPoolListener
 
 /**
  * A factory for creating a [[MongoClientProvider MongoClient]] instances.
@@ -247,10 +248,7 @@ trait MongoClientCompanion {
    */
   def apply(mongoClientURI: MongoClientURI, bufferProvider: BufferProvider): Client = {
     val options = mongoClientURI.options
-    val credentialList: List[MongoCredential] = mongoClientURI.mongoCredentials match {
-      case Some(credential) => List(credential)
-      case None             => List.empty[MongoCredential]
-    }
+    val credentialList = mongoClientURI.mongoCredentials
     mongoClientURI.hosts.size match {
       case 1 =>
         val clusterSettings = ClusterSettings.builder()

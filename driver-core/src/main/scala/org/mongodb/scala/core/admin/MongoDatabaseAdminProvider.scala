@@ -24,12 +24,14 @@
  */
 package org.mongodb.scala.core.admin
 
+import com.mongodb.async.{ MongoAsyncCursor, SingleResultFuture, MongoFuture }
 import org.bson.{ BsonDocumentWrapper }
 
-import org.mongodb.{ Block, CommandResult, CreateCollectionOptions, Document, MongoAsyncCursor, MongoException, MongoFuture, MongoNamespace, ReadPreference }
-import org.mongodb.codecs.DocumentCodec
-import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation.{ CommandReadOperation, CreateCollectionOperation, Find, QueryOperation, RenameCollectionOperation, SingleResultFuture }
+import com.mongodb.{ Block, MongoException, MongoNamespace, ReadPreference }
+import com.mongodb.codecs.DocumentCodec
+import com.mongodb.async.SingleResultCallback
+import com.mongodb.operation._
+import org.mongodb.{ Document, CommandResult }
 
 import org.mongodb.scala.core.{ MongoDatabaseProvider, RequiredTypesAndTransformersProvider }
 

@@ -26,8 +26,8 @@ package org.mongodb.scala.core
 
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
-import org.mongodb.{ ReadPreference, WriteConcern }
-import org.mongodb.connection.{ ConnectionPoolSettings, SSLSettings, ServerSettings, SocketSettings }
+import com.mongodb.{ ReadPreference, WriteConcern }
+import com.mongodb.connection.{ ConnectionPoolSettings, SSLSettings, ServerSettings, SocketSettings }
 
 // scalastyle:off magic.number
 
@@ -69,21 +69,9 @@ import org.mongodb.connection.{ ConnectionPoolSettings, SSLSettings, ServerSetti
  *                      `java.net.Socket#setSoTimeout(int)`. Default is `0` and means no timeout.
  * @param socketKeepAlive This flag controls the socket keep alive feature that keeps a connection alive through
  *                        firewalls. `java.net.Socket#setKeepAlive(boolean)`. Default is `false`.
- * @param autoConnectRetry If true, the driver will keep trying to connect to the same server in case that the socket
- *                         cannot be established. There is maximum amount of time to keep retrying, which is `15s` by
- *                         default. This can be useful to avoid some exceptions being thrown when a server is down
- *                         temporarily by blocking the operations. It also can be useful to smooth the transition to a
- *                         new master (so that a new master is elected within the retry time). Note that when using
- *                         this flag: - for a replica set, the driver will trying to connect to the old master for
- *                         that time, instead of failing over to the new one right away - this does not prevent
- *                         exception from being thrown in read/write operations on the socket, which must be handled
- *                         by application.
- *
- *                         Even if this flag is `false`, the driver already has mechanisms to automatically recreate
- *                         broken connections and retry the read operations. Default is `false`.
  * @param maxAutoConnectRetryTime The maximum amount of time in MS to spend retrying to open connection to the same
  *                                server. Default is `0`, which means to use the default `15s` if autoConnectRetry is on.
- * @param SSLEnabled Whether to use SSL. The default is `false`.
+ * @param SslEnabled Whether to use SSL. The default is `false`.
  * @param heartbeatFrequency This is the frequency that the driver will attempt to determine the current state of each
  *                           server in the cluster. The default value is `5000` milliseconds.
  * @param heartbeatConnectRetryFrequency This is the frequency that the driver will attempt to determine the current state of
@@ -107,9 +95,8 @@ case class MongoClientOptions(description: String = "",
                               connectTimeout: Int = 1000 * 10,
                               socketTimeout: Int = 0,
                               socketKeepAlive: Boolean = false,
-                              autoConnectRetry: Boolean = false,
                               maxAutoConnectRetryTime: Long = 0,
-                              SSLEnabled: Boolean = false,
+                              SslEnabled: Boolean = false,
                               heartbeatFrequency: Int = 5000,
                               heartbeatConnectRetryFrequency: Int = 10,
                               heartbeatConnectTimeout: Int = 20000,
@@ -139,7 +126,7 @@ case class MongoClientOptions(description: String = "",
     .heartbeatConnectRetryFrequency(heartbeatConnectRetryFrequency, MILLISECONDS)
     .build()
   val sslSettings = SSLSettings.builder
-    .enabled(SSLEnabled)
+    .enabled(SslEnabled)
     .build()
 
   override lazy val toString: String = {
@@ -153,11 +140,10 @@ case class MongoClientOptions(description: String = "",
                             | connectTimeout="$connectTimeout",
                             | socketTimeout="$socketTimeout",
                             | socketKeepAlive="$socketKeepAlive",
-                            | autoConnectRetry="$autoConnectRetry",
                             | maxAutoConnectRetryTime="$maxAutoConnectRetryTime",
                             | readPreference="$readPreference",
                             | writeConcern="$writeConcern",
-                            | SSLEnabled="$SSLEnabled",
+                            | SslEnabled="$SslEnabled",
                             | heartbeatFrequency="$heartbeatFrequency",
                             | heartbeatConnectRetryFrequency="$heartbeatConnectRetryFrequency",
                             | heartbeatConnectTimeout="$heartbeatConnectTimeout",

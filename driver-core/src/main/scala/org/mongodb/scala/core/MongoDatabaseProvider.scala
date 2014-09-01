@@ -24,9 +24,10 @@
  */
 package org.mongodb.scala.core
 
-import org.mongodb.{ Document, ReadPreference }
-import org.mongodb.codecs.{ CollectibleCodec, DocumentCodec }
-import org.mongodb.operation.{ CommandReadOperation, CommandWriteOperation }
+import com.mongodb.{ ReadPreference }
+import com.mongodb.codecs.{ CollectibleCodec, DocumentCodec }
+import com.mongodb.operation.{ CommandReadOperation, CommandWriteOperation }
+import org.mongodb.Document
 
 import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
 

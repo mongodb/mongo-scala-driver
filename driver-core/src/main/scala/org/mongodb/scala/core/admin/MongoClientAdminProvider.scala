@@ -26,12 +26,15 @@ package org.mongodb.scala.core.admin
 
 import java.lang.{ Double => JDouble }
 
+import com.mongodb.async.{ SingleResultFuture, MongoFuture }
 import org.bson.BsonDocumentWrapper
-import org.mongodb.codecs.DocumentCodec
-import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation.{ CommandReadOperation, SingleResultFuture }
+import com.mongodb.codecs.DocumentCodec
+import com.mongodb.async.SingleResultCallback
+import com.mongodb.operation.CommandReadOperation
+import com.mongodb.MongoException
+
 import org.mongodb.scala.core.{ MongoClientProvider, RequiredTypesAndTransformersProvider }
-import org.mongodb.{ CommandResult, Document, MongoException, MongoFuture }
+import org.mongodb.{ CommandResult, Document }
 
 import scala.collection.JavaConverters._
 

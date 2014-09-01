@@ -26,11 +26,13 @@ package org.mongodb.scala.core
 
 import scala.collection.JavaConverters._
 import scala.language.implicitConversions
+import org.mongodb.{ Document }
 
-import org.mongodb.{ Block, Document, MongoAsyncCursor, MongoException, MongoFuture, MongoNamespace, QueryOptions, ReadPreference, WriteConcern, WriteResult }
-import org.mongodb.codecs.CollectibleCodec
-import org.mongodb.connection.SingleResultCallback
-import org.mongodb.operation._
+import com.mongodb.async.{ SingleResultFuture, MongoAsyncCursor, MongoFuture }
+import com.mongodb.{ Block, MongoException, MongoNamespace, ReadPreference, WriteConcern, WriteResult }
+import com.mongodb.codecs.CollectibleCodec
+import com.mongodb.async.SingleResultCallback
+import com.mongodb.operation._
 
 import org.bson.{ BsonDocument, BsonDocumentWrapper }
 

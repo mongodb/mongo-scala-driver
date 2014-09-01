@@ -24,9 +24,12 @@
  */
 package org.mongodb.scala.async.integration.admin
 
+import org.mongodb.Document
+import com.mongodb.operation.{Index, CreateCollectionOptions}
+
 import org.mongodb.scala.async.admin.MongoCollectionAdmin
 import org.mongodb.scala.async.helpers.RequiresMongoDBSpec
-import org.mongodb.{CreateCollectionOptions, Document, Index}
+
 
 class MongoCollectionAdminISpec extends RequiresMongoDBSpec {
 

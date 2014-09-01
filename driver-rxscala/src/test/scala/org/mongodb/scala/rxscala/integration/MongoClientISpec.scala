@@ -25,7 +25,7 @@
 package org.mongodb.scala.rxscala.integration
 
 import org.mongodb.Document
-import org.mongodb.connection.ServerAddress
+import com.mongodb.ServerAddress
 
 import org.mongodb.scala.core.{MongoClientOptions, MongoClientURI}
 import org.mongodb.scala.rxscala._

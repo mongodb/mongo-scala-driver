@@ -27,9 +27,10 @@ package org.mongodb.scala.rxscala
 import org.mongodb.scala.core.RequiredTypesAndTransformersProvider
 
 import rx.lang.scala.{Subscriber, Observable}
-import org.mongodb.{Block, MongoException, MongoAsyncCursor, MongoFuture}
-import org.mongodb.binding.ReferenceCounted
-import org.mongodb.connection.SingleResultCallback
+import com.mongodb.async.{MongoAsyncCursor, MongoFuture}
+import com.mongodb.{ Block, MongoException }
+import com.mongodb.binding.ReferenceCounted
+import com.mongodb.async.SingleResultCallback
 
 trait RequiredTypesAndTransformers extends RequiredTypesAndTransformersProvider {
 

@@ -24,11 +24,13 @@
  */
 package org.mongodb.scala.async
 
+import com.mongodb.MongoException
+
 import scala.concurrent.{Future, Promise}
 
-import org.mongodb.{MongoAsyncCursor, MongoException, MongoFuture}
-import org.mongodb.binding.ReferenceCounted
-import org.mongodb.connection.SingleResultCallback
+import com.mongodb.async.{MongoAsyncCursor, MongoFuture}
+import com.mongodb.binding.ReferenceCounted
+import com.mongodb.async.SingleResultCallback
 
 import org.mongodb.scala.core.RequiredTypesAndTransformersProvider
 

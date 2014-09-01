@@ -26,10 +26,8 @@ package org.mongodb.scala.core.unit
 
 import scala.collection.JavaConverters._
 
-import org.mongodb.{ ReadPreference, WriteConcern }
-import org.mongodb.ReadPreference.secondaryPreferred
-import org.mongodb.connection.Tags
-
+import com.mongodb.{ Tag, TagSet, ReadPreference, WriteConcern }
+import com.mongodb.ReadPreference.secondaryPreferred
 import org.mongodb.scala.core.MongoClientURI
 import org.mongodb.scala.core.helpers.UnitTestSpec
 
@@ -37,7 +35,7 @@ class MongoClientUriSpec extends UnitTestSpec {
 
   "MongoClientURI" should "throw Exception if URI does not have a trailing slash" in {
     a[IllegalArgumentException] should be thrownBy {
-      MongoClientURI("mongodb://localhost?wTimeout=5")
+      MongoClientURI("mongodb://localhost?wtimeoutMS=5")
     }
   }
 
@@ -72,15 +70,14 @@ class MongoClientUriSpec extends UnitTestSpec {
         mongoClientURI.collection should equal(collection)
 
         val credentials = mongoClientURI.mongoCredentials
-        credentials match {
-          case Some(credential) => {
-            credential.getUserName should equal(username.get)
+        credentials.size match {
+          case 1 =>
+            credentials.head.getUserName should equal(username.get)
             password match {
-              case Some(pass) => credential.getPassword should equal(pass)
-              case None       => credential.getPassword should equal(null)
+              case Some(pass) => credentials.head.getPassword should equal(pass)
+              case None       => credentials.head.getPassword should equal(null)
             }
-          }
-          case None =>
+          case 0 =>
             username should be(None)
             password should be(None)
         }
@@ -101,9 +98,8 @@ class MongoClientUriSpec extends UnitTestSpec {
     options.connectTimeout should be(1000 * 10)
     options.socketTimeout should be(0)
     options.socketKeepAlive should be(false)
-    options.autoConnectRetry should be(false)
     options.maxAutoConnectRetryTime should be(0)
-    options.SSLEnabled should be(false)
+    options.SslEnabled should be(false)
     options.heartbeatFrequency should be(5000)
     options.heartbeatConnectRetryFrequency should be(10)
     options.heartbeatConnectTimeout should be(20000)
@@ -117,11 +113,11 @@ class MongoClientUriSpec extends UnitTestSpec {
       ("mongodb://localhost", WriteConcern.ACKNOWLEDGED),
       ("mongodb://localhost/?safe=true", WriteConcern.ACKNOWLEDGED),
       ("mongodb://localhost/?safe=false", WriteConcern.UNACKNOWLEDGED),
-      ("mongodb://localhost/?wTimeout=5", new WriteConcern(1, 5, false, false)),
+      ("mongodb://localhost/?wtimeoutMS=5", new WriteConcern(1, 5, false, false)),
       ("mongodb://localhost/?fsync=true", new WriteConcern(1, 0, true, false)),
       ("mongodb://localhost/?j=true", new WriteConcern(1, 0, false, true)),
-      ("mongodb://localhost/?w=2&wtimeout=5&fsync=true&j=true", new WriteConcern(2, 5, true, true)),
-      ("mongodb://localhost/?w=majority&wtimeout=5&fsync=true&j=true", new WriteConcern("majority", 5, true, true)))
+      ("mongodb://localhost/?w=2&wtimeoutMS=5&fsync=true&j=true", new WriteConcern(2, 5, true, true)),
+      ("mongodb://localhost/?w=majority&wtimeoutMS=5&fsync=true&j=true", new WriteConcern("majority", 5, true, true)))
 
     forAll(writeConcernExamples) {
       (uri: String, writeConcern: WriteConcern) =>
@@ -136,8 +132,8 @@ class MongoClientUriSpec extends UnitTestSpec {
       ("mongodb://localhost/?readPreference=secondaryPreferred", ReadPreference.secondaryPreferred),
       ("""mongodb://localhost/?readPreference=secondaryPreferred
           &readPreferenceTags=dc:ny,rack:1&readPreferenceTags=dc:ny
-          &readPreferenceTags=""".replaceAll("\n[ ]+", ""), secondaryPreferred(List(new Tags("dc", "ny").append("rack", "1"),
-        new Tags("dc", "ny"), new Tags()).asJava)))
+          &readPreferenceTags=""".replaceAll("\n[ ]+", ""), secondaryPreferred(List(new TagSet(List(new Tag("dc", "ny"), new Tag("rack", "1")).asJava),
+        new TagSet(List(new Tag("dc", "ny")).asJava), new TagSet()).asJava)))
     forAll(readPreferenceExamples) {
       (uri: String, readPreference: ReadPreference) =>
         val mongoClientURI = MongoClientURI(uri)
@@ -150,18 +146,15 @@ class MongoClientUriSpec extends UnitTestSpec {
       """mongodb://localhost/?minPoolSize=5&maxPoolSize=10&waitQueueMultiple=5&
              waitQueueTimeoutMS=150&maxIdleTimeMS=200&maxLifeTimeMS=300&
              replicaSet=test&connectTimeoutMS=2500&socketTimeoutMS=5500&
-             autoConnectRetry=true&slaveOk=true&safe=false&w=1&
-             wtimeout=2500&fsync=true""".replaceAll("\n[ ]+", ""),
+             readPreference=secondary&safe=false&w=1&wtimeoutMS=2500&fsync=true""".replaceAll("\n[ ]+", ""),
       """mongodb://localhost/?minPoolSize=5;maxPoolSize=10;waitQueueMultiple=5;
              waitQueueTimeoutMS=150;maxIdleTimeMS=200;maxLifeTimeMS=300;
              replicaSet=test;connectTimeoutMS=2500;socketTimeoutMS=5500;
-             autoConnectRetry=true;slaveOk=true;safe=false;w=1;
-             wtimeout=2500;fsync=true""".replaceAll("\n[ ]+", ""),
+             readPreference=secondary;safe=false;w=1;wtimeoutMS=2500;fsync=true""".replaceAll("\n[ ]+", ""),
       """mongodb://localhost/test?minPoolSize=5;maxPoolSize=10&waitQueueMultiple=5;
              waitQueueTimeoutMS=150;maxIdleTimeMS=200&maxLifeTimeMS=300&
              replicaSet=test;connectTimeoutMS=2500;socketTimeoutMS=5500&
-             autoConnectRetry=true;slaveOk=true;safe=false&w=1;
-             wtimeout=2500;fsync=true""".replaceAll("\n[ ]+", ""))
+             readPreference=secondary;safe=false&w=1;wtimeoutMS=2500;fsync=true""".replaceAll("\n[ ]+", ""))
 
     forAll(uriExamples) {
       (uri: String) =>
@@ -173,9 +166,8 @@ class MongoClientUriSpec extends UnitTestSpec {
         options.maxConnectionIdleTime should be(200)
         options.maxConnectionLifeTime should be(300)
         options.socketTimeout should be(5500)
-        options.autoConnectRetry should be(true)
         options.writeConcern should equal(new WriteConcern(1, 2500, true))
-        options.readPreference should equal(ReadPreference.secondaryPreferred())
+        options.readPreference should equal(ReadPreference.secondary())
         options.requiredReplicaSetName should be(Some("test"))
     }
   }

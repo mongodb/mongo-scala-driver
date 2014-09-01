@@ -32,15 +32,19 @@ exec scala -cp "$cp" "$0" "$@"
 import java.io.PrintWriter
 import java.util.logging.{Level, Logger}
 
+import com.mongodb.async.MongoAsyncCursor
+import org.bson.codecs.DecoderContext
+import org.bson.json.JsonReader
+
 import scala.Some
 import scala.concurrent.{Await, Future, Promise}
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 
-import org.mongodb.{Block, Document, MongoAsyncCursor, MongoException, ReadPreference}
-import org.mongodb.codecs.{DocumentCodec, PrimitiveCodecs}
-import org.mongodb.connection.SingleResultCallback
-import org.mongodb.json.JSONReader
+import org.mongodb.Document
+import com.mongodb.{Block, MongoException, ReadPreference}
+import com.mongodb.codecs.DocumentCodec
+import com.mongodb.async.SingleResultCallback
 
 import org.mongodb.scala.core.MongoClientURI
 import org.mongodb.scala.async._
@@ -310,9 +314,9 @@ object mongoexport {
    * @return a document
    */
   private def documentFromString(string: String): Document = {
-    val jsonReader: JSONReader = new JSONReader(string)
-    val documentCodec = new DocumentCodec(PrimitiveCodecs.createDefault)
-    documentCodec.decode(jsonReader)
+    val jsonReader: JsonReader = new JsonReader(string)
+    val documentCodec = new DocumentCodec()
+    documentCodec.decode(jsonReader, DecoderContext.builder.build)
   }
 
   case class Options(quiet: Boolean = false, uri: Option[String] = None, out: Option[String] = None,

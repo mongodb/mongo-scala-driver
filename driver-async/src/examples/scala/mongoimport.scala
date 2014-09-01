@@ -29,23 +29,25 @@ exec scala -cp "$cp" "$0" "$@"
  * https://github.com/mongodb/mongo-scala-driver
  */
 
+// TODO FIX needs an iterable codec
+
 import java.util.logging.{Level, Logger}
 
-import scala.Some
-import scala.collection.JavaConverters._
+import com.mongodb.WriteResult
+import com.mongodb.codecs.DocumentCodec
+import org.bson.codecs.DecoderContext
+import org.bson.json.JsonReader
+
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.{Await, Future, Promise}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.io.{BufferedSource, Source}
 
-import org.mongodb.{Document, WriteResult}
-import org.mongodb.codecs.{Codecs, DocumentCodec, IterableCodec, PrimitiveCodecs}
-import org.mongodb.json.JSONReader
+import org.mongodb.Document
 
 import org.mongodb.scala.core.MongoClientURI
-import org.mongodb.scala.async._
-
+import org.mongodb.scala.async.{MongoClient, MongoCollection}
 /**
  * An example program providing similar functionality as the ``mongoimport`` program
  *
@@ -166,20 +168,19 @@ object mongoimport {
     options.jsonArray match {
       case true =>
         // Import all
-        val jsonReader: JSONReader = new JSONReader(importSource.mkString)
-        val iterableCodec = new IterableCodec(Codecs.createDefault())
-        val documents: Iterable[Document] = iterableCodec.decode[Document](jsonReader).asScala
+        val jsonReader: JsonReader = new JsonReader(importSource.mkString)
+        val documents: Iterable[Document] = new DocumentCodec().decode(jsonReader, DecoderContext.builder().build())
         ListBuffer(collection.insert(documents))
       case false =>
         // Import in batches of 1000
-        val documentCodec = new DocumentCodec(PrimitiveCodecs.createDefault)
+        val documentCodec = new DocumentCodec()
         val lines = importSource.getLines()
         val futures = ListBuffer[Future[WriteResult]]()
         while (lines.hasNext) {
           val batch = lines.take(1000)
           val documents: Iterable[Document] = batch.map {case line =>
-            val jsonReader: JSONReader = new JSONReader(line)
-            documentCodec.decode(jsonReader)
+            val jsonReader: JsonReader = new JsonReader(line)
+            documentCodec.decode(jsonReader, DecoderContext.builder().build())
           }.toIterable
           futures += collection.insert(documents)
         }

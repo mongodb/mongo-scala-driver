@@ -24,7 +24,8 @@
  */
 package org.mongodb.scala.rxscala.integration.admin
 
-import org.mongodb.{CreateCollectionOptions, Document, Index}
+import org.mongodb.Document
+import com.mongodb.operation.{Index, CreateCollectionOptions}
 
 import org.mongodb.scala.rxscala.admin.MongoCollectionAdmin
 import org.mongodb.scala.rxscala.helpers.RequiresMongoDBSpec

@@ -28,17 +28,21 @@ exec scala -cp "$cp" "$0" "$@"
  *
  * https://github.com/mongodb/mongo-scala-driver
  */
+
+
+// TODO FIX needs an iterable codec
+
 import java.util.logging.{Level, Logger}
 
-import scala.Some
-import scala.collection.JavaConverters._
+import com.mongodb.codecs.DocumentCodec
+import org.bson.codecs.DecoderContext
+import org.bson.json.JsonReader
+
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration.Duration
 import scala.io.{BufferedSource, Source}
 
 import org.mongodb.{Document, WriteResult}
-import org.mongodb.codecs._
-import org.mongodb.json.JSONReader
 
 import org.mongodb.scala.core.MongoClientURI
 import org.mongodb.scala.rxscala.{MongoClient, MongoCollection}
@@ -133,7 +137,7 @@ object mongoimport {
       if (!options.quiet) Console.err.print(s"Dropping: $name ")
       val dropObservable = collection.admin.drop()
       if (!options.quiet) showPinWheel(dropObservable)
-      dropObservable.timeout(Duration.Inf).toSeq.toBlockingObservable.first
+      dropObservable.timeout(Duration.Inf).toSeq.toBlocking.first
     }
 
     // Import JSON in a future so we can output a spinner
@@ -143,7 +147,7 @@ object mongoimport {
 
     val importObservable = importJson(collection, importSource, options).toObservable.flatten
     if (!options.quiet) showPinWheel(importObservable)
-    importObservable.timeout(Duration.Inf).last.toBlockingObservable.first
+    importObservable.timeout(Duration.Inf).last.toBlocking.first
 
     // Close the client
     collection.client.close()
@@ -164,20 +168,19 @@ object mongoimport {
     options.jsonArray match {
       case true =>
         // Import all
-        val jsonReader: JSONReader = new JSONReader(importSource.mkString)
-        val iterableCodec = new IterableCodec(Codecs.createDefault())
-        val documents: Iterable[Document] = iterableCodec.decode[Document](jsonReader).asScala
+        val jsonReader: JsonReader = new JsonReader(importSource.mkString)
+        val documents: Iterable[Document] = new DocumentCodec().decode(jsonReader, DecoderContext.builder().build())
         ListBuffer(collection.insert(documents))
       case false =>
         // Import in batches of 1000
-        val documentCodec = new DocumentCodec(PrimitiveCodecs.createDefault)
+        val documentCodec = new DocumentCodec()
         val lines = importSource.getLines()
         val observables = ListBuffer[Observable[WriteResult]]()
         while (lines.hasNext) {
           val batch = lines.take(1000)
           val documents: Iterable[Document] = batch.map {case line =>
-            val jsonReader: JSONReader = new JSONReader(line)
-            documentCodec.decode(jsonReader)
+            val jsonReader: JsonReader = new JsonReader(line)
+            documentCodec.decode(jsonReader, DecoderContext.builder().build())
           }.toIterable
           observables += collection.insert(documents)
         }
@@ -222,7 +225,7 @@ object mongoimport {
   private def getOptions(optionMap: Map[String, _]): Options = {
     val default = Options()
     Options(
-      quiet = optionMap.getOrElse("quiet", default.quiet).asInstanceOf[Boolean],
+      quiet = optionMap.getOrElse("quiet", default.quiet),
       uri = optionMap.get("uri") match {
         case None => default.uri
         case Some(value) => Some(value.asInstanceOf[String])
@@ -231,8 +234,8 @@ object mongoimport {
         case None => default.file
         case Some(value) => Some(value.asInstanceOf[String])
       },
-      drop = optionMap.getOrElse("drop", default.drop).asInstanceOf[Boolean],
-      jsonArray = optionMap.getOrElse("jsonArray", default.jsonArray).asInstanceOf[Boolean]
+      drop = optionMap.getOrElse("drop", default.drop),
+      jsonArray = optionMap.getOrElse("jsonArray", default.jsonArray)
     )
   }
 

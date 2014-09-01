@@ -24,7 +24,7 @@
  */
 package org.mongodb.scala.async
 
-import org.mongodb.connection.Cluster
+import com.mongodb.connection.Cluster
 
 import org.mongodb.scala.core.{MongoClientCompanion, MongoClientOptions, MongoClientProvider, MongoDatabaseOptions}
 import org.mongodb.scala.async.admin.MongoClientAdmin

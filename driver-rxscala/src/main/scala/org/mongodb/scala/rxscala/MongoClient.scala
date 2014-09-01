@@ -24,7 +24,7 @@
  */
 package org.mongodb.scala.rxscala
 
-import org.mongodb.connection.Cluster
+import com.mongodb.connection.Cluster
 
 import org.mongodb.scala.core.{MongoClientCompanion, MongoClientOptions, MongoClientProvider, MongoDatabaseOptions}
 import org.mongodb.scala.rxscala.admin.MongoClientAdmin

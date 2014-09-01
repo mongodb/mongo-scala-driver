@@ -30,10 +30,10 @@ object Dependencies {
   val scalaCoreVersion     = "2.11.0"
 
   val mongodbDriverVersion = "3.0.0-SNAPSHOT"
-  val rxJavaScalaVersion   = "0.18.2"
+  val rxJavaScalaVersion   = "0.20.0"
 
   val scalaTestVersion     = "2.2.0-M1"
-  val scalaMeterVersion    = "0.5-SNAPSHOT"
+  val scalaMeterVersion    = "0.6"
   val logbackVersion       = "1.1.1"
 
 
@@ -42,7 +42,7 @@ object Dependencies {
   val scalaCompiler      = "org.scala-lang" % "scala-compiler" % scalaCoreVersion
 
   // Libraries
-  val mongodbDriver = "org.mongodb" % "mongodb-driver" % mongodbDriverVersion
+  val mongodbDriver = "org.mongodb" % "mongo-java-driver-core" % mongodbDriverVersion
   val rxJavaScala   = "com.netflix.rxjava" % "rxjava-scala" % rxJavaScalaVersion
 
   // Test
