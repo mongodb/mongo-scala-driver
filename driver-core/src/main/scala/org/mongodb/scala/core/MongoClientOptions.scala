@@ -74,8 +74,8 @@ import com.mongodb.connection.{ ConnectionPoolSettings, SSLSettings, ServerSetti
  * @param SslEnabled Whether to use SSL. The default is `false`.
  * @param heartbeatFrequency This is the frequency that the driver will attempt to determine the current state of each
  *                           server in the cluster. The default value is `5000` milliseconds.
- * @param heartbeatConnectRetryFrequency This is the frequency that the driver will attempt to determine the current state of
- *                                       each server in the cluster, after a previous failed attempt. The default value is `10` milliseconds.
+ * @param minHeartbeatFrequency This is the minimum heartbeat frequency.  In the event that the driver has to frequently re-check a server's availability, it will
+ *                              wait at least this long since the previous check to avoid wasted effort. The default value is `10` milliseconds.
  * @param heartbeatConnectTimeout the connect timeout for connections used for the cluster heartbeat.  The default value is `20,000` milliseconds.
  * @param heartbeatSocketTimeout  the socket timeout for connections used for the cluster heartbeat.  The default value is `20,000` milliseconds.
  * @param requiredReplicaSetName the required replica set name.  With this option set, the MongoClient instance will
@@ -98,7 +98,7 @@ case class MongoClientOptions(description: String = "",
                               maxAutoConnectRetryTime: Long = 0,
                               SslEnabled: Boolean = false,
                               heartbeatFrequency: Int = 5000,
-                              heartbeatConnectRetryFrequency: Int = 10,
+                              minHeartbeatFrequency: Int = 10,
                               heartbeatConnectTimeout: Int = 20000,
                               heartbeatSocketTimeout: Int = 20000,
                               requiredReplicaSetName: Option[String] = None) {
@@ -123,7 +123,7 @@ case class MongoClientOptions(description: String = "",
     .build()
   val serverSettings = ServerSettings.builder
     .heartbeatFrequency(heartbeatFrequency, MILLISECONDS)
-    .heartbeatConnectRetryFrequency(heartbeatConnectRetryFrequency, MILLISECONDS)
+    .minHeartbeatFrequency(minHeartbeatFrequency, MILLISECONDS)
     .build()
   val sslSettings = SSLSettings.builder
     .enabled(SslEnabled)
@@ -145,7 +145,7 @@ case class MongoClientOptions(description: String = "",
                             | writeConcern="$writeConcern",
                             | SslEnabled="$SslEnabled",
                             | heartbeatFrequency="$heartbeatFrequency",
-                            | heartbeatConnectRetryFrequency="$heartbeatConnectRetryFrequency",
+                            | minHeartbeatFrequency="$minHeartbeatFrequency",
                             | heartbeatConnectTimeout="$heartbeatConnectTimeout",
                             | heartbeatSocketTimeout="$heartbeatSocketTimeout",
                             | requiredReplicaSetName="$requiredReplicaSetName")""".stripMargin.replaceAll("\n", "")

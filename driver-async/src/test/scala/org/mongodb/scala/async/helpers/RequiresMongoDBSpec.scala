@@ -24,18 +24,17 @@
  */
 package org.mongodb.scala.async.helpers
 
-import scala.concurrent.{Future, Await}
-import scala.concurrent.duration.Duration
-import scala.util.Properties
-
-import org.mongodb.Document
-
-import org.mongodb.scala.core.MongoClientURI
+import com.mongodb.operation.DropDatabaseOperation
+import org.bson.Document
 import org.mongodb.scala.async.{MongoClient, MongoCollection, MongoDatabase}
-
+import org.mongodb.scala.core.MongoClientURI
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Millis, Seconds, Span}
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+import scala.util.Properties
 
 trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
 
@@ -73,15 +72,16 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
   def mongoClient() = MongoClient(mongoClientURI)
 
   def isMongoDBOnline(): Boolean = {
-    val client = mongoClient()
-    try {
-      Await.result(client.admin.ping, WAIT_DURATION)
-      true
-    } catch {
-      case t: Throwable => false
-    } finally {
-      client.close()
-    }
+    true
+//    val client = mongoClient()
+//    try {
+//      Await.result(client.admin.ping, WAIT_DURATION)
+//      true
+//    } catch {
+//      case t: Throwable => false
+//    } finally {
+//      client.close()
+//    }
   }
 
   def checkMongoDB() {
@@ -96,7 +96,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
     try testCode(mongoDatabase) // "loan" the fixture to the test
     finally {
       // clean up the fixture
-      Await.result(mongoDatabase.admin.drop(), WAIT_DURATION)
+      Await.result(mongoDatabase.dropDatabase(), WAIT_DURATION)
       client.close()
     }
   }
@@ -111,7 +111,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
     try testCode(mongoCollection) // "loan" the fixture to the test
     finally {
       // clean up the fixture
-      Await.result(mongoCollection.admin.drop(), WAIT_DURATION)
+      Await.result(mongoCollection.dropCollection(), WAIT_DURATION)
       client.close()
     }
   }
@@ -119,7 +119,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
   override def beforeAll() {
     if (mongoDBOnline) {
       val client = mongoClient()
-      Await.result(client(databaseName).admin.drop(), WAIT_DURATION)
+      Await.result(client(databaseName).dropDatabase(), WAIT_DURATION)
       client.close()
     }
   }
@@ -127,8 +127,16 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
   override def afterAll() {
     if (mongoDBOnline) {
       val client = mongoClient()
-      Await.result(client(databaseName).admin.drop(), WAIT_DURATION)
+      Await.result(client(databaseName).dropDatabase(), WAIT_DURATION)
       client.close()
+    }
+  }
+
+  Runtime.getRuntime.addShutdownHook(new ShutdownHook())
+
+  private[mongodb] class ShutdownHook extends Thread {
+    override def run() {
+      mongoClient()(databaseName).dropDatabase()
     }
   }
 

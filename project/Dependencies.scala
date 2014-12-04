@@ -27,15 +27,14 @@ import sbt._
 
 object Dependencies {
   // Versions
-  val scalaCoreVersion     = "2.11.0"
+  val scalaCoreVersion     = "2.11.4"
 
   val mongodbDriverVersion = "3.0.0-SNAPSHOT"
-  val rxJavaScalaVersion   = "0.20.0"
+  val rxScalaVersion       = "0.22.0"
 
   val scalaTestVersion     = "2.2.0-M1"
   val scalaMeterVersion    = "0.6"
   val logbackVersion       = "1.1.1"
-
 
   // Scala
   val scalaReflection    = "org.scala-lang" % "scala-reflect" % scalaCoreVersion
@@ -43,7 +42,7 @@ object Dependencies {
 
   // Libraries
   val mongodbDriver = "org.mongodb" % "mongo-java-driver-core" % mongodbDriverVersion
-  val rxJavaScala   = "com.netflix.rxjava" % "rxjava-scala" % rxJavaScalaVersion
+  val rxScala       = "io.reactivex" %% "rxscala" % rxScalaVersion
 
   // Test
   val scalaTest     = "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
@@ -52,6 +51,6 @@ object Dependencies {
 
   // Projects
   val coreDependencies = Seq(scalaCompiler, scalaReflection, mongodbDriver)
-  val rxScalaDependencies = Seq(rxJavaScala)
+  val rxScalaDependencies = Seq(rxScala)
   val testDependencies = Seq(scalaTest, scalaMeter, logback)
 }

@@ -25,15 +25,16 @@
 package org.mongodb.scala.core
 
 import java.io.Closeable
-import java.util.concurrent.TimeUnit
 
 import com.mongodb.ReadPreference
-import com.mongodb.async.{ MongoAsyncCursor, MongoFuture }
-import com.mongodb.binding.{ AsyncClusterBinding, AsyncReadBinding, AsyncReadWriteBinding, AsyncWriteBinding, ReferenceCounted }
+import com.mongodb.ReadPreference.primary
+import com.mongodb.assertions.Assertions.notNull
+import com.mongodb.async.ErrorHandlingResultCallback.wrapCallback
+import com.mongodb.async.SingleResultCallback
+import com.mongodb.binding.{ AsyncClusterBinding, AsyncReadBinding, AsyncReadWriteBinding, AsyncWriteBinding }
+import com.mongodb.client.options.OperationOptions
 import com.mongodb.connection.Cluster
-import com.mongodb.operation.{ AsyncReadOperation, AsyncWriteOperation, QueryOperation }
-
-import org.mongodb.scala.core.admin.MongoClientAdminProvider
+import com.mongodb.operation.{ AsyncWriteOperation, AsyncReadOperation, GetDatabaseNamesOperation, AsyncOperationExecutor }
 
 /**
  * The MongoClientProvider trait providing the core of a MongoClient implementation.
@@ -50,23 +51,14 @@ import org.mongodb.scala.core.admin.MongoClientAdminProvider
  *    case class MongoClient(options: MongoClientOptions, cluster: Cluster)
  *        extends MongoClientProvider with RequiredTypesAndTransformers
  *
- *         val admin: MongoClientAdminProvider
- *
  *         protected def databaseProvider(databaseName: String, databaseOptions: MongoDatabaseOptions): Database
  *
  * }}}
  *
  */
-trait MongoClientProvider extends Closeable {
+trait MongoClientProvider extends Closeable with ExecutorHelper {
 
   this: RequiredTypesAndTransformersProvider =>
-
-  /**
-   * A concrete implementation of [[org.mongodb.scala.core.admin.MongoClientAdminProvider MongoClientAdminProvider]]
-   *
-   * @note Each MongoClient implementation must provide this.
-   */
-  val admin: MongoClientAdminProvider
 
   /**
    * The MongoClientOptions used with MongoClient.
@@ -76,6 +68,11 @@ trait MongoClientProvider extends Closeable {
    *       The default MongoClientOptions is created automatically by the [[MongoClientCompanion]] helper.
    */
   val options: MongoClientOptions
+
+  /**
+   * TODO - document
+   */
+  val operationOptions: OperationOptions
 
   /**
    * The Cluster.
@@ -102,7 +99,7 @@ trait MongoClientProvider extends Closeable {
    * @param databaseOptions the options to use with the database
    * @return MongoDatabase
    */
-  def apply(databaseName: String, databaseOptions: MongoDatabaseOptions) = database(databaseName, databaseOptions)
+  def apply(databaseName: String, databaseOptions: OperationOptions) = database(databaseName, databaseOptions)
 
   /**
    * An explicit helper to get a database
@@ -110,7 +107,7 @@ trait MongoClientProvider extends Closeable {
    * @param databaseName the name of the database
    * @return MongoDatabase
    */
-  def database(databaseName: String): Database = database(databaseName, MongoDatabaseOptions(options))
+  def database(databaseName: String): Database = database(databaseName, operationOptions)
 
   /**
    * an explicit helper to get a database
@@ -119,8 +116,8 @@ trait MongoClientProvider extends Closeable {
    * @param databaseOptions the options to use with the database
    * @return MongoDatabase
    */
-  def database(databaseName: String, databaseOptions: MongoDatabaseOptions): Database =
-    databaseProvider(databaseName, databaseOptions)
+  def database(databaseName: String, databaseOptions: OperationOptions): Database =
+    databaseProvider(databaseName, databaseOptions.withDefaults(operationOptions))
 
   /**
    * Close the MongoClient and its connections
@@ -130,110 +127,63 @@ trait MongoClientProvider extends Closeable {
   }
 
   /**
+   * List the database names
+   *
+   * @return ListResultType[String]
+   */
+  def databaseNames: ListResultType[String] =
+    executeAsync(new GetDatabaseNamesOperation(), primary, listToListResultTypeCallback[String]())
+
+  /**
    * A concrete implementation of a [[MongoDatabaseProvider]]
    *
    * @note Each MongoClient implementation must provide this.
    *
    * @return Database
    */
-  protected def databaseProvider(databaseName: String, databaseOptions: MongoDatabaseOptions): Database
+  protected def databaseProvider(databaseName: String, databaseOptions: OperationOptions): Database
 
   /**
-   * Executes a AsyncWriteOperation
-   *
-   * @param writeOperation the write operation to execute asynchronously
-   * @tparam T the type of result eg CommandResult, Document etc..
-   * @return ResultType[T]
+   * TODO async operation executor
    */
-  private[scala] def executeAsync[T](writeOperation: AsyncWriteOperation[T]): ResultType[T] = {
-    val binding = this.writeBinding
-    mongoFutureConverter[T](writeOperation.executeAsync(binding), binding)
+  protected val executor: AsyncOperationExecutor = createOperationExecutor(options, cluster)
+
+  protected def createOperationExecutor(options: MongoClientOptions, cluster: Cluster): AsyncOperationExecutor = {
+    new AsyncOperationExecutor {
+
+      def execute[T](operation: AsyncReadOperation[T], readPreference: ReadPreference,
+                     callback: SingleResultCallback[T]) {
+        val wrappedCallback: SingleResultCallback[T] = wrapCallback(callback)
+        val binding: AsyncReadBinding = getReadWriteBinding(readPreference, options, cluster)
+        operation.executeAsync(binding, new SingleResultCallback[T] {
+          override def onResult(result: T, t: Throwable): Unit = {
+            try {
+              wrappedCallback.onResult(result, t)
+            } finally {
+              binding.release()
+            }
+          }
+        })
+      }
+
+      def execute[T](operation: AsyncWriteOperation[T], callback: SingleResultCallback[T]) {
+        val binding: AsyncWriteBinding = getReadWriteBinding(ReadPreference.primary, options, cluster)
+        operation.executeAsync(binding, new SingleResultCallback[T] {
+          override def onResult(result: T, t: Throwable): Unit = {
+            try {
+              wrapCallback(callback).onResult(result, t)
+            } finally {
+              binding.release()
+            }
+          }
+        })
+      }
+    }
   }
 
-  /**
-   * Executes a QueryOperation
-   *
-   * @param queryOperation the query operation to execute asynchronously
-   * @param readPreference the read preference
-   * @tparam T the type of result eg Document
-   * @return CursorType[T]
-   */
-  private[scala] def executeAsync[T](queryOperation: QueryOperation[T], readPreference: ReadPreference): CursorType[T] = {
-    val binding = readBinding(readPreference)
-    mongoCursorConverter[T](queryOperation.executeAsync(binding), binding)
-  }
-
-  /**
-   * Executes a QueryOperation and transforms the results
-   *
-   * @param queryOperation the query operation to execute asynchronously
-   * @param readPreference the read preference
-   * @param transformer the transformation
-   * @tparam T The original Type
-   * @tparam R The resulting Type
-   * @return The transformed results
-   */
-  private[scala] def executeAsync[T, R](queryOperation: QueryOperation[T], readPreference: ReadPreference,
-                                        transformer: MongoFuture[MongoAsyncCursor[T]] => MongoFuture[R]): ResultType[R] = {
-    val binding = readBinding(readPreference)
-    mongoFutureConverter[R](transformer(queryOperation.executeAsync(binding)), binding)
-  }
-
-  /**
-   * Executes a AsyncReadOperation
-   *
-   * @param readOperation the query operation to execute asynchronously
-   * @param readPreference the read preference
-   * @tparam T the type of result eg Document
-   * @return ResultType[T]
-   */
-  private[scala] def executeAsync[T](readOperation: AsyncReadOperation[T], readPreference: ReadPreference): ResultType[T] = {
-    val binding = readBinding(readPreference)
-    mongoFutureConverter[T](readOperation.executeAsync(binding), binding)
-  }
-
-  /**
-   * Executes a AsyncReadOperation
-   *
-   * @param readOperation the query operation to execute asynchronously
-   * @param readPreference the read preference
-   * @tparam T The original Type
-   * @tparam R The resulting Type
-   * @param transformer the transformation
-   * @return The transformed results
-   */
-  private[scala] def executeAsync[T, R](readOperation: AsyncReadOperation[T], readPreference: ReadPreference,
-                                        transformer: MongoFuture[T] => MongoFuture[R]): ResultType[R] = {
-    val binding = readBinding(readPreference)
-    mongoFutureConverter[R](transformer(readOperation.executeAsync(binding)), binding)
-  }
-
-  /**
-   * Returns a AsyncClusterBinding with a primary ReadPreference
-   *
-   * @return AsyncClusterBinding
-   */
-  private[scala] def writeBinding: AsyncWriteBinding = {
-    readWriteBinding(ReadPreference.primary)
-  }
-
-  /**
-   * Returns a AsyncReadBinding for the operation with the given ReadPreference
-   *
-   * @param readPreference the `ReadPreference` to be used with this operation
-   * @return AsyncReadBinding
-   */
-  private[scala] def readBinding(readPreference: ReadPreference): AsyncReadBinding = {
-    readWriteBinding(readPreference)
-  }
-
-  /**
-   * Returns a AsyncClusterBinding for the operation with the given ReadPreference
-   *
-   * @param readPreference the `ReadPreference` to be used with this operation
-   * @return AsyncReadBinding
-   */
-  private[scala] def readWriteBinding(readPreference: ReadPreference): AsyncReadWriteBinding = {
-    new AsyncClusterBinding(cluster, readPreference, options.maxWaitTime, TimeUnit.MILLISECONDS)
+  private def getReadWriteBinding(readPreference: ReadPreference, options: MongoClientOptions,
+                                  cluster: Cluster): AsyncReadWriteBinding = {
+    notNull("readPreference", readPreference)
+    new AsyncClusterBinding(cluster, readPreference)
   }
 }

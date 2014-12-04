@@ -24,10 +24,15 @@
  */
 package org.mongodb.scala.core
 
+import com.mongodb.ReadPreference.primary
+import com.mongodb.client.options.OperationOptions
+import org.bson.codecs.{ BsonValueCodecProvider, DocumentCodecProvider, ValueCodecProvider }
+import org.bson.codecs.configuration.RootCodecRegistry
+
 import scala.Some
 import scala.collection.JavaConverters._
 
-import com.mongodb.MongoCredential
+import com.mongodb.{ WriteConcern, MongoCredential, ServerAddress }
 import com.mongodb.connection.{
   AsynchronousSocketChannelStreamFactory,
   BufferProvider,
@@ -37,7 +42,6 @@ import com.mongodb.connection.{
   DefaultClusterFactory,
   PowerOfTwoBufferPool
 }
-import com.mongodb.ServerAddress
 
 import com.mongodb.management.JMXConnectionPoolListener
 
@@ -61,7 +65,7 @@ trait MongoClientCompanion {
    *
    * @return MongoClient
    */
-  def apply(options: MongoClientOptions, cluster: Cluster): Client
+  def apply(options: MongoClientOptions, cluster: Cluster, operationOptions: OperationOptions): Client
 
   /**
    * Create a default MongoClient at localhost:27017
@@ -151,7 +155,7 @@ trait MongoClientCompanion {
     }
 
     val cluster = getDefaultCluster(clusterSettings, credentialList, options, bufferProvider)
-    this(options, cluster)
+    this(options, cluster, defaultOptions)
   }
 
   /**
@@ -225,7 +229,7 @@ trait MongoClientCompanion {
       .build()
 
     val cluster = getDefaultCluster(clusterSettings, credentialList, options, bufferProvider)
-    this(options, cluster)
+    this(options, cluster, defaultOptions)
   }
 
   /**
@@ -258,12 +262,22 @@ trait MongoClientCompanion {
           case replicaSet: String => clusterSettings.requiredReplicaSetName(replicaSet)
         }
         val cluster = getDefaultCluster(clusterSettings.build, credentialList, options, bufferProvider)
-        this(options, cluster)
+        this(options, cluster, defaultOptions)
       case _ =>
         val seedList: List[ServerAddress] = mongoClientURI.hosts.map(hostName => new ServerAddress(hostName))
         this(seedList, credentialList, options, bufferProvider)
     }
   }
+
+  private val DEFAULT_CODEC_REGISTRY: RootCodecRegistry = new RootCodecRegistry(List(new ValueCodecProvider,
+    new DocumentCodecProvider,
+    new BsonValueCodecProvider)
+    .asJava)
+
+  private val defaultOptions = OperationOptions.builder()
+    .codecRegistry(DEFAULT_CODEC_REGISTRY)
+    .readPreference(primary)
+    .writeConcern(WriteConcern.ACKNOWLEDGED).build()
 
   private def getDefaultCluster(clusterSettings: ClusterSettings,
                                 credentialList: List[MongoCredential],

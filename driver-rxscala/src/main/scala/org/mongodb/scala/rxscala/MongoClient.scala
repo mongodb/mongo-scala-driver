@@ -24,10 +24,9 @@
  */
 package org.mongodb.scala.rxscala
 
+import com.mongodb.client.options.OperationOptions
 import com.mongodb.connection.Cluster
-
-import org.mongodb.scala.core.{MongoClientCompanion, MongoClientOptions, MongoClientProvider, MongoDatabaseOptions}
-import org.mongodb.scala.rxscala.admin.MongoClientAdmin
+import org.mongodb.scala.core.{MongoClientCompanion, MongoClientOptions, MongoClientProvider}
 
 /**
  * A factory for creating a [[MongoClient]] instance.
@@ -39,26 +38,22 @@ object MongoClient extends MongoClientCompanion with RequiredTypesAndTransformer
  *
  * Normally created via the companion object helpers
  *
+ * @inheritdoc
  * @param options The connection options
  * @param cluster The underlying cluster
+ * @param operationOptions The operation options
  */
-case class MongoClient(options: MongoClientOptions, cluster: Cluster) extends MongoClientProvider
-  with RequiredTypesAndTransformers {
+case class MongoClient(options: MongoClientOptions, cluster: Cluster, operationOptions: OperationOptions)
+  extends MongoClientProvider with RequiredTypesAndTransformers {
 
   /**
-   * Provides the MongoClientAdmin for this MongoClient
+   * A concrete implementation of a [[org.mongodb.scala.core.MongoDatabaseProvider]]
    *
-   * @return MongoClientAdmin
+   * @note Each MongoClient implementation must provide this.
+   *
+   * @return Database
    */
-  val admin: MongoClientAdmin = MongoClientAdmin(this)
+  override protected def databaseProvider(databaseName: String, databaseOptions: OperationOptions): Database =
+    MongoDatabase(databaseName, databaseOptions, executor)
 
-  /**
-   * an explicit helper to get a database
-   *
-   * @param databaseName the name of the database
-   * @param databaseOptions the options to use with the database
-   * @return MongoDatabase
-   */
-  protected def databaseProvider(databaseName: String, databaseOptions: MongoDatabaseOptions) =
-    MongoDatabase(databaseName, this, databaseOptions)
 }

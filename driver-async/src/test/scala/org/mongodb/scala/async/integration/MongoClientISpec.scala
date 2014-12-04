@@ -24,12 +24,13 @@
  */
 package org.mongodb.scala.async.integration
 
-import org.mongodb.Document
 import com.mongodb.ServerAddress
-
-import org.mongodb.scala.core.{MongoClientOptions, MongoClientURI}
-import org.mongodb.scala.async.{MongoClient, MongoCollection, MongoDatabase}
+import org.bson.Document
 import org.mongodb.scala.async.helpers.RequiresMongoDBSpec
+import org.mongodb.scala.async.{MongoClient, MongoCollection, MongoDatabase}
+import org.mongodb.scala.core.{MongoClientOptions, MongoClientURI}
+
+import scala.concurrent.Future
 
 class MongoClientISpec extends RequiresMongoDBSpec {
 
@@ -88,16 +89,19 @@ class MongoClientISpec extends RequiresMongoDBSpec {
     val database = MongoClient()("mongoScalaTest")
     val collection = database.collection("test")
     collection shouldBe a[MongoCollection[Document]]
-    collection.name shouldBe "test"
-    collection.client.close()
+    collection.namespace.getCollectionName shouldBe "test"
   }
 
   it should "Be able to get a collection via apply" in {
     val database = MongoClient()("mongoScalaTest")
     val collection = database("test")
     collection shouldBe a[MongoCollection[Document]]
-    collection.name shouldBe "test"
-    database.client.close()
+    collection.namespace.getCollectionName shouldBe "test"
+  }
+
+  it should "Return a seq of database names" in {
+    val dbNames = MongoClient().databaseNames
+    dbNames shouldBe a[Future[Seq[String]]]
   }
 
 }

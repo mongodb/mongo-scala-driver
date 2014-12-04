@@ -24,18 +24,17 @@
  */
 
 package org.mongodb.scala.rxscala.helpers
-import scala.concurrent.duration.Duration
-import scala.language.implicitConversions
-import scala.util.Properties
 
-import org.mongodb.Document
-
+import org.bson.Document
 import org.mongodb.scala.core.MongoClientURI
 import org.mongodb.scala.rxscala.{MongoClient, MongoCollection, MongoDatabase}
-
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import rx.lang.scala.Observable
+
+import scala.concurrent.duration.Duration
+import scala.language.implicitConversions
+import scala.util.Properties
 
 trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
 
@@ -69,17 +68,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
 
   def mongoClient = MongoClient(mongoClientURI)
 
-  def isMongoDBOnline(): Boolean = {
-    val client = mongoClient
-    try {
-      client.admin.ping.observableValue
-      true
-    } catch {
-      case t: Throwable => false
-    } finally {
-      client.close()
-    }
-  }
+  def isMongoDBOnline(): Boolean = true
 
   def checkMongoDB() {
     if (!mongoDBOnline) cancel("No Available Database")
@@ -93,7 +82,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
     try testCode(mongoDatabase) // "loan" the fixture to the test
     finally {
       // clean up the fixture
-      mongoDatabase.admin.drop().observableValue
+      mongoDatabase.dropDatabase().observableValue
       client.close()
     }
   }
@@ -108,7 +97,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
     try testCode(mongoCollection) // "loan" the fixture to the test
     finally {
       // clean up the fixture
-      mongoCollection.admin.drop().observableValue
+      mongoDatabase.dropDatabase().observableValue
       client.close()
     }
   }
@@ -116,7 +105,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
   override def beforeAll() {
     if (mongoDBOnline) {
       val client = mongoClient
-      client(databaseName).admin.drop().observableValue
+      client(databaseName).dropDatabase().observableValue
       client.close()
     }
   }
@@ -124,7 +113,7 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
   override def afterAll() {
     if (mongoDBOnline) {
       val client = mongoClient
-      client(databaseName).admin.drop().observableValue
+      client(databaseName).dropDatabase().observableValue
       client.close()
     }
   }

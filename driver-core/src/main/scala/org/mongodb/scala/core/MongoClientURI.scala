@@ -30,8 +30,8 @@ import scala.collection.JavaConverters._
 
 import com.mongodb._
 import com.mongodb.AuthenticationMechanism.{ GSSAPI, MONGODB_CR, MONGODB_X509, PLAIN }
-import com.mongodb.diagnostics.Loggers
 import com.mongodb.diagnostics.logging.Logger
+import com.mongodb.diagnostics.logging.Loggers
 
 // scalastyle:off cyclomatic.complexity method.length
 

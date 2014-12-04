@@ -24,109 +24,45 @@
  */
 package org.mongodb.scala.rxscala
 
+import com.mongodb.client.model.FindOptions
+import com.mongodb.client.options.OperationOptions
+import com.mongodb.operation.{AsyncBatchCursor, AsyncOperationExecutor, AsyncReadOperation}
+import com.mongodb.{MongoNamespace, ReadPreference}
 import org.mongodb.scala.core.RequiredTypesAndTransformersProvider
+import rx.lang.scala.Observable
 
-import rx.lang.scala.{Subscriber, Observable}
-import com.mongodb.async.{MongoAsyncCursor, MongoFuture}
-import com.mongodb.{ Block, MongoException }
-import com.mongodb.binding.ReferenceCounted
-import com.mongodb.async.SingleResultCallback
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 trait RequiredTypesAndTransformers extends RequiredTypesAndTransformersProvider {
 
   /* Concrete Implementations */
-
   type Client = MongoClient
   type Database = MongoDatabase
   type Collection[T] = MongoCollection[T]
-  type CollectionView[T] = MongoCollectionView[T]
+  type FindFluent[T] = MongoCollectionFindFluent[T]
+  type OperationIterable[T] = MongoOperationIterable[T]
 
   /* Desired Data Types */
   type ResultType[T] = Observable[T]
   type ListResultType[T] = Observable[T]
-  type CursorType[T] = Observable[T]
+
+  /* Required Helpers  */
+  protected def findFluent[T](namespace: MongoNamespace, filter: Any, findOptions: FindOptions,
+                              options: OperationOptions, executor: AsyncOperationExecutor,
+                              clazz: Class[T]): FindFluent[T] =
+    new MongoCollectionFindFluent[T](namespace, filter, findOptions, options, executor, clazz)
+
+  protected def operationIterable[T](operation: AsyncReadOperation[AsyncBatchCursor[T]],
+                                     readPreference: ReadPreference, executor: AsyncOperationExecutor,
+                                     clazz: Class[T]): OperationIterable[T] =
+    new MongoOperationIterable[T](operation, readPreference, executor, clazz)
 
   /* Transformers (Not robots in disguise but apply-to-all functions) */
 
-  /**
-   * A type converter method that converts a `MongoFuture[MongoAsyncCursor[T]]` to `Observable[T]`
-   *
-   * @tparam T the type of result eg CommandResult, Document etc..
-   * @return CursorType[T]
-   */
-  protected def mongoCursorConverter[T]: (MongoFuture[MongoAsyncCursor[T]], ReferenceCounted) => Observable[T] = {
-    (result, binding) => {
-      Observable((subscriber: Subscriber[T]) => {
-        result.register(new SingleResultCallback[MongoAsyncCursor[T]] {
-          override def onResult(cursor: MongoAsyncCursor[T], e: MongoException): Unit = {
-            Option(e) match {
-              case Some(err) => subscriber.onError(err)
-              case None =>
-                cursor.forEach(new Block[T] {
-                  override def apply(t: T): Unit = {
-                    if (subscriber.isUnsubscribed) {
-                      subscriber.onCompleted()
-                    } else {
-                      subscriber.onNext(t)
-                    }
-                  }
-                }).register(new SingleResultCallback[Void] {
-                  def onResult(result: Void, e: MongoException) {
-                    binding.release()
-                    if (e != null) subscriber.onError(e)
-                    subscriber.onCompleted()
-                  }
-                })
-            }
-          }
-        })
-      })
-    }
-  }
+  protected def listResultTypeConverter[T](): Future[List[T]] => ListResultType[T] =
+    result => Observable.from(result).flatMapIterable(results => results)
 
-  /**
-   * A type converter method that converts a `MongoFuture[T]` to `Observable[T]`
-   *
-   * @tparam T the type of result eg CommandResult, Document etc..
-   * @return Observable[T]
-   */
-  protected def mongoFutureConverter[T]: (MongoFuture[T], ReferenceCounted) => Observable[T] = {
-    (result, binding) => {
-      Observable((subscriber: Subscriber[T]) => {
-        result.register(new SingleResultCallback[T] {
-          override def onResult(result: T, e: MongoException): Unit = {
-            try {
-              Option(e) match {
-                case Some(err) => subscriber.onError(err)
-                case None => subscriber.onNext(result)
-              }
-            }
-            finally {
-              binding.release()
-              subscriber.onCompleted()
-            }
-          }
-        })
-      })
-    }
-  }
-
-  /**
-   * A type transformer that takes a `ResultType[Void]` and converts it to `ResultType[Unit]`
-   *
-   * This is needed as returning `Void` is not idiomatic in scala whereas a `Unit` is more acceptable.
-   *
-   * @return ResultType[Unit]
-   */
-  protected def voidToUnitConverter: Observable[Void] => Observable[Unit] = result => result map { v => Unit }
-
-  /**
-   * A type transformer that converts a `Observable[List[T]]` to `Observable[T]`
-   *
-   * @tparam T List data type of item eg Document or String
-   * @return the correct ListResultType[T]
-   */
-  protected def listToListResultTypeConverter[T]: Observable[List[T]] => Observable[T] = { result =>
-    result.map({ items => Observable.from(items) }).concat
-  }
+  protected def resultTypeConverter[T](): Future[T] => ResultType[T] =
+    result => Observable.from(result)
 }

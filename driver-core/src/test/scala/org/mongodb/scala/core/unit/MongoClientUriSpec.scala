@@ -65,7 +65,7 @@ class MongoClientUriSpec extends UnitTestSpec {
       password: Option[Array[Char]]) =>
         val mongoClientURI = MongoClientURI(uri)
 
-        mongoClientURI.hosts should equal(hosts)
+        mongoClientURI.hosts should contain theSameElementsAs hosts
         mongoClientURI.database should equal(database)
         mongoClientURI.collection should equal(collection)
 
@@ -101,7 +101,7 @@ class MongoClientUriSpec extends UnitTestSpec {
     options.maxAutoConnectRetryTime should be(0)
     options.SslEnabled should be(false)
     options.heartbeatFrequency should be(5000)
-    options.heartbeatConnectRetryFrequency should be(10)
+    options.minHeartbeatFrequency should be(10)
     options.heartbeatConnectTimeout should be(20000)
     options.heartbeatSocketTimeout should be(20000)
     options.requiredReplicaSetName should be(None)

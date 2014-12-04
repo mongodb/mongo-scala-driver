@@ -25,15 +25,16 @@
 package org.mongodb.scala.async.integration
 
 
+import com.mongodb.WriteConcernResult
+import org.bson.Document
+import org.mongodb.scala.async.MongoCollection
+import org.mongodb.scala.async.helpers.RequiresMongoDBSpec
+
 import scala.collection.immutable.IndexedSeq
+import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
 import scala.language.postfixOps
-
-import org.mongodb.{Document, WriteResult}
-
-import org.mongodb.scala.async.MongoCollection
-import org.mongodb.scala.async.helpers.RequiresMongoDBSpec
 
 class MongoCollectionISpec extends RequiresMongoDBSpec {
 
@@ -51,44 +52,36 @@ class MongoCollectionISpec extends RequiresMongoDBSpec {
 
   it should "be able to insert a document" in withCollection {
     collection =>
-      collection.admin.drop().futureValue
-      collection.insert(new Document("Hello", "World")).futureValue
+      collection.dropCollection().futureValue
+      collection.insertOne(new Document("Hello", "World")).futureValue
       collection.count().futureValue should equal(1)
   }
 
-  it should "cursor.toList() should return Future[List[Document]]" in withCollection {
+  it should "into should add all items into a target" in withCollection {
     collection =>
-      collection.insert(createDocuments(100)).futureValue
-      val documents = collection.toList()
-      documents shouldBe a[Future[List[Document]]]
-      documents.futureValue.length should equal(100)
-  }
-
-  it should "cursor should be non blocking and provide the expected results" in withCollection {
-    collection =>
-      collection.insert(createDocuments(100)).futureValue
-      var total = 0
-      val result = collection.toList()
-      total should not equal 100 // Ensures foreach is non blocking
-      total = result.futureValue.size // Complete the future
-      total should equal(100)
+      collection.insertMany(createDocuments(100)).futureValue
+      val documents = new ArrayBuffer[Document]()
+      collection.find().into(documents).futureValue
+      documents.length should equal(100)
   }
 
   it should "allow scala like handling for filtered collections" in withCollection {
     collection =>
-      collection.insert(createDocuments(100)).futureValue
-      val filtered = collection.find(new Document("_id", new Document("$gte", 50)))
-      filtered.toList().futureValue.size should equal(50)
+      collection.dropCollection().futureValue
+      collection.insertMany(createDocuments(100)).futureValue
+      val documents = new ArrayBuffer[Document]()
+      collection.find(new Document("_id", new Document("$gte", 50))).into(documents).futureValue
+      documents.length should equal(50)
   }
 
   it should "be able to insert many items" in withCollection {
     collection =>
-      val size = 500
-      val futures: IndexedSeq[Future[WriteResult]] = for (i <- 0 until size) yield {
+      val size = 50
+      val futures: IndexedSeq[Future[WriteConcernResult]] = for (i <- 0 until size) yield {
         val doc = new Document()
         doc.put("_id", s"async-$i")
         doc.put("field", "Some value")
-        collection.insert(doc)
+        collection.insertOne(doc)
       }
       Future.sequence(futures).futureValue
       collection.count().futureValue should be(size)
@@ -96,9 +89,48 @@ class MongoCollectionISpec extends RequiresMongoDBSpec {
 
   it should "Should be able to call count on the view" in withCollection {
     collection =>
-      collection.insert(createDocuments(100)).futureValue
-      val result = collection.find(new Document("_id", new Document("$gte", 50))).count().futureValue
+      collection.insertMany(createDocuments(100)).futureValue
+      val result = collection.count(new Document("_id", new Document("$gte", 50))).futureValue
       result should be(50)
+  }
+
+  it should "get indexes for a new collection" in withDatabase(collectionName) {
+    database =>
+      database.createCollection(collectionName).futureValue
+      database(collectionName).indexes().futureValue.length should equal(1)
+  }
+
+  it should "add index" in withCollection {
+    collection =>
+      collection.createIndex(new Document("test", 1)).futureValue
+      collection.indexes().futureValue.length should equal(2)
+  }
+
+  it should "drop index for non-existent collection" in withCollection {
+    collection =>
+      collection.dropIndex("test").futureValue
+      collection.dropIndex("test").futureValue
+  }
+
+  it should "drop index" in withCollection {
+    collection =>
+      collection.createIndex(new Document("test", 1)).futureValue
+      collection.indexes().futureValue.map { d => d.getString("name") } should contain("test_1")
+      collection.dropIndex("test_1").futureValue
+
+      collection.indexes().futureValue.map {d => d.getString("name")} should not contain("test_1")
+  }
+
+  it should "drop indexes for non-existent collection" in withCollection {
+    collection =>
+      collection.dropCollection().futureValue
+      collection.dropIndexes().futureValue
+  }
+
+  it should "drop indexes existing collection" in withCollection {
+    collection =>
+      collection.createIndex(new Document("test", 1)).futureValue
+      collection.dropIndexes().futureValue
   }
 
   def createDocuments(amount: Int = 100): IndexedSeq[Document] = {

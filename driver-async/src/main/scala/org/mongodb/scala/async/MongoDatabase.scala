@@ -24,29 +24,27 @@
  */
 package org.mongodb.scala.async
 
-import com.mongodb.codecs.CollectibleCodec
-import org.mongodb.scala.core.{MongoCollectionOptions, MongoDatabaseOptions, MongoDatabaseProvider}
-import org.mongodb.scala.async.admin.MongoDatabaseAdmin
+import com.mongodb.MongoNamespace
+import com.mongodb.client.options.OperationOptions
+import com.mongodb.operation.AsyncOperationExecutor
+import org.mongodb.scala.core.MongoDatabaseProvider
 
-case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
+case class MongoDatabase(name: String, options: OperationOptions, executor: AsyncOperationExecutor)
   extends MongoDatabaseProvider with RequiredTypesAndTransformers {
-
   /**
-   * MongoDatabase administration functionality
-   */
-  val admin: MongoDatabaseAdmin = MongoDatabaseAdmin(this)
-
-  /**
-   * Provides a MongoCollection
+   * A concrete implementation of [[org.mongodb.scala.core.MongoCollectionProvider]]
+   *
+   * @note Each MongoClient implementation must provide this.
    *
    * @param collectionName the name of the collection
-   * @param codec the codec to use with the collection
-   * @param collectionOptions the options to use with the collection
+   * @param operationOptions the options to use with the collection
+   * @param executor the AsyncOperationExecutor to be used with this MongoDatabase instance
+   * @param clazz the document return class type
    * @tparam T the document type
    * @return the collection
    */
-  def collection[T](collectionName: String, codec: CollectibleCodec[T],
-                    collectionOptions: MongoCollectionOptions): MongoCollection[T] = {
-    MongoCollection(collectionName, this, codec, collectionOptions)
+  override def collection[T](collectionName: String, operationOptions: OperationOptions,
+                             executor: AsyncOperationExecutor, clazz: Class[T]): Collection[T] = {
+    new MongoCollection[T](new MongoNamespace(name, collectionName), operationOptions, executor, clazz)
   }
 }

@@ -24,12 +24,12 @@
  */
 package org.mongodb.scala.rxscala.integration
 
-import org.mongodb.Document
 import com.mongodb.ServerAddress
-
+import org.bson.Document
 import org.mongodb.scala.core.{MongoClientOptions, MongoClientURI}
 import org.mongodb.scala.rxscala._
 import org.mongodb.scala.rxscala.helpers.RequiresMongoDBSpec
+import rx.lang.scala.Observer
 
 class MongoClientISpec extends RequiresMongoDBSpec {
 
@@ -49,7 +49,7 @@ class MongoClientISpec extends RequiresMongoDBSpec {
 
   it should "take a ServerAddress with Options" in {
     val myClient = MongoClient(new ServerAddress(),
-      MongoClientOptions(description="test"))
+                                MongoClientOptions(description="test"))
     myClient.options.description shouldBe "test"
     myClient.close()
   }
@@ -88,16 +88,14 @@ class MongoClientISpec extends RequiresMongoDBSpec {
     val database = MongoClient()("mongoScalaTest")
     val collection = database.collection("test")
     collection shouldBe a[MongoCollection[Document]]
-    collection.name shouldBe "test"
-    database.client.close()
+    collection.namespace.getCollectionName shouldBe "test"
   }
 
   it should "Be able to get a collection via apply" in {
     val database = MongoClient()("mongoScalaTest")
     val collection = database("test")
     collection shouldBe a[MongoCollection[Document]]
-    collection.name shouldBe "test"
-    collection.client.close()
+    collection.namespace.getCollectionName shouldBe "test"
   }
 
 }

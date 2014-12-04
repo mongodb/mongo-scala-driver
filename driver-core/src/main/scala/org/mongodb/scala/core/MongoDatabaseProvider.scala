@@ -24,14 +24,11 @@
  */
 package org.mongodb.scala.core
 
-import com.mongodb.{ ReadPreference }
-import com.mongodb.codecs.{ CollectibleCodec, DocumentCodec }
-import com.mongodb.operation.{ CommandReadOperation, CommandWriteOperation }
-import org.mongodb.Document
-
-import org.mongodb.scala.core.admin.MongoDatabaseAdminProvider
-
-import org.bson.{ BsonDocument, BsonDocumentWrapper }
+import com.mongodb.ReadPreference.primary
+import com.mongodb.client.model.CreateCollectionOptions
+import com.mongodb.client.options.OperationOptions
+import com.mongodb.operation.{ AsyncOperationExecutor, CreateCollectionOperation, DropDatabaseOperation, ListCollectionNamesOperation }
+import org.bson.Document
 
 /**
  * The MongoDatabaseProvider trait providing the core of a MongoDatabase implementation.
@@ -44,28 +41,18 @@ import org.bson.{ BsonDocument, BsonDocumentWrapper }
  * the following to be implemented:
  *
  * {{{
- *    case class MongoDatabase(name: String, client: MongoClient, options: MongoDatabaseOptions)
+ *    case class MongoDatabase(name: String, options: OperationOptions, executor: AsyncOperationExecutor)
  *      extends MongoDatabaseProvider with RequiredTypesAndTransformers {
  *
- *      val admin: MongoDatabaseAdminProvider
- *
- *      def collection[T](collectionName: String, codec: CollectibleCodec[T],
- *                        collectionOptions: MongoCollectionOptions): Collection[T]
+ *     def collection[T](collectionName: String, options: OperationOptions, executor: AsyncOperationExecutor)
  *
  *    }
  * }}}
  *
  */
-trait MongoDatabaseProvider {
+trait MongoDatabaseProvider extends ExecutorHelper {
 
   this: RequiredTypesAndTransformersProvider =>
-
-  /**
-   * A concrete implementation of [[org.mongodb.scala.core.admin.MongoDatabaseAdminProvider MongoDatabaseAdminProvider]]
-   *
-   * @note Each MongoClient implementation must provide this.
-   */
-  val admin: MongoDatabaseAdminProvider
 
   /**
    * The database name
@@ -76,20 +63,20 @@ trait MongoDatabaseProvider {
   val name: String
 
   /**
-   * The MongoClient instance used to create the MongoDatabase instance
+   * The OperationOptions to be used with this MongoDatabase instance
    *
    * @note Its expected that the MongoDatabase implementation is a case class and this is one of the constructor params.
    *       This is passed in from the MongoClient Implementation
    */
-  val client: MongoClientProvider
+  val options: OperationOptions
 
   /**
-   * The MongoDatabaseOptions to be used with this MongoDatabase instance
+   * The AsyncOperationExecutor to be used with this MongoDatabase instance
    *
    * @note Its expected that the MongoDatabase implementation is a case class and this is one of the constructor params.
    *       This is passed in from the MongoClient Implementation
    */
-  val options: MongoDatabaseOptions
+  val executor: AsyncOperationExecutor
 
   /**
    * Helper to get a collection
@@ -97,7 +84,8 @@ trait MongoDatabaseProvider {
    * @param collectionName the name of the collection
    * @return the collection
    */
-  def apply(collectionName: String): Collection[Document] = collection(collectionName)
+  def apply(collectionName: String): Collection[Document] =
+    collection(collectionName, options, executor, classOf[Document])
 
   /**
    * Helper to get a collection
@@ -105,8 +93,8 @@ trait MongoDatabaseProvider {
    * @param collectionOptions  the options to use with the collection
    * @return the collection
    */
-  def apply(collectionName: String, collectionOptions: MongoCollectionOptions): Collection[Document] =
-    collection(collectionName, collectionOptions)
+  def apply(collectionName: String, collectionOptions: OperationOptions): Collection[Document] =
+    collection[Document](collectionName, collectionOptions.withDefaults(options), executor, classOf[Document])
 
   /**
    * An explicit helper to get a collection
@@ -115,27 +103,16 @@ trait MongoDatabaseProvider {
    * @return the collection
    */
   def collection(collectionName: String): Collection[Document] =
-    collection(collectionName, MongoCollectionOptions(options))
+    collection[Document](collectionName, options, executor, classOf[Document])
 
   /**
    * An explicit helper to get a collection
-   * @param collectionName  the name of the collection
-   * @param collectionOptions  the options to use with the collection
+   *
+   * @param collectionName the name of the collection
    * @return the collection
    */
-  def collection(collectionName: String, collectionOptions: MongoCollectionOptions): Collection[Document] = {
-    val codec = new DocumentCodec()
-    collection(collectionName, codec, collectionOptions)
-  }
-
-  /**
-   * Helper to get a collection
-   * @param collectionName  the name of the collection
-   * @param codec  the codec to use with the collection
-   * @return the collection
-   */
-  def collection[T](collectionName: String, codec: CollectibleCodec[T]): Collection[T] =
-    collection(collectionName, codec, MongoCollectionOptions(options))
+  def collection(collectionName: String, operationOptions: OperationOptions): Collection[Document] =
+    collection[Document](collectionName, operationOptions.withDefaults(options), executor, classOf[Document])
 
   /**
    * A concrete implementation of [[MongoCollectionProvider]]
@@ -143,26 +120,46 @@ trait MongoDatabaseProvider {
    * @note Each MongoClient implementation must provide this.
    *
    * @param collectionName the name of the collection
-   * @param codec the codec to use with the collection
-   * @param collectionOptions the options to use with the collection
+   * @param operationOptions the options to use with the collection
+   * @param executor the AsyncOperationExecutor to be used with this MongoDatabase instance
+   * @param clazz the document return class type
    * @tparam T the document type
    * @return the collection
    */
-  def collection[T](collectionName: String, codec: CollectibleCodec[T],
-                    collectionOptions: MongoCollectionOptions): Collection[T]
+  def collection[T](collectionName: String, operationOptions: OperationOptions, executor: AsyncOperationExecutor,
+                    clazz: Class[T]): Collection[T]
 
-  private[scala] def executeAsyncWriteCommand(command: Document) = client.executeAsync(createWriteOperation(command))
-  private[scala] def executeAsyncReadCommand(command: Document, readPreference: ReadPreference) =
-    client.executeAsync(createReadOperation(command), readPreference)
+  /**
+   * Drops this database.
+   */
+  def dropDatabase(): ResultType[Unit] =
+    executeAsync(new DropDatabaseOperation(name), voidToUnitResultTypeCallback())
 
-  private def createWriteOperation(command: Document) =
-    new CommandWriteOperation(name, wrap(command))
+  /**
+   * Gets the names of all the collections in this database.
+   */
+  def collectionNames(): ListResultType[String] =
+    executeAsync(new ListCollectionNamesOperation(name), primary, listToListResultTypeCallback[String]())
 
-  private def createReadOperation(command: Document) =
-    new CommandReadOperation(name, wrap(command))
+  /**
+   * Create a new collection with the given name.
+   *
+   * @param collectionName the name for the new collection to create
+   */
+  def createCollection(collectionName: String): ResultType[Unit] =
+    createCollection(collectionName, new CreateCollectionOptions)
 
-  private def wrap(command: Document): BsonDocument = {
-    new BsonDocumentWrapper[Document](command, options.documentCodec)
-  }
-
+  /**
+   * Create a new collection with the selected options
+   *
+   * @param collectionName the name for the new collection to create
+   * @param options        various options for creating the collection
+   */
+  def createCollection(collectionName: String, options: CreateCollectionOptions): ResultType[Unit] =
+    executeAsync(new CreateCollectionOperation(name, collectionName)
+      .capped(options.isCapped)
+      .sizeInBytes(options.getSizeInBytes)
+      .autoIndex(options.isAutoIndex)
+      .maxDocuments(options.getMaxDocuments)
+      .usePowerOf2Sizes(options.isUsePowerOf2Sizes), voidToUnitResultTypeCallback())
 }

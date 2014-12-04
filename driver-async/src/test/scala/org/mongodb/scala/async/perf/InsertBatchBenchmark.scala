@@ -26,16 +26,15 @@ package org.mongodb.scala.async.perf
 
 import java.util.logging.{Level, Logger}
 
+import com.mongodb.WriteConcernResult
+import org.bson.Document
+import org.mongodb.scala.async.MongoClient
+import org.scalameter.api._
+
 import scala.collection.immutable.IndexedSeq
-import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-
-import org.mongodb.{Document, WriteResult}
-
-import org.mongodb.scala.async.MongoClient
-
-import org.scalameter.api._
+import scala.concurrent.{Await, Future}
 
 class InsertBatchBenchmark extends PerformanceTest.Quickbenchmark {
 
@@ -53,15 +52,15 @@ class InsertBatchBenchmark extends PerformanceTest.Quickbenchmark {
         // Turn off org.mongodb's noisy connection INFO logging - only works with the JULLogger
         Logger.getLogger("org.mongodb.driver.cluster").setLevel(Level.WARNING)
         Logger.getLogger("org.mongodb.driver.connection").setLevel(Level.WARNING)
-        Await.result(collection.admin.drop(), Duration.Inf)
+        Await.result(collection.dropCollection(), Duration.Inf)
       } afterTests {
-        Await.result(collection.admin.drop(), Duration.Inf)
+        Await.result(collection.dropCollection(), Duration.Inf)
       } in {
         size =>
           val loops = count / size
-          val futures: IndexedSeq[Future[WriteResult]] = (0 until loops).map(_ => {
+          val futures: IndexedSeq[Future[WriteConcernResult]] = (0 until loops).map(_ => {
             val documents: IndexedSeq[Document] = (0 until size).map(_ => new Document("filler", fillerString))
-            collection.insert(documents)
+            collection.insertMany(documents)
           })
           Await.result(Future.sequence(futures), Duration.Inf)
       }
