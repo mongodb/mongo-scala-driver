@@ -1,7 +1,7 @@
 package org.mongodb.scala.core
 
 import com.mongodb.ReadPreference
-import com.mongodb.operation.{AsyncBatchCursor, AsyncOperationExecutor, AsyncReadOperation}
+import com.mongodb.operation.{ AsyncBatchCursor, AsyncOperationExecutor, AsyncReadOperation }
 
 import scala.collection.mutable
 import scala.concurrent.Promise

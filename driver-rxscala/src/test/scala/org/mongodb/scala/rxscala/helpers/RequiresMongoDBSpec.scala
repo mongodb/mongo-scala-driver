@@ -30,15 +30,19 @@ import org.mongodb.scala.core.MongoClientURI
 import org.mongodb.scala.rxscala.{MongoClient, MongoCollection, MongoDatabase}
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.time.{Millis, Seconds, Span}
 import rx.lang.scala.Observable
 
 import scala.concurrent.duration.Duration
 import scala.language.implicitConversions
-import scala.util.Properties
+import scala.util.{Try, Properties}
 
 trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
 
-  val WAIT_DURATION: Duration = Duration(1, "seconds")
+  implicit val defaultPatience = PatienceConfig(timeout = Span(60, Seconds), interval = Span(5, Millis))
+  implicit val ec = scala.concurrent.ExecutionContext.Implicits.global
+
+  private val WAIT_DURATION: Duration = Duration(20, "seconds")
   private val DEFAULT_URI: String = "mongodb://localhost:27017"
   private val MONGODB_URI_SYSTEM_PROPERTY_NAME: String = "org.mongodb.test.uri"
   private val DB_PREFIX = "mongo-scala-rx"
@@ -68,7 +72,11 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
 
   def mongoClient = MongoClient(mongoClientURI)
 
-  def isMongoDBOnline(): Boolean = true
+  def isMongoDBOnline(): Boolean =
+    Try(MongoClient(mongoClientURI)
+      .databaseNames
+      .timeout(Duration(1, "second"))
+      .toBlocking.first).isSuccess
 
   def checkMongoDB() {
     if (!mongoDBOnline) cancel("No Available Database")

@@ -5,9 +5,9 @@ import java.util.concurrent.TimeUnit._
 import com.mongodb.MongoNamespace
 import com.mongodb.client.model.FindOptions
 import com.mongodb.client.options.OperationOptions
-import com.mongodb.operation.{AsyncOperationExecutor, FindOperation}
+import com.mongodb.operation.{ AsyncOperationExecutor, FindOperation }
 import org.bson.codecs.Codec
-import org.bson.{BsonDocument, BsonDocumentWrapper}
+import org.bson.{ BsonDocument, BsonDocumentWrapper }
 
 import scala.collection.mutable
 import scala.concurrent.duration.Duration

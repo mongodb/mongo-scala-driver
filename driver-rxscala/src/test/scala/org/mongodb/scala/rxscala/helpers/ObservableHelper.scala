@@ -30,6 +30,8 @@ import scala.concurrent.duration.Duration
 import rx.lang.scala.Observable
 
 case class ObservableHelper[T](observable: Observable[T]) extends AnyVal {
-  def observableValue: T = observable.timeout(Duration(1, "second")).toBlocking.first
-  def observableList: List[T] = observable.timeout(Duration(1, "second")).toBlocking.toList
+  private def WAIT_DURATION = Duration(20, "second")
+
+  def observableValue: T = observable.timeout(WAIT_DURATION).toBlocking.first
+  def observableList: List[T] = observable.timeout(WAIT_DURATION).toBlocking.toList
 }

@@ -24,7 +24,6 @@
  */
 package org.mongodb.scala.async.helpers
 
-import com.mongodb.operation.DropDatabaseOperation
 import org.bson.Document
 import org.mongodb.scala.async.{MongoClient, MongoCollection, MongoDatabase}
 import org.mongodb.scala.core.MongoClientURI
@@ -34,16 +33,16 @@ import org.scalatest.time.{Millis, Seconds, Span}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
-import scala.util.Properties
+import scala.util.{Try, Properties}
 
 trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
 
-  implicit val defaultPatience = PatienceConfig(timeout = Span(30, Seconds), interval = Span(5, Millis))
+  implicit val defaultPatience = PatienceConfig(timeout = Span(60, Seconds), interval = Span(5, Millis))
   implicit val ec = scala.concurrent.ExecutionContext.Implicits.global
 
   private val DEFAULT_URI: String = "mongodb://localhost:27017"
   private val MONGODB_URI_SYSTEM_PROPERTY_NAME: String = "org.mongodb.test.uri"
-  private val WAIT_DURATION = Duration(1, "second")
+  private val WAIT_DURATION = Duration(10, "second")
   private val DB_PREFIX = "mongo-scala-"
   private var _currentTestName: Option[String] = None
   private var mongoDBOnline: Boolean = false
@@ -71,18 +70,8 @@ trait RequiresMongoDBSpec extends FlatSpec with Matchers with ScalaFutures with 
 
   def mongoClient() = MongoClient(mongoClientURI)
 
-  def isMongoDBOnline(): Boolean = {
-    true
-//    val client = mongoClient()
-//    try {
-//      Await.result(client.admin.ping, WAIT_DURATION)
-//      true
-//    } catch {
-//      case t: Throwable => false
-//    } finally {
-//      client.close()
-//    }
-  }
+  def isMongoDBOnline(): Boolean =
+    Try(Await.result(MongoClient(mongoClientURI).databaseNames, Duration(1, "second"))).isSuccess
 
   def checkMongoDB() {
     if (!mongoDBOnline) cancel("No Available Database")
