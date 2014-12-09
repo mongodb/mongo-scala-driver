@@ -2,15 +2,10 @@
 language: scala
 scala:
   - "2.11.1"
-services: mongodb
-env:
-  - PROJECT=core
-  - PROJECT=async
-  - PROJECT=rxscala
-matrix:
-    fast_finish: true
-before_script: "mongo --eval 'db.runCommand({setParameter: 1, textSearchEnabled: true})' admin"
-script: sbt ++$TRAVIS_SCALA_VERSION $PROJECT/test
+
+jdk:
+  - openjdk7
+  - oraclejdk7
 
 # Branches to test
 branches:
@@ -22,6 +17,43 @@ notifications:
       - ross@mongodb.com
     on_success: change
     on_failure: always
-jdk:
-  - openjdk7
-  - oraclejdk7
+
+matrix:
+    fast_finish: true
+
+env:
+  global:
+    - MONGO_REPO="http://repo.mongodb.com/apt/ubuntu"
+    - REPO_TYPE="precise/mongodb-enterprise/2.6 multiverse"
+    - SOURCES_LOC="/etc/apt/sources.list.d/mongodb-enterprise.list"
+    - KEY_SERVER="hkp://keyserver.ubuntu.com:80"
+    - MONGOD_PARAMS="--setParameter=enableTestCommands=1"
+    - MONGOD_OPTS="--dbpath ./data --fork --logpath mongod.log ${MONGOD_PARAMS}"
+    - TERM=dumb
+  matrix:
+    - PROJECT=core
+    - PROJECT=async
+    - PROJECT=rxscala
+
+before_install:
+    # MongoDB Enterprise Edition 2.6
+    - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10
+    - echo "deb ${MONGO_REPO} ${REPO_TYPE}" | sudo tee ${SOURCES_LOC}
+
+    # Update all the repositories
+    - sudo apt-get update -qq
+
+install:
+    # Install MongoDB Enterprise
+    - sudo apt-get install mongodb-enterprise-server
+    - sudo stop mongod
+    - mkdir data
+
+before_script:
+    - mongod ${MONGOD_OPTS}
+
+
+
+script:
+  - ./sbt ++$TRAVIS_SCALA_VERSION $PROJECT/test
+
