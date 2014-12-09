@@ -19,8 +19,8 @@ import scala.util.{ Failure, Success, Try }
  *
  * Defines the types used across the system.
  *
- * - `Client`, `Database`, `Collection` and `CollectionView` are the implementation classes
- * - `ResultType`, `ListResultType` and `CursorType` are the future data types
+ * - `Client`, `Database`, `Collection`, `FindFluent` and `OperationIterable` are the implementation classes
+ * - `ResultType`, `ListResultType` are the future data types
  *
  */
 trait RequiredTypesAndTransformersProvider {
@@ -37,7 +37,6 @@ trait RequiredTypesAndTransformersProvider {
   type ListResultType[T]
 
   /* Required  */
-
   protected def findFluent[T](namespace: MongoNamespace, filter: Any, findOptions: FindOptions,
                               options: OperationOptions, executor: AsyncOperationExecutor,
                               clazz: Class[T]): FindFluent[T]

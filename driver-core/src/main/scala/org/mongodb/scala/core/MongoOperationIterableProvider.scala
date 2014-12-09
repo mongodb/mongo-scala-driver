@@ -1,8 +1,7 @@
 package org.mongodb.scala.core
 
 import com.mongodb.ReadPreference
-import com.mongodb.async.SingleResultCallback
-import com.mongodb.operation.{ AsyncBatchCursor, AsyncOperationExecutor, AsyncReadOperation }
+import com.mongodb.operation.{AsyncBatchCursor, AsyncOperationExecutor, AsyncReadOperation}
 
 import scala.collection.mutable
 import scala.concurrent.Promise
@@ -11,12 +10,36 @@ trait MongoOperationIterableProvider[T] extends MongoIterable[T] with ExecutorHe
 
   this: RequiredTypesAndTransformersProvider =>
 
+  /**
+   * The operation to be iterated
+   *
+   * @note Its expected that the MongoOperationIterable implementation is a case class and this is one of the
+   *       constructor params. This is passed in from the MongoCollection Implementation
+   */
   val operation: AsyncReadOperation[AsyncBatchCursor[T]]
 
+  /**
+   * The Read Preference to use when executing the underlying operation
+   *
+   * @note Its expected that the MongoOperationIterable implementation is a case class and this is one of the
+   *       constructor params. This is passed in from the MongoCollection Implementation
+   */
   val readPreference: ReadPreference
 
+  /**
+   * The AsyncOperationExecutor to be used with this MongoCollection instance
+   *
+   * @note Its expected that the MongoOperationIterable implementation is a case class and this is one of the
+   *       constructor params. This is passed in from the MongoCollection Implementation
+   */
   val executor: AsyncOperationExecutor
 
+  /**
+   * The class to decode each document into
+   *
+   * @note Its expected that the MongoOperationIterable implementation is a case class and this is one of the
+   *       constructor params. This is passed in from the MongoCollection Implementation
+   */
   val clazz: Class[T]
 
   /**

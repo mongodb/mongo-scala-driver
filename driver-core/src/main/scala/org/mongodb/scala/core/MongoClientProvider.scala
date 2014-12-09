@@ -29,7 +29,7 @@ import java.io.Closeable
 import com.mongodb.ReadPreference
 import com.mongodb.ReadPreference.primary
 import com.mongodb.assertions.Assertions.notNull
-import com.mongodb.async.ErrorHandlingResultCallback.wrapCallback
+import com.mongodb.async.ErrorHandlingResultCallback.errorHandlingCallback
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.binding.{ AsyncClusterBinding, AsyncReadBinding, AsyncReadWriteBinding, AsyncWriteBinding }
 import com.mongodb.client.options.OperationOptions
@@ -65,12 +65,15 @@ trait MongoClientProvider extends Closeable with ExecutorHelper {
    * These form the basis of the default options for the database and collection.
    *
    * @note Its expected that the MongoClient implementation is a case class and this is one of the constructor params.
-   *       The default MongoClientOptions is created automatically by the [[MongoClientCompanion]] helper.
+   *       The default MongoClientOptions will be created automatically by the [[MongoClientCompanion]] helper.
    */
   val options: MongoClientOptions
 
   /**
-   * TODO - document
+   * The various settings to control the behavior of Operations when they are executed.
+   *
+   * @note Its expected that the MongoClient implementation is a case class and this is one of the constructor params.
+   *       The default OperationOptions will be created automatically by the [[MongoClientCompanion]] helper.
    */
   val operationOptions: OperationOptions
 
@@ -80,7 +83,7 @@ trait MongoClientProvider extends Closeable with ExecutorHelper {
    * Used in conjunction with the binding for an operation to target the query at the correct server.
    *
    * @note Its expected that the MongoClient implementation is a case class and this is one of the constructor params.
-   *       The default Cluster is created automatically by the [[MongoClientCompanion]] helper.
+   *       The default Cluster will be created automatically by the [[MongoClientCompanion]] helper.
    */
   val cluster: Cluster
 
@@ -153,7 +156,7 @@ trait MongoClientProvider extends Closeable with ExecutorHelper {
 
       def execute[T](operation: AsyncReadOperation[T], readPreference: ReadPreference,
                      callback: SingleResultCallback[T]) {
-        val wrappedCallback: SingleResultCallback[T] = wrapCallback(callback)
+        val wrappedCallback: SingleResultCallback[T] = errorHandlingCallback(callback)
         val binding: AsyncReadBinding = getReadWriteBinding(readPreference, options, cluster)
         operation.executeAsync(binding, new SingleResultCallback[T] {
           override def onResult(result: T, t: Throwable): Unit = {
@@ -171,7 +174,7 @@ trait MongoClientProvider extends Closeable with ExecutorHelper {
         operation.executeAsync(binding, new SingleResultCallback[T] {
           override def onResult(result: T, t: Throwable): Unit = {
             try {
-              wrapCallback(callback).onResult(result, t)
+              errorHandlingCallback(callback).onResult(result, t)
             } finally {
               binding.release()
             }

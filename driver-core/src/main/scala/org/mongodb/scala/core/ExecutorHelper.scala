@@ -3,6 +3,10 @@ package org.mongodb.scala.core
 import com.mongodb.ReadPreference
 import com.mongodb.operation.{ AsyncOperationExecutor, AsyncWriteOperation, AsyncReadOperation }
 
+/**
+ * A helper trait to wrap an `com.mongodb.operation.AsyncOperationExecutor` that wraps the execution and returns
+ * a promise that is the result of the [[ResultCallback]]
+ */
 trait ExecutorHelper {
 
   protected val executor: AsyncOperationExecutor

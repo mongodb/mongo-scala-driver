@@ -48,7 +48,7 @@ import com.mongodb.management.JMXConnectionPoolListener
 /**
  * A factory for creating a [[MongoClientProvider MongoClient]] instances.
  *
- * All that is needed is a `RequiredTypesAndTransformersProvider` implementation to be mixed in:
+ * All that is needed is a [[RequiredTypesAndTransformersProvider]] implementation to be mixed in:
  *
  * @example {{{
  *   object MongoClient extends MongoClientCompanion with RequiredTypesAndTransformers

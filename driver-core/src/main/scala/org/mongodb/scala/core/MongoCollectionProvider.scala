@@ -87,8 +87,20 @@ trait MongoCollectionProvider[T] extends ExecutorHelper {
    */
   val options: OperationOptions
 
+  /**
+   * The AsyncOperationExecutor to be used with this MongoCollection instance
+   *
+   * @note Its expected that the MongoCollection implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoDatabase Implementation
+   */
   val executor: AsyncOperationExecutor
 
+  /**
+   * The class to decode each document into
+   *
+   * @note Its expected that the MongoCollection implementation is a case class and this is one of the constructor params.
+   *       This is passed in from the MongoDatabase Implementation
+   */
   val clazz: Class[T]
 
   /**
@@ -172,6 +184,7 @@ trait MongoCollectionProvider[T] extends ExecutorHelper {
    * Finds all documents in the collection.
    *
    * @param filter the query filter
+   * @param clazz the Clazz of the resulting type
    * @return the fluent find interface
    */
   def find[C](filter: Any, clazz: Class[C]): FindFluent[C] = find[C](clazz).filter(filter).asInstanceOf[FindFluent[C]]
