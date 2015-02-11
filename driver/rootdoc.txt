@@ -1,0 +1,15 @@
+This is the documentation for the MongoDB Scala driver.
+
+== Driver structure ==
+
+The [[http://reactive-streams.org reactive streams]] implementation of the [[http://mongodb.org mongodb]] scala driver.
+
+To get started you need a [[com.mongodb.scala.reactivestreams.client.MongoClient MongoClient]] instance, either from a
+[[http://docs.mongodb.org/manual/reference/connection-string/ connection string]] or via a `com.mongodb.async.client.MongoClientOptions`.
+
+Notable packages include:
+
+    - [[com.mongodb.scala.reactivestreams.client.MongoClient MongoClient]] The MongoClient used to connect and access MongoDB
+    - [[com.mongodb.scala.reactivestreams.client.MongoDatabase MongoDatabase]] Providing access to a specific database
+    - [[com.mongodb.scala.reactivestreams.client.MongoCollection MongoCollection]] Providing access to a specific collection in a database.
+

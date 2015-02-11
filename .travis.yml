@@ -1,7 +1,7 @@
 # See http://about.travis-ci.org/docs/user/build-configuration/
 language: scala
 scala:
-  - "2.11.1"
+  - "2.11.5"
 
 jdk:
   - openjdk7
@@ -30,10 +30,6 @@ env:
     - MONGOD_PARAMS="--setParameter=enableTestCommands=1"
     - MONGOD_OPTS="--dbpath ./data --fork --logpath mongod.log ${MONGOD_PARAMS}"
     - TERM=dumb
-  matrix:
-    - PROJECT=core
-    - PROJECT=async
-    - PROJECT=rxscala
 
 before_install:
     # MongoDB Enterprise Edition 2.6
@@ -53,7 +49,6 @@ before_script:
     - mongod ${MONGOD_OPTS}
 
 
-
 script:
-  - ./sbt ++$TRAVIS_SCALA_VERSION $PROJECT/test
+  - ./sbt ++$TRAVIS_SCALA_VERSION test
 
