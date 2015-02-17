@@ -41,7 +41,7 @@ object MongoScalaBuild extends Build {
     libraryDependencies ++= coreDependencies ++ testDependencies,
     resolvers := mongoScalaResolvers,
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature" /*, "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer"*/),
-    scalacOptions in(Compile, doc) ++= Seq("-diagrams", "-implicits", "-unchecked", "-doc-root-content", "driver/rootdoc.txt")
+    scalacOptions in(Compile, doc) ++= Seq("-diagrams", "-unchecked", "-doc-root-content", "driver/rootdoc.txt")
   )
 
   /*
