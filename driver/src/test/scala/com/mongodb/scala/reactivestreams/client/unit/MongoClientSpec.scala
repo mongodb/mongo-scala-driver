@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,9 +20,11 @@ import com.mongodb.ServerAddress
 import com.mongodb.async.client.MongoClientOptions
 import com.mongodb.connection.ClusterSettings
 import com.mongodb.reactivestreams.client.{ MongoClient => JMongoClient }
-import org.bson.{ BsonDocument, Document }
+import com.mongodb.scala.reactivestreams.client.collection.Document
+import org.bson.BsonDocument
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
+
 import scala.collection.JavaConverters._
 
 class MongoClientSpec extends FlatSpec with Matchers with MockFactory {

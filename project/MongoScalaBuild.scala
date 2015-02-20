@@ -5,7 +5,7 @@
   * you may not use this file except in compliance with the License.
   * You may obtain a copy of the License at
   *
-  *  http://www.apache.org/licenses/LICENSE-2.0
+  *   http://www.apache.org/licenses/LICENSE-2.0
   *
   * Unless required by applicable law or agreed to in writing, software
   * distributed under the License is distributed on an "AS IS" BASIS,
@@ -84,7 +84,7 @@ object MongoScalaBuild extends Build {
     testOptions in IntTest := Seq(Tests.Filter(itFilter)),
     testOptions in UnitTest <<= testOptions in Test,
     testOptions in UnitTest += Tests.Filter(unitFilter),
-    ScoverageKeys.coverageMinimum := 100,
+    ScoverageKeys.coverageMinimum := 95,
     ScoverageKeys.coverageFailOnMinimum := true
   ) ++ Seq(IntTest, UnitTest).flatMap {
     inConfig(_)(Defaults.testTasks)
@@ -98,7 +98,6 @@ object MongoScalaBuild extends Build {
   lazy val UnitTest = config("unit") extend Test
 
   val scoverageSettings = Seq()
-
 
   /*
    * Style and formatting

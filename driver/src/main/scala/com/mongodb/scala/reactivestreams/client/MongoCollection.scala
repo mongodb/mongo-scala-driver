@@ -23,7 +23,7 @@ import com.mongodb.client.model._
 import com.mongodb.client.result.{ DeleteResult, UpdateResult }
 import com.mongodb.reactivestreams.client.{ MongoCollection => JMongoCollection }
 import com.mongodb.{ MongoNamespace, ReadPreference, WriteConcern }
-import org.bson.Document
+import com.mongodb.scala.reactivestreams.client.collection.Document
 import org.bson.codecs.configuration.CodecRegistry
 import org.reactivestreams.Publisher
 

@@ -5,9 +5,11 @@ import com.mongodb.reactivestreams.client.{ MongoCollection => JMongoCollection 
 import com.mongodb.{ MongoNamespace, ReadPreference, WriteConcern }
 import org.bson.codecs.BsonValueCodecProvider
 import org.bson.codecs.configuration.RootCodecRegistry
-import org.bson.{ BsonDocument, Document }
+import org.bson.{ BsonInt32, BsonDocument }
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
+import com.mongodb.scala.reactivestreams.client.Implicits._
+import com.mongodb.scala.reactivestreams.client.collection.Document
 
 import scala.collection.JavaConverters._
 
@@ -16,7 +18,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   val wrapped = mock[JMongoCollection[Document]]
   val mongoCollection = MongoCollection(wrapped)
   val readPreference = ReadPreference.secondary()
-  val filter = new Document("filter", 1)
+  val filter = Document("filter" -> 1)
 
   "MongoCollection" should "have the same methods as the wrapped MongoCollection" in {
     val wrapped = classOf[JMongoCollection[Document]].getMethods.map(_.getName).toSet
@@ -120,7 +122,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "wrap the underlying AggregatePublisher correctly" in {
-    val pipeline = List(new Document("$match", 1))
+    val pipeline = List(Document("$match" -> 1))
 
     // Todo - currently a bug in scala mock prevents this.
     // https://github.com/paulbutcher/ScalaMock/issues/94
@@ -142,9 +144,9 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
   it should "wrap the underlying bulkWrite correctly" in {
     val bulkRequests = List(
-      new InsertOneModel[Document](new Document("a", 1)),
+      new InsertOneModel[Document](Document("a" -> 1)),
       new DeleteOneModel[Document](filter),
-      new UpdateOneModel[Document](filter, new Document("$set", new Document("b", 1)))
+      new UpdateOneModel[Document](filter, Document("$set" -> Document("b" -> 1)))
     )
     val bulkWriteOptions = new BulkWriteOptions().ordered(true)
 
@@ -159,14 +161,14 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "wrap the underlying insertOne correctly" in {
-    val insertDoc = new Document("a", 1)
+    val insertDoc = Document("a" -> 1)
     (wrapped.insertOne _).expects(insertDoc).once()
 
     mongoCollection.insertOne(insertDoc)
   }
 
   it should "wrap the underlying insertMany correctly" in {
-    val insertDocs = List(new Document("a", 1))
+    val insertDocs = List(Document("a" -> 1))
     val insertOptions = new InsertManyOptions().ordered(false)
 
     // Todo - currently a bug in scala mock prevents this.
@@ -192,7 +194,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "wrap the underlying replaceOne correctly" in {
-    val replacement = new Document("a", 1)
+    val replacement = Document("a" -> 1)
     val updateOptions = new UpdateOptions().upsert(true)
 
     // Todo - currently a bug in scala mock prevents this.
@@ -206,7 +208,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "wrap the underlying updateOne correctly" in {
-    val update = new Document("$set", new Document("a", 2))
+    val update = Document("$set" -> Document("a" -> 2))
     val updateOptions = new UpdateOptions().upsert(true)
 
     (wrapped.updateOne(_: Any, _: Any)).expects(filter, update).once()
@@ -217,7 +219,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "wrap the underlying updateMany correctly" in {
-    val update = new Document("$set", new Document("a", 2))
+    val update = Document("$set" -> Document("a" -> 2))
     val updateOptions = new UpdateOptions().upsert(true)
 
     (wrapped.updateMany(_: Any, _: Any)).expects(filter, update).once()
@@ -228,7 +230,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "wrap the underlying findOneAndDelete correctly" in {
-    val options = new FindOneAndDeleteOptions().sort(new Document("sort", 1))
+    val options = new FindOneAndDeleteOptions().sort(Document("sort" -> 1))
 
     (wrapped.findOneAndDelete(_: Any)).expects(filter).once()
     (wrapped.findOneAndDelete(_: Any, _: FindOneAndDeleteOptions)).expects(filter, options).once()
@@ -238,8 +240,8 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "wrap the underlying findOneAndReplace correctly" in {
-    val replacement = new Document("a", 2)
-    val options = new FindOneAndReplaceOptions().sort(new Document("sort", 1))
+    val replacement = Document("a" -> 2)
+    val options = new FindOneAndReplaceOptions().sort(Document("sort" -> 1))
 
     // Todo - currently a bug in scala mock prevents this.
     // https://github.com/paulbutcher/ScalaMock/issues/93
@@ -252,8 +254,8 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "wrap the underlying findOneAndUpdate correctly" in {
-    val update = new Document("a", 2)
-    val options = new FindOneAndUpdateOptions().sort(new Document("sort", 1))
+    val update = Document("a" -> 2)
+    val options = new FindOneAndUpdateOptions().sort(Document("sort" -> 1))
 
     // Todo - currently a bug in scala mock prevents this.
     // https://github.com/paulbutcher/ScalaMock/issues/93
@@ -272,7 +274,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "wrap the underlying createIndex correctly" in {
-    val index = new Document("a", 1)
+    val index = Document("a" -> 1)
     val options = new CreateIndexOptions().background(true)
 
     (wrapped.createIndex(_: Any)).expects(index).once()

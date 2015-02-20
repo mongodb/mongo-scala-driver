@@ -2,10 +2,11 @@ package com.mongodb.scala.reactivestreams.client
 
 import com.mongodb.client.model.CreateCollectionOptions
 import com.mongodb.reactivestreams.client.{ MongoDatabase => JMongoDatabase }
+import com.mongodb.scala.reactivestreams.client.collection.Document
 import com.mongodb.{ ReadPreference, WriteConcern }
+import org.bson.BsonDocument
 import org.bson.codecs.BsonValueCodecProvider
 import org.bson.codecs.configuration.RootCodecRegistry
-import org.bson.{ BsonDocument, Document }
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
@@ -15,7 +16,7 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
 
   val wrapped = mock[JMongoDatabase]
   val mongoDatabase = MongoDatabase(wrapped)
-  val command = new Document()
+  val command = Document()
   val readPreference = ReadPreference.secondary()
 
   "MongoDatabase" should "have the same methods as the wrapped MongoDatabase" in {
