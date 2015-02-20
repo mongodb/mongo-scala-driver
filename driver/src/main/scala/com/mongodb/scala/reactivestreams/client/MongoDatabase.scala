@@ -20,7 +20,7 @@ import com.mongodb.client.model.CreateCollectionOptions
 import com.mongodb.reactivestreams.client.{ MongoDatabase => JMongoDatabase }
 import com.mongodb.scala.reactivestreams.client.Helpers.{ DefaultsTo, classTagToClassOf }
 import com.mongodb.{ ReadPreference, WriteConcern }
-import org.bson.Document
+import com.mongodb.scala.reactivestreams.client.collection.Document
 import org.bson.codecs.configuration.CodecRegistry
 import org.reactivestreams.Publisher
 

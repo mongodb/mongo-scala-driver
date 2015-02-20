@@ -25,7 +25,7 @@
 
 package com.mongodb.scala.reactivestreams.client
 
-import org.bson.Document
+import com.mongodb.scala.reactivestreams.client.collection.Document
 import org.reactivestreams.{ Publisher, Subscriber, Subscription }
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,9 @@
 package com.mongodb.scala.reactivestreams.client
 
 import com.mongodb.MongoNamespace
-import org.bson.Document
+import com.mongodb.scala.reactivestreams.client.collection.Document
+import com.mongodb.scala.reactivestreams.client.Implicits._
+import org.bson.BsonString
 
 import scala.language.implicitConversions
 
@@ -26,13 +28,12 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
   "The Scala driver" should "handle common scenarios without error" in withDatabase(databaseName) {
     database =>
       val client = mongoClient()
-      val document = new Document("_id", 1)
-      def updatedDocument = new Document("_id", 1).append("a", 1)
+      val document = Document("_id" -> 1)
+      def updatedDocument = Document("_id" -> 1, "a" -> 1)
 
       val names = client.listDatabaseNames().futureValue
 
       info("Creating a collection")
-      println(database.name)
       database.createCollection(collectionName).futureValue shouldBe List(null)
 
       info("Database names should include the new collection")
@@ -61,25 +62,25 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       collection.find().futureValue.head shouldBe document
 
       info("update that document")
-      collection.updateOne(document, new Document("$set", new Document("a", 1))).futureValue.head.wasAcknowledged shouldBe true
+      collection.updateOne(document, Document("$set" -> Document("a" -> 1))).futureValue.head.wasAcknowledged shouldBe true
 
       info("the find the updated document")
       collection.find().first().futureValue.head shouldBe updatedDocument
 
       info("aggregate the collection")
-      collection.aggregate(List(new Document("$match", new Document("a", 1)))).futureValue.head shouldBe updatedDocument
+      collection.aggregate(List(Document("$match" -> Document("a" -> 1)))).futureValue.head shouldBe updatedDocument
 
       info("remove all documents")
-      collection.deleteOne(new Document()).futureValue.head.getDeletedCount() shouldBe 1
+      collection.deleteOne(Document()).futureValue.head.getDeletedCount() shouldBe 1
 
       info("The count is zero")
       collection.count().futureValue.head shouldBe 0
 
       info("create an index")
-      collection.createIndex(new Document("test", 1)).futureValue.head shouldBe null
+      collection.createIndex(Document("test" -> 1)).futureValue.head shouldBe null
 
       info("has the newly created index")
-      val indexNames = collection.listIndexes().futureValue.map(doc => doc.getString("name"))
+      val indexNames = collection.listIndexes().futureValue.map(doc => doc[BsonString]("name")).map(name => name: String)
       indexNames should contain("_id_")
       indexNames should contain("test_1")
 
