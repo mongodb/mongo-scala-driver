@@ -22,9 +22,13 @@ import com.mongodb.ConnectionString
 import com.mongodb.async.client.MongoClientOptions
 import com.mongodb.reactivestreams.client.{ MongoClient => JMongoClient, MongoClients }
 import com.mongodb.scala.reactivestreams.client.Helpers.DefaultsTo
-import org.bson.Document
+import com.mongodb.scala.reactivestreams.client.codecs.DocumentCodecProvider
+import com.mongodb.scala.reactivestreams.client.collection.Document
+import org.bson.codecs.configuration.RootCodecRegistry
+import org.bson.codecs.{ BsonValueCodecProvider, DocumentCodecProvider => JDocumentCodecProvider, ValueCodecProvider }
 import org.reactivestreams.Publisher
 
+import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
 /**
@@ -40,21 +44,42 @@ object MongoClient {
   def apply(): MongoClient = this("mongodb://localhost:27017")
 
   /**
-   * Create a MongoClient instance from the MongoClientOptions
-   *
-   * @param clientOptions MongoClientOptions to use for the MongoClient
-   * @return
-   */
-  def apply(clientOptions: MongoClientOptions): MongoClient = MongoClient(MongoClients.create(clientOptions))
-
-  /**
    * Create a MongoClient instance from a connection string uri
    *
    * @param uri the connection string
    * @return MongoClient
    */
-  def apply(uri: String): MongoClient = MongoClient(MongoClients.create(new ConnectionString(uri)))
+  def apply(uri: String): MongoClient = apply(MongoClients.create(new ConnectionString(uri)).getOptions)
 
+  /**
+   * Create a MongoClient instance from the MongoClientOptions
+   *
+   * @param clientOptions MongoClientOptions to use for the MongoClient
+   * @return
+   */
+  def apply(clientOptions: MongoClientOptions): MongoClient = {
+    if (clientOptions.getCodecRegistry == MongoClientOptions.builder().build().getCodecRegistry) {
+      val newClientOptions = MongoClientOptions.builder()
+        .clusterSettings(clientOptions.getClusterSettings)
+        .connectionPoolSettings(clientOptions.getConnectionPoolSettings)
+        .credentialList(clientOptions.getCredentialList)
+        .description(clientOptions.getDescription)
+        .heartbeatSocketSettings(clientOptions.getHeartbeatSocketSettings)
+        .readPreference(clientOptions.getReadPreference)
+        .serverSettings(clientOptions.getServerSettings)
+        .socketSettings(clientOptions.getSocketSettings)
+        .sslSettings(clientOptions.getSslSettings)
+        .writeConcern(clientOptions.getWriteConcern)
+        .codecRegistry(DEFAULT_CODEC_REGISTRY)
+        .build()
+      MongoClient(MongoClients.create(newClientOptions))
+    } else {
+      MongoClient(MongoClients.create(clientOptions))
+    }
+  }
+
+  val DEFAULT_CODEC_REGISTRY: RootCodecRegistry = new RootCodecRegistry(List(new ValueCodecProvider, new JDocumentCodecProvider,
+    new BsonValueCodecProvider, DocumentCodecProvider()).asJava)
 }
 
 /**
