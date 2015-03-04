@@ -17,6 +17,7 @@
 package com.mongodb.scala.reactivestreams.client
 
 import com.mongodb.MongoNamespace
+import com.mongodb.reactivestreams.client.Success.SUCCESS
 import com.mongodb.scala.reactivestreams.client.collection.Document
 import com.mongodb.scala.reactivestreams.client.Implicits._
 import org.bson.BsonString
@@ -34,7 +35,7 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       val names = client.listDatabaseNames().futureValue
 
       info("Creating a collection")
-      database.createCollection(collectionName).futureValue shouldBe List(null)
+      database.createCollection(collectionName).futureValue.head shouldBe SUCCESS
 
       info("Database names should include the new collection")
       val updatedNames = client.listDatabaseNames().futureValue
@@ -50,10 +51,10 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       collection.count().futureValue.head shouldBe 0
 
       info("find first should return null if no documents")
-      collection.find().first().futureValue.head shouldBe null // This should be an option
+      collection.find().first().futureValue shouldBe List.empty // This should be an option
 
       info("Insert a document")
-      collection.insertOne(document).futureValue.head shouldBe null
+      collection.insertOne(document).futureValue.head shouldBe SUCCESS
 
       info("The count should be one")
       collection.count().futureValue.head shouldBe 1
@@ -77,7 +78,7 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       collection.count().futureValue.head shouldBe 0
 
       info("create an index")
-      collection.createIndex(Document("test" -> 1)).futureValue.head shouldBe null
+      collection.createIndex(Document("test" -> 1)).futureValue.head shouldBe SUCCESS
 
       info("has the newly created index")
       val indexNames = collection.listIndexes().futureValue.map(doc => doc[BsonString]("name")).map(name => name: String)
@@ -85,21 +86,21 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       indexNames should contain("test_1")
 
       info("drop the index")
-      collection.dropIndex("test_1").futureValue.head shouldBe null
+      collection.dropIndex("test_1").futureValue.head shouldBe SUCCESS
 
       info("has a single index left '_id'")
       collection.listIndexes.futureValue.length shouldBe 1
 
       info("can rename the collection")
       val newCollectionName = "new" + collectionName.capitalize
-      collection.renameCollection(new MongoNamespace(databaseName, newCollectionName)).futureValue.head shouldBe null
+      collection.renameCollection(new MongoNamespace(databaseName, newCollectionName)).futureValue.head shouldBe SUCCESS
 
       info("the new collection name is in the collection names list")
       database.listCollectionNames().futureValue should contain(newCollectionName)
 
       info("drop the new collection")
       val newCollection = database.getCollection(newCollectionName)
-      newCollection.dropCollection().futureValue.head shouldBe null
+      newCollection.dropCollection().futureValue.head shouldBe SUCCESS
 
       info("there are no indexes")
       newCollection.listIndexes().futureValue.length shouldBe 0

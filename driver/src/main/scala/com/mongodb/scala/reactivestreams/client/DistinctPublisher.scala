@@ -18,6 +18,7 @@ package com.mongodb.scala.reactivestreams.client
 
 import java.util.concurrent.TimeUnit
 
+import org.bson.conversions.Bson
 import org.reactivestreams.{ Subscriber, Publisher }
 import com.mongodb.reactivestreams.client.{ DistinctPublisher => JDistinctPublisher }
 import scala.concurrent.duration.Duration
@@ -36,7 +37,7 @@ case class DistinctPublisher[T](private val wrapped: JDistinctPublisher[T]) exte
    * @param filter the filter, which may be null.
    * @return this
    */
-  def filter(filter: AnyRef): DistinctPublisher[T] = {
+  def filter(filter: Bson): DistinctPublisher[T] = {
     wrapped.filter(filter)
     this
   }

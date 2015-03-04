@@ -17,19 +17,17 @@
 package com.mongodb.scala.reactivestreams.client.codecs
 
 import com.mongodb.scala.reactivestreams.client.collection.Document
-import com.mongodb.scala.reactivestreams.client.collection.mutable.{ Document => MutableDocument }
 import com.mongodb.scala.reactivestreams.client.collection.immutable.{ Document => ImmutableDocument }
-import org.bson.codecs.configuration.RootCodecRegistry
+import com.mongodb.scala.reactivestreams.client.collection.mutable.{ Document => MutableDocument }
+import org.bson.codecs.configuration.CodecRegistryHelper.fromProvider
 import org.scalatest.{ FlatSpec, Matchers }
-
-import scala.collection.JavaConverters._
 
 class DocumentCodecProviderSpec extends FlatSpec with Matchers {
 
   "DocumentCodecProvider" should "get the correct codec" in {
 
     val provider = DocumentCodecProvider()
-    val registry = new RootCodecRegistry(List(provider).asJava)
+    val registry = fromProvider(provider)
 
     provider.get[Document](classOf[Document], registry) shouldBe a[ImmutableDocumentCodec]
     provider.get[ImmutableDocument](classOf[ImmutableDocument], registry) shouldBe a[ImmutableDocumentCodec]

@@ -17,11 +17,12 @@
 package com.mongodb.scala.reactivestreams.client
 
 import com.mongodb.client.model.CreateCollectionOptions
-import com.mongodb.reactivestreams.client.{ MongoDatabase => JMongoDatabase }
+import com.mongodb.reactivestreams.client.{ MongoDatabase => JMongoDatabase, Success }
 import com.mongodb.scala.reactivestreams.client.Helpers.{ DefaultsTo, classTagToClassOf }
 import com.mongodb.{ ReadPreference, WriteConcern }
 import com.mongodb.scala.reactivestreams.client.collection.Document
 import org.bson.codecs.configuration.CodecRegistry
+import org.bson.conversions.Bson
 import org.reactivestreams.Publisher
 
 import scala.reflect.ClassTag
@@ -105,7 +106,7 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @tparam T      the type of the class to use instead of { @code Document}.
    * @return a publisher containing the command result
    */
-  def executeCommand[T](command: AnyRef)(implicit e: T DefaultsTo Document, ct: ClassTag[T]): Publisher[T] =
+  def executeCommand[T](command: Bson)(implicit e: T DefaultsTo Document, ct: ClassTag[T]): Publisher[T] =
     wrapped.executeCommand[T](command, ct.runtimeClass.asInstanceOf[Class[T]])
 
   /**
@@ -116,7 +117,7 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @tparam T            the type of the class to use instead of { @code Document}.
    * @return a publisher containing the command result
    */
-  def executeCommand[T](command: AnyRef, readPreference: ReadPreference)(implicit e: T DefaultsTo Document, ct: ClassTag[T]): Publisher[T] =
+  def executeCommand[T](command: Bson, readPreference: ReadPreference)(implicit e: T DefaultsTo Document, ct: ClassTag[T]): Publisher[T] =
     wrapped.executeCommand(command, readPreference, ct.runtimeClass.asInstanceOf[Class[T]])
 
   /**
@@ -125,7 +126,7 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * [[http://docs.mongodb.org/manual/reference/commands/dropDatabase/#dbcmd.dropDatabase Drop database]]
    * @return a publisher identifying when the database has been dropped
    */
-  def dropDatabase(): Publisher[Void] = wrapped.dropDatabase()
+  def dropDatabase(): Publisher[Success] = wrapped.dropDatabase()
 
   /**
    * Gets the names of all the collections in this database.
@@ -151,7 +152,7 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @param collectionName the name for the new collection to create
    * @return a publisher identifying when the collection has been created
    */
-  def createCollection(collectionName: String): Publisher[Void] = wrapped.createCollection(collectionName)
+  def createCollection(collectionName: String): Publisher[Success] = wrapped.createCollection(collectionName)
 
   /**
    * Create a new collection with the selected options
@@ -161,6 +162,6 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @param options        various options for creating the collection
    * @return a publisher identifying when the collection has been created
    */
-  def createCollection(collectionName: String, options: CreateCollectionOptions): Publisher[Void] =
+  def createCollection(collectionName: String, options: CreateCollectionOptions): Publisher[Success] =
     wrapped.createCollection(collectionName, options)
 }

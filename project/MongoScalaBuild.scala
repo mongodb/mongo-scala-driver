@@ -34,7 +34,7 @@ object MongoScalaBuild extends Build {
   import Resolvers._
 
   val buildSettings = Seq(
-    organization := "com.mongodb.scala",
+    organization := "org.mongodb.scala",
     organizationHomepage := Some(url("http://www.mongodb.org")),
     version := "0.1-SNAPSHOT",
     scalaVersion := "2.11.5",
@@ -149,6 +149,7 @@ object MongoScalaBuild extends Build {
     .settings(docSettings: _*)
     .settings(scalaStyleSettings: _*)
     .settings(scoverageSettings: _*)
+    .settings(publish := {}, publishLocal := {})
 
   override def rootProject = Some(root)
 

@@ -18,6 +18,7 @@ package com.mongodb.scala.reactivestreams.client
 
 import java.util.concurrent.TimeUnit
 
+import org.bson.conversions.Bson
 import org.reactivestreams.{ Subscriber, Publisher }
 import com.mongodb.reactivestreams.client.{ ListCollectionsPublisher => JListCollectionsPublisher }
 
@@ -38,7 +39,7 @@ case class ListCollectionsPublisher[T](wrapped: JListCollectionsPublisher[T]) ex
    * @param filter the filter, which may be null.
    * @return this
    */
-  def filter(filter: AnyRef): ListCollectionsPublisher[T] = {
+  def filter(filter: Bson): ListCollectionsPublisher[T] = {
     wrapped.filter(filter)
     this
   }

@@ -17,6 +17,8 @@
 package com.mongodb.scala.reactivestreams.client.collection.immutable
 
 import com.mongodb.scala.reactivestreams.client.collection
+import org.bson.codecs.configuration.CodecRegistry
+import org.bson.conversions.Bson
 import org.bson.{ BsonDocument, BsonValue }
 
 import scala.collection.JavaConverters._
@@ -120,4 +122,5 @@ case class Document(protected[client] val underlying: BsonDocument)
    * Creates a new builder for this collection type.
    */
   override def newBuilder: Builder[(String, BsonValue), Document] = Document.builder
+
 }

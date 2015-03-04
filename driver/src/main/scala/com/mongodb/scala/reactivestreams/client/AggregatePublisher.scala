@@ -19,7 +19,7 @@ package com.mongodb.scala.reactivestreams.client
 import java.util.concurrent.TimeUnit
 
 import org.reactivestreams.{ Subscriber, Publisher }
-import com.mongodb.reactivestreams.client.{ AggregatePublisher => JAggregatePublisher }
+import com.mongodb.reactivestreams.client.{ AggregatePublisher => JAggregatePublisher, Success }
 import scala.concurrent.duration.Duration
 
 /**
@@ -73,7 +73,7 @@ case class AggregatePublisher[T](private val wrapped: JAggregatePublisher[T]) ex
    * [[http://docs.mongodb.org/manual/aggregation/ Aggregation]]
    * @return a publisher with a single element indicating when the operation has completed
    */
-  def toCollection(): Publisher[Void] = wrapped.toCollection()
+  def toCollection(): Publisher[Success] = wrapped.toCollection()
 
   override def subscribe(subscriber: Subscriber[_ >: T]): Unit = wrapped.subscribe(subscriber)
 }

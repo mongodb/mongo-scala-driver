@@ -18,6 +18,8 @@ package com.mongodb.scala.reactivestreams.client.collection
 
 import com.mongodb.scala.reactivestreams.client.Helpers.DefaultsTo
 import org.bson._
+import org.bson.codecs.configuration.CodecRegistry
+import org.bson.conversions.Bson
 
 import scala.collection.JavaConverters._
 import scala.collection.{ GenTraversableOnce, Traversable }
@@ -32,7 +34,7 @@ import scala.util.{ Failure, Success, Try }
  *
  * @tparam T The concrete Document implementation
  */
-trait BaseDocument[T] extends Traversable[(String, BsonValue)] {
+trait BaseDocument[T] extends Traversable[(String, BsonValue)] with Bson {
 
   /**
    * The underlying bson document
@@ -270,6 +272,8 @@ trait BaseDocument[T] extends Traversable[(String, BsonValue)] {
    * Returns a copy of the underlying BsonDocument
    */
   def toBsonDocument: BsonDocument = copyBsonDocument()
+
+  override def toBsonDocument[TDocument](documentClass: Class[TDocument], codecRegistry: CodecRegistry): BsonDocument = underlying
 
   /**
    * Copies the BsonDocument

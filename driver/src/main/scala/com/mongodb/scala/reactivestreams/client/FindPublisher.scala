@@ -19,6 +19,7 @@ package com.mongodb.scala.reactivestreams.client
 import java.util.concurrent.TimeUnit
 
 import com.mongodb.CursorType
+import org.bson.conversions.Bson
 import org.reactivestreams.{ Subscriber, Publisher }
 import com.mongodb.reactivestreams.client.{ FindPublisher => JFindPublisher }
 
@@ -47,7 +48,7 @@ case class FindPublisher[T](private val wrapped: JFindPublisher[T]) extends Publ
    * @param filter the filter, which may be null.
    * @return this
    */
-  def filter(filter: AnyRef): FindPublisher[T] = {
+  def filter(filter: Bson): FindPublisher[T] = {
     wrapped.filter(filter)
     this
   }
@@ -95,7 +96,7 @@ case class FindPublisher[T](private val wrapped: JFindPublisher[T]) extends Publ
    * @param modifiers the query modifiers to apply, which may be null.
    * @return this
    */
-  def modifiers(modifiers: AnyRef): FindPublisher[T] = {
+  def modifiers(modifiers: Bson): FindPublisher[T] = {
     wrapped.modifiers(modifiers)
     this
   }
@@ -107,7 +108,7 @@ case class FindPublisher[T](private val wrapped: JFindPublisher[T]) extends Publ
    * @param projection the project document, which may be null.
    * @return this
    */
-  def projection(projection: AnyRef): FindPublisher[T] = {
+  def projection(projection: Bson): FindPublisher[T] = {
     wrapped.projection(projection)
     this
   }
@@ -119,7 +120,7 @@ case class FindPublisher[T](private val wrapped: JFindPublisher[T]) extends Publ
    * @param sort the sort criteria, which may be null.
    * @return this
    */
-  def sort(sort: AnyRef): FindPublisher[T] = {
+  def sort(sort: Bson): FindPublisher[T] = {
     wrapped.sort(sort)
     this
   }

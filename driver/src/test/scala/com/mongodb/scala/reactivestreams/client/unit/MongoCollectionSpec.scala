@@ -4,14 +4,13 @@ import com.mongodb.client.model._
 import com.mongodb.reactivestreams.client.{ MongoCollection => JMongoCollection }
 import com.mongodb.{ MongoNamespace, ReadPreference, WriteConcern }
 import org.bson.codecs.BsonValueCodecProvider
-import org.bson.codecs.configuration.RootCodecRegistry
-import org.bson.{ BsonInt32, BsonDocument }
+import org.bson.codecs.configuration.CodecRegistryHelper.fromProvider
+import org.bson.conversions.Bson
+import org.bson.{ BsonDocument }
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 import com.mongodb.scala.reactivestreams.client.Implicits._
 import com.mongodb.scala.reactivestreams.client.collection.Document
-
-import scala.collection.JavaConverters._
 
 class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
@@ -55,13 +54,13 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "return the underlying getDefaultClass" in {
-    (wrapped.getDefaultClass _).expects().once()
+    (wrapped.getDocumentClass _).expects().once()
 
-    mongoCollection.defaultClass
+    mongoCollection.documentClass
   }
 
   it should "return the underlying withCodecRegistry" in {
-    val codecRegistry = new RootCodecRegistry(List(new BsonValueCodecProvider()).asJava)
+    val codecRegistry = fromProvider(new BsonValueCodecProvider())
 
     (wrapped.withCodecRegistry _).expects(codecRegistry).once()
 
@@ -82,19 +81,19 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "return the underlying withDefaultClass" in {
-    (wrapped.withDefaultClass[Document] _).expects(classOf[Document]).once()
-    (wrapped.withDefaultClass[BsonDocument] _).expects(classOf[BsonDocument]).once()
+    (wrapped.withDocumentClass[Document] _).expects(classOf[Document]).once()
+    (wrapped.withDocumentClass[BsonDocument] _).expects(classOf[BsonDocument]).once()
 
-    mongoCollection.withDefaultClass[Document]()
-    mongoCollection.withDefaultClass[BsonDocument]()
+    mongoCollection.withDocumentClass[Document]()
+    mongoCollection.withDocumentClass[BsonDocument]()
   }
 
   it should "return the underlying count" in {
     val countOptions = new CountOptions().hintString("Hint")
 
     (wrapped.count _).expects().once()
-    (wrapped.count(_: Any)).expects(filter).once()
-    (wrapped.count(_: Any, _: CountOptions)).expects(filter, countOptions).once()
+    (wrapped.count(_: Bson)).expects(filter).once()
+    (wrapped.count(_: Bson, _: CountOptions)).expects(filter, countOptions).once()
 
     mongoCollection.count()
     mongoCollection.count(filter)
@@ -111,8 +110,8 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     (wrapped.find[Document](_: Class[Document])).expects(classOf[Document]).once()
     (wrapped.find[BsonDocument](_: Class[BsonDocument])).expects(classOf[BsonDocument]).once()
 
-    (wrapped.find[Document](_: Any, _: Class[Document])).expects(filter, classOf[Document]).once()
-    (wrapped.find[BsonDocument](_: Any, _: Class[BsonDocument])).expects(filter, classOf[BsonDocument]).once()
+    (wrapped.find[Document](_: Bson, _: Class[Document])).expects(filter, classOf[Document]).once()
+    (wrapped.find[BsonDocument](_: Bson, _: Class[BsonDocument])).expects(filter, classOf[BsonDocument]).once()
 
     mongoCollection.find() shouldBe a[FindPublisher[_]]
     mongoCollection.find[BsonDocument]() shouldBe a[FindPublisher[_]]
@@ -199,7 +198,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
     // Todo - currently a bug in scala mock prevents this.
     // https://github.com/paulbutcher/ScalaMock/issues/93
-    //(wrapped.replaceOne(_: Any, _: Document)).expects(filter, replacement).once()
+    //(wrapped.replaceOne(_: Bson, _: Document)).expects(filter, replacement).once()
     //(wrapped.replaceOne(_, _: Document, _:UpdateOptions)).expects(filter, replacement, updateOptions).once()
     val mongoCollection = MongoCollection(stub[JMongoCollection[Document]])
 
@@ -211,8 +210,8 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     val update = Document("$set" -> Document("a" -> 2))
     val updateOptions = new UpdateOptions().upsert(true)
 
-    (wrapped.updateOne(_: Any, _: Any)).expects(filter, update).once()
-    (wrapped.updateOne(_: Any, _: Any, _: UpdateOptions)).expects(filter, update, updateOptions).once()
+    (wrapped.updateOne(_: Bson, _: Bson)).expects(filter, update).once()
+    (wrapped.updateOne(_: Bson, _: Bson, _: UpdateOptions)).expects(filter, update, updateOptions).once()
 
     mongoCollection.updateOne(filter, update)
     mongoCollection.updateOne(filter, update, updateOptions)
@@ -222,8 +221,8 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     val update = Document("$set" -> Document("a" -> 2))
     val updateOptions = new UpdateOptions().upsert(true)
 
-    (wrapped.updateMany(_: Any, _: Any)).expects(filter, update).once()
-    (wrapped.updateMany(_: Any, _: Any, _: UpdateOptions)).expects(filter, update, updateOptions).once()
+    (wrapped.updateMany(_: Bson, _: Bson)).expects(filter, update).once()
+    (wrapped.updateMany(_: Bson, _: Bson, _: UpdateOptions)).expects(filter, update, updateOptions).once()
 
     mongoCollection.updateMany(filter, update)
     mongoCollection.updateMany(filter, update, updateOptions)
@@ -232,8 +231,8 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   it should "wrap the underlying findOneAndDelete correctly" in {
     val options = new FindOneAndDeleteOptions().sort(Document("sort" -> 1))
 
-    (wrapped.findOneAndDelete(_: Any)).expects(filter).once()
-    (wrapped.findOneAndDelete(_: Any, _: FindOneAndDeleteOptions)).expects(filter, options).once()
+    (wrapped.findOneAndDelete(_: Bson)).expects(filter).once()
+    (wrapped.findOneAndDelete(_: Bson, _: FindOneAndDeleteOptions)).expects(filter, options).once()
 
     mongoCollection.findOneAndDelete(filter)
     mongoCollection.findOneAndDelete(filter, options)
@@ -245,8 +244,8 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
     // Todo - currently a bug in scala mock prevents this.
     // https://github.com/paulbutcher/ScalaMock/issues/93
-    // (wrapped.findOneAndReplace(_: Any, _: Document)).expects(filter, replacement).once()
-    // (wrapped.findOneAndReplace(_: Any, _: Document, _: FindOneAndReplaceOptions)).expects(filter, replacement, options).once()
+    // (wrapped.findOneAndReplace(_: Bson, _: Document)).expects(filter, replacement).once()
+    // (wrapped.findOneAndReplace(_: Bson, _: Document, _: FindOneAndReplaceOptions)).expects(filter, replacement, options).once()
     val mongoCollection = MongoCollection(stub[JMongoCollection[Document]])
 
     mongoCollection.findOneAndReplace(filter, replacement)
@@ -259,8 +258,8 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
     // Todo - currently a bug in scala mock prevents this.
     // https://github.com/paulbutcher/ScalaMock/issues/93
-    // (wrapped.findOneAndUpdate(_: Any, _: Document)).expects(filter, update).once()
-    // (wrapped.findOneAndUpdate(_: Any, _: Document, _: FindOneAndUpdateOptions)).expects(filter, update, options).once()
+    // (wrapped.findOneAndUpdate(_: Bson, _: Document)).expects(filter, update).once()
+    // (wrapped.findOneAndUpdate(_: Bson, _: Document, _: FindOneAndUpdateOptions)).expects(filter, update, options).once()
     val mongoCollection = MongoCollection(stub[JMongoCollection[Document]])
 
     mongoCollection.findOneAndUpdate(filter, update)
@@ -277,8 +276,8 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     val index = Document("a" -> 1)
     val options = new CreateIndexOptions().background(true)
 
-    (wrapped.createIndex(_: Any)).expects(index).once()
-    (wrapped.createIndex(_: Any, _: CreateIndexOptions)).expects(index, options).once()
+    (wrapped.createIndex(_: Bson)).expects(index).once()
+    (wrapped.createIndex(_: Bson, _: CreateIndexOptions)).expects(index, options).once()
 
     mongoCollection.createIndex(index)
     mongoCollection.createIndex(index, options)

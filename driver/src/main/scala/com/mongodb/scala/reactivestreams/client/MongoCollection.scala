@@ -21,10 +21,11 @@ import java.util
 import com.mongodb.bulk.BulkWriteResult
 import com.mongodb.client.model._
 import com.mongodb.client.result.{ DeleteResult, UpdateResult }
-import com.mongodb.reactivestreams.client.{ MongoCollection => JMongoCollection }
+import com.mongodb.reactivestreams.client.{ MongoCollection => JMongoCollection, Success }
 import com.mongodb.{ MongoNamespace, ReadPreference, WriteConcern }
 import com.mongodb.scala.reactivestreams.client.collection.Document
 import org.bson.codecs.configuration.CodecRegistry
+import org.bson.conversions.Bson
 import org.reactivestreams.Publisher
 
 import scala.collection.JavaConverters._
@@ -52,7 +53,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    *
    * @return the default class to cast any documents into
    */
-  lazy val defaultClass: Class[T] = wrapped.getDefaultClass
+  lazy val documentClass: Class[T] = wrapped.getDocumentClass
 
   /**
    * Get the codec registry for the MongoDatabase.
@@ -81,7 +82,8 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @tparam C   The type that the new collection will encode documents from and decode documents to
    * @return a new MongoCollection instance with the different default class
    */
-  def withDefaultClass[C]()(implicit e: C DefaultsTo Document, ct: ClassTag[C]): MongoCollection[C] = MongoCollection(wrapped.withDefaultClass(ct))
+  def withDocumentClass[C]()(implicit e: C DefaultsTo Document, ct: ClassTag[C]): MongoCollection[C] =
+    MongoCollection(wrapped.withDocumentClass(ct))
 
   /**
    * Create a new MongoCollection instance with a different codec registry.
@@ -120,7 +122,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param filter the query filter
    * @return a publisher with a single element indicating the number of documents
    */
-  def count(filter: AnyRef): Publisher[Long] = wrapped.count(filter).asInstanceOf[Publisher[Long]]
+  def count(filter: Bson): Publisher[Long] = wrapped.count(filter).asInstanceOf[Publisher[Long]]
 
   /**
    * Counts the number of documents in the collection according to the given options.
@@ -129,7 +131,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param options the options describing the count
    * @return a publisher with a single element indicating the number of documents
    */
-  def count(filter: AnyRef, options: CountOptions): Publisher[Long] = wrapped.count(filter, options).asInstanceOf[Publisher[Long]]
+  def count(filter: Bson, options: CountOptions): Publisher[Long] = wrapped.count(filter, options).asInstanceOf[Publisher[Long]]
 
   /**
    * Gets the distinct values of the specified field name.
@@ -161,7 +163,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @tparam C    the target document type of the iterable.
    * @return the find publisher
    */
-  def find[C](filter: AnyRef)(implicit e: C DefaultsTo Document, ct: ClassTag[C]): FindPublisher[C] =
+  def find[C](filter: Bson)(implicit e: C DefaultsTo Document, ct: ClassTag[C]): FindPublisher[C] =
     FindPublisher(wrapped.find(filter, ct))
 
   /**
@@ -171,7 +173,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher containing the result of the aggregation operation
    *         [[http://docs.mongodb.org/manual/aggregation/ Aggregation]]
    */
-  def aggregate[C](pipeline: List[Any])(implicit e: C DefaultsTo Document, ct: ClassTag[C]): AggregatePublisher[C] =
+  def aggregate[C](pipeline: List[Bson])(implicit e: C DefaultsTo Document, ct: ClassTag[C]): AggregatePublisher[C] =
     AggregatePublisher(wrapped.aggregate[C](pipeline.asJava, ct))
 
   /**
@@ -213,7 +215,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher with a single element indicating when the operation has completed or with either a
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    */
-  def insertOne(document: T): Publisher[Void] = wrapped.insertOne(document)
+  def insertOne(document: T): Publisher[Success] = wrapped.insertOne(document)
 
   /**
    * Inserts a batch of documents. The preferred way to perform bulk inserts is to use the BulkWrite API. However, when talking with a
@@ -223,7 +225,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher with a single element indicating when the operation has completed or with either a
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    */
-  def insertMany(documents: List[_ <: T]): Publisher[Void] = wrapped.insertMany(documents.asJava)
+  def insertMany(documents: List[_ <: T]): Publisher[Success] = wrapped.insertMany(documents.asJava)
 
   /**
    * Inserts a batch of documents. The preferred way to perform bulk inserts is to use the BulkWrite API. However, when talking with a
@@ -234,7 +236,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher with a single element indicating when the operation has completed or with either a
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    */
-  def insertMany(documents: List[_ <: T], options: InsertManyOptions): Publisher[Void] = wrapped.insertMany(documents.asJava, options)
+  def insertMany(documents: List[_ <: T], options: InsertManyOptions): Publisher[Success] = wrapped.insertMany(documents.asJava, options)
 
   /**
    * Removes at most one document from the collection that matches the given filter.  If no documents match, the collection is not
@@ -243,7 +245,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param filter the query filter to apply the the delete operation
    * @return a publisher with a single element the DeleteResult or with an com.mongodb.MongoException
    */
-  def deleteOne(filter: AnyRef): Publisher[DeleteResult] = wrapped.deleteOne(filter)
+  def deleteOne(filter: Bson): Publisher[DeleteResult] = wrapped.deleteOne(filter)
 
   /**
    * Removes all documents from the collection that match the given query filter.  If no documents match, the collection is not modified.
@@ -251,7 +253,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param filter the query filter to apply the the delete operation
    * @return a publisher with a single element the DeleteResult or with an com.mongodb.MongoException
    */
-  def deleteMany(filter: AnyRef): Publisher[DeleteResult] = wrapped.deleteMany(filter)
+  def deleteMany(filter: Bson): Publisher[DeleteResult] = wrapped.deleteMany(filter)
 
   /**
    * Replace a document in the collection according to the specified arguments.
@@ -261,7 +263,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param replacement the replacement document
    * @return a publisher with a single element the UpdateResult
    */
-  def replaceOne(filter: AnyRef, replacement: T): Publisher[UpdateResult] = wrapped.replaceOne(filter, replacement)
+  def replaceOne(filter: Bson, replacement: T): Publisher[UpdateResult] = wrapped.replaceOne(filter, replacement)
 
   /**
    * Replace a document in the collection according to the specified arguments.
@@ -272,7 +274,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param options     the options to apply to the replace operation
    * @return a publisher with a single element the UpdateResult
    */
-  def replaceOne(filter: AnyRef, replacement: T, options: UpdateOptions): Publisher[UpdateResult] =
+  def replaceOne(filter: Bson, replacement: T, options: UpdateOptions): Publisher[UpdateResult] =
     wrapped.replaceOne(filter, replacement, options)
 
   /**
@@ -286,7 +288,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    *               can be of any type for which a { @code Codec} is registered
    * @return a publisher with a single element the UpdateResult
    */
-  def updateOne(filter: AnyRef, update: AnyRef): Publisher[UpdateResult] = wrapped.updateOne(filter, update)
+  def updateOne(filter: Bson, update: Bson): Publisher[UpdateResult] = wrapped.updateOne(filter, update)
 
   /**
    * Update a single document in the collection according to the specified arguments.
@@ -300,7 +302,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param options the options to apply to the update operation
    * @return a publisher with a single element the UpdateResult
    */
-  def updateOne(filter: AnyRef, update: AnyRef, options: UpdateOptions): Publisher[UpdateResult] =
+  def updateOne(filter: Bson, update: Bson, options: UpdateOptions): Publisher[UpdateResult] =
     wrapped.updateOne(filter, update, options)
 
   /**
@@ -314,7 +316,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    *               can be of any type for which a { @code Codec} is registered
    * @return a publisher with a single element the UpdateResult
    */
-  def updateMany(filter: AnyRef, update: AnyRef): Publisher[UpdateResult] = wrapped.updateMany(filter, update)
+  def updateMany(filter: Bson, update: Bson): Publisher[UpdateResult] = wrapped.updateMany(filter, update)
 
   /**
    * Update a single document in the collection according to the specified arguments.
@@ -328,7 +330,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param options the options to apply to the update operation
    * @return a publisher with a single element the UpdateResult
    */
-  def updateMany(filter: AnyRef, update: AnyRef, options: UpdateOptions): Publisher[UpdateResult] =
+  def updateMany(filter: Bson, update: Bson, options: UpdateOptions): Publisher[UpdateResult] =
     wrapped.updateMany(filter, update, options)
 
   /**
@@ -338,7 +340,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher with a single element the document that was removed.  If no documents matched the query filter, then null will be
    *         returned
    */
-  def findOneAndDelete(filter: AnyRef): Publisher[T] = wrapped.findOneAndDelete(filter)
+  def findOneAndDelete(filter: Bson): Publisher[T] = wrapped.findOneAndDelete(filter)
 
   /**
    * Atomically find a document and remove it.
@@ -348,7 +350,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher with a single element the document that was removed.  If no documents matched the query filter, then null will be
    *         returned
    */
-  def findOneAndDelete(filter: AnyRef, options: FindOneAndDeleteOptions): Publisher[T] = wrapped.findOneAndDelete(filter, options)
+  def findOneAndDelete(filter: Bson, options: FindOneAndDeleteOptions): Publisher[T] = wrapped.findOneAndDelete(filter, options)
 
   /**
    * Atomically find a document and replace it.
@@ -359,7 +361,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    *         property, this will either be the document as it was before the update or as it is after the update.  If no documents matched the
    *         query filter, then null will be returned
    */
-  def findOneAndReplace(filter: AnyRef, replacement: T): Publisher[T] = wrapped.findOneAndReplace(filter, replacement)
+  def findOneAndReplace(filter: Bson, replacement: T): Publisher[T] = wrapped.findOneAndReplace(filter, replacement)
 
   /**
    * Atomically find a document and replace it.
@@ -371,7 +373,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    *         property, this will either be the document as it was before the update or as it is after the update.  If no documents matched the
    *         query filter, then null will be returned
    */
-  def findOneAndReplace(filter: AnyRef, replacement: T, options: FindOneAndReplaceOptions): Publisher[T] =
+  def findOneAndReplace(filter: Bson, replacement: T, options: FindOneAndReplaceOptions): Publisher[T] =
     wrapped.findOneAndReplace(filter, replacement, options)
 
   /**
@@ -384,7 +386,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher with a single element the document that was updated before the update was applied.  If no documents matched the
    *         query filter, then null will be returned
    */
-  def findOneAndUpdate(filter: AnyRef, update: AnyRef): Publisher[T] = wrapped.findOneAndUpdate(filter, update)
+  def findOneAndUpdate(filter: Bson, update: Bson): Publisher[T] = wrapped.findOneAndUpdate(filter, update)
 
   /**
    * Atomically find a document and update it.
@@ -398,7 +400,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    *         property, this will either be the document as it was before the update or as it is after the update.  If no documents matched the
    *         query filter, then null will be returned
    */
-  def findOneAndUpdate(filter: AnyRef, update: AnyRef, options: FindOneAndUpdateOptions): Publisher[T] =
+  def findOneAndUpdate(filter: Bson, update: Bson, options: FindOneAndUpdateOptions): Publisher[T] =
     wrapped.findOneAndUpdate(filter, update, options)
 
   /**
@@ -407,7 +409,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher with a single element indicating when the operation has completed
    *         [[http://docs.mongodb.org/manual/reference/command/drop/ Drop Collection]]
    */
-  def dropCollection(): Publisher[Void] = wrapped.dropCollection()
+  def dropCollection(): Publisher[Success] = wrapped.dropCollection()
 
   /**
    * Create an Index
@@ -417,7 +419,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher with a single element indicating when the operation has completed
    *         [[http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex Ensure Index]]
    */
-  def createIndex(key: AnyRef): Publisher[Void] = wrapped.createIndex(key)
+  def createIndex(key: Bson): Publisher[Success] = wrapped.createIndex(key)
 
   /**
    * [[http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex Ensure Index]]
@@ -426,7 +428,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param options the options for the index
    * @return a publisher with a single element indicating when the operation has completed
    */
-  def createIndex(key: AnyRef, options: CreateIndexOptions): Publisher[Void] = wrapped.createIndex(key, options)
+  def createIndex(key: Bson, options: CreateIndexOptions): Publisher[Success] = wrapped.createIndex(key, options)
 
   /**
    * Get all the indexes in this collection.
@@ -445,7 +447,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param indexName the name of the index to remove
    * @return a publisher with a single element indicating when the operation has completed
    */
-  def dropIndex(indexName: String): Publisher[Void] = wrapped.dropIndex(indexName)
+  def dropIndex(indexName: String): Publisher[Success] = wrapped.dropIndex(indexName)
 
   /**
    * Drop all the indexes on this collection, except for the default on _id.
@@ -453,7 +455,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * [[http://docs.mongodb.org/manual/reference/command/dropIndexes/ Drop Indexes]]
    * @return a publisher with a single element indicating when the operation has completed
    */
-  def dropIndexes(): Publisher[Void] = wrapped.dropIndexes()
+  def dropIndexes(): Publisher[Success] = wrapped.dropIndexes()
 
   /**
    * Rename the collection with oldCollectionName to the newCollectionName.
@@ -462,7 +464,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param newCollectionNamespace the namespace the collection will be renamed to
    * @return a publisher with a single element indicating when the operation has completed
    */
-  def renameCollection(newCollectionNamespace: MongoNamespace): Publisher[Void] = wrapped.renameCollection(newCollectionNamespace)
+  def renameCollection(newCollectionNamespace: MongoNamespace): Publisher[Success] = wrapped.renameCollection(newCollectionNamespace)
 
   /**
    * Rename the collection with oldCollectionName to the newCollectionName.
@@ -472,7 +474,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param options                the options for renaming a collection
    * @return a publisher with a single element indicating when the operation has completed
    */
-  def renameCollection(newCollectionNamespace: MongoNamespace, options: RenameCollectionOptions): Publisher[Void] =
+  def renameCollection(newCollectionNamespace: MongoNamespace, options: RenameCollectionOptions): Publisher[Success] =
     wrapped.renameCollection(newCollectionNamespace, options)
 
 }

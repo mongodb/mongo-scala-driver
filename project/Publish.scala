@@ -21,7 +21,7 @@ import scala.xml.NodeBuffer
 object Publish {
 
   lazy val settings = Seq(
-    crossPaths := false,
+    crossPaths := true,
     pomExtra := driverPomExtra,
     publishTo <<= sonatypePublishTo,
     credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),

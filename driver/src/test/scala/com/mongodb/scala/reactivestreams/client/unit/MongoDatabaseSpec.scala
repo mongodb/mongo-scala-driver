@@ -6,11 +6,10 @@ import com.mongodb.scala.reactivestreams.client.collection.Document
 import com.mongodb.{ ReadPreference, WriteConcern }
 import org.bson.BsonDocument
 import org.bson.codecs.BsonValueCodecProvider
-import org.bson.codecs.configuration.RootCodecRegistry
+import org.bson.codecs.configuration.CodecRegistryHelper.fromProvider
+import org.bson.conversions.Bson
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
-
-import scala.collection.JavaConverters._
 
 class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
 
@@ -62,7 +61,7 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "return the underlying withCodecRegistry" in {
-    val codecRegistry = new RootCodecRegistry(List(new BsonValueCodecProvider()).asJava)
+    val codecRegistry = fromProvider(new BsonValueCodecProvider())
 
     (wrapped.withCodecRegistry _).expects(codecRegistry).once()
 
@@ -83,16 +82,16 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "call the underlying executeCommand[T] when writing" in {
-    (wrapped.executeCommand[Document](_: Any, _: Class[Document])).expects(command, classOf[Document]).once()
-    (wrapped.executeCommand[BsonDocument](_: Any, _: Class[BsonDocument])).expects(command, classOf[BsonDocument]).once()
+    (wrapped.executeCommand[Document](_: Bson, _: Class[Document])).expects(command, classOf[Document]).once()
+    (wrapped.executeCommand[BsonDocument](_: Bson, _: Class[BsonDocument])).expects(command, classOf[BsonDocument]).once()
 
     mongoDatabase.executeCommand(command)
     mongoDatabase.executeCommand[BsonDocument](command)
   }
 
   it should "call the underlying executeCommand[T] when reading" in {
-    (wrapped.executeCommand[Document](_: Any, _: ReadPreference, _: Class[Document])).expects(command, readPreference, classOf[Document]).once()
-    (wrapped.executeCommand[BsonDocument](_: Any, _: ReadPreference, _: Class[BsonDocument])).expects(command, readPreference, classOf[BsonDocument]).once()
+    (wrapped.executeCommand[Document](_: Bson, _: ReadPreference, _: Class[Document])).expects(command, readPreference, classOf[Document]).once()
+    (wrapped.executeCommand[BsonDocument](_: Bson, _: ReadPreference, _: Class[BsonDocument])).expects(command, readPreference, classOf[BsonDocument]).once()
 
     mongoDatabase.executeCommand(command, readPreference)
     mongoDatabase.executeCommand[BsonDocument](command, readPreference)

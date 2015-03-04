@@ -42,8 +42,10 @@ case class MutableDocumentCodec(registry: Option[CodecRegistry]) extends Collect
     }
   }
 
-  override def generateIdIfAbsentFromDocument(document: Document): Unit =
+  override def generateIdIfAbsentFromDocument(document: Document): Document = {
     underlying.generateIdIfAbsentFromDocument(document.underlying)
+    document
+  }
 
   override def documentHasId(document: Document): Boolean = underlying.documentHasId(document.underlying)
 

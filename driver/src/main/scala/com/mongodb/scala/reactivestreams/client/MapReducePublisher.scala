@@ -19,8 +19,9 @@ package com.mongodb.scala.reactivestreams.client
 import java.util.concurrent.TimeUnit
 
 import com.mongodb.client.model.MapReduceAction
+import org.bson.conversions.Bson
 import org.reactivestreams.{ Subscriber, Publisher }
-import com.mongodb.reactivestreams.client.{ MapReducePublisher => JMapReducePublisher }
+import com.mongodb.reactivestreams.client.{ MapReducePublisher => JMapReducePublisher, Success }
 import scala.concurrent.duration.Duration
 
 case class MapReducePublisher[T](wrapped: JMapReducePublisher[T]) extends Publisher[T] {
@@ -56,7 +57,7 @@ case class MapReducePublisher[T](wrapped: JMapReducePublisher[T]) extends Publis
    * @param scope the global variables that are accessible in the map, reduce and finalize functions.
    * @return this
    */
-  def scope(scope: AnyRef): MapReducePublisher[T] = {
+  def scope(scope: Bson): MapReducePublisher[T] = {
     wrapped.scope(scope)
     this
   }
@@ -68,7 +69,7 @@ case class MapReducePublisher[T](wrapped: JMapReducePublisher[T]) extends Publis
    * @param sort the sort criteria, which may be null.
    * @return this
    */
-  def sort(sort: AnyRef): MapReducePublisher[T] = {
+  def sort(sort: Bson): MapReducePublisher[T] = {
     wrapped.sort(sort)
     this
   }
@@ -80,7 +81,7 @@ case class MapReducePublisher[T](wrapped: JMapReducePublisher[T]) extends Publis
    * @param filter the filter to apply to the query.
    * @return this
    */
-  def filter(filter: AnyRef): MapReducePublisher[T] = {
+  def filter(filter: Bson): MapReducePublisher[T] = {
     wrapped.filter(filter)
     this
   }
@@ -190,7 +191,7 @@ case class MapReducePublisher[T](wrapped: JMapReducePublisher[T]) extends Publis
    * @return a publisher with a single element indicating when the operation has completed
    * [[http://docs.mongodb.org/manual/aggregation/ Aggregation]]
    */
-  def toCollection(): Publisher[Void] = wrapped.toCollection()
+  def toCollection(): Publisher[Success] = wrapped.toCollection()
 
   override def subscribe(subscriber: Subscriber[_ >: T]): Unit = wrapped.subscribe(subscriber)
 }
