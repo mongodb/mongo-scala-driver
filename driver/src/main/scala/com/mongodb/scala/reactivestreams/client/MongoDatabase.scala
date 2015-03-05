@@ -106,8 +106,8 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @tparam T      the type of the class to use instead of { @code Document}.
    * @return a publisher containing the command result
    */
-  def executeCommand[T](command: Bson)(implicit e: T DefaultsTo Document, ct: ClassTag[T]): Publisher[T] =
-    wrapped.executeCommand[T](command, ct.runtimeClass.asInstanceOf[Class[T]])
+  def runCommand[T](command: Bson)(implicit e: T DefaultsTo Document, ct: ClassTag[T]): Publisher[T] =
+    wrapped.runCommand[T](command, ct.runtimeClass.asInstanceOf[Class[T]])
 
   /**
    * Executes command in the context of the current database.
@@ -117,8 +117,8 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @tparam T            the type of the class to use instead of { @code Document}.
    * @return a publisher containing the command result
    */
-  def executeCommand[T](command: Bson, readPreference: ReadPreference)(implicit e: T DefaultsTo Document, ct: ClassTag[T]): Publisher[T] =
-    wrapped.executeCommand(command, readPreference, ct.runtimeClass.asInstanceOf[Class[T]])
+  def runCommand[T](command: Bson, readPreference: ReadPreference)(implicit e: T DefaultsTo Document, ct: ClassTag[T]): Publisher[T] =
+    wrapped.runCommand(command, readPreference, ct.runtimeClass.asInstanceOf[Class[T]])
 
   /**
    * Drops this database.
@@ -126,7 +126,7 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * [[http://docs.mongodb.org/manual/reference/commands/dropDatabase/#dbcmd.dropDatabase Drop database]]
    * @return a publisher identifying when the database has been dropped
    */
-  def dropDatabase(): Publisher[Success] = wrapped.dropDatabase()
+  def drop(): Publisher[Success] = wrapped.drop()
 
   /**
    * Gets the names of all the collections in this database.

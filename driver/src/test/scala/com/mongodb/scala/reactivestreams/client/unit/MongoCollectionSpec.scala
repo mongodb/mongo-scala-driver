@@ -4,7 +4,7 @@ import com.mongodb.client.model._
 import com.mongodb.reactivestreams.client.{ MongoCollection => JMongoCollection }
 import com.mongodb.{ MongoNamespace, ReadPreference, WriteConcern }
 import org.bson.codecs.BsonValueCodecProvider
-import org.bson.codecs.configuration.CodecRegistryHelper.fromProvider
+import org.bson.codecs.configuration.CodecRegistries.fromProviders
 import org.bson.conversions.Bson
 import org.bson.{ BsonDocument }
 import org.scalamock.scalatest.MockFactory
@@ -53,14 +53,14 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     mongoCollection.writeConcern
   }
 
-  it should "return the underlying getDefaultClass" in {
+  it should "return the underlying getDocumentClass" in {
     (wrapped.getDocumentClass _).expects().once()
 
     mongoCollection.documentClass
   }
 
   it should "return the underlying withCodecRegistry" in {
-    val codecRegistry = fromProvider(new BsonValueCodecProvider())
+    val codecRegistry = fromProviders(new BsonValueCodecProvider())
 
     (wrapped.withCodecRegistry _).expects(codecRegistry).once()
 
@@ -80,7 +80,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     mongoCollection.withWriteConcern(writeConcern)
   }
 
-  it should "return the underlying withDefaultClass" in {
+  it should "return the underlying withDocumentClass" in {
     (wrapped.withDocumentClass[Document] _).expects(classOf[Document]).once()
     (wrapped.withDocumentClass[BsonDocument] _).expects(classOf[BsonDocument]).once()
 
@@ -266,18 +266,18 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     mongoCollection.findOneAndUpdate(filter, update, options)
   }
 
-  it should "wrap the underlying dropCollection correctly" in {
-    (wrapped.dropCollection _).expects().once()
+  it should "wrap the underlying drop correctly" in {
+    (wrapped.drop _).expects().once()
 
-    mongoCollection.dropCollection()
+    mongoCollection.drop()
   }
 
   it should "wrap the underlying createIndex correctly" in {
     val index = Document("a" -> 1)
-    val options = new CreateIndexOptions().background(true)
+    val options = new IndexOptions().background(true)
 
     (wrapped.createIndex(_: Bson)).expects(index).once()
-    (wrapped.createIndex(_: Bson, _: CreateIndexOptions)).expects(index, options).once()
+    (wrapped.createIndex(_: Bson, _: IndexOptions)).expects(index, options).once()
 
     mongoCollection.createIndex(index)
     mongoCollection.createIndex(index, options)

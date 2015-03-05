@@ -409,7 +409,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher with a single element indicating when the operation has completed
    *         [[http://docs.mongodb.org/manual/reference/command/drop/ Drop Collection]]
    */
-  def dropCollection(): Publisher[Success] = wrapped.dropCollection()
+  def drop(): Publisher[Success] = wrapped.drop()
 
   /**
    * Create an Index
@@ -428,7 +428,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param options the options for the index
    * @return a publisher with a single element indicating when the operation has completed
    */
-  def createIndex(key: Bson, options: CreateIndexOptions): Publisher[Success] = wrapped.createIndex(key, options)
+  def createIndex(key: Bson, options: IndexOptions): Publisher[Success] = wrapped.createIndex(key, options)
 
   /**
    * Get all the indexes in this collection.

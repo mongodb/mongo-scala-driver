@@ -6,7 +6,7 @@ import com.mongodb.scala.reactivestreams.client.collection.Document
 import com.mongodb.{ ReadPreference, WriteConcern }
 import org.bson.BsonDocument
 import org.bson.codecs.BsonValueCodecProvider
-import org.bson.codecs.configuration.CodecRegistryHelper.fromProvider
+import org.bson.codecs.configuration.CodecRegistries.fromProviders
 import org.bson.conversions.Bson
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
@@ -61,7 +61,7 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "return the underlying withCodecRegistry" in {
-    val codecRegistry = fromProvider(new BsonValueCodecProvider())
+    val codecRegistry = fromProviders(new BsonValueCodecProvider())
 
     (wrapped.withCodecRegistry _).expects(codecRegistry).once()
 
@@ -81,26 +81,26 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
     mongoDatabase.withWriteConcern(writeConcern)
   }
 
-  it should "call the underlying executeCommand[T] when writing" in {
-    (wrapped.executeCommand[Document](_: Bson, _: Class[Document])).expects(command, classOf[Document]).once()
-    (wrapped.executeCommand[BsonDocument](_: Bson, _: Class[BsonDocument])).expects(command, classOf[BsonDocument]).once()
+  it should "call the underlying runCommand[T] when writing" in {
+    (wrapped.runCommand[Document](_: Bson, _: Class[Document])).expects(command, classOf[Document]).once()
+    (wrapped.runCommand[BsonDocument](_: Bson, _: Class[BsonDocument])).expects(command, classOf[BsonDocument]).once()
 
-    mongoDatabase.executeCommand(command)
-    mongoDatabase.executeCommand[BsonDocument](command)
+    mongoDatabase.runCommand(command)
+    mongoDatabase.runCommand[BsonDocument](command)
   }
 
-  it should "call the underlying executeCommand[T] when reading" in {
-    (wrapped.executeCommand[Document](_: Bson, _: ReadPreference, _: Class[Document])).expects(command, readPreference, classOf[Document]).once()
-    (wrapped.executeCommand[BsonDocument](_: Bson, _: ReadPreference, _: Class[BsonDocument])).expects(command, readPreference, classOf[BsonDocument]).once()
+  it should "call the underlying runCommand[T] when reading" in {
+    (wrapped.runCommand[Document](_: Bson, _: ReadPreference, _: Class[Document])).expects(command, readPreference, classOf[Document]).once()
+    (wrapped.runCommand[BsonDocument](_: Bson, _: ReadPreference, _: Class[BsonDocument])).expects(command, readPreference, classOf[BsonDocument]).once()
 
-    mongoDatabase.executeCommand(command, readPreference)
-    mongoDatabase.executeCommand[BsonDocument](command, readPreference)
+    mongoDatabase.runCommand(command, readPreference)
+    mongoDatabase.runCommand[BsonDocument](command, readPreference)
   }
 
-  it should "call the underlying dropDatabase()" in {
-    (wrapped.dropDatabase _).expects().once()
+  it should "call the underlying drop()" in {
+    (wrapped.drop _).expects().once()
 
-    mongoDatabase.dropDatabase()
+    mongoDatabase.drop()
   }
 
   it should "call the underlying listCollectionNames()" in {

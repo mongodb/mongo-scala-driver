@@ -19,7 +19,7 @@ package com.mongodb.scala.reactivestreams.client.codecs
 import com.mongodb.scala.reactivestreams.client.collection.Document
 import com.mongodb.scala.reactivestreams.client.collection.immutable.{ Document => ImmutableDocument }
 import com.mongodb.scala.reactivestreams.client.collection.mutable.{ Document => MutableDocument }
-import org.bson.codecs.configuration.CodecRegistryHelper.fromProvider
+import org.bson.codecs.configuration.CodecRegistries.fromProviders
 import org.scalatest.{ FlatSpec, Matchers }
 
 class DocumentCodecProviderSpec extends FlatSpec with Matchers {
@@ -27,7 +27,7 @@ class DocumentCodecProviderSpec extends FlatSpec with Matchers {
   "DocumentCodecProvider" should "get the correct codec" in {
 
     val provider = DocumentCodecProvider()
-    val registry = fromProvider(provider)
+    val registry = fromProviders(provider)
 
     provider.get[Document](classOf[Document], registry) shouldBe a[ImmutableDocumentCodec]
     provider.get[ImmutableDocument](classOf[ImmutableDocument], registry) shouldBe a[ImmutableDocumentCodec]

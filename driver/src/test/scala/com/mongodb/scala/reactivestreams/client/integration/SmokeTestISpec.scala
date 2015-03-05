@@ -100,7 +100,7 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
 
       info("drop the new collection")
       val newCollection = database.getCollection(newCollectionName)
-      newCollection.dropCollection().futureValue.head shouldBe SUCCESS
+      newCollection.drop().futureValue.head shouldBe SUCCESS
 
       info("there are no indexes")
       newCollection.listIndexes().futureValue.length shouldBe 0

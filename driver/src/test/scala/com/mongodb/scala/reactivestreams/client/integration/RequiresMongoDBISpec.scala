@@ -87,7 +87,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
     try testCode(mongoDatabase) // "loan" the fixture to the test
     finally {
       // clean up the fixture
-      Await.result(mongoDatabase.dropDatabase(), WAIT_DURATION)
+      Await.result(mongoDatabase.drop(), WAIT_DURATION)
       client.close()
     }
   }
@@ -102,7 +102,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
     try testCode(mongoCollection) // "loan" the fixture to the test
     finally {
       // clean up the fixture
-      Await.result(mongoCollection.dropCollection(), WAIT_DURATION)
+      Await.result(mongoCollection.drop(), WAIT_DURATION)
       client.close()
     }
   }
@@ -110,7 +110,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
   override def beforeAll() {
     if (mongoDBOnline) {
       val client = mongoClient()
-      Await.result(client.getDatabase(databaseName).dropDatabase(), WAIT_DURATION)
+      Await.result(client.getDatabase(databaseName).drop(), WAIT_DURATION)
       client.close()
     }
   }
@@ -118,7 +118,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
   override def afterAll() {
     if (mongoDBOnline) {
       val client = mongoClient()
-      Await.result(client.getDatabase(databaseName).dropDatabase(), WAIT_DURATION)
+      Await.result(client.getDatabase(databaseName).drop(), WAIT_DURATION)
       client.close()
     }
   }
@@ -127,7 +127,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
 
   private[mongodb] class ShutdownHook extends Thread {
     override def run() {
-      mongoClient().getDatabase(databaseName).dropDatabase()
+      mongoClient().getDatabase(databaseName).drop()
     }
   }
 

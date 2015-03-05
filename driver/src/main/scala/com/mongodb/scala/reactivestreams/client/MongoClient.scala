@@ -24,12 +24,10 @@ import com.mongodb.reactivestreams.client.{ MongoClient => JMongoClient, MongoCl
 import com.mongodb.scala.reactivestreams.client.Helpers.DefaultsTo
 import com.mongodb.scala.reactivestreams.client.codecs.DocumentCodecProvider
 import com.mongodb.scala.reactivestreams.client.collection.Document
-import org.bson.codecs.BsonValueCodecProvider
+import org.bson.codecs.configuration.CodecRegistries.{ fromProviders, fromRegistries }
 import org.bson.codecs.configuration.CodecRegistry
-import org.bson.codecs.configuration.CodecRegistryHelper.{ fromProviders, fromRegistries }
 import org.reactivestreams.Publisher
 
-import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
 /**
@@ -68,7 +66,7 @@ object MongoClient {
 
   val DEFAULT_CODEC_REGISTRY: CodecRegistry = fromRegistries(
     MongoClientOptions.builder().build().getCodecRegistry,
-    fromProviders(List(new BsonValueCodecProvider(), DocumentCodecProvider()).asJava)
+    fromProviders(DocumentCodecProvider())
   )
 }
 
