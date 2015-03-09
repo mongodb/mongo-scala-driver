@@ -103,10 +103,11 @@ class ImmutableDocumentCodecSpec extends FlatSpec with Matchers {
     ImmutableDocumentCodec().getDocumentId(Document("_id" -> new BsonInt32(1))) should be(new BsonInt32(1))
   }
 
-  it should "generate document id if absent" in {
+  it should "generate document id if absent but not mutate original document" in {
     val document = Document()
-    ImmutableDocumentCodec().generateIdIfAbsentFromDocument(document)
-    document("_id") shouldBe a[BsonObjectId]
+    val document2 = ImmutableDocumentCodec().generateIdIfAbsentFromDocument(document)
+    document.contains("_id") shouldBe false
+    document2("_id") shouldBe a[BsonObjectId]
   }
 
   it should "not generate document id if present" in {
