@@ -17,7 +17,7 @@
 package com.mongodb.scala.reactivestreams.client
 
 import com.mongodb.ServerAddress
-import com.mongodb.async.client.MongoClientOptions
+import com.mongodb.async.client.MongoClientSettings
 import com.mongodb.connection.ClusterSettings
 import com.mongodb.reactivestreams.client.{ MongoClient => JMongoClient }
 import com.mongodb.scala.reactivestreams.client.collection.Document
@@ -46,21 +46,21 @@ class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
     val serverAddress = new ServerAddress("localhost", 27017)
     val mongoClient = MongoClient()
 
-    mongoClient.options.getClusterSettings.getHosts().asScala.head shouldBe serverAddress
+    mongoClient.settings.getClusterSettings.getHosts().asScala.head shouldBe serverAddress
   }
 
   it should "accept MongoClientOptions" in {
     val serverAddress = new ServerAddress("localhost", 27020)
     val clusterSettings = ClusterSettings.builder().hosts(List(serverAddress).asJava).build()
-    val mongoClient = MongoClient(MongoClientOptions.builder().clusterSettings(clusterSettings).build())
+    val mongoClient = MongoClient(MongoClientSettings.builder().clusterSettings(clusterSettings).build())
 
-    mongoClient.options.getClusterSettings.getHosts().get(0) shouldBe serverAddress
+    mongoClient.settings.getClusterSettings.getHosts().get(0) shouldBe serverAddress
   }
 
-  it should "call the underlying getOptions" in {
-    (wrapped.getOptions _).expects().once()
+  it should "call the underlying getSettings" in {
+    (wrapped.getSettings _).expects().once()
 
-    mongoClient.options
+    mongoClient.settings
   }
 
   it should "call the underlying getDatabase" in {

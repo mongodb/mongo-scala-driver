@@ -19,7 +19,7 @@ package com.mongodb.scala.reactivestreams.client
 import java.io.Closeable
 
 import com.mongodb.ConnectionString
-import com.mongodb.async.client.MongoClientOptions
+import com.mongodb.async.client.MongoClientSettings
 import com.mongodb.reactivestreams.client.{ MongoClient => JMongoClient, MongoClients }
 import com.mongodb.scala.reactivestreams.client.Helpers.DefaultsTo
 import com.mongodb.scala.reactivestreams.client.codecs.DocumentCodecProvider
@@ -48,24 +48,24 @@ object MongoClient {
    * @param uri the connection string
    * @return MongoClient
    */
-  def apply(uri: String): MongoClient = apply(MongoClients.create(new ConnectionString(uri)).getOptions)
+  def apply(uri: String): MongoClient = apply(MongoClients.create(new ConnectionString(uri)).getSettings)
 
   /**
-   * Create a MongoClient instance from the MongoClientOptions
+   * Create a MongoClient instance from the MongoClientSettings
    *
-   * @param clientOptions MongoClientOptions to use for the MongoClient
+   * @param clientSettings MongoClientSettings to use for the MongoClient
    * @return
    */
-  def apply(clientOptions: MongoClientOptions): MongoClient = {
-    val newClientOptions = MongoClientOptions.builder(clientOptions).codecRegistry(fromRegistries(
-      clientOptions.getCodecRegistry,
+  def apply(clientSettings: MongoClientSettings): MongoClient = {
+    val newClientSettings = MongoClientSettings.builder(clientSettings).codecRegistry(fromRegistries(
+      clientSettings.getCodecRegistry,
       DEFAULT_CODEC_REGISTRY
     )).build()
-    MongoClient(MongoClients.create(newClientOptions))
+    MongoClient(MongoClients.create(newClientSettings))
   }
 
   val DEFAULT_CODEC_REGISTRY: CodecRegistry = fromRegistries(
-    MongoClientOptions.builder().build().getCodecRegistry,
+    MongoClientSettings.builder().build().getCodecRegistry,
     fromProviders(DocumentCodecProvider())
   )
 }
@@ -96,13 +96,13 @@ case class MongoClient(private val wrapped: JMongoClient) extends Closeable {
   def close(): Unit = wrapped.close()
 
   /**
-   * Gets the options that this client uses to connect to server.
+   * Gets the settings that this client uses to connect to server.
    *
-   * **Note**: `MongoClientOptions` is immutable.
+   * **Note**: `MongoClientSettings` is immutable.
    *
-   * @return the options
+   * @return the settings
    */
-  lazy val options: MongoClientOptions = wrapped.getOptions
+  lazy val settings: MongoClientSettings = wrapped.getSettings
 
   /**
    * Get a list of the database names

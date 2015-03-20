@@ -11,6 +11,7 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 import com.mongodb.scala.reactivestreams.client.Implicits._
 import com.mongodb.scala.reactivestreams.client.collection.Document
+import scala.collection.JavaConverters._
 
 class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
@@ -281,6 +282,15 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
     mongoCollection.createIndex(index)
     mongoCollection.createIndex(index, options)
+  }
+
+  it should "wrap the underlying createIndexes correctly" in {
+    val indexes = new IndexModel(Document("a" -> 1))
+
+    // https://github.com/paulbutcher/ScalaMock/issues/93
+    (wrapped.createIndexes(_: java.util.List[IndexModel])).expects(List(indexes).asJava).once()
+
+    mongoCollection.createIndexes(List(indexes))
   }
 
   it should "wrap the underlying listIndexes correctly" in {

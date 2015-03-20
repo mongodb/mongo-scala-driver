@@ -422,13 +422,20 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
   def createIndex(key: Bson): Publisher[Success] = wrapped.createIndex(key)
 
   /**
-   * [[http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex Ensure Index]]
+   * [[http://docs.mongodb.org/manual/reference/command/createIndexes Create Index]]
    * @param key     an object describing the index key(s), which may not be null. This can be of any type for which a { @code Codec} is
    *                registered
    * @param options the options for the index
    * @return a publisher with a single element indicating when the operation has completed
    */
   def createIndex(key: Bson, options: IndexOptions): Publisher[Success] = wrapped.createIndex(key, options)
+
+  /**
+   * [[http://docs.mongodb.org/manual/reference/command/createIndexes Create Index]]
+   * @param indexes the list of indexes to create
+   * @return a publisher with a single element indicating when the operation has completed
+   */
+  def createIndexes(models: List[IndexModel]): Publisher[Success] = wrapped.createIndexes(models.asJava)
 
   /**
    * Get all the indexes in this collection.
