@@ -419,7 +419,7 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher with a single element indicating when the operation has completed
    *         [[http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex Ensure Index]]
    */
-  def createIndex(key: Bson): Publisher[Success] = wrapped.createIndex(key)
+  def createIndex(key: Bson): Publisher[String] = wrapped.createIndex(key)
 
   /**
    * [[http://docs.mongodb.org/manual/reference/command/createIndexes Create Index]]
@@ -428,14 +428,14 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @param options the options for the index
    * @return a publisher with a single element indicating when the operation has completed
    */
-  def createIndex(key: Bson, options: IndexOptions): Publisher[Success] = wrapped.createIndex(key, options)
+  def createIndex(key: Bson, options: IndexOptions): Publisher[String] = wrapped.createIndex(key, options)
 
   /**
    * [[http://docs.mongodb.org/manual/reference/command/createIndexes Create Index]]
    * @param indexes the list of indexes to create
    * @return a publisher with a single element indicating when the operation has completed
    */
-  def createIndexes(models: List[IndexModel]): Publisher[Success] = wrapped.createIndexes(models.asJava)
+  def createIndexes(models: List[IndexModel]): Publisher[String] = wrapped.createIndexes(models.asJava)
 
   /**
    * Get all the indexes in this collection.
@@ -455,6 +455,14 @@ case class MongoCollection[T](private val wrapped: JMongoCollection[T]) {
    * @return a publisher with a single element indicating when the operation has completed
    */
   def dropIndex(indexName: String): Publisher[Success] = wrapped.dropIndex(indexName)
+
+  /**
+   * Drops the index given the keys used to create it.
+   *
+   * @param keys the keys of the index to remove
+   * @return a publisher with a single element indicating when the operation has completed
+   */
+  def dropIndex(keys: Bson): Publisher[Success] = wrapped.dropIndex(keys)
 
   /**
    * Drop all the indexes on this collection, except for the default on _id.

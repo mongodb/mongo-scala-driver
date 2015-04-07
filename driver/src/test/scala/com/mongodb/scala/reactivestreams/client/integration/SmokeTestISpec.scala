@@ -78,7 +78,7 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       collection.count().futureValue.head shouldBe 0
 
       info("create an index")
-      collection.createIndex(Document("test" -> 1)).futureValue.head shouldBe SUCCESS
+      collection.createIndex(Document("test" -> 1)).futureValue.head shouldBe "test_1"
 
       info("has the newly created index")
       val indexNames = collection.listIndexes().futureValue.map(doc => doc[BsonString]("name")).map(name => name: String)

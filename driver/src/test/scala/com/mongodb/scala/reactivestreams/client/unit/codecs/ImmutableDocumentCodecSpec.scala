@@ -51,14 +51,14 @@ class ImmutableDocumentCodecSpec extends FlatSpec with Matchers {
     )
 
     info("encoding")
-    val writer: BsonBinaryWriter = new BsonBinaryWriter(new BasicOutputBuffer(), false)
+    val writer: BsonBinaryWriter = new BsonBinaryWriter(new BasicOutputBuffer())
     ImmutableDocumentCodec(registry).encode(writer, original, EncoderContext.builder().build())
 
     info("decoding")
     val buffer: BasicOutputBuffer = writer.getBsonOutput().asInstanceOf[BasicOutputBuffer];
     val reader: BsonBinaryReader = new BsonBinaryReader(new ByteBufferBsonInput(
       new ByteBufNIO(ByteBuffer.wrap(buffer.toByteArray))
-    ), true)
+    ))
 
     val decodedDocument = ImmutableDocumentCodec().decode(reader, DecoderContext.builder().build())
 
@@ -71,14 +71,12 @@ class ImmutableDocumentCodecSpec extends FlatSpec with Matchers {
       "nested" -> Document("a" -> new BsonString("string"), "_id" -> new BsonInt32(1)).toBsonDocument)
 
     info("encoding")
-    val writer: BsonBinaryWriter = new BsonBinaryWriter(new BasicOutputBuffer(), false)
+    val writer: BsonBinaryWriter = new BsonBinaryWriter(new BasicOutputBuffer())
     ImmutableDocumentCodec(registry).encode(writer, original, EncoderContext.builder().isEncodingCollectibleDocument(true).build())
 
     info("decoding")
     val buffer: BasicOutputBuffer = writer.getBsonOutput().asInstanceOf[BasicOutputBuffer];
-    val reader: BsonBinaryReader = new BsonBinaryReader(new ByteBufferBsonInput(
-      new ByteBufNIO(ByteBuffer.wrap(buffer.toByteArray))
-    ), true)
+    val reader: BsonBinaryReader = new BsonBinaryReader(new ByteBufferBsonInput(new ByteBufNIO(ByteBuffer.wrap(buffer.toByteArray))))
 
     val decodedDocument = ImmutableDocumentCodec().decode(reader, DecoderContext.builder().build())
 

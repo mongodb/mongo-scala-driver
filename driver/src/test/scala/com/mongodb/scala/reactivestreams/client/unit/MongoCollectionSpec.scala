@@ -302,7 +302,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "wrap the underlying dropIndex correctly" in {
-    (wrapped.dropIndex _).expects("indexName").once()
+    (wrapped.dropIndex(_: String)).expects("indexName").once()
 
     mongoCollection.dropIndex("indexName")
   }
