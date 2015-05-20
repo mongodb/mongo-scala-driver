@@ -7,9 +7,8 @@ This is an experimental reactive driver for Scala and MongoDB.
 
                 Here be dragons
 
-    Currently, under heavy development, depends on the 3.0.x MongoDB
-    Java Driver (also under heavy development) and as such may change
-    at *any* time.
+    Currently, under heavy development, depends on the 3.1.x MongoDB
+    Java Driver and as such may change at *any* time.
 
                                ___, ____--'
                           _,-.'_,-'      (

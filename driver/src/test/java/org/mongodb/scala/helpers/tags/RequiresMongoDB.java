@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 MongoDB, Inc.
+ * Copyright 2014-2015 MongoDB, Inc.
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

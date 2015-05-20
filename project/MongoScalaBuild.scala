@@ -14,18 +14,12 @@
   * limitations under the License.
   */
 
-import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
-import com.typesafe.sbt.SbtGhPages._
-import com.typesafe.sbt.SbtGit.GitKeys._
 import com.typesafe.sbt.SbtScalariform._
-import com.typesafe.sbt.SbtSite.SiteKeys._
-import com.typesafe.sbt._
 import org.scalastyle.sbt.ScalastylePlugin._
 import sbt.Keys._
 import sbt._
 import sbtassembly.Plugin.AssemblyKeys._
 import sbtassembly.Plugin._
-import sbtunidoc.Plugin._
 import scoverage.ScoverageSbtPlugin._
 
 object MongoScalaBuild extends Build {
@@ -36,43 +30,13 @@ object MongoScalaBuild extends Build {
   val buildSettings = Seq(
     organization := "org.mongodb.scala",
     organizationHomepage := Some(url("http://www.mongodb.org")),
-    version := "0.1-SNAPSHOT",
-    scalaVersion := "2.11.5",
+    version := "1.0.0-SNAPSHOT",
+    scalaVersion := scalaCoreVersion,
     libraryDependencies ++= coreDependencies ++ testDependencies,
     resolvers := mongoScalaResolvers,
-    scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature" /*, "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer"*/),
+    scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xlint" /*, "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer"*/),
     scalacOptions in(Compile, doc) ++= Seq("-diagrams", "-unchecked", "-doc-root-content", "driver/rootdoc.txt")
   )
-
-  /*
-   * Documentation
-   */
-  val docSettings =
-    SbtSite.site.settings ++
-      SbtSite.site.sphinxSupport() ++
-      ghpages.settings ++
-      unidocSettings ++
-      Seq(
-        siteSourceDirectory := file("docs"),
-        siteDirectory := file("target/site"),
-        // depending on the version, copy the api files to a different directory
-        siteMappings <++= (mappings in packageDoc in ScalaUnidoc, version) map {
-          (m, v) =>
-            for ((f, d) <- m) yield (f, if (v.trim.endsWith("SNAPSHOT")) ("api/master/" + d) else ("api/" + v + "/" + d))
-        },
-        // override the synchLocal task to avoid removing the existing files
-        synchLocal <<= (privateMappings, updatedRepository, ghpagesNoJekyll, gitRunner, streams) map {
-          (mappings, repo, noJekyll, git, s) =>
-            val betterMappings = mappings map {
-              case (file, target) => (file, repo / target)
-            }
-            IO.copy(betterMappings)
-            if (noJekyll) IO.touch(repo / ".nojekyll")
-            repo
-        },
-        ghpagesNoJekyll := true,
-        gitRemoteRepo := "git@github.com:mongodb/mongo-scala-driver.git"
-      ) ++ inConfig(config("sphinx"))(Seq(sourceDirectory := file("docs")))
 
   val publishSettings = Publish.settings
 
@@ -91,7 +55,6 @@ object MongoScalaBuild extends Build {
   }
 
   def itFilter(name: String): Boolean = name endsWith "ISpec"
-
   def unitFilter(name: String): Boolean = !itFilter(name)
 
   lazy val IntTest = config("it") extend Test
@@ -102,7 +65,6 @@ object MongoScalaBuild extends Build {
   /*
    * Style and formatting
    */
-
   def scalariFormFormattingPreferences = {
     import scalariform.formatter.preferences._
     FormattingPreferences()
@@ -113,40 +75,63 @@ object MongoScalaBuild extends Build {
 
   val customScalariformSettings = scalariformSettings ++ Seq(
     ScalariformKeys.preferences in Compile := scalariFormFormattingPreferences,
-    ScalariformKeys.preferences in Test    := scalariFormFormattingPreferences
+    ScalariformKeys.preferences in Test := scalariFormFormattingPreferences
   )
 
   val scalaStyleSettings = Seq(
-    (scalastyleConfig in Compile) := file("project/scalastyle-config.xml")
+    (scalastyleConfig in Compile) := file("project/scalastyle-config.xml"),
+    (scalastyleConfig in Test) := file("project/scalastyle-config.xml")
   )
 
   /*
    * Assembly Jar Settings
    */
-  val reactiveStreamsAssemblyJarSettings = assemblySettings ++
-    addArtifact(Artifact("mongo-scala-reactivestreams-alldep", "jar", "jar"), assembly) ++ Seq(test in assembly := {})
+  val driverAssemblyJarSettings = assemblySettings ++
+    addArtifact(Artifact("mongo-scala-driver-alldep", "jar", "jar"), assembly) ++ Seq(test in assembly := {})
 
-  lazy val reactiveStreams = Project(
-    id = "reactiveStreams",
+  // Check style task
+  val checkTask = TaskKey[Unit]("check", "Runs scalastyle, test and coverage") := {
+    (scalastyle in Compile).toTask("").value
+    (test in Test).value
+    (ScoverageKeys.coverage in Test).value
+    (ScoverageKeys.coverageReport in Test).value
+    (ScoverageKeys.coverageAggregate in Test).value
+  }
+
+
+  lazy val driver = Project(
+    id = "driver",
     base = file("driver")
   ).configs(IntTest)
     .configs(UnitTest)
     .settings(buildSettings: _*)
     .settings(testSettings: _*)
     .settings(publishSettings: _*)
-    .settings(reactiveStreamsAssemblyJarSettings: _*)
+    .settings(driverAssemblyJarSettings: _*)
     .settings(customScalariformSettings: _*)
     .settings(scalaStyleSettings: _*)
     .settings(scoverageSettings: _*)
     .settings(initialCommands in console := """import com.mongodb.scala._""")
+    .settings(checkTask)
+    .dependsOn(core)
+
+  lazy val core = Project(
+    id = "core",
+    base = file("core")
+  ).configs(IntTest)
+    .configs(UnitTest)
+    .settings(buildSettings: _*)
+    .settings(testSettings: _*)
+    .settings(scalaStyleSettings: _*)
+    .settings(scalaVersion := scalaCoreVersion)
+    .settings(checkTask)
 
   lazy val root = Project(
     id = "root",
     base = file(".")
-  ).aggregate(reactiveStreams)
-    .dependsOn(reactiveStreams)
+  ).aggregate(core)
+    .aggregate(driver)
     .settings(buildSettings: _*)
-    .settings(docSettings: _*)
     .settings(scalaStyleSettings: _*)
     .settings(scoverageSettings: _*)
     .settings(publish := {}, publishLocal := {})

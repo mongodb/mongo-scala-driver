@@ -18,19 +18,19 @@ import sbt._
 
 object Dependencies {
   // Versions
-  val scalaCoreVersion     = "2.11.5"
-  val mongodbDriverVersion = "1.0.0-SNAPSHOT"
+  val scalaCoreVersion     = "2.11.6"
+  val mongodbDriverVersion = "3.1.0-SNAPSHOT"
 
-  val scalaTestVersion     = "2.2.1"
-  val scalaMockVersion     = "3.2.1"
-  val logbackVersion       = "1.1.2"
+  val scalaTestVersion     = "2.2.4"
+  val scalaMockVersion     = "3.2.2"
+  val logbackVersion       = "1.1.3"
 
   // Scala
   val scalaReflection    = "org.scala-lang" % "scala-reflect" % scalaCoreVersion
   val scalaCompiler      = "org.scala-lang" % "scala-compiler" % scalaCoreVersion
 
   // Libraries
-  val mongodbDriver = "org.mongodb" % "mongodb-driver-reactivestreams" % mongodbDriverVersion
+  val mongodbDriver = "org.mongodb" % "mongodb-driver-async" % mongodbDriverVersion
 
   // Test
   val scalaTest     = "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
