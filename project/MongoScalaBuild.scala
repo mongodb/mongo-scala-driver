@@ -100,7 +100,7 @@ object MongoScalaBuild extends Build {
 
 
   lazy val driver = Project(
-    id = "driver",
+    id = "mongo-scala-driver",
     base = file("driver")
   ).configs(IntTest)
     .configs(UnitTest)

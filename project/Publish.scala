@@ -13,53 +13,90 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
-import sbt._
+
+import java.io.FileInputStream
+import java.util.Properties
+
+import com.typesafe.sbt.SbtPgp
+import com.typesafe.sbt.pgp.PgpKeys
 import sbt.Keys._
-import sbt.Def.Initialize
-import scala.xml.NodeBuffer
+import sbt._
 
 object Publish {
 
-  lazy val settings = Seq(
-    crossPaths := true,
-    pomExtra := driverPomExtra,
-    publishTo <<= sonatypePublishTo,
-    credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
-    pomIncludeRepository := { x => false },
-    publishMavenStyle := true,
-    publishArtifact in Test := false
-  )
+  val propFile = new File(Path.userHome / ".gradle", "gradle.properties")
 
-  def sonatypePublishTo: Initialize[Option[Resolver]] = {
-    version { v: String =>
-      val nexus = "https://oss.sonatype.org/"
-      if (v.trim.endsWith("SNAPSHOT"))
-        Some("snapshots" at nexus + "content/repositories/snapshots")
-      else
-        Some("releases" at nexus + "service/local/staging/deploy/maven2")
+  val username = "nexusUsername"
+  val password = "nexusPassword"
+  val keyId = "signing.keyId"
+  val secretKeyRing = "signing.secretKeyRingFile"
+  val keyPassword = "signing.password"
+
+  lazy val settings: Seq[Def.Setting[_]] = {
+    if (!propFile.exists) Seq.empty
+    else {
+      val props = new Properties
+      val input = new FileInputStream(propFile)
+      try props.load(input) finally input.close()
+
+      mavenSettings ++ SbtPgp.settings ++ Seq(
+        SbtPgp.pgpPassphrase := Some(props.getProperty(keyPassword).toArray),
+        SbtPgp.pgpSecretRing := file(props.getProperty(secretKeyRing)),
+        credentials += Credentials(
+          "Sonatype Nexus Repository Manager",
+          "oss.sonatype.org",
+          props.getProperty(username),
+          props.getProperty(password)),
+        publishSnapshot <<= publishSnapshotTask
+      )
     }
   }
 
-  def driverPomExtra: NodeBuffer = {
-    <url>http://github.com/mongodb/mongo-scala-driver</url>
-    <licenses>
-      <license>
-        <name>Apache 2</name>
-        <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-        <distribution>repo</distribution>
-      </license>
-    </licenses>
-    <scm>
-      <url>git@github.com:mongodb/mongo-scala-driver.git</url>
-      <connection>scm:git:git@github.com:mongodb/mongo-scala-driver.git</connection>
-    </scm>
-    <developers>
-      <developer>
-        <id>ross</id>
-        <name>Ross Lawley</name>
-        <url>http://rosslawley.co.uk</url>
-      </developer>
-    </developers>
+  lazy val mavenSettings = Seq(
+    publishTo := {
+      val nexus = "https://oss.sonatype.org/"
+      if (isSnapshot.value)
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    },
+    publishMavenStyle := true,
+    publishArtifact in Test := false,
+    pomIncludeRepository := { _ => false },
+    pomExtra := (
+      <url>http://mongodb.github.io/mongo-scala-driver</url>
+        <licenses>
+          <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+            <distribution>repo</distribution>
+          </license>
+        </licenses>
+        <scm>
+          <url>git@github.com:mongodb/mongo-scala-driver.git</url>
+          <connection>scm:git:git@github.com:mongodb/mongo-scala-driver.git</connection>
+        </scm>
+        <developers>
+          <developer>
+            <id>ross</id>
+            <name>Ross Lawley</name>
+            <url>http://rosslawley.co.uk</url>
+          </developer>
+        </developers>
+      )
+  )
+
+  lazy val noPublishing = Seq(
+    publish :=(),
+    publishLocal :=(),
+    publishTo := None,
+    publishSnapshot := None
+  )
+
+  lazy val publishSnapshot: TaskKey[Unit] = TaskKey[Unit]("publish-snapshot", "publishes a snapshot")
+  val publishSnapshotTask = Def.taskDyn {
+    // Only publish if snapshot
+    if(isSnapshot.value) Def.task { PgpKeys.publishSigned.value } else Def.task { }
   }
 
 }
