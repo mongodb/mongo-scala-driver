@@ -1,4 +1,0 @@
-This is the documentation for the MongoDB Scala driver core.
-
-
-

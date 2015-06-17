@@ -24,6 +24,7 @@ object Dependencies {
   val scalaTestVersion     = "2.2.4"
   val scalaMockVersion     = "3.2.2"
   val logbackVersion       = "1.1.3"
+  val reflectionsVersion   = "0.9.10"
 
   // Scala
   val scalaReflection    = "org.scala-lang" % "scala-reflect" % scalaCoreVersion
@@ -35,9 +36,10 @@ object Dependencies {
   // Test
   val scalaTest     = "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
   val scalaMock     = "org.scalamock" %% "scalamock-scalatest-support" % scalaMockVersion % "test"
-  val logback       = "ch.qos.logback" % "logback-classic"  % logbackVersion % "test"
+  val logback       = "ch.qos.logback" % "logback-classic" % logbackVersion % "test"
+  val reflections   = "org.reflections" % "reflections" % reflectionsVersion % "test"
 
   // Projects
   val coreDependencies = Seq(scalaCompiler, scalaReflection, mongodbDriver)
-  val testDependencies = Seq(scalaTest, scalaMock, logback)
+  val testDependencies = Seq(scalaTest, scalaMock, logback, reflections)
 }

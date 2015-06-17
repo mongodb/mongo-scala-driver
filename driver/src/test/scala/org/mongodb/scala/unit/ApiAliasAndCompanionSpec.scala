@@ -1,0 +1,154 @@
+/*
+ * Copyright 2015 MongoDB, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.mongodb.scala.unit
+import java.lang.reflect.Modifier._
+
+import scala.collection.JavaConverters._
+import scala.reflect.runtime.{ currentMirror, universe => u }
+
+import org.mongodb.scala.{ MongoException, WriteConcern }
+import org.reflections.Reflections
+import org.reflections.scanners.SubTypesScanner
+import org.reflections.util.{ ClasspathHelper, ConfigurationBuilder, FilterBuilder }
+import org.scalatest.{ FlatSpec, Matchers }
+
+class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
+
+  "The scala package" should "mirror the com.mongodb package and com.mongodb.async.client" in {
+    val packageName = "com.mongodb"
+    val javaExclusions = Set("AsyncBatchCursor", "Block", "ConnectionString", "Function", "ServerCursor", "Majority", "MongoClients",
+      "MongoIterable", "Observables", "SingleResultCallback")
+    val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult")
+    val classFilter = (f: Class[_ <: Object]) => {
+      isPublic(f.getModifiers) &&
+        !f.getName.contains("$") &&
+        !f.getSimpleName.contains("Spec") &&
+        !javaExclusions.contains(f.getSimpleName)
+    }
+    val filters = FilterBuilder.parse(
+      """
+        |-com.mongodb.annotations.*,
+        |-com.mongodb.assertions.*,
+        |-com.mongodb.binding.*,
+        |-com.mongodb.bulk.*,
+        |-com.mongodb.client.*,
+        |-com.mongodb.connection.*,
+        |-com.mongodb.diagnostics.*,
+        |-com.mongodb.event.*,
+        |-com.mongodb.internal.*,
+        |-com.mongodb.management.*,
+        |-com.mongodb.operation.*,
+        |-com.mongodb.selector.*,""".stripMargin
+    )
+
+    val exceptions = new Reflections(packageName).getSubTypesOf(classOf[MongoException]).asScala.map(_.getSimpleName).toSet + "MongoException"
+
+    val objects = new Reflections(new ConfigurationBuilder()
+      .setUrls(ClasspathHelper.forPackage(packageName))
+      .setScanners(new SubTypesScanner(false))
+      .filterInputsBy(filters)).getSubTypesOf(classOf[Object])
+      .asScala.filter(classFilter)
+      .map(_.getSimpleName.replace("Iterable", "Observable")).toSet
+
+    val wrapped = objects ++ exceptions
+
+    val scalaPackageName = "org.mongodb.scala"
+    val local = new Reflections(scalaPackageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
+      .asScala.filter(classFilter).filter(f => f.getPackage.getName == scalaPackageName)
+      .map(_.getSimpleName).toSet ++ currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet -- scalaExclusions
+
+    local should equal(wrapped)
+  }
+
+  it should "mirror parts of com.mongodb.connection in org.mongdb.scala.connection" in {
+    val packageName = "com.mongodb.connection"
+    val javaExclusions = Set("AsyncCompletionHandler", "AsyncConnection", "AsynchronousSocketChannelStreamFactory", "BufferProvider",
+      "Builder", "BulkWriteBatchCombiner", "ChangeEvent", "ChangeListener", "Cluster", "ClusterDescription", "ClusterFactory",
+      "ClusterId", "Connection", "ConnectionDescription", "ConnectionId", "DefaultClusterFactory", "DefaultRandomStringGenerator",
+      "QueryResult", "RandomStringGenerator", "Server", "ServerDescription", "ServerId", "ServerVersion", "SocketStreamFactory", "Stream")
+
+    val filters = FilterBuilder.parse("-com.mongodb.connection.netty.*")
+    val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers)
+
+    val wrapped = new Reflections(new ConfigurationBuilder()
+      .setUrls(ClasspathHelper.forPackage(packageName))
+      .setScanners(new SubTypesScanner(false))
+      .filterInputsBy(filters)).getSubTypesOf(classOf[Object])
+      .asScala.filter(_.getPackage.getName == packageName)
+      .filter(classFilter)
+      .map(_.getSimpleName).toSet -- javaExclusions
+
+    val scalaPackageName = "org.mongodb.scala.connection"
+    val local = currentMirror.staticPackage("org.mongodb.scala.connection").info.decls.map(_.name.toString).toSet - "package"
+
+    local should equal(wrapped)
+  }
+
+  it should "mirror all com.mongodb.client.model in org.mongdb.scala.model" in {
+    val packageName = "com.mongodb.client.model"
+    val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
+    val wrapped = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
+      .asScala.filter(_.getPackage.getName == packageName)
+      .filter(classFilter)
+      .map(_.getSimpleName).toSet ++ Set("MapReduceAction", "ReturnDocument")
+
+    val scalaPackageName = "org.mongodb.scala.model"
+    val localPackage = currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet
+    val localObjects = new Reflections(scalaPackageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
+      .asScala.filter(classFilter).map(_.getSimpleName).toSet
+    val local = (localPackage ++ localObjects) - "package"
+
+    local should equal(wrapped)
+  }
+
+  it should "mirror all com.mongodb.client.model.geojson in org.mongdb.scala.model.geojson" in {
+    val packageName = "com.mongodb.client.model.geojson"
+    val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
+    val wrapped = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
+      .asScala.filter(_.getPackage.getName == packageName)
+      .filter(classFilter)
+      .map(_.getSimpleName).toSet ++ Set("GeoJsonObjectType", "CoordinateReferenceSystemType")
+
+    val scalaPackageName = "org.mongodb.scala.model.geojson"
+    val local = currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet - "package"
+
+    local should equal(wrapped)
+  }
+
+  it should "mirror all com.mongodb.client.result in org.mongdb.scala.result" in {
+    val packageName = "com.mongodb.client.result"
+    val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers)
+    val wrapped = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
+      .asScala.filter(_.getPackage.getName == packageName)
+      .filter(classFilter)
+      .map(_.getSimpleName).toSet
+
+    val scalaPackageName = "org.mongodb.scala.result"
+    val local = currentMirror.staticPackage("org.mongodb.scala.result").info.decls.map(_.name.toString).toSet - "package"
+
+    local should equal(wrapped)
+  }
+
+  it should "mirror all com.mongodb.WriteConcern in org.mongodb.scala.WriteConcern" in {
+    val notMirrored = Set("SAFE", "serialVersionUID", "FSYNC_SAFE", "JOURNAL_SAFE", "REPLICAS_SAFE", "NAMED_CONCERNS", "NORMAL", "valueOf")
+    val wrapped = (classOf[com.mongodb.WriteConcern].getDeclaredMethods ++ classOf[com.mongodb.WriteConcern].getDeclaredFields)
+      .filter(f => isStatic(f.getModifiers) && !notMirrored.contains(f.getName)).map(_.getName).toSet
+
+    val local = WriteConcern.getClass.getDeclaredMethods.filter(f => f.getName != "apply" && isPublic(f.getModifiers)).map(_.getName).toSet
+    local should equal(wrapped)
+  }
+}
