@@ -35,7 +35,7 @@ object MongoScalaBuild extends Build {
     organizationHomepage := Some(url("http://www.mongodb.org")),
     version := "1.0.0-SNAPSHOT",
     scalaVersion := scalaCoreVersion,
-    libraryDependencies ++= coreDependencies ++ testDependencies,
+    libraryDependencies ++= coreDependencies,
     resolvers := mongoScalaResolvers,
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xlint", "-Xlint:-missing-interpolator" /*, "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer"*/)
   )
@@ -48,19 +48,11 @@ object MongoScalaBuild extends Build {
    */
   val testSettings = Seq(
     testFrameworks += TestFrameworks.ScalaTest,
-    testOptions in IntTest := Seq(Tests.Filter(itFilter)),
-    testOptions in UnitTest <<= testOptions in Test,
-    testOptions in UnitTest += Tests.Filter(unitFilter),
     ScoverageKeys.coverageMinimum := 95,
-    ScoverageKeys.coverageFailOnMinimum := true
-  ) ++ Seq(IntTest, UnitTest).flatMap {
-    inConfig(_)(Defaults.testTasks)
-  }
+    ScoverageKeys.coverageFailOnMinimum := true,
+    libraryDependencies ++= testDependencies
+  ) ++ Defaults.itSettings
 
-  def itFilter(name: String): Boolean = name endsWith "ISpec"
-  def unitFilter(name: String): Boolean = !itFilter(name)
-
-  lazy val IntTest = config("it") extend Test
   lazy val UnitTest = config("unit") extend Test
 
   val scoverageSettings = Seq()
@@ -92,14 +84,8 @@ object MongoScalaBuild extends Build {
   val driverAssemblyJarSettings = assemblySettings ++
     addArtifact(Artifact("mongo-scala-driver-alldep", "jar", "jar"), assembly) ++ Seq(test in assembly := {})
 
-  // Check style task
-  val checkTask = TaskKey[Unit]("check", "Runs scalastyle, test and coverage") := {
-    (scalastyle in Compile).toTask("").value
-    (test in Test).value
-    (ScoverageKeys.coverage in Test).value
-    (ScoverageKeys.coverageReport in Test).value
-    (ScoverageKeys.coverageAggregate in Test).value
-  }
+  // Check style
+  val checkAlias = addCommandAlias("check", ";clean;coverage;test;it:test;coverageAggregate;coverageReport")
 
   // Documentation Settings to link to the async JavaDoc
   val apiUrl = "http://api.mongodb.org/java/3.1/"
@@ -139,41 +125,40 @@ object MongoScalaBuild extends Build {
   lazy val driver = Project(
     id = "mongo-scala-driver",
     base = file("driver")
-  ).configs(IntTest)
+  ).configs(IntegrationTest)
     .configs(UnitTest)
-    .settings(buildSettings: _*)
-    .settings(testSettings: _*)
-    .settings(customScalariformSettings: _*)
-    .settings(scalaStyleSettings: _*)
-    .settings(scoverageSettings: _*)
+    .settings(buildSettings)
+    .settings(testSettings)
+    .settings(customScalariformSettings)
+    .settings(scalaStyleSettings)
+    .settings(scoverageSettings)
     .settings(initialCommands in console := """import org.mongodb.scala._""")
-    .settings(docSettings: _*)
-    .settings(publishSettings: _*)
-    .settings(checkTask)
+    .settings(docSettings)
+    .settings(publishSettings)
     .dependsOn(core)
 
   lazy val core = Project(
     id = "mongo-scala-driver-core",
     base = file("core")
-  ).configs(IntTest)
+  ).configs(IntegrationTest)
     .configs(UnitTest)
-    .settings(buildSettings: _*)
-    .settings(testSettings: _*)
-    .settings(scalaStyleSettings: _*)
-    .settings(docSettings: _*)
-    .settings(checkTask)
-    .settings(publishSettings: _*)
+    .settings(buildSettings)
+    .settings(testSettings)
+    .settings(scalaStyleSettings)
+    .settings(docSettings)
+    .settings(publishSettings)
 
   lazy val root = Project(
     id = "mongo-scala-driver-root",
     base = file(".")
   ).aggregate(core)
     .aggregate(driver)
-    .settings(buildSettings: _*)
-    .settings(scalaStyleSettings: _*)
-    .settings(scoverageSettings: _*)
-    .settings(rootUnidocSettings: _*)
-    .settings(noPublishSettings: _*)
+    .settings(buildSettings)
+    .settings(scalaStyleSettings)
+    .settings(scoverageSettings)
+    .settings(rootUnidocSettings)
+    .settings(noPublishSettings)
+    .settings(checkAlias)
     .dependsOn(driver)
 
   override def rootProject = Some(root)

@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.unit
+package org.mongodb.scala
 
 import java.lang.reflect.Modifier.isStatic
 
 import scala.collection.JavaConverters._
 
-import org.mongodb.scala.{ ReadPreference, Tag, TagSet }
 import org.scalatest.{ FlatSpec, Matchers }
 
 class ReadPreferenceSpec extends FlatSpec with Matchers {

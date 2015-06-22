@@ -14,31 +14,22 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.unit
-
+package org.mongodb.scala
 import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
 
-import com.mongodb.async.client.{ AggregateIterable, MongoIterable }
+import com.mongodb.async.client.{ ListDatabasesIterable, MongoIterable }
 
-import org.mongodb.scala._
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
-class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
+class ListDatabasesObservableSpec extends FlatSpec with Matchers with MockFactory {
 
-  def observer[T] = new Observer[T]() {
-    override def onError(throwable: Throwable): Unit = {}
-    override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
-    override def onComplete(): Unit = {}
-    override def onNext(doc: T): Unit = {}
-  }
-
-  "AggregateObservable" should "have the same methods as the wrapped AggregateObservable" in {
+  "ListDatabasesObservable" should "have the same methods as the wrapped ListDatabasesObservable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
-    val wrapped: Set[String] = classOf[AggregateIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
-    val local = classOf[AggregateObservable[Document]].getMethods.map(_.getName).toSet
+    val wrapped = classOf[ListDatabasesIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
+    val local = classOf[ListDatabasesObservable[Document]].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {
       val cleanedName = name.stripPrefix("get")
@@ -47,22 +38,22 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "call the underlying methods" in {
-    val wrapper = mock[AggregateIterable[Document]]
-    val Observable = AggregateObservable(wrapper)
+    val wrapper = mock[ListDatabasesIterable[Document]]
+    val Observable = ListDatabasesObservable(wrapper)
 
     val duration = Duration(1, TimeUnit.SECONDS)
+    val observer = new Observer[Document]() {
+      override def onError(throwable: Throwable): Unit = {}
+      override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
+      override def onComplete(): Unit = {}
+      override def onNext(doc: Document): Unit = {}
+    }
 
-    wrapper.expects('allowDiskUse)(java.lang.Boolean.TRUE).once()
-    wrapper.expects('useCursor)(java.lang.Boolean.TRUE).once()
     wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
-    wrapper.expects('toCollection)(*).once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
-    Observable.allowDiskUse(true)
-    Observable.useCursor(true)
     Observable.maxTime(duration)
-    Observable.toCollection().subscribe(observer[Void])
-    Observable.subscribe(observer[Document])
+    Observable.subscribe(observer)
   }
 }

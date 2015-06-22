@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.unit
+package org.mongodb.scala
 import java.lang.reflect.Modifier._
 
 import scala.collection.JavaConverters._
 import scala.reflect.runtime.{ currentMirror, universe => u }
 
-import org.mongodb.scala.{ MongoException, WriteConcern }
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
 import org.reflections.util.{ ClasspathHelper, ConfigurationBuilder, FilterBuilder }

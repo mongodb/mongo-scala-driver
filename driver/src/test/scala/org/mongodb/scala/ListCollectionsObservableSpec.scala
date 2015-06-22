@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.unit
+package org.mongodb.scala
 import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
 
-import com.mongodb.async.client.{ DistinctIterable, MongoIterable }
+import com.mongodb.async.client.{ ListCollectionsIterable, MongoIterable }
 
-import org.mongodb.scala._
 import org.mongodb.scala.implicits._
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
-class DistinctObservableSpec extends FlatSpec with Matchers with MockFactory {
+class ListCollectionsObservableSpec extends FlatSpec with Matchers with MockFactory {
 
-  "DistinctObservable" should "have the same methods as the wrapped DistinctObservable" in {
+  "ListCollectionsObservable" should "have the same methods as the wrapped ListCollectionsObservable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
-    val wrapped = classOf[DistinctIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
-    val local = classOf[DistinctObservable[Document]].getMethods.map(_.getName).toSet
+    val wrapped = classOf[ListCollectionsIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
+    val local = classOf[ListCollectionsObservable[Document]].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {
       val cleanedName = name.stripPrefix("get")
@@ -40,8 +39,8 @@ class DistinctObservableSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "call the underlying methods" in {
-    val wrapper = mock[DistinctIterable[Document]]
-    val Observable = DistinctObservable(wrapper)
+    val wrapper = mock[ListCollectionsIterable[Document]]
+    val Observable = ListCollectionsObservable(wrapper)
 
     val filter = Document("a" -> 1)
     val duration = Duration(1, TimeUnit.SECONDS)

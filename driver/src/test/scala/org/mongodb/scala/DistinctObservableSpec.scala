@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.unit
+package org.mongodb.scala
 import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
 
-import com.mongodb.async.client.{ ListDatabasesIterable, MongoIterable }
+import com.mongodb.async.client.{ DistinctIterable, MongoIterable }
 
-import org.mongodb.scala._
+import org.mongodb.scala.implicits._
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
-class ListDatabasesObservableSpec extends FlatSpec with Matchers with MockFactory {
+class DistinctObservableSpec extends FlatSpec with Matchers with MockFactory {
 
-  "ListDatabasesObservable" should "have the same methods as the wrapped ListDatabasesObservable" in {
+  "DistinctObservable" should "have the same methods as the wrapped DistinctObservable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
-    val wrapped = classOf[ListDatabasesIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
-    val local = classOf[ListDatabasesObservable[Document]].getMethods.map(_.getName).toSet
+    val wrapped = classOf[DistinctIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
+    val local = classOf[DistinctObservable[Document]].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {
       val cleanedName = name.stripPrefix("get")
@@ -39,9 +39,10 @@ class ListDatabasesObservableSpec extends FlatSpec with Matchers with MockFactor
   }
 
   it should "call the underlying methods" in {
-    val wrapper = mock[ListDatabasesIterable[Document]]
-    val Observable = ListDatabasesObservable(wrapper)
+    val wrapper = mock[DistinctIterable[Document]]
+    val Observable = DistinctObservable(wrapper)
 
+    val filter = Document("a" -> 1)
     val duration = Duration(1, TimeUnit.SECONDS)
     val observer = new Observer[Document]() {
       override def onError(throwable: Throwable): Unit = {}
@@ -50,10 +51,12 @@ class ListDatabasesObservableSpec extends FlatSpec with Matchers with MockFactor
       override def onNext(doc: Document): Unit = {}
     }
 
+    wrapper.expects('filter)(filter).once()
     wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
+    Observable.filter(filter)
     Observable.maxTime(duration)
     Observable.subscribe(observer)
   }

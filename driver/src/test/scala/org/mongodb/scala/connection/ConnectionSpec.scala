@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.unit.connection
+package org.mongodb.scala.connection
 
-import java.net.{ InetSocketAddress, InetAddress }
+import java.net.{ InetAddress, InetSocketAddress }
 
 import scala.collection.JavaConverters._
 
 import com.mongodb.{ ServerAddress => JServerAddress }
 
 import org.mongodb.scala.ServerAddress
-import org.mongodb.scala.connection._
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.unit
+package org.mongodb.scala
 import scala.collection.JavaConverters._
 
 import org.bson.BsonDocument
@@ -23,7 +23,6 @@ import org.bson.codecs.configuration.CodecRegistries.fromProviders
 import com.mongodb.client.model.CountOptions
 import com.mongodb.async.client.{ MongoCollection => JMongoCollection }
 
-import org.mongodb.scala._
 import org.mongodb.scala.implicits._
 import org.mongodb.scala.model._
 import org.mongodb.scala.result._

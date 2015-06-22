@@ -34,9 +34,9 @@ object Dependencies {
   val mongodbDriver = "org.mongodb" % "mongodb-driver-async" % mongodbDriverVersion
 
   // Test
-  val scalaTest     = "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
+  val scalaTest     = "org.scalatest" %% "scalatest" % scalaTestVersion % "it,test"
   val scalaMock     = "org.scalamock" %% "scalamock-scalatest-support" % scalaMockVersion % "test"
-  val logback       = "ch.qos.logback" % "logback-classic" % logbackVersion % "test"
+  val logback       = "ch.qos.logback" % "logback-classic" % logbackVersion % "it,test"
   val reflections   = "org.reflections" % "reflections" % reflectionsVersion % "test"
 
   // Projects

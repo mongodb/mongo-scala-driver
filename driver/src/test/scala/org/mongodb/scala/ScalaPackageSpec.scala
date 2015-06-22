@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.unit
+package org.mongodb.scala
 
 import org.bson.BsonString
 import com.mongodb.{ MongoCredential => JMongoCredential }
-import com.mongodb.async.client.{ Observer, Subscription }
 
 import org.mongodb.scala
 import org.mongodb.scala.WriteConcern.Majority
-import org.mongodb.scala._
 import org.mongodb.scala.implicits._
 import org.mongodb.scala.model._
 import org.scalatest.{ FlatSpec, Matchers }

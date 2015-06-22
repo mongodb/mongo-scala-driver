@@ -1,11 +1,10 @@
-package org.mongodb.scala.unit
+package org.mongodb.scala
 import org.bson.BsonDocument
 import org.bson.codecs.BsonValueCodecProvider
 import org.bson.codecs.configuration.CodecRegistries.fromProviders
 import com.mongodb.client.model.CreateCollectionOptions
 import com.mongodb.async.client.{ ListCollectionsIterable, MongoDatabase => JMongoDatabase }
 
-import org.mongodb.scala._
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 

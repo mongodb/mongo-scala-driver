@@ -14,30 +14,27 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.unit.model
+package org.mongodb.scala.model
 
 import java.lang.reflect.Modifier._
 
-import com.mongodb.client.model.{ MapReduceAction => JMapReduceAction }
+import com.mongodb.client.model.{ ReturnDocument => JReturnDocument }
 
-import org.mongodb.scala.model.MapReduceAction
 import org.scalatest.{ FlatSpec, Matchers }
 
-class MapReduceActionSpec extends FlatSpec with Matchers {
+class ReturnDocumentSpec extends FlatSpec with Matchers {
 
-  "MapReduceAction" should "mirror com.mongodb.client.model.MapReduceAction" in {
-    val wrapped = classOf[JMapReduceAction].getEnumConstants.map(_.getValue.toUpperCase).toSet
-    val local = MapReduceAction.getClass.getDeclaredMethods.filter(f => isPublic(f.getModifiers)).map(_.getName).toSet
+  "ReturnDocument" should "mirror com.mongodb.client.model.ReturnDocument" in {
+    val wrapped = classOf[JReturnDocument].getEnumConstants.map(_.toString).toSet
+    val local = ReturnDocument.getClass.getDeclaredMethods.filter(f => isPublic(f.getModifiers)).map(_.getName).toSet
 
     local should equal(wrapped)
   }
 
   it should "have the same values" in {
-    MapReduceAction.MERGE should equal(JMapReduceAction.MERGE)
+    ReturnDocument.BEFORE should equal(JReturnDocument.BEFORE)
 
-    MapReduceAction.REDUCE should equal(JMapReduceAction.REDUCE)
-
-    MapReduceAction.REPLACE should equal(JMapReduceAction.REPLACE)
+    ReturnDocument.AFTER should equal(JReturnDocument.AFTER)
   }
 
 }

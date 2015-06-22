@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.unit
+package org.mongodb.scala
 import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
 
-import com.mongodb.async.client.{ ListIndexesIterable, MongoIterable }
+import com.mongodb.CursorType
+import com.mongodb.async.client.{ FindIterable, MongoIterable }
 
-import org.mongodb.scala._
+import org.mongodb.scala.implicits._
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
-class ListIndexesObservableSpec extends FlatSpec with Matchers with MockFactory {
+class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
 
-  "ListIndexesObservable" should "have the same methods as the wrapped ListIndexesObservable" in {
+  "FindObservable" should "have the same methods as the wrapped FindObservable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
-    val wrapped = classOf[ListIndexesIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
-    val local = classOf[ListIndexesObservable[Document]].getMethods.map(_.getName).toSet
+    val wrapped = classOf[FindIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
+    val local = classOf[FindObservable[Document]].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {
       val cleanedName = name.stripPrefix("get")
@@ -39,10 +40,14 @@ class ListIndexesObservableSpec extends FlatSpec with Matchers with MockFactory 
   }
 
   it should "call the underlying methods" in {
-    val wrapper = mock[ListIndexesIterable[Document]]
-    val Observable = ListIndexesObservable(wrapper)
+    val wrapper = mock[FindIterable[Document]]
+    val Observable = FindObservable(wrapper)
 
+    val filter = Document("a" -> 1)
     val duration = Duration(1, TimeUnit.SECONDS)
+    val modifiers = Document("mod" -> 1)
+    val projection = Document("proj" -> 1)
+    val sort = Document("sort" -> 1)
     val observer = new Observer[Document]() {
       override def onError(throwable: Throwable): Unit = {}
       override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
@@ -50,11 +55,33 @@ class ListIndexesObservableSpec extends FlatSpec with Matchers with MockFactory 
       override def onNext(doc: Document): Unit = {}
     }
 
+    wrapper.expects('first)(*).once()
+    wrapper.expects('filter)(filter).once()
     wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
+    wrapper.expects('limit)(1).once()
+    wrapper.expects('skip)(1).once()
+    wrapper.expects('modifiers)(modifiers).once()
+    wrapper.expects('projection)(projection).once()
+    wrapper.expects('sort)(sort).once()
+    wrapper.expects('noCursorTimeout)(true).once()
+    wrapper.expects('oplogReplay)(true).once()
+    wrapper.expects('partial)(true).once()
+    wrapper.expects('cursorType)(CursorType.NonTailable).once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
+    Observable.first().subscribe(observer)
+    Observable.filter(filter)
     Observable.maxTime(duration)
+    Observable.limit(1)
+    Observable.skip(1)
+    Observable.modifiers(modifiers)
+    Observable.projection(projection)
+    Observable.sort(sort)
+    Observable.noCursorTimeout(true)
+    Observable.oplogReplay(true)
+    Observable.partial(true)
+    Observable.cursorType(CursorType.NonTailable)
     Observable.subscribe(observer)
   }
 }
