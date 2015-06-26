@@ -42,13 +42,13 @@ class SortsSpec extends FlatSpec with Matchers {
   it should "ascending" in {
     toBson(ascending("x")) should equal(Document("""{x : 1}"""))
     toBson(ascending("x", "y")) should equal(Document("""{x : 1, y : 1}"""))
-    toBson(ascending(List("x", "y"))) should equal(Document("""{x : 1, y : 1}"""))
+    toBson(ascending(Seq("x", "y"): _*)) should equal(Document("""{x : 1, y : 1}"""))
   }
 
   it should "descending" in {
     toBson(descending("x")) should equal(Document("""{x : -1}"""))
     toBson(descending("x", "y")) should equal(Document("""{x : -1, y : -1}"""))
-    toBson(descending(List("x", "y"))) should equal(Document("""{x : -1, y : -1}"""))
+    toBson(descending(Seq("x", "y"): _*)) should equal(Document("""{x : -1, y : -1}"""))
   }
 
   it should "metaTextScore" in {
@@ -56,7 +56,7 @@ class SortsSpec extends FlatSpec with Matchers {
   }
 
   it should "orderBy" in {
-    toBson(orderBy(List(ascending("x"), descending("y")))) should equal(Document("""{x : 1, y : -1}"""))
+    toBson(orderBy(Seq(ascending("x"), descending("y")): _*)) should equal(Document("""{x : 1, y : -1}"""))
     toBson(orderBy(ascending("x"), descending("y"))) should equal(Document("""{x : 1, y : -1}"""))
     toBson(orderBy(ascending("x"), descending("y"), descending("x"))) should equal(Document("""{y : -1, x : -1}"""))
     toBson(orderBy(ascending("x", "y"), descending("a", "b"))) should equal(Document("""{x : 1, y : 1, a : -1, b : -1}"""))

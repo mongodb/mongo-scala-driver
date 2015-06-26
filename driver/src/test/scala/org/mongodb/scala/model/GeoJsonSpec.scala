@@ -58,32 +58,32 @@ class GeoJsonSpec extends FlatSpec with Matchers {
   }
 
   it should "create the same GeometryCollection" in {
-    GeometryCollection(List(Point(Position(1, 2)))) should equal(
-      new geojson.GeometryCollection(List(Point(Position(1, 2))).asInstanceOf[List[Geometry]].asJava)
+    GeometryCollection(Seq(Point(Position(1, 2)))) should equal(
+      new geojson.GeometryCollection(Seq(Point(Position(1, 2))).asInstanceOf[List[Geometry]].asJava)
     )
 
-    GeometryCollection(EPSG_4326, List(Point(Position(1, 2)))) should equal(
-      new geojson.GeometryCollection(EPSG_4326, List(Point(Position(1, 2))).asInstanceOf[List[Geometry]].asJava)
+    GeometryCollection(EPSG_4326, Seq(Point(Position(1, 2)))) should equal(
+      new geojson.GeometryCollection(EPSG_4326, Seq(Point(Position(1, 2))).asInstanceOf[List[Geometry]].asJava)
     )
   }
 
   it should "create the same LineString" in {
-    LineString(List(Position(1, 2), Position(2, 4))) should equal(new geojson.LineString(List(Position(1, 2), Position(2, 4)).asJava))
-    LineString(EPSG_4326_STRICT_WINDING, List(Position(1, 2), Position(2, 4))) should equal(
-      new geojson.LineString(EPSG_4326_STRICT_WINDING, List(Position(1, 2), Position(2, 4)).asJava)
+    LineString(Seq(Position(1, 2), Position(2, 4))) should equal(new geojson.LineString(Seq(Position(1, 2), Position(2, 4)).asJava))
+    LineString(EPSG_4326_STRICT_WINDING, Seq(Position(1, 2), Position(2, 4))) should equal(
+      new geojson.LineString(EPSG_4326_STRICT_WINDING, Seq(Position(1, 2), Position(2, 4)).asJava)
     )
   }
 
   it should "create the same MultiLineString" in {
-    MultiLineString(List(List(Position(1, 2)))) should equal(new geojson.MultiLineString(List(List(Position(1, 2)).asJava).asJava))
-    MultiLineString(EPSG_4326, List(List(Position(1, 2)))) should equal(
-      new geojson.MultiLineString(EPSG_4326, List(List(Position(1, 2)).asJava).asJava)
+    MultiLineString(Seq(Position(1, 2))) should equal(new geojson.MultiLineString(Seq(Seq(Position(1, 2)).asJava).asJava))
+    MultiLineString(EPSG_4326, Seq(Position(1, 2))) should equal(
+      new geojson.MultiLineString(EPSG_4326, Seq(Seq(Position(1, 2)).asJava).asJava)
     )
   }
 
   it should "create the same MultiPoint" in {
-    MultiPoint(List(Position(1, 2))) should equal(new geojson.MultiPoint(List(Position(1, 2)).asJava))
-    MultiPoint(CRS_84, List(Position(1, 2))) should equal(new geojson.MultiPoint(CRS_84, List(Position(1, 2)).asJava))
+    MultiPoint(Position(1, 2)) should equal(new geojson.MultiPoint(Seq(Position(1, 2)).asJava))
+    MultiPoint(CRS_84, Position(1, 2)) should equal(new geojson.MultiPoint(CRS_84, Seq(Position(1, 2)).asJava))
   }
 
   it should "create the same Point" in {
@@ -92,22 +92,22 @@ class GeoJsonSpec extends FlatSpec with Matchers {
   }
 
   it should "create the same MultiPolygon" in {
-    val exterior = List(Position(10, 20), Position(10, 40), Position(20, 40), Position(10, 20))
-    val interior = List(Position(15, 16), Position(15, 18), Position(16, 18), Position(15, 16))
+    val exterior = Seq(Position(10, 20), Position(10, 40), Position(20, 40), Position(10, 20))
+    val interior = Seq(Position(15, 16), Position(15, 18), Position(16, 18), Position(15, 16))
 
-    MultiPolygon(List(PolygonCoordinates(exterior))) should equal(new geojson.MultiPolygon(List(PolygonCoordinates(exterior)).asJava))
+    MultiPolygon(PolygonCoordinates(exterior)) should equal(new geojson.MultiPolygon(Seq(PolygonCoordinates(exterior)).asJava))
 
-    MultiPolygon(List(PolygonCoordinates(exterior, interior))) should equal(
-      new geojson.MultiPolygon(List(PolygonCoordinates(exterior, interior)).asJava)
+    MultiPolygon(PolygonCoordinates(exterior, interior)) should equal(
+      new geojson.MultiPolygon(Seq(PolygonCoordinates(exterior, interior)).asJava)
     )
 
-    MultiPolygon(CRS_84, List(PolygonCoordinates(exterior))) should equal(
-      new geojson.MultiPolygon(CRS_84, List(PolygonCoordinates(exterior)).asJava)
+    MultiPolygon(CRS_84, PolygonCoordinates(exterior)) should equal(
+      new geojson.MultiPolygon(CRS_84, Seq(PolygonCoordinates(exterior)).asJava)
     )
   }
 
   it should "create the same Polygon" in {
-    val exterior = List(Position(10, 20), Position(10, 40), Position(20, 40), Position(10, 20))
+    val exterior = Seq(Position(10, 20), Position(10, 40), Position(20, 40), Position(10, 20))
 
     Polygon(PolygonCoordinates(exterior)) should equal(new geojson.Polygon(PolygonCoordinates(exterior)))
     Polygon(CRS_84, PolygonCoordinates(exterior)) should equal(new geojson.Polygon(CRS_84, PolygonCoordinates(exterior)))

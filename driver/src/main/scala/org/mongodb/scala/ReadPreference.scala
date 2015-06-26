@@ -102,7 +102,7 @@ object ReadPreference {
    * @param tagSetList the list of tag sets to limit the list of secondaries to
    * @return ReadPreference which reads primary if available, otherwise a secondary respective of tags.
    */
-  def primaryPreferred(tagSetList: List[TagSet]): TaggableReadPreference = JReadPreference.primaryPreferred(tagSetList.asJava)
+  def primaryPreferred(tagSetList: Seq[TagSet]): TaggableReadPreference = JReadPreference.primaryPreferred(tagSetList.asJava)
 
   /**
    * Gets a read preference that forces reads to a secondary with one of the given sets of tags.
@@ -112,7 +112,7 @@ object ReadPreference {
    * @param tagSetList the list of tag sets to limit the list of secondaries to
    * @return ReadPreference which reads secondary respective of tags.
    */
-  def secondary(tagSetList: List[TagSet]): TaggableReadPreference = JReadPreference.secondary(tagSetList.asJava)
+  def secondary(tagSetList: Seq[TagSet]): TaggableReadPreference = JReadPreference.secondary(tagSetList.asJava)
 
   /**
    * Gets a read preference that forces reads to a secondary with one of the given sets of tags.
@@ -122,7 +122,7 @@ object ReadPreference {
    * @param tagSetList the list of tag sets to limit the list of secondaries to
    * @return ReadPreference which reads secondary if available respective of tags, otherwise from primary irrespective of tags.
    */
-  def secondaryPreferred(tagSetList: List[TagSet]): TaggableReadPreference = JReadPreference.secondaryPreferred(tagSetList.asJava)
+  def secondaryPreferred(tagSetList: Seq[TagSet]): TaggableReadPreference = JReadPreference.secondaryPreferred(tagSetList.asJava)
 
   /**
    * Gets a read preference that forces reads to the primary or a secondary with one of the given sets of tags.
@@ -132,7 +132,7 @@ object ReadPreference {
    * @param tagSetList the list of tag sets to limit the list of secondaries to
    * @return ReadPreference which reads nearest node respective of tags.
    */
-  def nearest(tagSetList: List[TagSet]): TaggableReadPreference = JReadPreference.nearest(tagSetList.asJava)
+  def nearest(tagSetList: Seq[TagSet]): TaggableReadPreference = JReadPreference.nearest(tagSetList.asJava)
 
   /**
    * Creates a read preference from the given read preference name.
@@ -149,7 +149,7 @@ object ReadPreference {
    * @param tagSetList the list of tag sets
    * @return the taggable read preference
    */
-  def valueOf(name: String, tagSetList: List[TagSet]): TaggableReadPreference = JReadPreference.valueOf(name, tagSetList.asJava)
+  def valueOf(name: String, tagSetList: Seq[TagSet]): TaggableReadPreference = JReadPreference.valueOf(name, tagSetList.asJava)
 
 }
 

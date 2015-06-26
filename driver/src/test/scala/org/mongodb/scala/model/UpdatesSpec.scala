@@ -84,19 +84,19 @@ class UpdatesSpec extends FlatSpec with Matchers {
 
   it should "should render $addToSet" in {
     toBson(addToSet("x", 1)) should equal(Document("""{$addToSet : { x : 1} }"""))
-    toBson(addEachToSet("x", List(1, 2, 3))) should equal(Document("""{$addToSet : { x : { $each : [1, 2, 3] } } }"""))
+    toBson(addEachToSet("x", 1, 2, 3)) should equal(Document("""{$addToSet : { x : { $each : [1, 2, 3] } } }"""))
   }
 
   it should "should render $push" in {
     toBson(push("x", 1)) should equal(Document("""{$push : { x : 1} }"""))
-    toBson(pushEach("x", List(1, 2, 3))) should equal(Document("""{$push : { x : { $each : [1, 2, 3] } } }"""))
-    toBson(pushEach("x", List(1, 2, 3), PushOptions())) should equal(Document("""{$push : { x : { $each : [1, 2, 3] } } }"""))
-    toBson(pushEach("x", List(Document("""{score : 89}"""), Document("""{score : 65}""")),
-      PushOptions().position(0).slice(3).sortDocument(Document("{score : -1}")))) should equal(
+    toBson(pushEach("x", 1, 2, 3)) should equal(Document("""{$push : { x : { $each : [1, 2, 3] } } }"""))
+    toBson(pushEach("x", PushOptions(), 1, 2, 3)) should equal(Document("""{$push : { x : { $each : [1, 2, 3] } } }"""))
+    toBson(pushEach("x", PushOptions().position(0).slice(3).sortDocument(Document("{score : -1}")),
+      Document("""{score : 89}"""), Document("""{score : 65}"""))) should equal(
       Document("""{$push : { x : { $each : [{score : 89}, {score : 65}], $position : 0, $slice : 3, $sort : { score : -1 } } } }""")
     )
 
-    toBson(pushEach("x", List(89, 65), PushOptions().position(0).slice(3).sort(-1))) should equal(
+    toBson(pushEach("x", PushOptions().position(0).slice(3).sort(-1), 89, 65)) should equal(
       Document("""{$push : { x : { $each : [89, 65], $position : 0, $slice : 3, $sort : -1 } } }""")
     )
   }
@@ -107,8 +107,8 @@ class UpdatesSpec extends FlatSpec with Matchers {
   }
 
   it should "should render `$pullAll`" in {
-    toBson(pullAll("x", List())) should equal(Document("""{$pullAll : { x : []} }"""))
-    toBson(pullAll("x", List(1, 2, 3))) should equal(Document("""{$pullAll : { x : [1, 2, 3]} }"""))
+    toBson(pullAll("x")) should equal(Document("""{$pullAll : { x : []} }"""))
+    toBson(pullAll("x", 1, 2, 3)) should equal(Document("""{$pullAll : { x : [1, 2, 3]} }"""))
   }
 
   it should "should render $pop" in {
@@ -127,7 +127,6 @@ class UpdatesSpec extends FlatSpec with Matchers {
 
   it should "should combine updates" in {
     toBson(combine(set("x", 1))) should equal(Document("""{$set : { x : 1} }"""))
-    toBson(combine(List(set("x", 1), set("y", 2)))) should equal(Document("""{$set : { x : 1, y : 2} }"""))
     toBson(combine(set("x", 1), set("x", 2))) should equal(Document("""{$set : { x : 2} }"""))
     toBson(combine(set("x", 1), inc("z", 3), set("y", 2), inc("a", 4))) should equal(Document("""{
                                                                                             $set : { x : 1, y : 2},

@@ -111,20 +111,6 @@ class AggregatesSpec extends FlatSpec with Matchers {
       push("all", "$quantity"),
       addToSet("unique", "$quantity")
     )) should equal(groupDocument)
-
-    toBson(group(
-      null,
-      List(
-        sum("sum", Document("""{ $multiply: [ "$price", "$quantity" ] }""")),
-        avg("avg", "$quantity"),
-        min("min", "$quantity"),
-        max("max", "$quantity"),
-        first("first", "$quantity"),
-        last("last", "$quantity"),
-        push("all", "$quantity"),
-        addToSet("unique", "$quantity")
-      )
-    )) should equal(groupDocument)
   }
 
 }

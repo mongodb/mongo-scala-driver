@@ -46,25 +46,7 @@ object Sorts {
    * @return the sort specification
    * @see [[http://http://docs.mongodb.org/manual/reference/operator/meta/orderby Sort]]
    */
-  def ascending(fieldNames: List[String]): Bson = JSorts.ascending(fieldNames.asJava)
-
-  /**
-   * Create a sort specification for an ascending sort on the given fields.
-   *
-   * @param fieldNames the field names, which must contain at least one
-   * @return the sort specification
-   * @see [[http://http://docs.mongodb.org/manual/reference/operator/meta/orderby Sort]]
-   */
   def descending(fieldNames: String*): Bson = JSorts.descending(fieldNames.asJava)
-
-  /**
-   * Create a sort specification for an ascending sort on the given fields.
-   *
-   * @param fieldNames the field names, which must contain at least one
-   * @return the sort specification
-   * @see [[http://http://docs.mongodb.org/manual/reference/operator/meta/orderby Sort]]
-   */
-  def descending(fieldNames: List[String]): Bson = JSorts.descending(fieldNames.asJava)
 
   /**
    * Create a sort specification for the text score meta projection on the given field.
@@ -82,12 +64,4 @@ object Sorts {
    * @return the combined sort specification
    */
   def orderBy(sorts: Bson*): Bson = JSorts.orderBy(sorts.asJava)
-
-  /**
-   * Combine multiple sort specifications.  If any field names are repeated, the last one takes precendence.
-   *
-   * @param sorts the sort specifications
-   * @return the combined sort specification
-   */
-  def orderBy(sorts: List[Bson]): Bson = JSorts.orderBy(sorts.asJava)
 }

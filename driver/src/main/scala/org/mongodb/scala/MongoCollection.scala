@@ -186,7 +186,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable containing the result of the aggregation operation
    *         [[http://docs.mongodb.org/manual/aggregation/ Aggregation]]
    */
-  def aggregate[C](pipeline: List[Bson])(implicit e: C DefaultsTo immutable.Document, ct: ClassTag[C]): AggregateObservable[C] =
+  def aggregate[C](pipeline: Seq[Bson])(implicit e: C DefaultsTo immutable.Document, ct: ClassTag[C]): AggregateObservable[C] =
     AggregateObservable(wrapped.aggregate[C](pipeline.asJava, ct))
 
   /**
@@ -207,7 +207,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param requests the writes to execute
    * @return a Observable with a single element the BulkWriteResult
    */
-  def bulkWrite(requests: List[_ <: WriteModel[_ <: TResult]]): Observable[BulkWriteResult] =
+  def bulkWrite(requests: Seq[_ <: WriteModel[_ <: TResult]]): Observable[BulkWriteResult] =
     observe(wrapped.bulkWrite(requests.asJava.asInstanceOf[util.List[_ <: WriteModel[_ <: TResult]]], _: SingleResultCallback[BulkWriteResult]))
 
   /**
@@ -217,7 +217,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param options  the options to apply to the bulk write operation
    * @return a Observable with a single element the BulkWriteResult
    */
-  def bulkWrite(requests: List[_ <: WriteModel[_ <: TResult]], options: BulkWriteOptions): Observable[BulkWriteResult] =
+  def bulkWrite(requests: Seq[_ <: WriteModel[_ <: TResult]], options: BulkWriteOptions): Observable[BulkWriteResult] =
     observe(wrapped.bulkWrite(
       requests.asJava.asInstanceOf[util.List[_ <: WriteModel[_ <: TResult]]],
       options,
@@ -241,7 +241,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element indicating when the operation has completed or with either a
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    */
-  def insertMany(documents: List[_ <: TResult]): Observable[Void] =
+  def insertMany(documents: Seq[_ <: TResult]): Observable[Void] =
     observe(wrapped.insertMany(documents.asJava, _: SingleResultCallback[Void]))
 
   /**
@@ -253,7 +253,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element indicating when the operation has completed or with either a
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    */
-  def insertMany(documents: List[_ <: TResult], options: InsertManyOptions): Observable[Void] =
+  def insertMany(documents: Seq[_ <: TResult], options: InsertManyOptions): Observable[Void] =
     observe(wrapped.insertMany(documents.asJava, options, _: SingleResultCallback[Void]))
 
   /**
@@ -460,7 +460,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param models the list of indexes to create
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def createIndexes(models: List[IndexModel]): Observable[String] =
+  def createIndexes(models: Seq[IndexModel]): Observable[String] =
     observeAndFlatten(wrapped.createIndexes(models.asJava, _: SingleResultCallback[util.List[String]]))
 
   /**

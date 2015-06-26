@@ -42,5 +42,5 @@ object TagSet {
    *
    * @param tagList the list of tags
    */
-  def apply(tagList: List[Tag]): TagSet = new JTagSet(tagList.asJava)
+  def apply(tagList: Seq[Tag]): TagSet = new JTagSet(tagList.asJava)
 }

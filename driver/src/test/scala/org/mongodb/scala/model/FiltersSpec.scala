@@ -65,7 +65,7 @@ class FiltersSpec extends FlatSpec with Matchers {
 
   it should "render $nor" in {
     toBson(model.Filters.nor(model.Filters.eq("price", 1))) should equal(Document("""{$nor : [{price: 1}]}"""))
-    toBson(model.Filters.nor(List(model.Filters.eq("price", 1), model.Filters.eq("sale", true)))) should equal(Document("""{$nor : [{price: 1}, {sale: true}]}"""))
+    toBson(model.Filters.nor(model.Filters.eq("price", 1), model.Filters.eq("sale", true))) should equal(Document("""{$nor : [{price: 1}, {sale: true}]}"""))
   }
 
   it should "render $gt" in {
@@ -90,42 +90,37 @@ class FiltersSpec extends FlatSpec with Matchers {
   }
 
   it should "or should render empty or using $or" in {
-    toBson(model.Filters.or(List())) should equal(Document("""{$or : []}"""))
     toBson(model.Filters.or()) should equal(Document("""{$or : []}"""))
   }
 
   it should "render $or" in {
-    toBson(model.Filters.or(List(model.Filters.eq("x", 1), model.Filters.eq("y", 2)))) should equal(Document("""{$or : [{x : 1}, {y : 2}]}"""))
     toBson(model.Filters.or(model.Filters.eq("x", 1), model.Filters.eq("y", 2))) should equal(Document("""{$or : [{x : 1}, {y : 2}]}"""))
   }
 
   it should "and should render empty and using $and" in {
-    toBson(model.Filters.and(List())) should equal(Document("""{$and : []}"""))
     toBson(model.Filters.and()) should equal(Document("""{$and : []}"""))
   }
 
   it should "and should render and without using $and" in {
-    toBson(model.Filters.and(List(model.Filters.eq("x", 1), model.Filters.eq("y", 2)))) should equal(Document("""{x : 1, y : 2}"""))
     toBson(model.Filters.and(model.Filters.eq("x", 1), model.Filters.eq("y", 2))) should equal(Document("""{x : 1, y : 2}"""))
   }
 
   it should "and should render $and with clashing keys" in {
-    toBson(model.Filters.and(List(model.Filters.eq("a", 1), model.Filters.eq("a", 2)))) should equal(Document("""{$and: [{a: 1}, {a: 2}]}"""))
+    toBson(model.Filters.and(model.Filters.eq("a", 1), model.Filters.eq("a", 2))) should equal(Document("""{$and: [{a: 1}, {a: 2}]}"""))
   }
 
   it should "and should flatten multiple operators for the same key" in {
-    toBson(model.Filters.and(List(model.Filters.gt("a", 1), model.Filters.lt("a", 9)))) should equal(Document("""{a : {$gt : 1, $lt : 9}}"""))
+    toBson(model.Filters.and(model.Filters.gt("a", 1), model.Filters.lt("a", 9))) should equal(Document("""{a : {$gt : 1, $lt : 9}}"""))
   }
 
   it should "and should flatten nested" in {
-    toBson(model.Filters.and(List(model.Filters.and(List(model.Filters.eq("a", 1), model.Filters.eq("b", 2))), model.Filters.eq("c", 3)))) should equal(Document("""{a : 1, b : 2, c : 3}"""))
-    toBson(model.Filters.and(List(model.Filters.and(model.Filters.eq("a", 1), model.Filters.eq("a", 2)), model.Filters.eq("c", 3)))) should equal(Document("""{$and:[{a : 1}, {a : 2}, {c : 3}] }"""))
+    toBson(model.Filters.and(model.Filters.and(model.Filters.eq("a", 1), model.Filters.eq("b", 2)), model.Filters.eq("c", 3))) should equal(Document("""{a : 1, b : 2, c : 3}"""))
+    toBson(model.Filters.and(model.Filters.and(model.Filters.eq("a", 1), model.Filters.eq("a", 2)), model.Filters.eq("c", 3))) should equal(Document("""{$and:[{a : 1}, {a : 2}, {c : 3}] }"""))
     toBson(model.Filters.and(model.Filters.lt("a", 1), model.Filters.lt("b", 2))) should equal(Document("""{a : {$lt : 1}, b : {$lt : 2} }"""))
     toBson(model.Filters.and(model.Filters.lt("a", 1), model.Filters.lt("a", 2))) should equal(Document("""{$and : [{a : {$lt : 1}}, {a : {$lt : 2}}]}"""))
   }
 
   it should "render $all" in {
-    toBson(model.Filters.all("a", List(1, 2, 3))) should equal(Document("""{a : {$all : [1, 2, 3]} }"""))
     toBson(model.Filters.all("a", 1, 2, 3)) should equal(Document("""{a : {$all : [1, 2, 3]} }"""))
   }
 
@@ -135,12 +130,10 @@ class FiltersSpec extends FlatSpec with Matchers {
   }
 
   it should "render $in" in {
-    toBson(model.Filters.in("a", List(1, 2, 3))) should equal(Document("""{a : {$in : [1, 2, 3]} }"""))
     toBson(model.Filters.in("a", 1, 2, 3)) should equal(Document("""{a : {$in : [1, 2, 3]} }"""))
   }
 
   it should "render $nin" in {
-    toBson(model.Filters.nin("a", List(1, 2, 3))) should equal(Document("""{a : {$nin : [1, 2, 3]} }"""))
     toBson(model.Filters.nin("a", 1, 2, 3)) should equal(Document("""{a : {$nin : [1, 2, 3]} }"""))
   }
 
@@ -172,11 +165,11 @@ class FiltersSpec extends FlatSpec with Matchers {
   }
 
   it should "render $geoWithin" in {
-    val polygon = Polygon(List(
-      Position(List(40.0, 18.0)),
-      Position(List(40.0, 19.0)),
-      Position(List(41.0, 19.0)),
-      Position(List(40.0, 18.0))
+    val polygon = Polygon(Seq(
+      Position(40.0, 18.0),
+      Position(40.0, 19.0),
+      Position(41.0, 19.0),
+      Position(40.0, 18.0)
     ))
 
     toBson(model.Filters.geoWithin("loc", polygon)) should equal(Document("""{
@@ -253,7 +246,7 @@ class FiltersSpec extends FlatSpec with Matchers {
   }
 
   it should "render $geoIntersects" in {
-    val polygon = Polygon(List(
+    val polygon = Polygon(Seq(
       Position(40.0d, 18.0d),
       Position(40.0d, 19.0d),
       Position(41.0d, 19.0d),

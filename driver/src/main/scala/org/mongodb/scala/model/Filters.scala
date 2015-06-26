@@ -114,17 +114,6 @@ object Filters {
   def in[TItem](fieldName: String, values: TItem*): Bson = JFilters.in(fieldName, values.asJava)
 
   /**
-   * Creates a filter that matches all documents where the value of a field equals any value in the list of specified values.
-   *
-   * @param fieldName the field name
-   * @param values    the list of values
-   * @tparam TItem   the value type
-   * @return the filter
-   * @see [[http://docs.mongodb.org/manual/reference/operator/query/in \$in]]
-   */
-  def in[TItem](fieldName: String, values: List[TItem]): Bson = JFilters.in(fieldName, values.asJava)
-
-  /**
    * Creates a filter that matches all documents where the value of a field does not equal any of the specified values or does not exist.
    *
    * @param fieldName the field name
@@ -134,33 +123,6 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/nin \$nin]]
    */
   def nin[TItem](fieldName: String, values: TItem*): Bson = JFilters.nin(fieldName, values.asJava)
-
-  /**
-   * Creates a filter that matches all documents where the value of a field does not equal any of the specified values or does not exist.
-   *
-   * @param fieldName the field name
-   * @param values    the list of values
-   * @tparam TItem   the value type
-   * @return the filter
-   * @see [[http://docs.mongodb.org/manual/reference/operator/query/nin \$nin]]
-   */
-  def nin[TItem](fieldName: String, values: List[TItem]): Bson = JFilters.nin(fieldName, values.asJava)
-
-  /**
-   * Creates a filter that performs a logical AND of the provided list of filters.  Note that this will only generate a `\$and`
-   * operator if absolutely necessary, as the query language implicity ands together all the keys.  In other words, a query expression
-   * like:
-   *
-   * `and(eq("x", 1), lt("y", 3))`
-   *
-   * will generate a MongoDB query like:
-   * `{x : 1, y : {\$lt : 3}}`
-   *
-   * @param filters the list of filters to and together
-   * @return the filter
-   * @see [[http://docs.mongodb.org/manual/reference/operator/query/and \$and]]
-   */
-  def and(filters: List[Bson]): Bson = JFilters.and(filters.asJava)
 
   /**
    * Creates a filter that performs a logical AND of the provided list of filters.  Note that this will only generate a "\$and"
@@ -182,15 +144,6 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/and \$and]]
    */
   def and(filters: Bson*): Bson = JFilters.and(filters.asJava)
-
-  /**
-   * Creates a filter that preforms a logical OR of the provided list of filters.
-   *
-   * @param filters the list of filters to and together
-   * @return the filter
-   * @see [[http://docs.mongodb.org/manual/reference/operator/query/or \$or]]
-   */
-  def or(filters: Iterable[Bson]): Bson = JFilters.or(filters.asJava)
 
   /**
    * Creates a filter that preforms a logical OR of the provided list of filters.
@@ -224,15 +177,6 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/nor \$nor]]
    */
   def nor(filters: Bson*): Bson = JFilters.nor(filters.asJava)
-
-  /**
-   * Creates a filter that performs a logical NOR operation on all the specified filters.
-   *
-   * @param filters    the list of values
-   * @return the filter
-   * @see [[http://docs.mongodb.org/manual/reference/operator/query/nor \$nor]]
-   */
-  def nor(filters: Iterable[Bson]): Bson = JFilters.nor(filters.asJava)
 
   /**
    * Creates a filter that matches all documents that contain the given field.
@@ -353,17 +297,6 @@ object Filters {
   def all[TItem](fieldName: String, values: TItem*): Bson = JFilters.all(fieldName, values.toList.asJava)
 
   /**
-   * Creates a filter that matches all documents where the value of a field is an array that contains all the specified values.
-   *
-   * @param fieldName the field name
-   * @param values    the list of values
-   * @tparam TItem   the value type
-   * @return the filter
-   * @see [[http://docs.mongodb.org/manual/reference/operator/query/all \$all]]
-   */
-  def all[TItem](fieldName: String, values: List[TItem]): Bson = JFilters.all(fieldName, values.asJava)
-
-  /**
    * Creates a filter that matches all documents containing a field that is an array where at least one member of the array matches the
    * given filter.
    *
@@ -425,13 +358,13 @@ object Filters {
    * polygon.
    *
    * @param fieldName the field name
-   * @param points    a list of pairs of x, y coordinates.  Any extra dimensions are ignored
+   * @param points    a Seq of pairs of x, y coordinates.  Any extra dimensions are ignored
    * @return the filter
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/geoWithin/ \$geoWithin]]
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/polygon/#op._S_polygon \$polygon]]
    */
-  def geoWithinPolygon(fieldName: String, points: List[List[Double]]): Bson =
-    JFilters.geoWithinPolygon(fieldName, points.map(_.asInstanceOf[List[lang.Double]].asJava).asJava)
+  def geoWithinPolygon(fieldName: String, points: Seq[Seq[Double]]): Bson =
+    JFilters.geoWithinPolygon(fieldName, points.map(_.asInstanceOf[Seq[lang.Double]].asJava).asJava)
 
   /**
    * Creates a filter that matches all documents containing a field with grid coordinates data that exist entirely within the specified

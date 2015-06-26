@@ -41,14 +41,11 @@ class ProjectionsSpec extends FlatSpec with Matchers {
   it should "include" in {
     toBson(model.Projections.include("x")) should equal(Document("""{x : 1}"""))
     toBson(model.Projections.include("x", "y")) should equal(Document("""{x : 1, y : 1}"""))
-    toBson(model.Projections.include(List("x", "y"))) should equal(Document("""{x : 1, y : 1}"""))
-    toBson(model.Projections.include(List("x", "y", "x"))) should equal(Document("""{y : 1, x : 1}"""))
   }
 
   it should "exclude" in {
     toBson(model.Projections.exclude("x")) should equal(Document("""{x : 0}"""))
     toBson(model.Projections.exclude("x", "y")) should equal(Document("""{x : 0, y : 0}"""))
-    toBson(model.Projections.exclude(List("x", "y"))) should equal(Document("""{x : 0, y : 0}"""))
   }
 
   it should "excludeId" in {
@@ -78,7 +75,6 @@ class ProjectionsSpec extends FlatSpec with Matchers {
 
   it should "combine fields" in {
     toBson(model.Projections.fields(model.Projections.include("x", "y"), model.Projections.exclude("_id"))) should equal(Document("""{x : 1, y : 1, _id : 0}"""))
-    toBson(model.Projections.fields(List(model.Projections.include("x", "y"), model.Projections.exclude("_id")))) should equal(Document("""{x : 1, y : 1, _id : 0}"""))
     toBson(model.Projections.fields(model.Projections.include("x", "y"), model.Projections.exclude("x"))) should equal(Document("""{y : 1, x : 0}"""))
   }
 

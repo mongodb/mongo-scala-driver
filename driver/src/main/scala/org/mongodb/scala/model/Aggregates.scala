@@ -87,19 +87,7 @@ object Aggregates {
    * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/group/ \$group]]
    * @see [[http://docs.mongodb.org/manual/meta/aggregation-quick-reference/#aggregation-expressions Expressions]]
    */
-  def group[TExpression](id: TExpression, fieldAccumulators: BsonField*): Bson = group(id, fieldAccumulators.toList)
-
-  /**
-   * Creates a `\$group` pipeline stage for the specified filter
-   *
-   * @param id the id expression for the group
-   * @param fieldAccumulators zero or more field accumulator pairs
-   * @tparam TExpression the expression type
-   * @return the `\$group` pipeline stage
-   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/group/ \$group]]
-   * @see [[http://docs.mongodb.org/manual/meta/aggregation-quick-reference/#aggregation-expressions Expressions]]
-   */
-  def group[TExpression](id: TExpression, fieldAccumulators: List[BsonField]): Bson = JAggregates.group(id, fieldAccumulators.asJava)
+  def group[TExpression](id: TExpression, fieldAccumulators: BsonField*): Bson = JAggregates.group(id, fieldAccumulators.asJava)
 
   /**
    * Creates a `\$unwind` pipeline stage for the specified field name, which must be prefixed by a `\$` sign.

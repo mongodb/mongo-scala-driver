@@ -118,9 +118,13 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @tparam TResult       the type of the class to use instead of [[Document]].
    * @return a Observable containing the command result
    */
-  def runCommand[TResult](command: Bson, readPreference: ReadPreference)(implicit
-    e: TResult DefaultsTo immutable.Document,
-                                                                         ct: ClassTag[TResult]): Observable[TResult] =
+  def runCommand[TResult](
+    command:        Bson,
+    readPreference: ReadPreference
+  )(
+    implicit
+    e: TResult DefaultsTo immutable.Document, ct: ClassTag[TResult]
+  ): Observable[TResult] =
     observe(wrapped.runCommand(command, readPreference, ct.runtimeClass.asInstanceOf[Class[TResult]], _: SingleResultCallback[TResult]))
 
   /**

@@ -38,14 +38,6 @@ object Updates {
   def combine(updates: Bson*): Bson = JUpdates.combine(updates.asJava)
 
   /**
-   * Combine a list of updates into a single update.
-   *
-   * @param updates the list of updates
-   * @return a combined update
-   */
-  def combine(updates: List[Bson]): Bson = JUpdates.combine(updates.asJava)
-
-  /**
    * Creates an update that sets the value of the field with the given name to the given value.
    *
    * @param fieldName the non-null field name
@@ -173,7 +165,7 @@ object Updates {
    * @return the update
    * @see [[http://docs.mongodb.com/manual/reference/operator/update/addToSet/ \$addToSet]]
    */
-  def addEachToSet[TItem](fieldName: String, values: List[TItem]): Bson = JUpdates.addEachToSet(fieldName, values.asJava)
+  def addEachToSet[TItem](fieldName: String, values: TItem*): Bson = JUpdates.addEachToSet(fieldName, values.asJava)
 
   /**
    * Creates an update that adds the given value to the array value of the field with the given name.
@@ -195,7 +187,7 @@ object Updates {
    * @return the update
    * @see [[http://docs.mongodb.com/manual/reference/operator/update/push/ \$push]]
    */
-  def pushEach[TItem](fieldName: String, values: List[TItem]): Bson = JUpdates.pushEach(fieldName, values.asJava)
+  def pushEach[TItem](fieldName: String, values: TItem*): Bson = JUpdates.pushEach(fieldName, values.asJava)
 
   /**
    * Creates an update that adds each of the given values to the array value of the field with the given name, applying the given
@@ -208,7 +200,7 @@ object Updates {
    * @return the update
    * @see [[http://docs.mongodb.com/manual/reference/operator/update/push/ \$push]]
    */
-  def pushEach[TItem](fieldName: String, values: List[TItem], options: JPushOptions): Bson =
+  def pushEach[TItem](fieldName: String, options: JPushOptions, values: TItem*): Bson =
     JUpdates.pushEach(fieldName, values.asJava, options)
 
   /**
@@ -240,7 +232,7 @@ object Updates {
    * @return the update
    * @see [[http://docs.mongodb.com/manual/reference/operator/update/pull/ \$pull]]
    */
-  def pullAll[TItem](fieldName: String, values: List[TItem]): Bson = JUpdates.pullAll(fieldName, values.asJava)
+  def pullAll[TItem](fieldName: String, values: TItem*): Bson = JUpdates.pullAll(fieldName, values.asJava)
 
   /**
    * Creates an update that pops the first element of an array that is the value of the field with the given name.

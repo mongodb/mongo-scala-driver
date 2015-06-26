@@ -49,28 +49,12 @@ object Projections {
   def include(fieldNames: String*): Bson = JProjections.include(fieldNames.asJava)
 
   /**
-   * Creates a projection that includes all of the given fields.
-   *
-   * @param fieldNames the field names
-   * @return the projection
-   */
-  def include(fieldNames: List[String]): Bson = JProjections.include(fieldNames.asJava)
-
-  /**
    * Creates a projection that excludes all of the given fields.
    *
    * @param fieldNames the field names
    * @return the projection
    */
   def exclude(fieldNames: String*): Bson = JProjections.exclude(fieldNames.asJava)
-
-  /**
-   * Creates a projection that excludes all of the given fields.
-   *
-   * @param fieldNames the field names
-   * @return the projection
-   */
-  def exclude(fieldNames: List[String]): Bson = JProjections.exclude(fieldNames.asJava)
 
   /**
    * Creates a projection that excludes the _id field.  This suppresses the automatic inclusion of _id that is the default, even when
@@ -139,13 +123,4 @@ object Projections {
    * @return the combined projection
    */
   def fields(projections: Bson*): Bson = JProjections.fields(projections.asJava)
-
-  /**
-   * Creates a projection that combines the list of projections into a single one.  If there are duplicate keys, the last one takes
-   * precedence.
-   *
-   * @param projections the list of projections to combine
-   * @return the combined projection
-   */
-  def fields(projections: List[Bson]): Bson = JProjections.fields(projections.asJava)
 }
