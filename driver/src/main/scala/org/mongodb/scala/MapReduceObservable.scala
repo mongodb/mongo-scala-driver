@@ -202,7 +202,7 @@ case class MapReduceObservable[TResult](wrapped: MapReduceIterable[TResult]) ext
    * @return a Observable with a single element indicating when the operation has completed
    * [[http://docs.mongodb.org/manual/aggregation/ Aggregation]]
    */
-  def toCollection(): Observable[Void] = observe(wrapped.toCollection(_: SingleResultCallback[Void]))
+  def toCollection(): Observable[Completed] = observeCompleted(wrapped.toCollection(_: SingleResultCallback[Void]))
 
   override def subscribe(observer: Observer[_ >: TResult]): Unit = observe(wrapped).subscribe(observer)
 }

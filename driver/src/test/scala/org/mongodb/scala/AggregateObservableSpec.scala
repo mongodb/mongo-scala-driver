@@ -61,7 +61,7 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
     Observable.allowDiskUse(true)
     Observable.useCursor(true)
     Observable.maxTime(duration)
-    Observable.toCollection().subscribe(observer[Void])
+    Observable.toCollection().subscribe(observer[Completed])
     Observable.subscribe(observer[Document])
   }
 }

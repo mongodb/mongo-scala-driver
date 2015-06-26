@@ -103,7 +103,7 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   it should "call the underlying drop()" in {
     wrapped.expects('drop)(*).once()
 
-    mongoDatabase.drop().subscribe(observer[Void])
+    mongoDatabase.drop().subscribe(observer[Completed])
   }
 
   it should "call the underlying listCollectionNames()" in {
@@ -125,8 +125,8 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
     wrapped.expects('createCollection)("collectionName", *).once()
     wrapped.expects('createCollection)("collectionName", options, *).once()
 
-    mongoDatabase.createCollection("collectionName").subscribe(observer[Void])
-    mongoDatabase.createCollection("collectionName", options).subscribe(observer[Void])
+    mongoDatabase.createCollection("collectionName").subscribe(observer[Completed])
+    mongoDatabase.createCollection("collectionName", options).subscribe(observer[Completed])
   }
 
 }

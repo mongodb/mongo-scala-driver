@@ -182,7 +182,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     val insertDoc = Document("a" -> 1)
     wrapped.expects('insertOne)(insertDoc, *).once()
 
-    mongoCollection.insertOne(insertDoc).subscribe(observer[Void])
+    mongoCollection.insertOne(insertDoc).subscribe(observer[Completed])
   }
 
   it should "wrap the underlying insertMany correctly" in {
@@ -192,8 +192,8 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     wrapped.expects('insertMany)(insertDocs.asJava, *).once()
     wrapped.expects('insertMany)(insertDocs.asJava, insertOptions, *).once()
 
-    mongoCollection.insertMany(insertDocs).subscribe(observer[Void])
-    mongoCollection.insertMany(insertDocs, insertOptions).subscribe(observer[Void])
+    mongoCollection.insertMany(insertDocs).subscribe(observer[Completed])
+    mongoCollection.insertMany(insertDocs, insertOptions).subscribe(observer[Completed])
   }
 
   it should "wrap the underlying deleteOne correctly" in {
@@ -276,7 +276,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   it should "wrap the underlying drop correctly" in {
     wrapped.expects('drop)(*).once()
 
-    mongoCollection.drop().subscribe(observer[Void])
+    mongoCollection.drop().subscribe(observer[Completed])
   }
 
   it should "wrap the underlying createIndex correctly" in {
@@ -310,13 +310,13 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   it should "wrap the underlying dropIndex correctly" in {
     wrapped.expects('dropIndex)("indexName", *).once()
 
-    mongoCollection.dropIndex("indexName").subscribe(observer[Void])
+    mongoCollection.dropIndex("indexName").subscribe(observer[Completed])
   }
 
   it should "wrap the underlying dropIndexes correctly" in {
     wrapped.expects('dropIndexes)(*).once()
 
-    mongoCollection.dropIndexes().subscribe(observer[Void])
+    mongoCollection.dropIndexes().subscribe(observer[Completed])
   }
 
   it should "wrap the underlying renameCollection correctly" in {
@@ -326,8 +326,8 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     wrapped.expects('renameCollection)(newNamespace, *).once()
     wrapped.expects('renameCollection)(newNamespace, options, *).once()
 
-    mongoCollection.renameCollection(newNamespace).subscribe(observer[Void])
-    mongoCollection.renameCollection(newNamespace, options).subscribe(observer[Void])
+    mongoCollection.renameCollection(newNamespace).subscribe(observer[Completed])
+    mongoCollection.renameCollection(newNamespace, options).subscribe(observer[Completed])
   }
 
 }

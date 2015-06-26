@@ -22,7 +22,7 @@ import org.bson.codecs.configuration.CodecRegistry
 import org.bson.conversions.Bson
 import org.mongodb.scala.Helpers.DefaultsTo
 import org.mongodb.scala.collection.immutable
-import org.mongodb.scala.internal.ObservableHelper.observe
+import org.mongodb.scala.internal.ObservableHelper.{ observe, observeCompleted }
 import com.mongodb.client.model.CreateCollectionOptions
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.{ MongoDatabase => JMongoDatabase }
@@ -133,7 +133,7 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * [[http://docs.mongodb.org/manual/reference/commands/dropDatabase/#dbcmd.dropDatabase Drop database]]
    * @return a Observable identifying when the database has been dropped
    */
-  def drop(): Observable[Void] = observe(wrapped.drop(_: SingleResultCallback[Void]))
+  def drop(): Observable[Completed] = observeCompleted(wrapped.drop(_: SingleResultCallback[Void]))
 
   /**
    * Gets the names of all the collections in this database.
@@ -159,8 +159,8 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @param collectionName the name for the new collection to create
    * @return a Observable identifying when the collection has been created
    */
-  def createCollection(collectionName: String): Observable[Void] =
-    observe(wrapped.createCollection(collectionName, _: SingleResultCallback[Void]))
+  def createCollection(collectionName: String): Observable[Completed] =
+    observeCompleted(wrapped.createCollection(collectionName, _: SingleResultCallback[Void]))
 
   /**
    * Create a new collection with the selected options
@@ -170,6 +170,6 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @param options        various options for creating the collection
    * @return a Observable identifying when the collection has been created
    */
-  def createCollection(collectionName: String, options: CreateCollectionOptions): Observable[Void] =
-    observe(wrapped.createCollection(collectionName, options, _: SingleResultCallback[Void]))
+  def createCollection(collectionName: String, options: CreateCollectionOptions): Observable[Completed] =
+    observeCompleted(wrapped.createCollection(collectionName, options, _: SingleResultCallback[Void]))
 }

@@ -231,7 +231,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element indicating when the operation has completed or with either a
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    */
-  def insertOne(document: TResult): Observable[Void] = observe(wrapped.insertOne(document, _: SingleResultCallback[Void]))
+  def insertOne(document: TResult): Observable[Completed] = observeCompleted(wrapped.insertOne(document, _: SingleResultCallback[Void]))
 
   /**
    * Inserts a batch of documents. The preferred way to perform bulk inserts is to use the BulkWrite API. However, when talking with a
@@ -241,8 +241,8 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element indicating when the operation has completed or with either a
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    */
-  def insertMany(documents: Seq[_ <: TResult]): Observable[Void] =
-    observe(wrapped.insertMany(documents.asJava, _: SingleResultCallback[Void]))
+  def insertMany(documents: Seq[_ <: TResult]): Observable[Completed] =
+    observeCompleted(wrapped.insertMany(documents.asJava, _: SingleResultCallback[Void]))
 
   /**
    * Inserts a batch of documents. The preferred way to perform bulk inserts is to use the BulkWrite API. However, when talking with a
@@ -253,8 +253,8 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element indicating when the operation has completed or with either a
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    */
-  def insertMany(documents: Seq[_ <: TResult], options: InsertManyOptions): Observable[Void] =
-    observe(wrapped.insertMany(documents.asJava, options, _: SingleResultCallback[Void]))
+  def insertMany(documents: Seq[_ <: TResult], options: InsertManyOptions): Observable[Completed] =
+    observeCompleted(wrapped.insertMany(documents.asJava, options, _: SingleResultCallback[Void]))
 
   /**
    * Removes at most one document from the collection that matches the given filter.  If no documents match, the collection is not
@@ -433,7 +433,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element indicating when the operation has completed
    *         [[http://docs.mongodb.org/manual/reference/command/drop/ Drop Collection]]
    */
-  def drop(): Observable[Void] = observe(wrapped.drop(_: SingleResultCallback[Void]))
+  def drop(): Observable[Completed] = observeCompleted(wrapped.drop(_: SingleResultCallback[Void]))
 
   /**
    * Create an Index
@@ -480,7 +480,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param indexName the name of the index to remove
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def dropIndex(indexName: String): Observable[Void] = observe(wrapped.dropIndex(indexName, _: SingleResultCallback[Void]))
+  def dropIndex(indexName: String): Observable[Completed] = observeCompleted(wrapped.dropIndex(indexName, _: SingleResultCallback[Void]))
 
   /**
    * Drops the index given the keys used to create it.
@@ -488,7 +488,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param keys the keys of the index to remove
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def dropIndex(keys: Bson): Observable[Void] = observe(wrapped.dropIndex(keys, _: SingleResultCallback[Void]))
+  def dropIndex(keys: Bson): Observable[Completed] = observeCompleted(wrapped.dropIndex(keys, _: SingleResultCallback[Void]))
 
   /**
    * Drop all the indexes on this collection, except for the default on _id.
@@ -496,7 +496,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * [[http://docs.mongodb.org/manual/reference/command/dropIndexes/ Drop Indexes]]
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def dropIndexes(): Observable[Void] = observe(wrapped.dropIndexes(_: SingleResultCallback[Void]))
+  def dropIndexes(): Observable[Completed] = observeCompleted(wrapped.dropIndexes(_: SingleResultCallback[Void]))
 
   /**
    * Rename the collection with oldCollectionName to the newCollectionName.
@@ -505,8 +505,8 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param newCollectionNamespace the namespace the collection will be renamed to
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def renameCollection(newCollectionNamespace: MongoNamespace): Observable[Void] =
-    observe(wrapped.renameCollection(newCollectionNamespace, _: SingleResultCallback[Void]))
+  def renameCollection(newCollectionNamespace: MongoNamespace): Observable[Completed] =
+    observeCompleted(wrapped.renameCollection(newCollectionNamespace, _: SingleResultCallback[Void]))
 
   /**
    * Rename the collection with oldCollectionName to the newCollectionName.
@@ -516,8 +516,8 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param options                the options for renaming a collection
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def renameCollection(newCollectionNamespace: MongoNamespace, options: RenameCollectionOptions): Observable[Void] =
-    observe(wrapped.renameCollection(newCollectionNamespace, options, _: SingleResultCallback[Void]))
+  def renameCollection(newCollectionNamespace: MongoNamespace, options: RenameCollectionOptions): Observable[Completed] =
+    observeCompleted(wrapped.renameCollection(newCollectionNamespace, options, _: SingleResultCallback[Void]))
 
 }
 

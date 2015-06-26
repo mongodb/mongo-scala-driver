@@ -85,7 +85,7 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
     Observable.verbose(true)
     Observable.sharded(true)
     Observable.nonAtomic(true)
-    Observable.toCollection().subscribe(observer[Void])
+    Observable.toCollection().subscribe(observer[Completed])
     Observable.subscribe(observer[Document])
   }
 }

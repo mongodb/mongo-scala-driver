@@ -31,7 +31,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val packageName = "com.mongodb"
     val javaExclusions = Set("AsyncBatchCursor", "Block", "ConnectionString", "Function", "ServerCursor", "Majority", "MongoClients",
       "MongoIterable", "Observables", "SingleResultCallback")
-    val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult")
+    val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "Completed")
     val classFilter = (f: Class[_ <: Object]) => {
       isPublic(f.getModifiers) &&
         !f.getName.contains("$") &&

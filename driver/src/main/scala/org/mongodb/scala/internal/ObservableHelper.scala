@@ -22,7 +22,7 @@ import com.mongodb.Block
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.{ MongoIterable, Observables }
 
-import org.mongodb.scala.Observable
+import org.mongodb.scala.{ Completed, Observable }
 
 /**
  * A helper to pass in Scala partial functions to the Observables helper
@@ -34,6 +34,15 @@ private[scala] object ObservableHelper {
   def observe[T](block: (SingleResultCallback[T]) => Unit): Observable[T] =
     Observables.observe(new Block[SingleResultCallback[T]] {
       override def apply(callback: SingleResultCallback[T]): Unit = block(callback)
+    })
+
+  def observeCompleted(block: (SingleResultCallback[Void]) => Unit): Observable[Completed] =
+    Observables.observe(new Block[SingleResultCallback[Completed]] {
+      override def apply(callback: SingleResultCallback[Completed]): Unit =
+        block(new SingleResultCallback[Void]() {
+          def onResult(result: Void, t: Throwable): Unit =
+            callback.onResult(Completed(), t)
+        })
     })
 
   def observeLong(block: (SingleResultCallback[java.lang.Long]) => Unit): Observable[Long] =
