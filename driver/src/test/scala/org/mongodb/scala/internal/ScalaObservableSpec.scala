@@ -16,7 +16,12 @@
 
 package org.mongodb.scala.internal
 
+import java.util.concurrent.TimeUnit
+
 import scala.collection.mutable.ArrayBuffer
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
 import scala.util.{ Failure, Success }
 
 import com.mongodb.MongoException
@@ -126,20 +131,20 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
   }
 
   it should "have a collect method" in {
-    def myObservable(fail: Boolean = false): Observable[List[Int]] = {
+    def myObservable(fail: Boolean = false): Observable[Seq[Int]] = {
       observable[Int](fail = fail).collect()
     }
 
     var results = ArrayBuffer[Int]()
-    myObservable().subscribe((i: List[Int]) => results ++= i)
+    myObservable().subscribe((i: Seq[Int]) => results ++= i)
     results should equal(1 to 100)
 
     var errorSeen: Option[Throwable] = None
-    myObservable(true).subscribe((s: List[Int]) => (), (fail: Throwable) => errorSeen = Some(fail))
+    myObservable(true).subscribe((s: Seq[Int]) => (), (fail: Throwable) => errorSeen = Some(fail))
     errorSeen.getOrElse(None) shouldBe a[Throwable]
 
     var completed = false
-    myObservable().subscribe((s: List[Int]) => (), (t: Throwable) => t, () => completed = true)
+    myObservable().subscribe((s: Seq[Int]) => (), (t: Throwable) => t, () => completed = true)
     completed should equal(true)
   }
 
@@ -303,6 +308,33 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
 
     results should equal((1 to 50) :+ -999)
     completed should equal(false)
+  }
+
+  it should "convert to a Future" in {
+    var results = ArrayBuffer[Int]()
+    var errorSeen: Option[Throwable] = None
+    val happyFuture = observable[Int]().toFuture()
+
+    happyFuture.onComplete({
+      case Success(res)       => results ++= res
+      case Failure(throwable) => errorSeen = Some(throwable)
+    })
+    Await.ready(happyFuture, Duration(10, TimeUnit.SECONDS))
+    results should equal(1 to 100)
+    errorSeen.isEmpty should equal(true)
+
+    results = ArrayBuffer[Int]()
+    val unhappyFuture = observable[Int](fail = true).toFuture()
+    unhappyFuture.onComplete({
+      case Success(res)       => results ++= res
+      case Failure(throwable) => errorSeen = Some(throwable)
+    })
+    intercept[MongoException] {
+      Await.result(unhappyFuture, Duration(10, TimeUnit.SECONDS))
+    }
+    results should equal(List())
+    errorSeen.nonEmpty should equal(true)
+    errorSeen.getOrElse(None) shouldBe a[Throwable]
   }
 
   def observable[A](from: Iterable[A] = (1 to 100).toIterable, fail: Boolean = false): Observable[A] = {

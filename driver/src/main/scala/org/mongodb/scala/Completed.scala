@@ -21,4 +21,6 @@ package org.mongodb.scala
  *
  * This allows [[Observable]]s to be composed rather than just completing without a result.
  */
-case class Completed()
+case class Completed() {
+  override def toString: String = "The operation completed successfully"
+}

@@ -88,42 +88,6 @@ package object scala extends ObservableImplicits {
    * Represents the location of a MongoDB server
    */
   type ServerAddress = com.mongodb.ServerAddress
-  /**
-   * An `Observable` represents a MongoDB operation.
-   *
-   * As such it is a provider of a potentially unbounded number of sequenced elements, publishing them according to the demand received
-   * from its [[Observer]](s).
-   *
-   * @tparam TResult the type of element signaled by the operation.
-   * @see Observables
-   */
-  type Observable[TResult] = com.mongodb.async.client.Observable[TResult]
-
-  /**
-   * A `Subscription` represents a one-to-one lifecycle of a [[Observer]]subscribing to an [[Observable]].
-   *
-   * Instances can only be used once by a single [[Observer]].
-   *
-   * It is used to both signal desire for data and to allow for unsubscribing.
-   */
-  type Subscription = com.mongodb.async.client.Subscription
-  /**
-   * Provides a mechanism for receiving push-based notifications.
-   *
-   * Will receive a call to `Observer#onSubscribe(Subscription)` on subscription to the [[Observable]].
-   * No further notifications will be received until `Subscription#request(long)` is called.
-   *
-   * After signaling demand:
-   *
-   * - One or more invocations of `Observable#onNext(Object)` up to the maximum number defined by `Subscription#request(long)`
-   * - Single invocation of `Observable#onError(Throwable)` or `Observer#onComplete()` which signals a terminal state after which no
-   * further events will be sent
-   *
-   * Demand can be signaled via `Subscription#request(long)` whenever the [[Observer]] instance is capable of handling more.
-   *
-   * @tparam TResult The type of element signaled.
-   */
-  type Observer[TResult] = com.mongodb.async.client.Observer[TResult]
 
   /**
    * Various settings to control the behavior of a `MongoClient`.

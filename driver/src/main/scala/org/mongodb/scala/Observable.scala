@@ -16,10 +16,12 @@
 
 package org.mongodb.scala
 
+import com.mongodb.async.client.{ Observable => JObservable, Observer => JObserver, Subscription => JSubscription }
+
 import org.mongodb.scala.internal._
 
 /**
- * A companion object to the Java [[Observable]]
+ * A companion object for [[Observable]]
  */
 object Observable {
 
@@ -36,3 +38,33 @@ object Observable {
 
 }
 
+/**
+ * A `Observable` represents a MongoDB operation.
+ *
+ * As such it is a provider of a potentially unbounded number of sequenced elements, publishing them according to the demand received
+ * from its [[Observer]](s).
+ *
+ * @tparam T the type of element signaled.
+ */
+trait Observable[T] extends JObservable[T] {
+
+  /**
+   * Request `Observable` to start streaming data.
+   *
+   * This is a "factory method" and can be called multiple times, each time starting a new [[Subscription]].
+   * Each `Subscription` will work for only a single [[Observer]].
+   *
+   * If the `Observable` rejects the subscription attempt or otherwise fails it will signal the error via [[Observer.onError]].
+   *
+   * @param observer the `Observer` that will consume signals from this `Observable`
+   */
+  def subscribe(observer: Observer[_ >: T]): Unit
+
+  /**
+   * Handles the automatic boxing of a Java `Observable` so it conforms to the interface.
+   *
+   * @note Users should not have to implement this method but rather use the Scala `Observable`.
+   * @param observer the `Observer` that will consume signals from this `Observable`
+   */
+  override def subscribe(observer: JObserver[_ >: T]) = subscribe(BoxedObserver[T](observer))
+}

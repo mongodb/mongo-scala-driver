@@ -17,7 +17,10 @@
 package org.mongodb.scala
 
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.{ Future, Promise }
 import scala.util.Try
+
+import com.mongodb.async.client.{ Observable => JObservable, Observer => JObserver, Subscription => JSubscription }
 
 import org.mongodb.scala.internal._
 
@@ -177,8 +180,8 @@ trait ObservableImplicits {
      * @see Uses [[foldLeft]] underneath
      * @return an Observable that emits a single item, the result of accumulator.
      */
-    def collect[S](): Observable[List[T]] =
-      FoldLeftObservable(observable, ListBuffer[T](), (l: ListBuffer[T], v: T) => l += v).map(_.toList)
+    def collect[S](): Observable[Seq[T]] =
+      FoldLeftObservable(observable, ListBuffer[T](), (l: ListBuffer[T], v: T) => l += v).map(_.toSeq)
 
     /**
      * Creates a new [[Observable]] that contains the single result of the applied accumulator function.
@@ -310,5 +313,75 @@ trait ObservableImplicits {
      * @return an
      */
     def andThen[U](pf: PartialFunction[Try[T], U]): Observable[T] = AndThenObservable(observable, pf)
+
+    /**
+     * Collects the [[Observable]] results and converts to a [[Future]].
+     *
+     * Automatically subscribes to the `Observable` and uses the [[collect]] method to aggregate the results.
+     *
+     * @note If the Observable is large then this will consume lots of memory!
+     *       If the underlying Observable is infinite this Observable will never complete.
+     * @return a future representation of the whole Observable
+     */
+    def toFuture(): Future[Seq[T]] = {
+      val promise = Promise[Seq[T]]()
+      collect().subscribe((l: Seq[T]) => promise.success(l), (t: Throwable) => promise.failure(t))
+      promise.future
+    }
+
+    /**
+     * Returns the head of the [[Observable]] in a [[Future]].
+     *
+     * @return the head result of the [[Observable]].
+     */
+    def head(): Future[T] = {
+      val promise = Promise[T]()
+      observable.subscribe(new Observer[T]() {
+        @volatile
+        var subscription: Option[Subscription] = None
+
+        override def onError(throwable: Throwable): Unit = promise.failure(throwable)
+
+        override def onSubscribe(sub: Subscription): Unit = {
+          subscription = Some(sub)
+          sub.request(1)
+        }
+
+        override def onComplete(): Unit = promise.failure(new Throwable("Observable completed without returning a result"))
+
+        override def onNext(tResult: T): Unit = {
+          subscription.get.unsubscribe()
+          promise.success(tResult)
+        }
+      })
+      promise.future
+    }
+  }
+
+  implicit class BoxedObservable[T](observable: JObservable[T]) extends Observable[T] {
+    override def subscribe(observer: Observer[_ >: T]): Unit = observable.subscribe(observer)
+    override def subscribe(observer: JObserver[_ >: T]): Unit = observable.subscribe(BoxedObserver(observer))
+  }
+
+  implicit class BoxedObserver[T](observer: JObserver[_ >: T]) extends Observer[T] {
+
+    override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
+
+    override def onError(e: Throwable): Unit = observer.onError(e)
+
+    override def onComplete(): Unit = observer.onComplete()
+
+    override def onNext(result: T): Unit = observer.onNext(result)
+
+    override def onSubscribe(subscription: JSubscription): Unit = onSubscribe(BoxedSubscription(subscription))
+  }
+
+  implicit class BoxedSubscription(subscription: JSubscription) extends Subscription {
+
+    override def request(n: Long): Unit = subscription.request(n)
+
+    override def isUnsubscribed: Boolean = subscription.isUnsubscribed
+
+    override def unsubscribe(): Unit = subscription.unsubscribe()
   }
 }

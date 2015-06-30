@@ -46,9 +46,13 @@ private[scala] object ObservableHelper {
     })
 
   def observeLong(block: (SingleResultCallback[java.lang.Long]) => Unit): Observable[Long] =
-    Observables.observe(new Block[SingleResultCallback[java.lang.Long]] {
-      override def apply(callback: SingleResultCallback[java.lang.Long]): Unit = block(callback)
-    }).asInstanceOf[Observable[Long]]
+    Observables.observe(new Block[SingleResultCallback[Long]] {
+      override def apply(callback: SingleResultCallback[Long]): Unit =
+        block(new SingleResultCallback[java.lang.Long]() {
+          def onResult(result: java.lang.Long, t: Throwable): Unit =
+            callback.onResult(result, t)
+        })
+    })
 
   def observeAndFlatten[T](block: (SingleResultCallback[util.List[T]]) => Unit): Observable[T] =
     Observables.observeAndFlatten(new Block[SingleResultCallback[util.List[T]]] {
