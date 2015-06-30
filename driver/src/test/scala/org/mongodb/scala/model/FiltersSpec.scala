@@ -35,8 +35,8 @@ class FiltersSpec extends FlatSpec with Matchers {
   "Filters" should "have the same methods as the wrapped Filters" in {
     val wrapped = classOf[com.mongodb.client.model.Filters].getDeclaredMethods
       .filter(f => isStatic(f.getModifiers) && isPublic(f.getModifiers)).map(_.getName).toSet
-    val local = model.Filters.getClass.getDeclaredMethods.filter(f => isPublic(f.getModifiers)).map(_.getName).toSet
-
+    val aliases = Set("equal", "notEqual", "bsonType")
+    val local = model.Filters.getClass.getDeclaredMethods.filter(f => isPublic(f.getModifiers)).map(_.getName).toSet -- aliases
     local should equal(wrapped)
   }
 

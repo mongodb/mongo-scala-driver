@@ -48,6 +48,20 @@ object Filters {
   def eq[TItem](fieldName: String, value: TItem): Bson = JFilters.eq(fieldName, value)
 
   /**
+   * Creates a filter that matches all documents where the value of the field name equals the specified value. Note that this does
+   * actually generate a `\$eq` operator, as the query language doesn't require it.
+   *
+   * A friendly alias for the `eq` method.
+   *
+   * @param fieldName the field name
+   * @param value     the value
+   * @tparam TItem  the value type
+   * @return the filter
+   * @see [[http://docs.mongodb.org/manual/reference/operator/query/eq \$eq]]
+   */
+  def equal[TItem](fieldName: String, value: TItem): Bson = eq(fieldName, value)
+
+  /**
    * Creates a filter that matches all documents where the value of the field name does not equal the specified value.
    *
    * @param fieldName the field name
@@ -57,6 +71,19 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/ne \$ne]]
    */
   def ne[TItem](fieldName: String, value: TItem): Bson = JFilters.ne(fieldName, value)
+
+  /**
+   * Creates a filter that matches all documents where the value of the field name does not equal the specified value.
+   *
+   * A friendly alias for the `neq` method.
+   *
+   * @param fieldName the field name
+   * @param value     the value
+   * @tparam TItem  the value type
+   * @return the filter
+   * @see [[http://docs.mongodb.org/manual/reference/operator/query/ne \$ne]]
+   */
+  def notEqual[TItem](fieldName: String, value: TItem): Bson = JFilters.ne(fieldName, value)
 
   /**
    * Creates a filter that matches all documents where the value of the given field is greater than the specified value.
@@ -202,11 +229,23 @@ object Filters {
    * Creates a filter that matches all documents where the value of the field is of the specified BSON type.
    *
    * @param fieldName the field name
-   * @param type      the BSON type
+   * @param bsonType      the BSON type
    * @return the filter
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/type \$type]]
    */
-  def `type`(fieldName: String, `type`: BsonType): Bson = JFilters.`type`(fieldName, `type`) //scalastyle:ignore
+  def `type`(fieldName: String, bsonType: BsonType): Bson = JFilters.`type`(fieldName, bsonType) //scalastyle:ignore
+
+  /**
+   * Creates a filter that matches all documents where the value of the field is of the specified BSON type.
+   *
+   * A friendly alias for the `type` method.
+   *
+   * @param fieldName the field name
+   * @param bsonType      the BSON type
+   * @return the filter
+   * @see [[http://docs.mongodb.org/manual/reference/operator/query/type \$type]]
+   */
+  def bsonType(fieldName: String, bsonType: BsonType): Bson = JFilters.`type`(fieldName, bsonType)
 
   /**
    * Creates a filter that matches all documents where the value of a field divided by a divisor has the specified remainder (i.e. perform
