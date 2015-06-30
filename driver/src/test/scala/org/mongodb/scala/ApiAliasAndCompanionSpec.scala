@@ -15,15 +15,16 @@
  */
 
 package org.mongodb.scala
+
 import java.lang.reflect.Modifier._
 
 import scala.collection.JavaConverters._
-import scala.reflect.runtime.{ currentMirror, universe => u }
+import scala.reflect.runtime.{currentMirror, universe => u}
 
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
-import org.reflections.util.{ ClasspathHelper, ConfigurationBuilder, FilterBuilder }
-import org.scalatest.{ FlatSpec, Matchers }
+import org.reflections.util.{ClasspathHelper, ConfigurationBuilder, FilterBuilder}
+import org.scalatest.{FlatSpec, Matchers}
 
 class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
 
@@ -31,7 +32,8 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val packageName = "com.mongodb"
     val javaExclusions = Set("AsyncBatchCursor", "Block", "ConnectionString", "Function", "ServerCursor", "Majority", "MongoClients",
       "MongoIterable", "Observables", "SingleResultCallback")
-    val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "Completed")
+    val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "Completed", "ScalaObservable", "ObservableImplicits")
+
     val classFilter = (f: Class[_ <: Object]) => {
       isPublic(f.getModifiers) &&
         !f.getName.contains("$") &&

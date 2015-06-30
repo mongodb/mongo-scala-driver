@@ -25,7 +25,7 @@ import org.mongodb.scala.collection.immutable
  *
  * @since 1.0
  */
-package object scala {
+package object scala extends ObservableImplicits {
 
   /**
    * An immutable Document implementation.
