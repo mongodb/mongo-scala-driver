@@ -132,7 +132,6 @@ object MongoScalaBuild extends Build {
     .settings(customScalariformSettings)
     .settings(scalaStyleSettings)
     .settings(scoverageSettings)
-    .settings(initialCommands in console := """import org.mongodb.scala._""")
     .settings(docSettings)
     .settings(publishSettings)
     .dependsOn(core)
@@ -148,6 +147,16 @@ object MongoScalaBuild extends Build {
     .settings(docSettings)
     .settings(publishSettings)
 
+  lazy val examples = Project(
+    id = "mongo-scala-driver-examples",
+    base = file("examples")
+  ).aggregate(core)
+    .aggregate(driver)
+    .settings(buildSettings)
+    .settings(scalaStyleSettings)
+    .settings(noPublishSettings)
+    .dependsOn(driver)
+
   lazy val root = Project(
     id = "mongo-scala-driver-root",
     base = file(".")
@@ -159,6 +168,7 @@ object MongoScalaBuild extends Build {
     .settings(rootUnidocSettings)
     .settings(noPublishSettings)
     .settings(checkAlias)
+    .settings(initialCommands in console := """import org.mongodb.scala._""")
     .dependsOn(driver)
 
   override def rootProject = Some(root)
