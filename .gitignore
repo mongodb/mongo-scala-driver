@@ -1,15 +1,31 @@
-*.iml
-*.swp
-.cache
-.classpath
-.DS_Store
-.history
-.idea_
-.idea
-.idea/workspace.xml
-.lib
-.project
+*~
+.#*
+.git
+*#
+*.sh
+
+# os x stuff
+*Thumbs.db*
+*.DS_Store
+
+# Build artifacts
 target
-driver/src/examples/scala/lib
-driver/src/examples/scala/data
-docs/_build
+
+# Eclipse files
+.classpath
+.project
+.settings
+
+# Intellij IDEA files
+*.ipr
+*.iws
+*.iml
+*.idea
+workspace.xml
+atlassian-ide-plugin.xml
+
+
+# doc settings
+docs/reference/public
+docs/landing/public
+docs/hugo*
