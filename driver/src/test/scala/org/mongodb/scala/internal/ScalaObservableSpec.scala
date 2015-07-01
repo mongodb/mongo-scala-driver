@@ -16,7 +16,7 @@
 
 package org.mongodb.scala.internal
 
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.{ CountDownLatch, TimeUnit }
 
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Await
@@ -314,24 +314,31 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
     var results = ArrayBuffer[Int]()
     var errorSeen: Option[Throwable] = None
     val happyFuture = observable[Int]().toFuture()
+    var latch = new CountDownLatch(1)
 
     happyFuture.onComplete({
-      case Success(res)       => results ++= res
+      case Success(res) =>
+        results ++= res
+        latch.countDown()
       case Failure(throwable) => errorSeen = Some(throwable)
     })
-    Await.ready(happyFuture, Duration(10, TimeUnit.SECONDS))
+    latch.await(10, TimeUnit.SECONDS)
     results should equal(1 to 100)
     errorSeen.isEmpty should equal(true)
 
     results = ArrayBuffer[Int]()
+    latch = new CountDownLatch(1)
     val unhappyFuture = observable[Int](fail = true).toFuture()
     unhappyFuture.onComplete({
-      case Success(res)       => results ++= res
-      case Failure(throwable) => errorSeen = Some(throwable)
+      case Success(res) => results ++= res
+      case Failure(throwable) =>
+        errorSeen = Some(throwable)
+        latch.countDown()
     })
     intercept[MongoException] {
       Await.result(unhappyFuture, Duration(10, TimeUnit.SECONDS))
     }
+    latch.await(10, TimeUnit.SECONDS)
     results should equal(List())
     errorSeen.nonEmpty should equal(true)
     errorSeen.getOrElse(None) shouldBe a[Throwable]
