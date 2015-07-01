@@ -23,10 +23,11 @@ import scala.reflect.ClassTag
 import org.bson.codecs.configuration.CodecRegistries.{ fromProviders, fromRegistries }
 import org.bson.codecs.configuration.CodecRegistry
 import com.mongodb.ConnectionString
+import com.mongodb.async.client.{ MongoClient => JMongoClient, MongoClients }
+
 import org.mongodb.scala.Helpers.DefaultsTo
 import org.mongodb.scala.codecs.DocumentCodecProvider
 import org.mongodb.scala.internal.ObservableHelper.observe
-import com.mongodb.async.client.{ MongoClient => JMongoClient, MongoClients }
 
 /**
  * Companion object for creating new [[MongoClient]] instances

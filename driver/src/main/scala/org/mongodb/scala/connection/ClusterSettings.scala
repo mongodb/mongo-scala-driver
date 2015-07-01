@@ -29,6 +29,6 @@ object ClusterSettings {
    *
    * @return a new Builder for creating ClusterSettings.
    */
-  def builder: JClusterSettings.Builder = JClusterSettings.builder()
+  def builder(): JClusterSettings.Builder = JClusterSettings.builder()
 
 }

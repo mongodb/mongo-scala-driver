@@ -101,7 +101,7 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
     MongoCollection(wrapped.getCollection(collectionName, ct.runtimeClass.asInstanceOf[Class[TResult]]))
 
   /**
-   * Executes command in the context of the current database.
+   * Executes command in the context of the current database using the primary server.
    *
    * @param command  the command to be run
    * @tparam TResult the type of the class to use instead of [[Document]].
