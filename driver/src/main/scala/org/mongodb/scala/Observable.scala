@@ -66,5 +66,5 @@ trait Observable[T] extends JObservable[T] {
    * @note Users should not have to implement this method but rather use the Scala `Observable`.
    * @param observer the `Observer` that will consume signals from this `Observable`
    */
-  override def subscribe(observer: JObserver[_ >: T]) = subscribe(BoxedObserver[T](observer))
+  override def subscribe(observer: JObserver[_ >: T]): Unit = subscribe(BoxedObserver[T](observer))
 }

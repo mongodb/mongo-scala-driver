@@ -303,10 +303,11 @@ trait ObservableImplicits {
      *  observable(1 to 10) andThen {
      *   case r => sys.error("runtime exception")
      *  } andThen {
-     *   case Success(x) => println(x)
-     *   case Failure(t) => println("Failure")
+     *   case Success(x) => print(x)
+     *   case Failure(t) => print("Failure")
      *  }
      * }}}
+     *
      *
      * @param pf the partial function to pattern match against
      * @tparam U the result type of the

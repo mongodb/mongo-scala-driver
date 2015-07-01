@@ -85,7 +85,7 @@ object MongoScalaBuild extends Build {
     addArtifact(Artifact("mongo-scala-driver-alldep", "jar", "jar"), assembly) ++ Seq(test in assembly := {})
 
   // Check style
-  val checkAlias = addCommandAlias("check", ";clean;coverage;test;it:test;coverageAggregate;coverageReport")
+  val checkAlias = addCommandAlias("check", ";clean;scalastyle;coverage;test;it:test;coverageAggregate;coverageReport")
 
   // Documentation Settings to link to the async JavaDoc
   val apiUrl = "http://api.mongodb.org/java/3.1/"
