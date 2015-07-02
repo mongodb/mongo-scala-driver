@@ -21,10 +21,11 @@ object Dependencies {
   val scalaCoreVersion     = "2.11.6"
   val mongodbDriverVersion = "3.1.0-SNAPSHOT"
 
-  val scalaTestVersion     = "2.2.4"
-  val scalaMockVersion     = "3.2.2"
-  val logbackVersion       = "1.1.3"
-  val reflectionsVersion   = "0.9.10"
+  val scalaTestVersion        = "2.2.4"
+  val scalaMockVersion        = "3.2.2"
+  val logbackVersion          = "1.1.3"
+  val reflectionsVersion      = "0.9.10"
+  val javaxServeletApiVersion = "2.5"
 
   // Scala
   val scalaReflection    = "org.scala-lang" % "scala-reflect" % scalaCoreVersion
@@ -34,12 +35,13 @@ object Dependencies {
   val mongodbDriver = "org.mongodb" % "mongodb-driver-async" % mongodbDriverVersion
 
   // Test
-  val scalaTest     = "org.scalatest" %% "scalatest" % scalaTestVersion % "it,test"
-  val scalaMock     = "org.scalamock" %% "scalamock-scalatest-support" % scalaMockVersion % "test"
-  val logback       = "ch.qos.logback" % "logback-classic" % logbackVersion % "it,test"
-  val reflections   = "org.reflections" % "reflections" % reflectionsVersion % "test"
+  val scalaTest         = "org.scalatest" %% "scalatest" % scalaTestVersion % "it,test"
+  val scalaMock         = "org.scalamock" %% "scalamock-scalatest-support" % scalaMockVersion % "test"
+  val logback           = "ch.qos.logback" % "logback-classic" % logbackVersion % "it,test"
+  val reflections       = "org.reflections" % "reflections" % reflectionsVersion % "test"
+  val javaxServeletApi  = "javax.servlet" % "servlet-api" % javaxServeletApiVersion % "test"
 
   // Projects
   val coreDependencies = Seq(scalaCompiler, scalaReflection, mongodbDriver)
-  val testDependencies = Seq(scalaTest, scalaMock, logback, reflections)
+  val testDependencies = Seq(scalaTest, scalaMock, logback, reflections, javaxServeletApi)
 }
