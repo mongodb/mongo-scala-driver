@@ -23,7 +23,7 @@ This guide uses the `Helper` implicits as covered in the [Quick Tour Primer]({{<
 ## Make a Connection
 
 The following example shows multiple ways to connect to the database `mydb` on the local machine, using the 
-[`MongoClient`]({{< apiref "#org.mongodb.scala.MongoClient$" >}}) companion object.
+[`MongoClient`]({{< apiref "org.mongodb.scala.MongoClient$" >}}) companion object.
 
 
 ```scala
@@ -67,7 +67,7 @@ cluster and use it across your application. When creating multiple instances:
 ## Get a Collection
 
 To get a collection to operate upon, specify the name of the collection to
-the [`getCollection(String collectionName)`]({{< apiref "#org.mongodb.scala.MongoDatabase@getCollection[TResult](collectionName:String)(implicite:org.mongodb.scala.Helpers.DefaultsTo[TResult,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[TResult]):org.mongodb.scala.MongoCollection[TResult]">}})
+the [`getCollection(String collectionName)`]({{< apiref "org.mongodb.scala.MongoDatabase@getCollection[TResult](collectionName:String)(implicite:org.mongodb.scala.Helpers.DefaultsTo[TResult,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[TResult]):org.mongodb.scala.MongoCollection[TResult]">}})
 method:
 
 The following example gets the collection `test`:

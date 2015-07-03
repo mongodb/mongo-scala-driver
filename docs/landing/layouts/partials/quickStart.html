@@ -79,9 +79,11 @@
 </div>
 <div id="sbt-{{$versionPos}}" class="download{{if or (ne $firstDriver true) (ne $currentVersion.status "current") }} hidden{{end}}">
 <pre><code>
-  libraryDependencies += "org.mongodb.scala" %% "{{$currentDriver}}" % "{{$currentVersion.version}}"
 
-  resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+
+libraryDependencies += "org.mongodb.scala" %% "{{$currentDriver}}" % "{{$currentVersion.version}}"
+
+resolvers += "Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
 </code></pre>
 </div>
@@ -100,6 +102,9 @@
 </div>
 <div id="sbt-{{$versionPos}}" class="download{{if or (ne $firstDriver true) (ne $currentVersion.status "current") }} hidden{{end}}">
 <pre><code>
+
+
+
     libraryDependencies += "org.mongodb.scala" %% "{{$currentDriver}}" % "{{$currentVersion.version}}"
 
 </code></pre>

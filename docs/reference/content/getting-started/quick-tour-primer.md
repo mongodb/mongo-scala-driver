@@ -72,7 +72,7 @@ be taken to ensure that the `Observer` has the capacity to handle all the result
 
 ## Helpers used in the Quick Tour
 
-For the Quick Tour we use custom implicit helpers defined in [`Helpers.scala`]({{< srcref "examples/tour/src/main/tour/Helpers.scala">}}). These helpers get and print results and although this is an artificial scenario for asynchronous code we 
+For the Quick Tour we use custom implicit helpers defined in [`Helpers.scala`]({{< srcref "examples/src/test/scala/tour/Helpers.scala">}}). These helpers get and print results and although this is an artificial scenario for asynchronous code we 
 block on  the results of one example before starting the next, so as to ensure the state of the database. The `Helpers` object
 provides the following methods:
 
