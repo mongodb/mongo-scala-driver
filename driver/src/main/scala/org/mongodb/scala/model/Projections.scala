@@ -62,7 +62,7 @@ object Projections {
    *
    * @return the projection
    */
-  def excludeId: Bson = JProjections.excludeId
+  def excludeId(): Bson = JProjections.excludeId
 
   /**
    * Creates a projection that includes for the given field only the first element of an array that matches the query filter.  This is

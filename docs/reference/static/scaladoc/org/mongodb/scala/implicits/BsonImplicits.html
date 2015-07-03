@@ -1,0 +1,895 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>BsonImplicits - Mongo Scala Driver - org.mongodb.scala.implicits.BsonImplicits</title>
+          <meta name="description" content="BsonImplicits - Mongo Scala Driver - org.mongodb.scala.implicits.BsonImplicits" />
+          <meta name="keywords" content="BsonImplicits Mongo Scala Driver org.mongodb.scala.implicits.BsonImplicits" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      <script type="text/javascript" src="../../../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../../../lib/diagrams.js" id="diagrams-js"></script>
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'org.mongodb.scala.implicits.BsonImplicits';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img src="../../../../lib/trait_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="org">org</a>.<a href="../../package.html" class="extype" name="org.mongodb">mongodb</a>.<a href="../package.html" class="extype" name="org.mongodb.scala">scala</a>.<a href="package.html" class="extype" name="org.mongodb.scala.implicits">implicits</a></p>
+        <h1>BsonImplicits</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="package.html" class="extype" name="org.mongodb.scala.implicits">package implicits</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <span class="name">BsonImplicits</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
+                <span class="toggle diagram-link">Type Hierarchy</span>
+                <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#diagrams" target="_blank" class="diagram-help">Learn more about scaladoc diagrams</a>
+                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 158.00 118.00" height="118pt" width="158pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 114)" class="graph" id="graph0"><polygon points="-4,4 -4,-114 154,-114 154,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this trait" id="graph1_0"><g id="a_this trait|graph1_0"><a xlink:title="org.mongodb.scala.implicits.BsonImplicits (this trait)" xlink:href="#inheritance-diagram"><polygon points="126,-49 24,-49 24,-24 126,-24 126,-49" stroke="#37657d" fill="#498aad"></polygon><image xlink:href="../../../../lib/trait_diagram.png" y="-43.5" x="34" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-33.7495" x="54.6577" text-anchor="start">BsonImplicits</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="scala.AnyRef"><polygon points="113,-110 37,-110 37,-85 113,-85 113,-110" stroke="#115f3b" fill="#0a955b"></polygon><image xlink:href="../../../../lib/class_diagram.png" y="-104.5" x="47" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="10.00" font-family="Arial" y="-94.7495" x="67.7144" text-anchor="start">AnyRef</text></a></g></g><!-- node1&#45;&gt;node0 --><g class="edge inheritance" id="graph1_1_0"><g id="a_inheritance|graph1_1_0"><a xlink:title="BsonImplicits is a subtype of AnyRef"><path d="M75,-79.6874C75,-69.9173 75,-57.8534 75,-49.1323" stroke="#d4d4d4" fill="none"></path><polygon points="73.2501,-79.8435 75,-84.8435 76.7501,-79.8435 73.2501,-79.8435" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+              </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="org.mongodb.scala.implicits.BsonImplicits"><span>BsonImplicits</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@##():Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#binaryArrayToBsonBinary" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="binaryArrayToBsonBinary(value:Array[Byte]):org.bson.BsonBinary"></a>
+      <a id="binaryArrayToBsonBinary(Array[Byte]):BsonBinary"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">binaryArrayToBsonBinary</span><span class="params">(<span name="value">value: <span class="extype" name="scala.Array">Array</span>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>)</span><span class="result">: <span class="extype" name="org.bson.BsonBinary">BsonBinary</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@binaryArrayToBsonBinary(value:Array[Byte]):org.bson.BsonBinary" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#booleanToBsonBoolean" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="booleanToBsonBoolean(value:Boolean):org.bson.BsonBoolean"></a>
+      <a id="booleanToBsonBoolean(Boolean):BsonBoolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">booleanToBsonBoolean</span><span class="params">(<span name="value">value: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <span class="extype" name="org.bson.BsonBoolean">BsonBoolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@booleanToBsonBoolean(value:Boolean):org.bson.BsonBoolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonBinaryTobinaryArray" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonBinaryTobinaryArray(value:org.bson.BsonBinary):Array[Byte]"></a>
+      <a id="bsonBinaryTobinaryArray(BsonBinary):Array[Byte]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonBinaryTobinaryArray</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonBinary">BsonBinary</span></span>)</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Byte" class="extype" target="_top">Byte</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonBinaryTobinaryArray(value:org.bson.BsonBinary):Array[Byte]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonBooleanToBoolean" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonBooleanToBoolean(value:org.bson.BsonBoolean):Boolean"></a>
+      <a id="bsonBooleanToBoolean(BsonBoolean):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonBooleanToBoolean</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonBoolean">BsonBoolean</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonBooleanToBoolean(value:org.bson.BsonBoolean):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonDocumentToImmutableDocument" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonDocumentToImmutableDocument(value:org.bson.BsonDocument):org.mongodb.scala.collection.immutable.Document"></a>
+      <a id="bsonDocumentToImmutableDocument(BsonDocument):collection.immutable.Document"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonDocumentToImmutableDocument</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonDocument">BsonDocument</span></span>)</span><span class="result">: <a href="../collection/immutable/Document.html" class="extype" name="org.mongodb.scala.collection.immutable.Document">collection.immutable.Document</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonDocumentToImmutableDocument(value:org.bson.BsonDocument):org.mongodb.scala.collection.immutable.Document" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonDocumentToMutableDocument" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonDocumentToMutableDocument(value:org.bson.BsonDocument):org.mongodb.scala.collection.mutable.Document"></a>
+      <a id="bsonDocumentToMutableDocument(BsonDocument):collection.mutable.Document"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonDocumentToMutableDocument</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonDocument">BsonDocument</span></span>)</span><span class="result">: <a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.collection.mutable.Document">collection.mutable.Document</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonDocumentToMutableDocument(value:org.bson.BsonDocument):org.mongodb.scala.collection.mutable.Document" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonDoubleToDouble" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonDoubleToDouble(value:org.bson.BsonDouble):Double"></a>
+      <a id="bsonDoubleToDouble(BsonDouble):Double"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonDoubleToDouble</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonDouble">BsonDouble</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Double" class="extype" target="_top">Double</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonDoubleToDouble(value:org.bson.BsonDouble):Double" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonInt32ToInt" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonInt32ToInt(value:org.bson.BsonInt32):Int"></a>
+      <a id="bsonInt32ToInt(BsonInt32):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonInt32ToInt</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonInt32">BsonInt32</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonInt32ToInt(value:org.bson.BsonInt32):Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonInt64ToLong" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonInt64ToLong(value:org.bson.BsonInt64):Long"></a>
+      <a id="bsonInt64ToLong(BsonInt64):Long"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonInt64ToLong</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonInt64">BsonInt64</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonInt64ToLong(value:org.bson.BsonInt64):Long" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonNullToNone" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonNullToNone(value:org.bson.BsonNull):Option[Nothing]"></a>
+      <a id="bsonNullToNone(BsonNull):Option[Nothing]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonNullToNone</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonNull">BsonNull</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Nothing">Nothing</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonNullToNone(value:org.bson.BsonNull):Option[Nothing]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonObjectIdToObjectId" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonObjectIdToObjectId(value:org.bson.BsonObjectId):org.bson.types.ObjectId"></a>
+      <a id="bsonObjectIdToObjectId(BsonObjectId):ObjectId"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonObjectIdToObjectId</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonObjectId">BsonObjectId</span></span>)</span><span class="result">: <span class="extype" name="org.bson.types.ObjectId">ObjectId</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonObjectIdToObjectId(value:org.bson.BsonObjectId):org.bson.types.ObjectId" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonRegularExpression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonRegularExpression(value:org.bson.BsonRegularExpression):scala.util.matching.Regex"></a>
+      <a id="bsonRegularExpression(BsonRegularExpression):Regex"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonRegularExpression</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonRegularExpression">BsonRegularExpression</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.util.matching.Regex" class="extype" target="_top">Regex</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonRegularExpression(value:org.bson.BsonRegularExpression):scala.util.matching.Regex" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonStringToString" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonStringToString(value:org.bson.BsonString):String"></a>
+      <a id="bsonStringToString(BsonString):String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonStringToString</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonString">BsonString</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonStringToString(value:org.bson.BsonString):String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#bsonSymbolToSymbol" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bsonSymbolToSymbol(value:org.bson.BsonSymbol):Symbol"></a>
+      <a id="bsonSymbolToSymbol(BsonSymbol):Symbol"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bsonSymbolToSymbol</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.BsonSymbol">BsonSymbol</span></span>)</span><span class="result">: <span class="extype" name="scala.Symbol">Symbol</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@bsonSymbolToSymbol(value:org.bson.BsonSymbol):Symbol" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#doubleToBsonDouble" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="doubleToBsonDouble(value:Double):org.bson.BsonDouble"></a>
+      <a id="doubleToBsonDouble(Double):BsonDouble"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">doubleToBsonDouble</span><span class="params">(<span name="value">value: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Double" class="extype" target="_top">Double</a></span>)</span><span class="result">: <span class="extype" name="org.bson.BsonDouble">BsonDouble</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@doubleToBsonDouble(value:Double):org.bson.BsonDouble" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#immutableDocumentToBsonDocument" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="immutableDocumentToBsonDocument(value:org.mongodb.scala.collection.immutable.Document):org.bson.BsonDocument"></a>
+      <a id="immutableDocumentToBsonDocument(collection.immutable.Document):BsonDocument"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">immutableDocumentToBsonDocument</span><span class="params">(<span name="value">value: <a href="../collection/immutable/Document.html" class="extype" name="org.mongodb.scala.collection.immutable.Document">collection.immutable.Document</a></span>)</span><span class="result">: <span class="extype" name="org.bson.BsonDocument">BsonDocument</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@immutableDocumentToBsonDocument(value:org.mongodb.scala.collection.immutable.Document):org.bson.BsonDocument" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#intToBsonInt32" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="intToBsonInt32(value:Int):org.bson.BsonInt32"></a>
+      <a id="intToBsonInt32(Int):BsonInt32"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">intToBsonInt32</span><span class="params">(<span name="value">value: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <span class="extype" name="org.bson.BsonInt32">BsonInt32</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@intToBsonInt32(value:Int):org.bson.BsonInt32" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#longToBsonInt64" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="longToBsonInt64(value:Long):org.bson.BsonInt64"></a>
+      <a id="longToBsonInt64(Long):BsonInt64"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">longToBsonInt64</span><span class="params">(<span name="value">value: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <span class="extype" name="org.bson.BsonInt64">BsonInt64</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@longToBsonInt64(value:Long):org.bson.BsonInt64" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#mutableDocumentToBsonDocument" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="mutableDocumentToBsonDocument(value:org.mongodb.scala.collection.mutable.Document):org.bson.BsonDocument"></a>
+      <a id="mutableDocumentToBsonDocument(collection.mutable.Document):BsonDocument"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mutableDocumentToBsonDocument</span><span class="params">(<span name="value">value: <a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.collection.mutable.Document">collection.mutable.Document</a></span>)</span><span class="result">: <span class="extype" name="org.bson.BsonDocument">BsonDocument</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@mutableDocumentToBsonDocument(value:org.mongodb.scala.collection.mutable.Document):org.bson.BsonDocument" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#noneToBsonNull" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="noneToBsonNull(value:Option[Nothing]):org.bson.BsonNull"></a>
+      <a id="noneToBsonNull(Option[Nothing]):BsonNull"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">noneToBsonNull</span><span class="params">(<span name="value">value: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Option" class="extype" target="_top">Option</a>[<span class="extype" name="scala.Nothing">Nothing</span>]</span>)</span><span class="result">: <span class="extype" name="org.bson.BsonNull">BsonNull</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@noneToBsonNull(value:Option[Nothing]):org.bson.BsonNull" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#objectIdToBsonObjectId" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="objectIdToBsonObjectId(value:org.bson.types.ObjectId):org.bson.BsonObjectId"></a>
+      <a id="objectIdToBsonObjectId(ObjectId):BsonObjectId"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">objectIdToBsonObjectId</span><span class="params">(<span name="value">value: <span class="extype" name="org.bson.types.ObjectId">ObjectId</span></span>)</span><span class="result">: <span class="extype" name="org.bson.BsonObjectId">BsonObjectId</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@objectIdToBsonObjectId(value:org.bson.types.ObjectId):org.bson.BsonObjectId" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#regexToBsonRegularExpression" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="regexToBsonRegularExpression(value:scala.util.matching.Regex):org.bson.BsonRegularExpression"></a>
+      <a id="regexToBsonRegularExpression(Regex):BsonRegularExpression"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">regexToBsonRegularExpression</span><span class="params">(<span name="value">value: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.util.matching.Regex" class="extype" target="_top">Regex</a></span>)</span><span class="result">: <span class="extype" name="org.bson.BsonRegularExpression">BsonRegularExpression</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@regexToBsonRegularExpression(value:scala.util.matching.Regex):org.bson.BsonRegularExpression" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#stringToBsonString" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="stringToBsonString(value:String):org.bson.BsonString"></a>
+      <a id="stringToBsonString(String):BsonString"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stringToBsonString</span><span class="params">(<span name="value">value: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="org.bson.BsonString">BsonString</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@stringToBsonString(value:String):org.bson.BsonString" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.mongodb.scala.implicits.BsonImplicits#symbolToBsonSymbol" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="symbolToBsonSymbol(value:Symbol):org.bson.BsonSymbol"></a>
+      <a id="symbolToBsonSymbol(Symbol):BsonSymbol"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">symbolToBsonSymbol</span><span class="params">(<span name="value">value: <span class="extype" name="scala.Symbol">Symbol</span></span>)</span><span class="result">: <span class="extype" name="org.bson.BsonSymbol">BsonSymbol</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@symbolToBsonSymbol(value:Symbol):org.bson.BsonSymbol" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@toString():String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.implicits.BsonImplicits@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
