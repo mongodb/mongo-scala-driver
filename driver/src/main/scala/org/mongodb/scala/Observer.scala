@@ -80,7 +80,7 @@ trait Observer[T] extends JObserver[T] {
    * Handles the automatic boxing of a Java subscription so it conforms to the interface.
    *
    * @note Users should not have to implement this method but rather use the Scala `Subscription`.
-   * @param sub the Java subscription
+   * @param subscription the Java subscription
    */
-  override def onSubscribe(sub: JSubscription): Unit = onSubscribe(BoxedSubscription(sub))
+  override def onSubscribe(subscription: JSubscription): Unit = onSubscribe(BoxedSubscription(subscription))
 }

@@ -25,6 +25,7 @@ import scala.concurrent.duration.Duration
 import scala.util.{ Failure, Success }
 
 import com.mongodb.MongoException
+import com.mongodb.async.client.{ Observable => JObservable, Observer => JObserver, Subscription => JSubscription }
 
 import org.mongodb.scala._
 import org.scalatest.{ FlatSpec, Matchers }
@@ -344,10 +345,116 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
     errorSeen.getOrElse(None) shouldBe a[Throwable]
   }
 
+  it should "provide a head method" in {
+    Await.result(observable[Int]().head(), Duration(10, TimeUnit.SECONDS)) should equal(1)
+    Await.result(observable[Int](fail = true).head(), Duration(10, TimeUnit.SECONDS)) should equal(1)
+
+    intercept[MongoException] {
+      Await.result(TestObservable[Int](Observable[Int](1 to 10), failOn = 1).head(), Duration(10, TimeUnit.SECONDS))
+    }
+
+    intercept[IllegalStateException] {
+      Await.result(TestObservable[Int](Observable(List[Int]())).head(), Duration(10, TimeUnit.SECONDS))
+    }
+  }
+
+  it should "work with Java Observer" in {
+    var results = ArrayBuffer[Int]()
+    var errorSeen: Option[Throwable] = None
+    var latch = new CountDownLatch(1)
+
+    var subscription: Option[JSubscription] = None
+    val observer = new JObserver[Int]() {
+      override def onError(e: Throwable): Unit = {
+        errorSeen = Some(e)
+        latch.countDown()
+      }
+
+      override def onSubscribe(sub: JSubscription): Unit = {
+        subscription = Some(sub)
+        sub.request(Long.MaxValue)
+      }
+
+      override def onComplete(): Unit = latch.countDown()
+
+      override def onNext(result: Int): Unit = results += result
+    }
+
+    observable[Int]().subscribe(observer)
+    latch.await(10, TimeUnit.SECONDS)
+    results should equal(1 to 100)
+
+    subscription = None
+    results = ArrayBuffer[Int]()
+    errorSeen = None
+    latch = new CountDownLatch(1)
+
+    observable(fail = true).subscribe(observer)
+    latch.await(10, TimeUnit.SECONDS)
+    results should equal(1 to 50)
+    errorSeen.nonEmpty should equal(true)
+    errorSeen.getOrElse(None) shouldBe a[Throwable]
+  }
+
   def observable[A](from: Iterable[A] = (1 to 100).toIterable, fail: Boolean = false): Observable[A] = {
     fail match {
-      case true  => TestObservable[A](Observable(from), failOn = 50)
+      case true  => TestObservable[A](Observable(from), failOn = 51)
       case false => TestObservable[A](Observable(from))
     }
   }
+
+  "Observers" should "support JSubscriptions" in {
+    val observer = new Observer[Int]() {
+      override def onError(e: Throwable): Unit = {}
+
+      override def onSubscribe(subscription: Subscription): Unit = {
+        subscription.request(1)
+        subscription.unsubscribe()
+        subscription.isUnsubscribed should equal(true)
+      }
+
+      override def onComplete(): Unit = {}
+
+      override def onNext(result: Int): Unit = {}
+    }
+
+    var requested = 0
+    val subscription = new JSubscription {
+      var subscribed = true
+
+      override def isUnsubscribed: Boolean = !subscribed
+
+      override def request(n: Long): Unit = requested += 1
+
+      override def unsubscribe(): Unit = subscribed = false
+    }
+
+    observer.onSubscribe(subscription)
+    subscription.isUnsubscribed should equal(true)
+    requested should equal(1)
+  }
+
+  "Observers" should "automatically subscribe and request Long.MaxValue" in {
+    val observer = new Observer[Int]() {
+      override def onError(e: Throwable): Unit = {}
+
+      override def onComplete(): Unit = {}
+
+      override def onNext(result: Int): Unit = {}
+    }
+
+    var requested: Long = 0
+    val subscription = new JSubscription {
+
+      override def isUnsubscribed: Boolean = false
+
+      override def request(n: Long): Unit = requested = n
+
+      override def unsubscribe(): Unit = {}
+    }
+
+    observer.onSubscribe(subscription)
+    requested should equal(Long.MaxValue)
+  }
+
 }

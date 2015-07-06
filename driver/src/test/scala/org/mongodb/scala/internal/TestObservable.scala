@@ -57,10 +57,11 @@ case class TestObservable[A](
 
         override def onNext(tResult: A): Unit = {
           if (!failed) {
-            observer.onNext(tResult)
             if (tResult == failOn) {
               failed = true
-              observer.onError(new MongoException(errorMessage))
+              onError(new MongoException(errorMessage))
+            } else {
+              observer.onNext(tResult)
             }
           }
         }

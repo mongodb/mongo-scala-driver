@@ -348,7 +348,7 @@ trait ObservableImplicits {
           sub.request(1)
         }
 
-        override def onComplete(): Unit = promise.failure(new Throwable("Observable completed without returning a result"))
+        override def onComplete(): Unit = promise.failure(new IllegalStateException("Observable completed without returning a result"))
 
         override def onNext(tResult: T): Unit = {
           subscription.get.unsubscribe()
@@ -361,20 +361,17 @@ trait ObservableImplicits {
 
   implicit class BoxedObservable[T](observable: JObservable[T]) extends Observable[T] {
     override def subscribe(observer: Observer[_ >: T]): Unit = observable.subscribe(observer)
-    override def subscribe(observer: JObserver[_ >: T]): Unit = observable.subscribe(BoxedObserver(observer))
   }
 
   implicit class BoxedObserver[T](observer: JObserver[_ >: T]) extends Observer[T] {
 
-    override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
+    override def onSubscribe(subscription: Subscription): Unit = observer.onSubscribe(subscription)
 
     override def onError(e: Throwable): Unit = observer.onError(e)
 
     override def onComplete(): Unit = observer.onComplete()
 
     override def onNext(result: T): Unit = observer.onNext(result)
-
-    override def onSubscribe(subscription: JSubscription): Unit = onSubscribe(BoxedSubscription(subscription))
   }
 
   implicit class BoxedSubscription(subscription: JSubscription) extends Subscription {

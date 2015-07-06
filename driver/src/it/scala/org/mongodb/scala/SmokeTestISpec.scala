@@ -33,7 +33,9 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       val names = client.listDatabaseNames().futureValue
 
       info("Creating a collection")
-      database.createCollection(collectionName).futureValue.head should equal(Completed())
+      val created = database.createCollection(collectionName).futureValue.head
+      created should equal(Completed())
+      created.toString() should equal("The operation completed successfully")
 
       info("Database names should include the new collection")
       val updatedNames = client.listDatabaseNames().futureValue
