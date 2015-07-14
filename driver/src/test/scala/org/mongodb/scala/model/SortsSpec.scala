@@ -21,7 +21,7 @@ import java.lang.reflect.Modifier._
 import org.bson.BsonDocument
 import org.bson.conversions.Bson
 
-import org.mongodb.scala.collection.immutable.Document
+import org.mongodb.scala.bson.collection.immutable.Document
 import org.mongodb.scala.model.Sorts._
 import org.mongodb.scala.{ MongoClient, model }
 import org.scalatest.{ FlatSpec, Matchers }

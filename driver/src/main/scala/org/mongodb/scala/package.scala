@@ -16,7 +16,9 @@
 
 package org.mongodb
 
-import org.mongodb.scala.collection.immutable
+import _root_.scala.language.implicitConversions
+
+import _root_.scala.reflect.ClassTag
 
 /**
  * The Mongo Scala Driver package
@@ -31,13 +33,12 @@ package object scala extends ObservableImplicits {
    * An immutable Document implementation.
    *
    * A strictly typed `Map[String, BsonValue]` like structure that traverses the elements in insertion order. Unlike native scala maps there
-   * is no variance in the value type and it always has to be a `BsonValue`.  The [[org.mongodb.scala.implicits]]
-   * helper provides simple interactions with Documents taking native data types and converting them to `BsonValues`.
+   * is no variance in the value type and it always has to be a `BsonValue`.
    *
    * @param underlying the underlying BsonDocument which stores the data.
    */
-  type Document = immutable.Document
-  val Document = immutable.Document
+  type Document = bson.Document
+  val Document = bson.Document
 
   /**
    * The result of a successful bulk write operation.
@@ -231,5 +232,14 @@ package object scala extends ObservableImplicits {
    * Subclass of [[WriteConcernException]] representing a duplicate key exception
    */
   type DuplicateKeyException = com.mongodb.DuplicateKeyException
+
+  /**
+   * Helper to get the class from a classTag
+   *
+   * @param ct the classTag we want to implicitly get the class of
+   * @tparam C the class type
+   * @return the classOf[C]
+   */
+  implicit def classTagToClassOf[C](ct: ClassTag[C]): Class[C] = ct.runtimeClass.asInstanceOf[Class[C]]
 
 }

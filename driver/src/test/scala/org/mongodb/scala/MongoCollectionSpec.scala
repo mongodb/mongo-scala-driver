@@ -23,7 +23,6 @@ import org.bson.codecs.configuration.CodecRegistries.fromProviders
 import com.mongodb.client.model.CountOptions
 import com.mongodb.async.client.{ MongoCollection => JMongoCollection }
 
-import org.mongodb.scala.implicits._
 import org.mongodb.scala.model._
 import org.mongodb.scala.result._
 import org.scalamock.scalatest.proxy.MockFactory

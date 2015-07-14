@@ -20,8 +20,8 @@ import scala.reflect.ClassTag
 
 import org.bson.codecs.configuration.CodecRegistry
 import org.bson.conversions.Bson
-import org.mongodb.scala.Helpers.DefaultsTo
-import org.mongodb.scala.collection.immutable
+import org.mongodb.scala.bson.DefaultsTo
+import org.mongodb.scala.bson.collection.immutable
 import org.mongodb.scala.internal.ObservableHelper.{ observe, observeCompleted }
 import com.mongodb.client.model.CreateCollectionOptions
 import com.mongodb.async.SingleResultCallback

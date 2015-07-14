@@ -19,7 +19,6 @@ package tour
 import scala.collection.immutable.IndexedSeq
 
 import org.mongodb.scala._
-import org.mongodb.scala.implicits._
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Projections._
 import org.mongodb.scala.model.Sorts._

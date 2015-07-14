@@ -21,7 +21,6 @@ import scala.concurrent.duration.Duration
 
 import com.mongodb.async.client.{ DistinctIterable, MongoIterable }
 
-import org.mongodb.scala.implicits._
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 

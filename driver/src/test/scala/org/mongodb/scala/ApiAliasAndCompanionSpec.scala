@@ -33,7 +33,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val javaExclusions = Set("AsyncBatchCursor", "Block", "ConnectionString", "Function", "ServerCursor", "Majority", "MongoClients",
       "MongoIterable", "Observables", "SingleResultCallback")
     val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "ScalaObservable",
-      "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription")
+      "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription", "classTagToClassOf")
 
     val classFilter = (f: Class[_ <: Object]) => {
       isPublic(f.getModifiers) &&
@@ -73,7 +73,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       .asScala.filter(classFilter).filter(f => f.getPackage.getName == scalaPackageName)
       .map(_.getSimpleName).toSet ++ currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet -- scalaExclusions
 
-    local should equal(wrapped)
+    local.diff(wrapped) shouldBe empty
   }
 
   it should "mirror parts of com.mongodb.connection in org.mongdb.scala.connection" in {

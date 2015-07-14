@@ -17,7 +17,6 @@
 package org.mongodb.scala.model
 
 import org.mongodb.scala._
-import org.mongodb.scala.implicits._
 import org.scalatest.{ FlatSpec, Matchers }
 
 class ModelSpec extends FlatSpec with Matchers {

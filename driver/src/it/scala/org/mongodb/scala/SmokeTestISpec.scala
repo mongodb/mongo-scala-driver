@@ -20,7 +20,6 @@ import scala.language.implicitConversions
 
 import org.bson.BsonString
 
-import org.mongodb.scala.implicits._
 
 class SmokeTestISpec extends RequiresMongoDBISpec {
 
@@ -81,7 +80,7 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       collection.createIndex(Document("test" -> 1)).futureValue.head shouldBe "test_1"
 
       info("has the newly created index")
-      val indexNames = collection.listIndexes().futureValue.map(doc => doc[BsonString]("name")).map(name => name: String)
+      val indexNames = collection.listIndexes().futureValue.map(doc => doc[BsonString]("name")).map(name => name.getValue)
       indexNames should contain("_id_")
       indexNames should contain("test_1")
 

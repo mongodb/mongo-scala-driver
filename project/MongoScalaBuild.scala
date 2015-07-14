@@ -134,11 +134,11 @@ object MongoScalaBuild extends Build {
     .settings(scoverageSettings)
     .settings(docSettings)
     .settings(publishSettings)
-    .dependsOn(core)
+    .dependsOn(bson)
 
-  lazy val core = Project(
-    id = "mongo-scala-driver-core",
-    base = file("core")
+  lazy val bson = Project(
+    id = "mongo-scala-bson",
+    base = file("bson")
   ).configs(IntegrationTest)
     .configs(UnitTest)
     .settings(buildSettings)
@@ -150,7 +150,7 @@ object MongoScalaBuild extends Build {
   lazy val examples = Project(
     id = "mongo-scala-driver-examples",
     base = file("examples")
-  ).aggregate(core)
+  ).aggregate(bson)
     .aggregate(driver)
     .settings(buildSettings)
     .settings(scalaStyleSettings)
@@ -158,9 +158,9 @@ object MongoScalaBuild extends Build {
     .dependsOn(driver)
 
   lazy val root = Project(
-    id = "mongo-scala-driver-root",
+    id = "mongo-scala",
     base = file(".")
-  ).aggregate(core)
+  ).aggregate(bson)
     .aggregate(driver)
     .settings(buildSettings)
     .settings(scalaStyleSettings)

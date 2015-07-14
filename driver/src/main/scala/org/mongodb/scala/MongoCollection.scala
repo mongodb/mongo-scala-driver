@@ -23,8 +23,8 @@ import scala.reflect.ClassTag
 
 import org.bson.codecs.configuration.CodecRegistry
 import org.bson.conversions.Bson
-import org.mongodb.scala.Helpers.{ DefaultsTo, classTagToClassOf }
-import org.mongodb.scala.collection.immutable
+import org.mongodb.scala.bson.DefaultsTo
+import org.mongodb.scala.bson.collection.immutable
 import org.mongodb.scala.internal.ObservableHelper._
 import org.mongodb.scala.model._
 import org.mongodb.scala.result._

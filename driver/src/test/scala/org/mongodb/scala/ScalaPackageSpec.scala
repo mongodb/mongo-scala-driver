@@ -16,12 +16,11 @@
 
 package org.mongodb.scala
 
-import org.bson.BsonString
 import com.mongodb.{ MongoCredential => JMongoCredential }
 
 import org.mongodb.scala
 import org.mongodb.scala.WriteConcern.Majority
-import org.mongodb.scala.implicits._
+import org.mongodb.scala.bson.BsonString
 import org.mongodb.scala.model._
 import org.scalatest.{ FlatSpec, Matchers }
 
@@ -63,10 +62,10 @@ class ScalaPackageSpec extends FlatSpec with Matchers {
   }
 
   it should "be able to create Documents" in {
-    val doc = Document("a" -> new BsonString("1"))
-    val doc2 = org.mongodb.scala.collection.Document("a" -> new BsonString("1"))
+    val doc = Document("a" -> BsonString("1"))
+    val doc2 = org.mongodb.scala.bson.collection.Document("a" -> BsonString("1"))
 
-    doc shouldBe a[org.mongodb.scala.collection.immutable.Document]
+    doc shouldBe a[org.mongodb.scala.bson.collection.immutable.Document]
     doc should equal(doc2)
   }
 

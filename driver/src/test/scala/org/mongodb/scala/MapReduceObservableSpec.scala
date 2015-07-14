@@ -22,7 +22,6 @@ import scala.concurrent.duration.Duration
 import com.mongodb.client.model.MapReduceAction
 import com.mongodb.async.client.{ MapReduceIterable, MongoIterable }
 
-import org.mongodb.scala.implicits._
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
