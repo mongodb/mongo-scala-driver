@@ -25,7 +25,7 @@ import org.bson.codecs.configuration.CodecRegistry
 import com.mongodb.ConnectionString
 import com.mongodb.async.client.{ MongoClient => JMongoClient, MongoClients }
 
-import org.mongodb.scala.bson.DefaultsTo
+import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
 import org.mongodb.scala.bson.codecs.DocumentCodecProvider
 import org.mongodb.scala.internal.ObservableHelper.observe
 
@@ -121,5 +121,5 @@ case class MongoClient(private val wrapped: JMongoClient) extends Closeable {
    * @return the fluent list databases interface
    */
   def listDatabases[TResult]()(implicit e: TResult DefaultsTo Document, ct: ClassTag[TResult]): ListDatabasesObservable[TResult] =
-    ListDatabasesObservable(wrapped.listDatabases(ct.runtimeClass.asInstanceOf[Class[TResult]]))
+    ListDatabasesObservable(wrapped.listDatabases(ct))
 }

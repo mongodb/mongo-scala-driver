@@ -204,7 +204,7 @@ class ImmutableDocumentSpec extends FlatSpec with Matchers {
   }
 
   it should "return a Json representation" in {
-    doc.toJson should equal("""{ "key" : "value", "key2" : "value2", "key3" : "value3" }""")
+    doc.toJson() should equal("""{ "key" : "value", "key2" : "value2", "key3" : "value3" }""")
   }
 
   "Documents" should "support Traversable like builders" in {

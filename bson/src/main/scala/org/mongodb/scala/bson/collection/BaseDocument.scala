@@ -21,9 +21,12 @@ import scala.collection.{GenTraversableOnce, Traversable}
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
+import org.bson.json.JsonWriterSettings
+
+import org.mongodb.scala.bson.DefaultHelper._
 import org.mongodb.scala.bson._
 import org.bson.codecs.configuration.CodecRegistry
-import org.bson.conversions.Bson
+import org.mongodb.scala.bson.conversions.Bson
 
 import org.mongodb.scala.bson.BsonMagnets
 
@@ -222,7 +225,14 @@ private[bson] trait BaseDocument[T] extends Traversable[(String, BsonValue)] wit
    *
    * @return a JSON representation of this document
    */
-  def toJson: String = underlying.toJson
+  def toJson(): String = underlying.toJson
+
+  /**
+   * Gets a JSON representation of this document using the given `JsonWriterSettings`.
+   * @param settings the JSON writer settings
+   * @return a JSON representation of this document
+   */
+  def toJson(settings: JsonWriterSettings): String = underlying.toJson(settings)
 
   /**
    * Returns a copy of the underlying BsonDocument

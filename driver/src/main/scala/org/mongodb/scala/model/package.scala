@@ -16,7 +16,7 @@
 
 package org.mongodb.scala
 
-import org.bson.conversions.Bson
+import org.mongodb.scala.bson.conversions.Bson
 
 /**
  * The model package containing models and options that help describe `MongoCollection` operations

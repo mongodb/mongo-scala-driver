@@ -49,6 +49,7 @@ package object scala extends ObservableImplicits {
    * A MongoDB namespace, which includes a database name and collection name.
    */
   type MongoNamespace = com.mongodb.MongoNamespace
+
   /**
    * Represents preferred replica set members to which a query or command can be sent.
    */
@@ -241,5 +242,4 @@ package object scala extends ObservableImplicits {
    * @return the classOf[C]
    */
   implicit def classTagToClassOf[C](ct: ClassTag[C]): Class[C] = ct.runtimeClass.asInstanceOf[Class[C]]
-
 }

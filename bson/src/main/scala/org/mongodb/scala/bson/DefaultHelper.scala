@@ -16,12 +16,14 @@
 
 package org.mongodb.scala.bson
 
+import scala.language.implicitConversions
+
 /**
  * A helper containing the sealed `DefaultsTo` trait which is used to determine the default type for a given method.
  *
  * @since 1.0
  */
-protected[scala] trait DefaultHelper {
+protected[scala] object DefaultHelper {
 
   /**
    * Neat helper to obtain a default type should one not be given eg:

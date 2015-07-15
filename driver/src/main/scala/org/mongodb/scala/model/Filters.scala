@@ -22,7 +22,7 @@ import scala.collection.JavaConverters._
 import scala.util.matching.Regex
 
 import org.bson._
-import org.bson.conversions.Bson
+import org.mongodb.scala.bson.conversions.Bson
 import com.mongodb.client.model.geojson.{ Geometry, Point }
 import com.mongodb.client.model.{ Filters => JFilters }
 

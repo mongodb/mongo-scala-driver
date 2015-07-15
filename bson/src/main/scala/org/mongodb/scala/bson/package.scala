@@ -20,7 +20,7 @@ package org.mongodb.scala
  * The bson package, contains mirrors and companion objects for `Bson` values.
  *
  */
-package object bson extends DefaultHelper {
+package object bson {
 
   /**
    * An immutable Document implementation.

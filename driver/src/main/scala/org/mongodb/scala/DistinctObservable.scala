@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
 
-import org.bson.conversions.Bson
+import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.internal.ObservableHelper._
 import com.mongodb.async.client.DistinctIterable
 

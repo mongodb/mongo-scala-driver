@@ -19,13 +19,13 @@ package org.mongodb.scala
 import scala.reflect.ClassTag
 
 import org.bson.codecs.configuration.CodecRegistry
-import org.bson.conversions.Bson
-import org.mongodb.scala.bson.DefaultsTo
-import org.mongodb.scala.bson.collection.immutable
-import org.mongodb.scala.internal.ObservableHelper.{ observe, observeCompleted }
 import com.mongodb.client.model.CreateCollectionOptions
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.{ MongoDatabase => JMongoDatabase }
+
+import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
+import org.mongodb.scala.bson.conversions.Bson
+import org.mongodb.scala.internal.ObservableHelper.{ observe, observeCompleted }
 
 /**
  * The MongoDatabase representation.
@@ -97,8 +97,8 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @tparam TResult       the type of the class to use instead of [[Document]].
    * @return the collection
    */
-  def getCollection[TResult](collectionName: String)(implicit e: TResult DefaultsTo immutable.Document, ct: ClassTag[TResult]): MongoCollection[TResult] =
-    MongoCollection(wrapped.getCollection(collectionName, ct.runtimeClass.asInstanceOf[Class[TResult]]))
+  def getCollection[TResult](collectionName: String)(implicit e: TResult DefaultsTo Document, ct: ClassTag[TResult]): MongoCollection[TResult] =
+    MongoCollection(wrapped.getCollection(collectionName, ct))
 
   /**
    * Executes command in the context of the current database using the primary server.
@@ -107,8 +107,8 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @tparam TResult the type of the class to use instead of [[Document]].
    * @return a Observable containing the command result
    */
-  def runCommand[TResult](command: Bson)(implicit e: TResult DefaultsTo immutable.Document, ct: ClassTag[TResult]): Observable[TResult] =
-    observe(wrapped.runCommand[TResult](command, ct.runtimeClass.asInstanceOf[Class[TResult]], _: SingleResultCallback[TResult]))
+  def runCommand[TResult](command: Bson)(implicit e: TResult DefaultsTo Document, ct: ClassTag[TResult]): Observable[TResult] =
+    observe(wrapped.runCommand[TResult](command, ct, _: SingleResultCallback[TResult]))
 
   /**
    * Executes command in the context of the current database.
@@ -123,9 +123,9 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
     readPreference: ReadPreference
   )(
     implicit
-    e: TResult DefaultsTo immutable.Document, ct: ClassTag[TResult]
+    e: TResult DefaultsTo Document, ct: ClassTag[TResult]
   ): Observable[TResult] =
-    observe(wrapped.runCommand(command, readPreference, ct.runtimeClass.asInstanceOf[Class[TResult]], _: SingleResultCallback[TResult]))
+    observe(wrapped.runCommand(command, readPreference, ct, _: SingleResultCallback[TResult]))
 
   /**
    * Drops this database.
@@ -149,8 +149,8 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    * @tparam TResult the target document type of the iterable.
    * @return the fluent list collections interface
    */
-  def listCollections[TResult]()(implicit e: TResult DefaultsTo immutable.Document, ct: ClassTag[TResult]): ListCollectionsObservable[TResult] =
-    ListCollectionsObservable(wrapped.listCollections(ct.runtimeClass.asInstanceOf[Class[TResult]]))
+  def listCollections[TResult]()(implicit e: TResult DefaultsTo Document, ct: ClassTag[TResult]): ListCollectionsObservable[TResult] =
+    ListCollectionsObservable(wrapped.listCollections(ct))
 
   /**
    * Create a new collection with the given name.

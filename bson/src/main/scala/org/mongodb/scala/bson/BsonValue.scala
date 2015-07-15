@@ -150,7 +150,7 @@ object BsonDocument {
    * Creates a `BsonDocument` from a json String
    *
    * @param json the json string
-   * @return the BsonDocumebt
+   * @return the BsonDocumet
    */
   def apply(json: String): BsonDocument = JBsonDocument.parse(json)
 }

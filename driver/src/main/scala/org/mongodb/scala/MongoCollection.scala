@@ -22,14 +22,14 @@ import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
 import org.bson.codecs.configuration.CodecRegistry
-import org.bson.conversions.Bson
-import org.mongodb.scala.bson.DefaultsTo
-import org.mongodb.scala.bson.collection.immutable
+import com.mongodb.async.SingleResultCallback
+import com.mongodb.async.client.{ MongoCollection => JMongoCollection }
+
+import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
+import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.internal.ObservableHelper._
 import org.mongodb.scala.model._
 import org.mongodb.scala.result._
-import com.mongodb.async.SingleResultCallback
-import com.mongodb.async.client.{ MongoCollection => JMongoCollection }
 
 // scalastyle:off number.of.methods
 
@@ -82,8 +82,8 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @tparam C   The type that the new collection will encode documents from and decode documents to
    * @return a new MongoCollection instance with the different default class
    */
-  def withDocumentClass[C]()(implicit e: C DefaultsTo immutable.Document, ct: ClassTag[C]): MongoCollection[C] =
-    MongoCollection(wrapped.withDocumentClass(ct.runtimeClass.asInstanceOf[Class[C]]))
+  def withDocumentClass[C]()(implicit e: C DefaultsTo Document, ct: ClassTag[C]): MongoCollection[C] =
+    MongoCollection(wrapped.withDocumentClass(ct))
 
   /**
    * Create a new MongoCollection instance with a different codec registry.
@@ -165,7 +165,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @tparam C   the target document type of the iterable.
    * @return the find Observable
    */
-  def find[C]()(implicit e: C DefaultsTo immutable.Document, ct: ClassTag[C]): FindObservable[C] =
+  def find[C]()(implicit e: C DefaultsTo Document, ct: ClassTag[C]): FindObservable[C] =
     FindObservable(wrapped.find[C](ct))
 
   /**
@@ -176,7 +176,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @tparam C    the target document type of the iterable.
    * @return the find Observable
    */
-  def find[C](filter: Bson)(implicit e: C DefaultsTo immutable.Document, ct: ClassTag[C]): FindObservable[C] =
+  def find[C](filter: Bson)(implicit e: C DefaultsTo Document, ct: ClassTag[C]): FindObservable[C] =
     FindObservable(wrapped.find(filter, ct))
 
   /**
@@ -186,7 +186,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable containing the result of the aggregation operation
    *         [[http://docs.mongodb.org/manual/aggregation/ Aggregation]]
    */
-  def aggregate[C](pipeline: Seq[Bson])(implicit e: C DefaultsTo immutable.Document, ct: ClassTag[C]): AggregateObservable[C] =
+  def aggregate[C](pipeline: Seq[Bson])(implicit e: C DefaultsTo Document, ct: ClassTag[C]): AggregateObservable[C] =
     AggregateObservable(wrapped.aggregate[C](pipeline.asJava, ct))
 
   /**
@@ -198,7 +198,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable containing the result of the map-reduce operation
    *         [[http://docs.mongodb.org/manual/reference/command/mapReduce/ map-reduce]]
    */
-  def mapReduce[C](mapFunction: String, reduceFunction: String)(implicit e: C DefaultsTo immutable.Document, ct: ClassTag[C]): MapReduceObservable[C] =
+  def mapReduce[C](mapFunction: String, reduceFunction: String)(implicit e: C DefaultsTo Document, ct: ClassTag[C]): MapReduceObservable[C] =
     MapReduceObservable(wrapped.mapReduce(mapFunction, reduceFunction, ct))
 
   /**
@@ -470,7 +470,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @tparam C   the target document type of the iterable.
    * @return the fluent list indexes interface
    */
-  def listIndexes[C]()(implicit e: C DefaultsTo immutable.Document, ct: ClassTag[C]): ListIndexesObservable[C] =
+  def listIndexes[C]()(implicit e: C DefaultsTo Document, ct: ClassTag[C]): ListIndexesObservable[C] =
     ListIndexesObservable(wrapped.listIndexes(ct))
 
   /**

@@ -18,7 +18,7 @@ package org.mongodb.scala.model
 
 import scala.collection.JavaConverters._
 
-import org.bson.conversions.Bson
+import org.mongodb.scala.bson.conversions.Bson
 import com.mongodb.client.model.{ Aggregates => JAggregates }
 
 /**
