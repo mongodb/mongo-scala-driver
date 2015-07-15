@@ -20,8 +20,6 @@ import com.typesafe.sbt.SbtScalariform._
 import org.scalastyle.sbt.ScalastylePlugin._
 import sbt.Keys._
 import sbt._
-import sbtassembly.Plugin.AssemblyKeys._
-import sbtassembly.Plugin._
 import sbtunidoc.Plugin._
 import scoverage.ScoverageSbtPlugin._
 
@@ -77,12 +75,6 @@ object MongoScalaBuild extends Build {
     (scalastyleConfig in Compile) := file("project/scalastyle-config.xml"),
     (scalastyleConfig in Test) := file("project/scalastyle-config.xml")
   )
-
-  /*
-   * Assembly Jar Settings
-   */
-  val driverAssemblyJarSettings = assemblySettings ++
-    addArtifact(Artifact("mongo-scala-driver-alldep", "jar", "jar"), assembly) ++ Seq(test in assembly := {})
 
   // Check style
   val checkAlias = addCommandAlias("check", ";clean;scalastyle;coverage;test;it:test;coverageAggregate;coverageReport")
@@ -145,7 +137,7 @@ object MongoScalaBuild extends Build {
     .settings(testSettings)
     .settings(scalaStyleSettings)
     .settings(docSettings)
-    .settings(publishSettings)
+    .settings(noPublishSettings)
 
   lazy val examples = Project(
     id = "mongo-scala-driver-examples",

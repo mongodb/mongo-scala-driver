@@ -21,6 +21,7 @@ import com.typesafe.sbt.SbtPgp
 import com.typesafe.sbt.pgp.PgpKeys
 import sbt.Keys._
 import sbt._
+import sbtassembly.AssemblyPlugin.autoImport._
 
 object Publish {
 
@@ -48,7 +49,14 @@ object Publish {
           props.getProperty(username),
           props.getProperty(password)),
         publishSnapshot <<= publishSnapshotTask
-      )
+      ) ++ Seq(
+        assemblyJarName in assembly := "mongo-scala-driver-alldep.jar",
+        test in assembly := {},
+        artifact in (Compile, assembly) := {
+        val art = (artifact in (Compile, assembly)).value
+        art.copy(`classifier` = Some("alldep"))
+        }
+      ) ++ addArtifact(artifact in (Compile, assembly), assembly)
     }
   }
 
