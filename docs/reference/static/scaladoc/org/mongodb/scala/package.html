@@ -51,7 +51,7 @@
 </p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.0
 </p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="ObservableImplicits.html" class="extype" name="org.mongodb.scala.ObservableImplicits">ObservableImplicits</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="ObservableImplicits.html" class="extype" name="org.mongodb.scala.ObservableImplicits">ObservableImplicits</a>, <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div><div class="toggleContainer block diagram-container" id="content-diagram-container">
                 <span class="toggle diagram-link">Content Hierarchy</span>
                 <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#diagrams" target="_blank" class="diagram-help">Learn more about scaladoc diagrams</a>
@@ -222,7 +222,7 @@
 </p></div><dl class="paramcmts block"><dt class="tparam">TResult</dt><dd class="cmt"><p>The type of the result.</p></dd><dt class="param">wrapped</dt><dd class="cmt"><p>the underlying java DistinctObservable</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.0
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.Document" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="Document=org.mongodb.scala.collection.immutable.Document"></a>
+      <a id="Document=org.mongodb.scala.bson.Document"></a>
       <a id="Document:Document"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -230,16 +230,15 @@
         <span class="kind">type</span>
       </span>
       <span class="symbol">
-        <span class="name">Document</span><span class="result"> = <a href="collection/immutable/Document.html" class="extype" name="org.mongodb.scala.collection.immutable.Document">scala.collection.immutable.Document</a></span>
+        <span class="name">Document</span><span class="result"> = <a href="bson/collection/immutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.immutable.Document">scala.bson.collection.immutable.Document</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.package@Document=org.mongodb.scala.collection.immutable.Document" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.package@Document=org.mongodb.scala.bson.Document" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
       <p class="shortcomment cmt">An immutable Document implementation.</p><div class="fullcomment"><div class="comment cmt"><p>An immutable Document implementation.</p><p>A strictly typed <code>Map[String, BsonValue]</code> like structure that traverses the elements in insertion order. Unlike native scala maps there
-is no variance in the value type and it always has to be a <code>BsonValue</code>.  The <a href="implicits/package.html" class="extype" name="org.mongodb.scala.implicits">org.mongodb.scala.implicits</a>
-helper provides simple interactions with Documents taking native data types and converting them to <code>BsonValues</code>.
+is no variance in the value type and it always has to be a <code>BsonValue</code>.
 </p></div></div>
     </li><li name="org.mongodb.scala.DuplicateKeyException" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DuplicateKeyException=com.mongodb.DuplicateKeyException"></a>
@@ -914,7 +913,7 @@ from its <a href="Observer.html" class="extype" name="org.mongodb.scala.Observer
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="ObservableImplicits.html"><span class="name">ObservableImplicits</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="ObservableImplicits.html"><span class="name">ObservableImplicits</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.package@ObservableImplicitsextendsAnyRef" title="Permalink" target="_top">
@@ -939,7 +938,7 @@ from its <a href="Observer.html" class="extype" name="org.mongodb.scala.Observer
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">A Scala based wrapper of the <code>Observer</code> interface which provides a mechanism for receiving push-based notifications.</p><div class="fullcomment"><div class="comment cmt"><p>A Scala based wrapper of the <code>Observer</code> interface which provides a mechanism for receiving push-based notifications.</p><p>Will receive a call to <a href="Observer.html#onSubscribe(sub:com.mongodb.async.client.Subscription):Unit" class="extmbr" name="org.mongodb.scala.Observer#onSubscribe">Observer.onSubscribe</a> on subscription to the <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>.</p><p>Default implementations of this trait are greedy and will call <a href="Subscription.html#request(n:Long):Unit" class="extmbr" name="org.mongodb.scala.Subscription#request">Subscription.request</a> with <code>Long.MaxValue</code> so that all results are
+      <p class="shortcomment cmt">A Scala based wrapper of the <code>Observer</code> interface which provides a mechanism for receiving push-based notifications.</p><div class="fullcomment"><div class="comment cmt"><p>A Scala based wrapper of the <code>Observer</code> interface which provides a mechanism for receiving push-based notifications.</p><p>Will receive a call to <a href="Observer.html#onSubscribe(subscription:com.mongodb.async.client.Subscription):Unit" class="extmbr" name="org.mongodb.scala.Observer#onSubscribe">Observer.onSubscribe</a> on subscription to the <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>.</p><p>Default implementations of this trait are greedy and will call <a href="Subscription.html#request(n:Long):Unit" class="extmbr" name="org.mongodb.scala.Subscription#request">Subscription.request</a> with <code>Long.MaxValue</code> so that all results are
 requested.  Custom implementations of the <code>onSubscribe</code> method can be used to control &quot;back-pressure&quot; and ensure that only demand that
 the <code>Observer</code> is capable of handling is requested.</p><p>After signaling demand:</p><p>- One or more invocations of <a href="Observer.html#onNext(result:T):Unit" class="extmbr" name="org.mongodb.scala.Observer#onNext">Observer.onNext</a> up to the maximum number defined by <a href="Subscription.html#request(n:Long):Unit" class="extmbr" name="org.mongodb.scala.Subscription#request">Subscription.request</a>
 - Single invocation of <a href="Observer.html#onError(e:Throwable):Unit" class="extmbr" name="org.mongodb.scala.Observer#onError">Observer.onError</a> or <a href="Observer.html#onComplete():Unit" class="extmbr" name="org.mongodb.scala.Observer#onComplete">Observer.onComplete</a> which signals a terminal state after which no
@@ -972,7 +971,7 @@ further events will be sent.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ObservableImplicits$ScalaObservable.html"><span class="name">ScalaObservable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="ObservableImplicits$ScalaObservable.html"><span class="name">ScalaObservable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.ObservableImplicits@ScalaObservable[T]extendsAnyRef" title="Permalink" target="_top">
@@ -1150,18 +1149,18 @@ other methods with throw <code>MongoUnacknowledgedWriteException</code>.
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="org.mongodb.scala#Document" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Document:org.mongodb.scala.collection.immutable.Document.type"></a>
-      <a id="Document:scala.collection.immutable.Document.type"></a>
+      <a id="Document:org.mongodb.scala.bson.collection.immutable.Document.type"></a>
+      <a id="Document:scala.bson.collection.immutable.Document.type"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">Document</span><span class="result">: <a href="collection/immutable/Document$.html" class="extype" name="org.mongodb.scala.collection.immutable.Document">scala.collection.immutable.Document</a>.type</span>
+        <span class="name">Document</span><span class="result">: <a href="bson/collection/immutable/Document$.html" class="extype" name="org.mongodb.scala.bson.collection.immutable.Document">scala.bson.collection.immutable.Document</a>.type</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.package@Document:org.mongodb.scala.collection.immutable.Document.type" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.package@Document:org.mongodb.scala.bson.collection.immutable.Document.type" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -1366,40 +1365,43 @@ to use.
    preference to this one.
 </p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.0
 </p></dd></dl></div>
-    </li><li name="org.mongodb.scala.codecs" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="codecs"></a>
-      <a id="codecs:codecs"></a>
+    </li><li name="org.mongodb.scala.bson" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bson"></a>
+      <a id="bson:bson"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
       </span>
       <span class="symbol">
-        <a href="codecs/package.html"><span class="name">codecs</span></a>
+        <a href="bson/package.html"><span class="name">bson</span></a>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.package@codecs" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.package@bson" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
-      
-    </li><li name="org.mongodb.scala.collection" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="collection"></a>
-      <a id="collection:collection"></a>
+      <p class="shortcomment cmt">The bson package, contains mirrors and companion objects for <code>Bson</code> values.</p>
+    </li><li name="org.mongodb.scala#classTagToClassOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="classTagToClassOf[C](ct:scala.reflect.ClassTag[C]):Class[C]"></a>
+      <a id="classTagToClassOf[C](ClassTag[C]):Class[C]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">package</span>
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <a href="collection/package.html"><span class="name">collection</span></a>
+        <span class="name">classTagToClassOf</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.classTagToClassOf.C">C</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Predef.Class">Class</span>[<span class="extype" name="org.mongodb.scala.classTagToClassOf.C">C</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.package@collection" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.package@classTagToClassOf[C](ct:scala.reflect.ClassTag[C]):Class[C]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">The collection package.</p>
+      <p class="shortcomment cmt">Helper to get the class from a classTag
+</p><div class="fullcomment"><div class="comment cmt"><p>Helper to get the class from a classTag
+</p></div><dl class="paramcmts block"><dt class="tparam">C</dt><dd class="cmt"><p>the class type</p></dd><dt class="param">ct</dt><dd class="cmt"><p>the classTag we want to implicitly get the class of</p></dd><dt>returns</dt><dd class="cmt"><p>the classOf[C]
+</p></dd></dl></div>
     </li><li name="org.mongodb.scala.connection" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="connection"></a>
       <a id="connection:connection"></a>
@@ -1413,23 +1415,6 @@ to use.
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.package@connection" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" />
-      </a>
-    </span>
-      
-    </li><li name="org.mongodb.scala.implicits" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="implicits"></a>
-      <a id="implicits:implicits"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">package</span>
-      </span>
-      <span class="symbol">
-        <a href="implicits/package.html"><span class="name">implicits</span></a>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.package@implicits" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -1464,9 +1449,9 @@ to use.
         <div class="parent" name="org.mongodb.scala.ObservableImplicits">
               <h3>Inherited from <a href="ObservableImplicits.html" class="extype" name="org.mongodb.scala.ObservableImplicits">ObservableImplicits</a></h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>

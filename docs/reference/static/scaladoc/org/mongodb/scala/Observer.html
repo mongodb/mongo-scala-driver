@@ -49,7 +49,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Scala based wrapper of the <code>Observer</code> interface which provides a mechanism for receiving push-based notifications.</p><p>Will receive a call to <a href="#onSubscribe(sub:com.mongodb.async.client.Subscription):Unit" class="extmbr" name="org.mongodb.scala.Observer#onSubscribe">Observer.onSubscribe</a> on subscription to the <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>.</p><p>Default implementations of this trait are greedy and will call <a href="Subscription.html#request(n:Long):Unit" class="extmbr" name="org.mongodb.scala.Subscription#request">Subscription.request</a> with <code>Long.MaxValue</code> so that all results are
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Scala based wrapper of the <code>Observer</code> interface which provides a mechanism for receiving push-based notifications.</p><p>Will receive a call to <a href="#onSubscribe(subscription:com.mongodb.async.client.Subscription):Unit" class="extmbr" name="org.mongodb.scala.Observer#onSubscribe">Observer.onSubscribe</a> on subscription to the <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>.</p><p>Default implementations of this trait are greedy and will call <a href="Subscription.html#request(n:Long):Unit" class="extmbr" name="org.mongodb.scala.Subscription#request">Subscription.request</a> with <code>Long.MaxValue</code> so that all results are
 requested.  Custom implementations of the <code>onSubscribe</code> method can be used to control &quot;back-pressure&quot; and ensure that only demand that
 the <code>Observer</code> is capable of handling is requested.</p><p>After signaling demand:</p><p>- One or more invocations of <a href="#onNext(result:T):Unit" class="extmbr" name="org.mongodb.scala.Observer#onNext">Observer.onNext</a> up to the maximum number defined by <a href="Subscription.html#request(n:Long):Unit" class="extmbr" name="org.mongodb.scala.Subscription#request">Subscription.request</a>
 - Single invocation of <a href="#onError(e:Throwable):Unit" class="extmbr" name="org.mongodb.scala.Observer#onError">Observer.onError</a> or <a href="#onComplete():Unit" class="extmbr" name="org.mongodb.scala.Observer#onComplete">Observer.onComplete</a> which signals a terminal state after which no
@@ -57,7 +57,7 @@ further events will be sent.
 </p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>The type of element signaled.
 </p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href=http://api.mongodb.org/java/3.1/index.html?com/mongodb/async/client/Observer.html class="extype" target="_top">com.mongodb.async.client.Observer</a>[<span class="extype" name="org.mongodb.scala.Observer.T">T</span>], <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href=http://api.mongodb.org/java/3.1/index.html?com/mongodb/async/client/Observer.html class="extype" target="_top">com.mongodb.async.client.Observer</a>[<span class="extype" name="org.mongodb.scala.Observer.T">T</span>], <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div><div class="toggleContainer block">
             <span class="toggle">Known Subclasses</span>
             <div class="subClasses hiddenContent"><a href="ObservableImplicits$BoxedObserver.html" class="extype" name="org.mongodb.scala.ObservableImplicits.BoxedObserver">BoxedObserver</a></div>
@@ -177,7 +177,7 @@ further events will be sent.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.Observer@!=(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -211,7 +211,7 @@ further events will be sent.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.Observer@==(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -245,7 +245,7 @@ further events will be sent.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.Observer@clone():Object" title="Permalink" target="_top">
@@ -268,7 +268,7 @@ further events will be sent.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.Observer@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
@@ -285,7 +285,7 @@ further events will be sent.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.Observer@equals(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -376,7 +376,7 @@ further events will be sent.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.Observer@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
@@ -419,7 +419,7 @@ further events will be sent.
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="org.mongodb.scala.Observer#onSubscribe" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="onSubscribe(sub:com.mongodb.async.client.Subscription):Unit"></a>
+      <a id="onSubscribe(subscription:com.mongodb.async.client.Subscription):Unit"></a>
       <a id="onSubscribe(com.mongodb.async.client.Subscription):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -427,15 +427,15 @@ further events will be sent.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">onSubscribe</span><span class="params">(<span name="sub">sub: <a href=http://api.mongodb.org/java/3.1/index.html?com/mongodb/async/client/Subscription.html class="extype" target="_top">com.mongodb.async.client.Subscription</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">onSubscribe</span><span class="params">(<span name="subscription">subscription: <a href=http://api.mongodb.org/java/3.1/index.html?com/mongodb/async/client/Subscription.html class="extype" target="_top">com.mongodb.async.client.Subscription</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.Observer@onSubscribe(sub:com.mongodb.async.client.Subscription):Unit" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.Observer@onSubscribe(subscription:com.mongodb.async.client.Subscription):Unit" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
       <p class="shortcomment cmt">Handles the automatic boxing of a Java subscription so it conforms to the interface.</p><div class="fullcomment"><div class="comment cmt"><p>Handles the automatic boxing of a Java subscription so it conforms to the interface.
-</p></div><dl class="paramcmts block"><dt class="param">sub</dt><dd class="cmt"><p>the Java subscription
+</p></div><dl class="paramcmts block"><dt class="param">subscription</dt><dd class="cmt"><p>the Java subscription
 </p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.mongodb.scala.Observer">Observer</a> → Observer</dd><dt>Note</dt><dd><span class="cmt"><p>Users should not have to implement this method but rather use the Scala <code>Subscription</code>.</p></span></dd></dl></div>
     </li><li name="org.mongodb.scala.Observer#onSubscribe" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="onSubscribe(subscription:org.mongodb.scala.Subscription):Unit"></a>
@@ -571,9 +571,9 @@ further events will be sent.
         <div class="parent" name="com.mongodb.async.client.Observer">
               <h3>Inherited from <a href=http://api.mongodb.org/java/3.1/index.html?com/mongodb/async/client/Observer.html class="extype" target="_top">com.mongodb.async.client.Observer</a>[<span class="extype" name="org.mongodb.scala.Observer.T">T</span>]</h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>

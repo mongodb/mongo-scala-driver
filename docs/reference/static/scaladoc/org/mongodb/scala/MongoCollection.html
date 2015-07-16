@@ -53,7 +53,7 @@
 </p></div><dl class="paramcmts block"><dt class="tparam">TResult</dt><dd class="cmt"><p>The type that this collection will encode documents from and decode documents to.</p></dd><dt class="param">wrapped</dt><dd class="cmt"><p>the underlying java MongoCollection</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.0
 </p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
                 <span class="toggle diagram-link">Type Hierarchy</span>
                 <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#diagrams" target="_blank" class="diagram-help">Learn more about scaladoc diagrams</a>
@@ -130,7 +130,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.MongoCollection@!=(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -164,7 +164,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.MongoCollection@==(x$1:Any):Boolean" title="Permalink" target="_top">
@@ -173,18 +173,18 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#aggregate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="aggregate[C](pipeline:Seq[org.bson.conversions.Bson])(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.AggregateObservable[C]"></a>
-      <a id="aggregate[C](Seq[Bson])(DefaultsTo[C,collection.immutable.Document],ClassTag[C]):AggregateObservable[C]"></a>
+      <a id="aggregate[C](pipeline:Seq[org.mongodb.scala.bson.conversions.Bson])(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.AggregateObservable[C]"></a>
+      <a id="aggregate[C](Seq[Bson])(DefaultsTo[C,Document],ClassTag[C]):AggregateObservable[C]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">aggregate</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="pipeline">pipeline: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="org.bson.conversions.Bson">Bson</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <span class="extype" name="org.mongodb.scala.Helpers.DefaultsTo">DefaultsTo</span>[<span class="extype" name="org.mongodb.scala.MongoCollection.aggregate.C">C</span>, <a href="collection/immutable/Document.html" class="extype" name="org.mongodb.scala.collection.immutable.Document">collection.immutable.Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.aggregate.C">C</span>]</span>)</span><span class="result">: <a href="AggregateObservable.html" class="extype" name="org.mongodb.scala.AggregateObservable">AggregateObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.aggregate.C">C</span>]</span>
+        <span class="name">aggregate</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="pipeline">pipeline: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <a href="bson/DefaultHelper$$DefaultsTo.html" class="extype" name="org.mongodb.scala.bson.DefaultHelper.DefaultsTo">DefaultsTo</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.aggregate.C">C</span>, <a href="package.html#Document=org.mongodb.scala.bson.Document" class="extmbr" name="org.mongodb.scala.Document">Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.aggregate.C">C</span>]</span>)</span><span class="result">: <a href="AggregateObservable.html" class="extype" name="org.mongodb.scala.AggregateObservable">AggregateObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.aggregate.C">C</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@aggregate[C](pipeline:Seq[org.bson.conversions.Bson])(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.AggregateObservable[C]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@aggregate[C](pipeline:Seq[org.mongodb.scala.bson.conversions.Bson])(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.AggregateObservable[C]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -256,7 +256,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.MongoCollection@clone():Object" title="Permalink" target="_top">
@@ -290,7 +290,7 @@
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the { @link org.bson.codecs.configuration.CodecRegistry}
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#count" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="count(filter:org.bson.conversions.Bson,options:org.mongodb.scala.model.CountOptions):org.mongodb.scala.Observable[Long]"></a>
+      <a id="count(filter:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.CountOptions):org.mongodb.scala.Observable[Long]"></a>
       <a id="count(Bson,CountOptions):Observable[Long]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -298,10 +298,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">count</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#CountOptions=com.mongodb.client.model.CountOptions" class="extmbr" name="org.mongodb.scala.model.CountOptions">CountOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a>]</span>
+        <span class="name">count</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#CountOptions=com.mongodb.client.model.CountOptions" class="extmbr" name="org.mongodb.scala.model.CountOptions">CountOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@count(filter:org.bson.conversions.Bson,options:org.mongodb.scala.model.CountOptions):org.mongodb.scala.Observable[Long]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@count(filter:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.CountOptions):org.mongodb.scala.Observable[Long]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -309,7 +309,7 @@
 </p></div><dl class="paramcmts block"><dt class="param">filter</dt><dd class="cmt"><p>the query filter</p></dd><dt class="param">options</dt><dd class="cmt"><p>the options describing the count</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element indicating the number of documents
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#count" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="count(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[Long]"></a>
+      <a id="count(filter:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[Long]"></a>
       <a id="count(Bson):Observable[Long]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -317,10 +317,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">count</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a>]</span>
+        <span class="name">count</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Long" class="extype" target="_top">Long</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@count(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[Long]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@count(filter:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[Long]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -347,7 +347,7 @@
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a Observable with a single element indicating the number of documents
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#createIndex" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="createIndex(key:org.bson.conversions.Bson,options:org.mongodb.scala.model.IndexOptions):org.mongodb.scala.Observable[String]"></a>
+      <a id="createIndex(key:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.IndexOptions):org.mongodb.scala.Observable[String]"></a>
       <a id="createIndex(Bson,IndexOptions):Observable[String]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -355,10 +355,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">createIndex</span><span class="params">(<span name="key">key: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#IndexOptions=com.mongodb.client.model.IndexOptions" class="extmbr" name="org.mongodb.scala.model.IndexOptions">IndexOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+        <span class="name">createIndex</span><span class="params">(<span name="key">key: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#IndexOptions=com.mongodb.client.model.IndexOptions" class="extmbr" name="org.mongodb.scala.model.IndexOptions">IndexOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@createIndex(key:org.bson.conversions.Bson,options:org.mongodb.scala.model.IndexOptions):org.mongodb.scala.Observable[String]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@createIndex(key:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.IndexOptions):org.mongodb.scala.Observable[String]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -366,7 +366,7 @@
                registered</p></dd><dt class="param">options</dt><dd class="cmt"><p>the options for the index</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element indicating when the operation has completed
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#createIndex" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="createIndex(key:org.bson.conversions.Bson):org.mongodb.scala.Observable[String]"></a>
+      <a id="createIndex(key:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[String]"></a>
       <a id="createIndex(Bson):Observable[String]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -374,10 +374,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">createIndex</span><span class="params">(<span name="key">key: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+        <span class="name">createIndex</span><span class="params">(<span name="key">key: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@createIndex(key:org.bson.conversions.Bson):org.mongodb.scala.Observable[String]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@createIndex(key:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[String]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -406,7 +406,7 @@
       <p class="shortcomment cmt"><a href="http://docs.mongodb.org/manual/reference/command/createIndexes" target="_blank">Create Index</a></p><div class="fullcomment"><div class="comment cmt"><p><a href="http://docs.mongodb.org/manual/reference/command/createIndexes" target="_blank">Create Index</a></p></div><dl class="paramcmts block"><dt class="param">models</dt><dd class="cmt"><p>the list of indexes to create</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element indicating when the operation has completed
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#deleteMany" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="deleteMany(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]"></a>
+      <a id="deleteMany(filter:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]"></a>
       <a id="deleteMany(Bson):Observable[DeleteResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -414,10 +414,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">deleteMany</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.DeleteResult">DeleteResult</span>]</span>
+        <span class="name">deleteMany</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.DeleteResult">DeleteResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@deleteMany(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@deleteMany(filter:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -425,7 +425,7 @@
 </p></div><dl class="paramcmts block"><dt class="param">filter</dt><dd class="cmt"><p>the query filter to apply the the delete operation</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element the DeleteResult or with an com.mongodb.MongoException
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#deleteOne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="deleteOne(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]"></a>
+      <a id="deleteOne(filter:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]"></a>
       <a id="deleteOne(Bson):Observable[DeleteResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -433,10 +433,10 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">deleteOne</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.DeleteResult">DeleteResult</span>]</span>
+        <span class="name">deleteOne</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.DeleteResult">DeleteResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@deleteOne(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@deleteOne(filter:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -445,7 +445,7 @@ modified.
 </p></div><dl class="paramcmts block"><dt class="param">filter</dt><dd class="cmt"><p>the query filter to apply the the delete operation</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element the DeleteResult or with an com.mongodb.MongoException
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#distinct" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="distinct[C](fieldName:String,filter:org.bson.conversions.Bson)(implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.DistinctObservable[C]"></a>
+      <a id="distinct[C](fieldName:String,filter:org.mongodb.scala.bson.conversions.Bson)(implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.DistinctObservable[C]"></a>
       <a id="distinct[C](String,Bson)(ClassTag[C]):DistinctObservable[C]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -453,10 +453,10 @@ modified.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">distinct</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.distinct.C">C</span>]</span>)</span><span class="result">: <a href="DistinctObservable.html" class="extype" name="org.mongodb.scala.DistinctObservable">DistinctObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.distinct.C">C</span>]</span>
+        <span class="name">distinct</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.distinct.C">C</span>]</span>)</span><span class="result">: <a href="DistinctObservable.html" class="extype" name="org.mongodb.scala.DistinctObservable">DistinctObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.distinct.C">C</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@distinct[C](fieldName:String,filter:org.bson.conversions.Bson)(implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.DistinctObservable[C]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@distinct[C](fieldName:String,filter:org.mongodb.scala.bson.conversions.Bson)(implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.DistinctObservable[C]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -520,7 +520,7 @@ modified.
         <a href="http://docs.mongodb.org/manual/reference/command/drop/" target="_blank">Drop Collection</a>
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#dropIndex" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="dropIndex(keys:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.Completed]"></a>
+      <a id="dropIndex(keys:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.Completed]"></a>
       <a id="dropIndex(Bson):Observable[Completed]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -528,10 +528,10 @@ modified.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">dropIndex</span><span class="params">(<span name="keys">keys: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<a href="Completed.html" class="extype" name="org.mongodb.scala.Completed">Completed</a>]</span>
+        <span class="name">dropIndex</span><span class="params">(<span name="keys">keys: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<a href="Completed.html" class="extype" name="org.mongodb.scala.Completed">Completed</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@dropIndex(keys:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.Completed]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@dropIndex(keys:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.Completed]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -583,7 +583,7 @@ modified.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.MongoCollection@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
@@ -615,36 +615,36 @@ modified.
               
         </dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#find" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="find[C](filter:org.bson.conversions.Bson)(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.FindObservable[C]"></a>
-      <a id="find[C](Bson)(DefaultsTo[C,collection.immutable.Document],ClassTag[C]):FindObservable[C]"></a>
+      <a id="find[C](filter:org.mongodb.scala.bson.conversions.Bson)(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.FindObservable[C]"></a>
+      <a id="find[C](Bson)(DefaultsTo[C,Document],ClassTag[C]):FindObservable[C]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">find</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <span class="extype" name="org.mongodb.scala.Helpers.DefaultsTo">DefaultsTo</span>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>, <a href="collection/immutable/Document.html" class="extype" name="org.mongodb.scala.collection.immutable.Document">collection.immutable.Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>]</span>)</span><span class="result">: <a href="FindObservable.html" class="extype" name="org.mongodb.scala.FindObservable">FindObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>]</span>
+        <span class="name">find</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <a href="bson/DefaultHelper$$DefaultsTo.html" class="extype" name="org.mongodb.scala.bson.DefaultHelper.DefaultsTo">DefaultsTo</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>, <a href="package.html#Document=org.mongodb.scala.bson.Document" class="extmbr" name="org.mongodb.scala.Document">Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>]</span>)</span><span class="result">: <a href="FindObservable.html" class="extype" name="org.mongodb.scala.FindObservable">FindObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@find[C](filter:org.bson.conversions.Bson)(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.FindObservable[C]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@find[C](filter:org.mongodb.scala.bson.conversions.Bson)(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.FindObservable[C]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
       <p class="shortcomment cmt">Finds all documents in the collection.</p><div class="fullcomment"><div class="comment cmt"><p>Finds all documents in the collection.</p><p><a href="http://docs.mongodb.org/manual/tutorial/query-documents/" target="_blank">Find</a></p></div><dl class="paramcmts block"><dt class="tparam">C</dt><dd class="cmt"><p>the target document type of the iterable.</p></dd><dt class="param">filter</dt><dd class="cmt"><p>the query filter</p></dd><dt>returns</dt><dd class="cmt"><p>the find Observable
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#find" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="find[C]()(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.FindObservable[C]"></a>
-      <a id="find[C]()(DefaultsTo[C,collection.immutable.Document],ClassTag[C]):FindObservable[C]"></a>
+      <a id="find[C]()(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.FindObservable[C]"></a>
+      <a id="find[C]()(DefaultsTo[C,Document],ClassTag[C]):FindObservable[C]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">find</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">()</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <span class="extype" name="org.mongodb.scala.Helpers.DefaultsTo">DefaultsTo</span>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>, <a href="collection/immutable/Document.html" class="extype" name="org.mongodb.scala.collection.immutable.Document">collection.immutable.Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>]</span>)</span><span class="result">: <a href="FindObservable.html" class="extype" name="org.mongodb.scala.FindObservable">FindObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>]</span>
+        <span class="name">find</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">()</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <a href="bson/DefaultHelper$$DefaultsTo.html" class="extype" name="org.mongodb.scala.bson.DefaultHelper.DefaultsTo">DefaultsTo</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>, <a href="package.html#Document=org.mongodb.scala.bson.Document" class="extmbr" name="org.mongodb.scala.Document">Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>]</span>)</span><span class="result">: <a href="FindObservable.html" class="extype" name="org.mongodb.scala.FindObservable">FindObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.find.C">C</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@find[C]()(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.FindObservable[C]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@find[C]()(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.FindObservable[C]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -652,7 +652,7 @@ modified.
 </p></div><dl class="paramcmts block"><dt class="tparam">C</dt><dd class="cmt"><p>the target document type of the iterable.</p></dd><dt>returns</dt><dd class="cmt"><p>the find Observable
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#findOneAndDelete" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="findOneAndDelete(filter:org.bson.conversions.Bson,options:org.mongodb.scala.model.FindOneAndDeleteOptions):org.mongodb.scala.Observable[TResult]"></a>
+      <a id="findOneAndDelete(filter:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.FindOneAndDeleteOptions):org.mongodb.scala.Observable[TResult]"></a>
       <a id="findOneAndDelete(Bson,FindOneAndDeleteOptions):Observable[TResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -660,10 +660,10 @@ modified.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">findOneAndDelete</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#FindOneAndDeleteOptions=com.mongodb.client.model.FindOneAndDeleteOptions" class="extmbr" name="org.mongodb.scala.model.FindOneAndDeleteOptions">FindOneAndDeleteOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
+        <span class="name">findOneAndDelete</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#FindOneAndDeleteOptions=com.mongodb.client.model.FindOneAndDeleteOptions" class="extmbr" name="org.mongodb.scala.model.FindOneAndDeleteOptions">FindOneAndDeleteOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndDelete(filter:org.bson.conversions.Bson,options:org.mongodb.scala.model.FindOneAndDeleteOptions):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndDelete(filter:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.FindOneAndDeleteOptions):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -672,7 +672,7 @@ modified.
         returned
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#findOneAndDelete" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="findOneAndDelete(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[TResult]"></a>
+      <a id="findOneAndDelete(filter:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[TResult]"></a>
       <a id="findOneAndDelete(Bson):Observable[TResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -680,10 +680,10 @@ modified.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">findOneAndDelete</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
+        <span class="name">findOneAndDelete</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndDelete(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndDelete(filter:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -692,7 +692,7 @@ modified.
         returned
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#findOneAndReplace" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="findOneAndReplace(filter:org.bson.conversions.Bson,replacement:TResult,options:org.mongodb.scala.model.FindOneAndReplaceOptions):org.mongodb.scala.Observable[TResult]"></a>
+      <a id="findOneAndReplace(filter:org.mongodb.scala.bson.conversions.Bson,replacement:TResult,options:org.mongodb.scala.model.FindOneAndReplaceOptions):org.mongodb.scala.Observable[TResult]"></a>
       <a id="findOneAndReplace(Bson,TResult,FindOneAndReplaceOptions):Observable[TResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -700,10 +700,10 @@ modified.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">findOneAndReplace</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="replacement">replacement: <span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span></span>, <span name="options">options: <a href="model/package.html#FindOneAndReplaceOptions=com.mongodb.client.model.FindOneAndReplaceOptions" class="extmbr" name="org.mongodb.scala.model.FindOneAndReplaceOptions">FindOneAndReplaceOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
+        <span class="name">findOneAndReplace</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="replacement">replacement: <span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span></span>, <span name="options">options: <a href="model/package.html#FindOneAndReplaceOptions=com.mongodb.client.model.FindOneAndReplaceOptions" class="extmbr" name="org.mongodb.scala.model.FindOneAndReplaceOptions">FindOneAndReplaceOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndReplace(filter:org.bson.conversions.Bson,replacement:TResult,options:org.mongodb.scala.model.FindOneAndReplaceOptions):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndReplace(filter:org.mongodb.scala.bson.conversions.Bson,replacement:TResult,options:org.mongodb.scala.model.FindOneAndReplaceOptions):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -713,7 +713,7 @@ modified.
         query filter, then null will be returned
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#findOneAndReplace" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="findOneAndReplace(filter:org.bson.conversions.Bson,replacement:TResult):org.mongodb.scala.Observable[TResult]"></a>
+      <a id="findOneAndReplace(filter:org.mongodb.scala.bson.conversions.Bson,replacement:TResult):org.mongodb.scala.Observable[TResult]"></a>
       <a id="findOneAndReplace(Bson,TResult):Observable[TResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -721,10 +721,10 @@ modified.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">findOneAndReplace</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="replacement">replacement: <span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
+        <span class="name">findOneAndReplace</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="replacement">replacement: <span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndReplace(filter:org.bson.conversions.Bson,replacement:TResult):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndReplace(filter:org.mongodb.scala.bson.conversions.Bson,replacement:TResult):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -734,7 +734,7 @@ modified.
         query filter, then null will be returned
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#findOneAndUpdate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="findOneAndUpdate(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson,options:org.mongodb.scala.model.FindOneAndUpdateOptions):org.mongodb.scala.Observable[TResult]"></a>
+      <a id="findOneAndUpdate(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.FindOneAndUpdateOptions):org.mongodb.scala.Observable[TResult]"></a>
       <a id="findOneAndUpdate(Bson,Bson,FindOneAndUpdateOptions):Observable[TResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -742,10 +742,10 @@ modified.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">findOneAndUpdate</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#FindOneAndUpdateOptions=com.mongodb.client.model.FindOneAndUpdateOptions" class="extmbr" name="org.mongodb.scala.model.FindOneAndUpdateOptions">FindOneAndUpdateOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
+        <span class="name">findOneAndUpdate</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#FindOneAndUpdateOptions=com.mongodb.client.model.FindOneAndUpdateOptions" class="extmbr" name="org.mongodb.scala.model.FindOneAndUpdateOptions">FindOneAndUpdateOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndUpdate(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson,options:org.mongodb.scala.model.FindOneAndUpdateOptions):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndUpdate(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.FindOneAndUpdateOptions):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -757,7 +757,7 @@ modified.
         query filter, then null will be returned
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#findOneAndUpdate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="findOneAndUpdate(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson):org.mongodb.scala.Observable[TResult]"></a>
+      <a id="findOneAndUpdate(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[TResult]"></a>
       <a id="findOneAndUpdate(Bson,Bson):Observable[TResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -765,10 +765,10 @@ modified.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">findOneAndUpdate</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
+        <span class="name">findOneAndUpdate</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndUpdate(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@findOneAndUpdate(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[TResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -875,36 +875,36 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#listIndexes" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="listIndexes[C]()(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.ListIndexesObservable[C]"></a>
-      <a id="listIndexes[C]()(DefaultsTo[C,collection.immutable.Document],ClassTag[C]):ListIndexesObservable[C]"></a>
+      <a id="listIndexes[C]()(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.ListIndexesObservable[C]"></a>
+      <a id="listIndexes[C]()(DefaultsTo[C,Document],ClassTag[C]):ListIndexesObservable[C]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">listIndexes</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">()</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <span class="extype" name="org.mongodb.scala.Helpers.DefaultsTo">DefaultsTo</span>[<span class="extype" name="org.mongodb.scala.MongoCollection.listIndexes.C">C</span>, <a href="collection/immutable/Document.html" class="extype" name="org.mongodb.scala.collection.immutable.Document">collection.immutable.Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.listIndexes.C">C</span>]</span>)</span><span class="result">: <a href="ListIndexesObservable.html" class="extype" name="org.mongodb.scala.ListIndexesObservable">ListIndexesObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.listIndexes.C">C</span>]</span>
+        <span class="name">listIndexes</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">()</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <a href="bson/DefaultHelper$$DefaultsTo.html" class="extype" name="org.mongodb.scala.bson.DefaultHelper.DefaultsTo">DefaultsTo</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.listIndexes.C">C</span>, <a href="package.html#Document=org.mongodb.scala.bson.Document" class="extmbr" name="org.mongodb.scala.Document">Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.listIndexes.C">C</span>]</span>)</span><span class="result">: <a href="ListIndexesObservable.html" class="extype" name="org.mongodb.scala.ListIndexesObservable">ListIndexesObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.listIndexes.C">C</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@listIndexes[C]()(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.ListIndexesObservable[C]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@listIndexes[C]()(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.ListIndexesObservable[C]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
       <p class="shortcomment cmt">Get all the indexes in this collection.</p><div class="fullcomment"><div class="comment cmt"><p>Get all the indexes in this collection.</p><p><a href="http://docs.mongodb.org/manual/reference/command/listIndexes/" target="_blank">listIndexes</a></p></div><dl class="paramcmts block"><dt class="tparam">C</dt><dd class="cmt"><p>the target document type of the iterable.</p></dd><dt>returns</dt><dd class="cmt"><p>the fluent list indexes interface
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#mapReduce" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="mapReduce[C](mapFunction:String,reduceFunction:String)(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.MapReduceObservable[C]"></a>
-      <a id="mapReduce[C](String,String)(DefaultsTo[C,collection.immutable.Document],ClassTag[C]):MapReduceObservable[C]"></a>
+      <a id="mapReduce[C](mapFunction:String,reduceFunction:String)(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.MapReduceObservable[C]"></a>
+      <a id="mapReduce[C](String,String)(DefaultsTo[C,Document],ClassTag[C]):MapReduceObservable[C]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mapReduce</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="mapFunction">mapFunction: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="reduceFunction">reduceFunction: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <span class="extype" name="org.mongodb.scala.Helpers.DefaultsTo">DefaultsTo</span>[<span class="extype" name="org.mongodb.scala.MongoCollection.mapReduce.C">C</span>, <a href="collection/immutable/Document.html" class="extype" name="org.mongodb.scala.collection.immutable.Document">collection.immutable.Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.mapReduce.C">C</span>]</span>)</span><span class="result">: <a href="MapReduceObservable.html" class="extype" name="org.mongodb.scala.MapReduceObservable">MapReduceObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.mapReduce.C">C</span>]</span>
+        <span class="name">mapReduce</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">(<span name="mapFunction">mapFunction: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="reduceFunction">reduceFunction: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <a href="bson/DefaultHelper$$DefaultsTo.html" class="extype" name="org.mongodb.scala.bson.DefaultHelper.DefaultsTo">DefaultsTo</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.mapReduce.C">C</span>, <a href="package.html#Document=org.mongodb.scala.bson.Document" class="extmbr" name="org.mongodb.scala.Document">Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.mapReduce.C">C</span>]</span>)</span><span class="result">: <a href="MapReduceObservable.html" class="extype" name="org.mongodb.scala.MapReduceObservable">MapReduceObservable</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.mapReduce.C">C</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@mapReduce[C](mapFunction:String,reduceFunction:String)(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.MapReduceObservable[C]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@mapReduce[C](mapFunction:String,reduceFunction:String)(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.MapReduceObservable[C]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -940,7 +940,7 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../index.html#org.mongodb.scala.MongoCollection@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
@@ -1038,7 +1038,7 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
       <p class="shortcomment cmt">Rename the collection with oldCollectionName to the newCollectionName.</p><div class="fullcomment"><div class="comment cmt"><p>Rename the collection with oldCollectionName to the newCollectionName.</p><p><a href="http://docs.mongodb.org/manual/reference/commands/renameCollection" target="_blank">Rename collection</a></p></div><dl class="paramcmts block"><dt class="param">newCollectionNamespace</dt><dd class="cmt"><p>the namespace the collection will be renamed to</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element indicating when the operation has completed
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#replaceOne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="replaceOne(filter:org.bson.conversions.Bson,replacement:TResult,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
+      <a id="replaceOne(filter:org.mongodb.scala.bson.conversions.Bson,replacement:TResult,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
       <a id="replaceOne(Bson,TResult,UpdateOptions):Observable[UpdateResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1046,17 +1046,17 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">replaceOne</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="replacement">replacement: <span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span></span>, <span name="options">options: <a href="model/package.html#UpdateOptions=com.mongodb.client.model.UpdateOptions" class="extmbr" name="org.mongodb.scala.model.UpdateOptions">UpdateOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
+        <span class="name">replaceOne</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="replacement">replacement: <span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span></span>, <span name="options">options: <a href="model/package.html#UpdateOptions=com.mongodb.client.model.UpdateOptions" class="extmbr" name="org.mongodb.scala.model.UpdateOptions">UpdateOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@replaceOne(filter:org.bson.conversions.Bson,replacement:TResult,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@replaceOne(filter:org.mongodb.scala.bson.conversions.Bson,replacement:TResult,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
       <p class="shortcomment cmt">Replace a document in the collection according to the specified arguments.</p><div class="fullcomment"><div class="comment cmt"><p>Replace a document in the collection according to the specified arguments.</p><p><a href="http://docs.mongodb.org/manual/tutorial/modify-documents/#replace-the-document" target="_blank">Replace</a></p></div><dl class="paramcmts block"><dt class="param">filter</dt><dd class="cmt"><p>the query filter to apply the the replace operation</p></dd><dt class="param">replacement</dt><dd class="cmt"><p>the replacement document</p></dd><dt class="param">options</dt><dd class="cmt"><p>the options to apply to the replace operation</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element the UpdateResult
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#replaceOne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="replaceOne(filter:org.bson.conversions.Bson,replacement:TResult):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
+      <a id="replaceOne(filter:org.mongodb.scala.bson.conversions.Bson,replacement:TResult):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
       <a id="replaceOne(Bson,TResult):Observable[UpdateResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1064,10 +1064,10 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">replaceOne</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="replacement">replacement: <span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
+        <span class="name">replaceOne</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="replacement">replacement: <span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@replaceOne(filter:org.bson.conversions.Bson,replacement:TResult):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@replaceOne(filter:org.mongodb.scala.bson.conversions.Bson,replacement:TResult):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -1091,7 +1091,7 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#updateMany" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="updateMany(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
+      <a id="updateMany(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
       <a id="updateMany(Bson,Bson,UpdateOptions):Observable[UpdateResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1099,10 +1099,10 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">updateMany</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#UpdateOptions=com.mongodb.client.model.UpdateOptions" class="extmbr" name="org.mongodb.scala.model.UpdateOptions">UpdateOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
+        <span class="name">updateMany</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#UpdateOptions=com.mongodb.client.model.UpdateOptions" class="extmbr" name="org.mongodb.scala.model.UpdateOptions">UpdateOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@updateMany(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@updateMany(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -1112,7 +1112,7 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
                can be of any type for which a { @code Codec} is registered</p></dd><dt class="param">options</dt><dd class="cmt"><p>the options to apply to the update operation</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element the UpdateResult
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#updateMany" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="updateMany(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
+      <a id="updateMany(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
       <a id="updateMany(Bson,Bson):Observable[UpdateResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1120,10 +1120,10 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">updateMany</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
+        <span class="name">updateMany</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@updateMany(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@updateMany(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -1133,7 +1133,7 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
               can be of any type for which a { @code Codec} is registered</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element the UpdateResult
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#updateOne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="updateOne(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
+      <a id="updateOne(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
       <a id="updateOne(Bson,Bson,UpdateOptions):Observable[UpdateResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1141,10 +1141,10 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">updateOne</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#UpdateOptions=com.mongodb.client.model.UpdateOptions" class="extmbr" name="org.mongodb.scala.model.UpdateOptions">UpdateOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
+        <span class="name">updateOne</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="options">options: <a href="model/package.html#UpdateOptions=com.mongodb.client.model.UpdateOptions" class="extmbr" name="org.mongodb.scala.model.UpdateOptions">UpdateOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@updateOne(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@updateOne(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson,options:org.mongodb.scala.model.UpdateOptions):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -1154,7 +1154,7 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
                can be of any type for which a { @code Codec} is registered</p></dd><dt class="param">options</dt><dd class="cmt"><p>the options to apply to the update operation</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element the UpdateResult
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#updateOne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="updateOne(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
+      <a id="updateOne(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]"></a>
       <a id="updateOne(Bson,Bson):Observable[UpdateResult]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1162,10 +1162,10 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">updateOne</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
+        <span class="name">updateOne</span><span class="params">(<span name="filter">filter: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>, <span name="update">update: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<span class="extype" name="org.mongodb.scala.result.UpdateResult">UpdateResult</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@updateOne(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@updateOne(filter:org.mongodb.scala.bson.conversions.Bson,update:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -1263,18 +1263,18 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
 </p></div><dl class="paramcmts block"><dt class="param">codecRegistry</dt><dd class="cmt"><p>the new { @link org.bson.codecs.configuration.CodecRegistry} for the collection</p></dd><dt>returns</dt><dd class="cmt"><p>a new MongoCollection instance with the different codec registry
 </p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#withDocumentClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="withDocumentClass[C]()(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.MongoCollection[C]"></a>
-      <a id="withDocumentClass[C]()(DefaultsTo[C,collection.immutable.Document],ClassTag[C]):MongoCollection[C]"></a>
+      <a id="withDocumentClass[C]()(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.MongoCollection[C]"></a>
+      <a id="withDocumentClass[C]()(DefaultsTo[C,Document],ClassTag[C]):MongoCollection[C]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">withDocumentClass</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">()</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <span class="extype" name="org.mongodb.scala.Helpers.DefaultsTo">DefaultsTo</span>[<span class="extype" name="org.mongodb.scala.MongoCollection.withDocumentClass.C">C</span>, <a href="collection/immutable/Document.html" class="extype" name="org.mongodb.scala.collection.immutable.Document">collection.immutable.Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.withDocumentClass.C">C</span>]</span>)</span><span class="result">: <a href="" class="extype" name="org.mongodb.scala.MongoCollection">MongoCollection</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.withDocumentClass.C">C</span>]</span>
+        <span class="name">withDocumentClass</span><span class="tparams">[<span name="C">C</span>]</span><span class="params">()</span><span class="params">(<span class="implicit">implicit </span><span name="e">e: <a href="bson/DefaultHelper$$DefaultsTo.html" class="extype" name="org.mongodb.scala.bson.DefaultHelper.DefaultsTo">DefaultsTo</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.withDocumentClass.C">C</span>, <a href="package.html#Document=org.mongodb.scala.bson.Document" class="extmbr" name="org.mongodb.scala.Document">Document</a>]</span>, <span name="ct">ct: <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.reflect.ClassTag" class="extype" target="_top">ClassTag</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.withDocumentClass.C">C</span>]</span>)</span><span class="result">: <a href="" class="extype" name="org.mongodb.scala.MongoCollection">MongoCollection</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.withDocumentClass.C">C</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.MongoCollection@withDocumentClass[C]()(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.MongoCollection[C]" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@withDocumentClass[C]()(implicite:org.mongodb.scala.bson.DefaultHelper.DefaultsTo[C,org.mongodb.scala.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.MongoCollection[C]" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -1356,9 +1356,9 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
             </div><div class="parent" name="scala.Equals">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Equals" class="extype" target="_top">Equals</a></h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.6/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>
