@@ -15,13 +15,14 @@
  */
 package tour
 
-import org.bson.conversions.Bson
+import org.mongodb.scala.bson.conversions.Bson
 
 import org.mongodb.scala._
 import org.mongodb.scala.model.CreateCollectionOptions
 import org.mongodb.scala.model.Filters.text
 import org.mongodb.scala.model.Projections.metaTextScore
 import org.mongodb.scala.model.Sorts.ascending
+
 import tour.Helpers._
 
 /**

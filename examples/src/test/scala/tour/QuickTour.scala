@@ -24,6 +24,7 @@ import org.mongodb.scala.model.Projections._
 import org.mongodb.scala.model.Sorts._
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.model._
+
 import tour.Helpers._
 
 /**
