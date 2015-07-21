@@ -137,7 +137,7 @@ object MongoScalaBuild extends Build {
     .settings(testSettings)
     .settings(scalaStyleSettings)
     .settings(docSettings)
-    .settings(noPublishSettings)
+    .settings(publishSettings)
 
   lazy val examples = Project(
     id = "mongo-scala-driver-examples",
