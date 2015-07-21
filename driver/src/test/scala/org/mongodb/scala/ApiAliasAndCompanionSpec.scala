@@ -73,7 +73,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       .asScala.filter(classFilter).filter(f => f.getPackage.getName == scalaPackageName)
       .map(_.getSimpleName).toSet ++ currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet -- scalaExclusions
 
-    local.diff(wrapped) shouldBe empty
+    diff(local, wrapped) shouldBe empty
   }
 
   it should "mirror parts of com.mongodb.connection in org.mongdb.scala.connection" in {
@@ -97,7 +97,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val scalaPackageName = "org.mongodb.scala.connection"
     val local = currentMirror.staticPackage("org.mongodb.scala.connection").info.decls.map(_.name.toString).toSet - "package"
 
-    local should equal(wrapped)
+    diff(local, wrapped) shouldBe empty
   }
 
   it should "mirror all com.mongodb.client.model in org.mongdb.scala.model" in {
@@ -114,7 +114,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       .asScala.filter(classFilter).map(_.getSimpleName).toSet
     val local = (localPackage ++ localObjects) - "package"
 
-    local should equal(wrapped)
+    diff(local, wrapped) shouldBe empty
   }
 
   it should "mirror all com.mongodb.client.model.geojson in org.mongdb.scala.model.geojson" in {
@@ -128,7 +128,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val scalaPackageName = "org.mongodb.scala.model.geojson"
     val local = currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet - "package"
 
-    local should equal(wrapped)
+    diff(local, wrapped) shouldBe empty
   }
 
   it should "mirror all com.mongodb.client.result in org.mongdb.scala.result" in {
@@ -142,7 +142,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val scalaPackageName = "org.mongodb.scala.result"
     val local = currentMirror.staticPackage("org.mongodb.scala.result").info.decls.map(_.name.toString).toSet - "package"
 
-    local should equal(wrapped)
+    diff(local, wrapped) shouldBe empty
   }
 
   it should "mirror all com.mongodb.WriteConcern in org.mongodb.scala.WriteConcern" in {
@@ -151,6 +151,8 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       .filter(f => isStatic(f.getModifiers) && !notMirrored.contains(f.getName)).map(_.getName).toSet
 
     val local = WriteConcern.getClass.getDeclaredMethods.filter(f => f.getName != "apply" && isPublic(f.getModifiers)).map(_.getName).toSet
-    local should equal(wrapped)
+    diff(local, wrapped) shouldBe empty
   }
+
+  def diff(a: Set[String], b: Set[String]): Set[String] = a.diff(b) ++ b.diff(a)
 }
