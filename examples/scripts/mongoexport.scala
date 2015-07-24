@@ -1,8 +1,3 @@
-#!/bin/sh
-L=`pwd`
-cp=`echo $L/lib/*`
-exec scala -cp "$cp" "$0" "$@"
-!#
 
 /*
  * Copyright 2015 MongoDB, Inc.

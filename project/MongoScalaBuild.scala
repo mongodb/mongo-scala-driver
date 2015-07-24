@@ -142,11 +142,13 @@ object MongoScalaBuild extends Build {
   lazy val examples = Project(
     id = "mongo-scala-driver-examples",
     base = file("examples")
-  ).aggregate(bson)
+  ).configs(UnitTest)
+    .aggregate(bson)
     .aggregate(driver)
     .settings(buildSettings)
     .settings(scalaStyleSettings)
     .settings(noPublishSettings)
+    .settings(libraryDependencies ++= examplesDependencies)
     .dependsOn(driver)
 
   lazy val root = Project(
@@ -154,6 +156,7 @@ object MongoScalaBuild extends Build {
     base = file(".")
   ).aggregate(bson)
     .aggregate(driver)
+    .aggregate(examples)
     .settings(buildSettings)
     .settings(scalaStyleSettings)
     .settings(scoverageSettings)

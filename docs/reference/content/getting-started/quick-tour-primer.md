@@ -38,7 +38,7 @@ This means that `onSubscribe` is always signalled, followed by a possibly unboun
 followed by an `onError` signal if there is a failure, or an `onComplete` signal when no more elements are available—all as long as 
 the `Subscription` is not cancelled.
 
-The implementation draws inspiration from the [ReactiveX](http://reactivex.io/) and [reactive streams](http://www.reactive-streams.org) libraries and provides easy interoperability with them.
+The implementation draws inspiration from the [ReactiveX](http://reactivex.io/) and [reactive streams](http://www.reactive-streams.org) libraries and provides easy interoperability with them.  For more information see the [integrations guide]({{< relref "integrations/index.md" >}}).
 
 
 ## From Async Callbacks to Observables
