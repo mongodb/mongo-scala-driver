@@ -13,19 +13,19 @@ The `Observable`, `Observer` and `Subscription` implementation draws inspiration
 
 ## RxScala
 
-{{< img src="/img/mongoRxLogo.png" title="RxScala" class="align-right" >}}
+{{< img src="/img/mongoRxLogo.png" title="RxScala" class="align-left" >}}
 
-The [ReactiveX](http://reactivex.io/) scala driver (RxScala) provides extra composability compared to the MongoDB implementation of `Observerable`.  To implement an `rx.Observable` use the [`Observable.apply(f: (Subscriber[T]) => Unit)`](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable$@apply[T]\(f:rx.lang.scala.Subscriber[T]=>Unit\):rx.lang.scala.Observable[T]) method. This returns an Observable that will execute the specified function when someone subscribes to it, this follows the native MongoDB implementation. By implementing the [`Producer`](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Producer) trait you can also honor "Backpressure" and use the RxScala [backpressure operators](http://reactivex.io/documentation/operators/backpressure.html).
+The [ReactiveX](http://reactivex.io/) scala driver (RxScala) provides extra composability of `Observables` compared to the MongoDB `Observable`.  
 
-An example implicit based implementation can be found in the [examples folder]({{< srcref "examples/src/test/scala/rxScala">}}).  This includes an implicit based conversion from `Observable` to `rx.Observable` and an example of it being used.
+An example implicit based implementation can be found in the [examples folder]({{< srcref "examples/src/test/scala/rxScala">}}).  This includes an implicit based conversion from `Observable` to `rx.Observable` and an example of it being used.  
+
+The example uses the [`Observable.apply(f: (Subscriber[T]) => Unit)`](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable$@apply[T]\(f:rx.lang.scala.Subscriber[T]=>Unit\):rx.lang.scala.Observable[T]) method to return a cold observable.  It also implements the [`Producer`](http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Producer) trait, so the `Observable` can honor "Backpressure" when when using any of the [backpressure operators](http://reactivex.io/documentation/operators/backpressure.html).
 
 
 ## Reactive Streams
 
 {{< img src="/img/mongoReactiveLogo.png" title="RxScala" class="align-right" >}}
 
- The [Reactive streams](http://www.reactive-streams.org) initiative provides API's so that reactive stream based systems can interact. The API is similar to the MongoDB `Observable` API but without the composability of the MongoDB implementation.  
+The [Reactive streams](http://www.reactive-streams.org) initiative provides interfaces that allow reactive stream based systems to interact. The API is similar to the MongoDB `Observable` API but without the composability of the MongoDB implementation.  
  
- Converting a `Observable` to a `Publisher` is a simple process and can be done in a few short lines of code.
-
-An example implicit based implementation can be found in the [examples folder]({{< srcref "examples/src/test/scala/rxStreams">}}).  This includes an implicit based conversion from `Observable` to `Producer` and an example of it being used.
+Converting from an `Observable` to a `Publisher` is a simple process and can be done in a few short lines of code. An implicit based conversion can be found in the [examples folder]({{< srcref "examples/src/test/scala/rxStreams">}}).
