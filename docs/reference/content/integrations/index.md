@@ -15,7 +15,7 @@ The `Observable`, `Observer` and `Subscription` implementation draws inspiration
 
 {{< img src="/img/mongoRxLogo.png" title="RxScala" class="align-left" >}}
 
-The [ReactiveX](http://reactivex.io/) scala driver (RxScala) provides extra composability of `Observables` compared to the MongoDB `Observable`.  
+The [ReactiveX](http://reactivex.io/) scala driver (RxScala) provides extra composability of `Observables` compared to the MongoDB `Observable` implementation.
 
 An example implicit based implementation can be found in the [examples folder]({{< srcref "examples/src/test/scala/rxScala">}}).  This includes an implicit based conversion from `Observable` to `rx.Observable` and an example of it being used.  
 
