@@ -42,7 +42,7 @@ object MongoClient {
    *
    * @return MongoClient
    */
-  def apply(): MongoClient = this("mongodb://localhost:27017")
+  def apply(): MongoClient = apply("mongodb://localhost:27017")
 
   /**
    * Create a MongoClient instance from a connection string uri
@@ -68,9 +68,7 @@ object MongoClient {
    * @param clientSettings MongoClientSettings to use for the MongoClient
    * @return
    */
-  def apply(clientSettings: MongoClientSettings): MongoClient = {
-    MongoClient(MongoClients.create(clientSettings))
-  }
+  def apply(clientSettings: MongoClientSettings): MongoClient = MongoClient(MongoClients.create(clientSettings))
 
   val DEFAULT_CODEC_REGISTRY: CodecRegistry = fromRegistries(
     MongoClients.getDefaultCodecRegistry,
