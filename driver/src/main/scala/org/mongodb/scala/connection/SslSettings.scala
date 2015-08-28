@@ -30,6 +30,6 @@ object SslSettings {
    *
    * @return a new Builder for creating SslSettings.
    */
-  def builder: JSslSettings.Builder = new JSslSettings.Builder
+  def builder(): JSslSettings.Builder = JSslSettings.builder()
 
 }

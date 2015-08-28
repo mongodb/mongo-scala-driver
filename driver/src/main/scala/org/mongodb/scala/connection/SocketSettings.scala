@@ -30,6 +30,6 @@ object SocketSettings {
    *
    * @return a new Builder for creating SocketSettings.
    */
-  def builder: JSocketSettings.Builder = new JSocketSettings.Builder
+  def builder(): JSocketSettings.Builder = JSocketSettings.builder()
 
 }
