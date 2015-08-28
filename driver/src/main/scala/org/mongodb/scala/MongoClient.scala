@@ -27,6 +27,7 @@ import com.mongodb.async.client.{ MongoClient => JMongoClient, MongoClients }
 
 import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
 import org.mongodb.scala.bson.codecs.DocumentCodecProvider
+import org.mongodb.scala.connection.{ ClusterSettings, ConnectionPoolSettings, ServerSettings, SocketSettings, SslSettings }
 import org.mongodb.scala.internal.ObservableHelper.observe
 
 /**
@@ -49,7 +50,17 @@ object MongoClient {
    * @param uri the connection string
    * @return MongoClient
    */
-  def apply(uri: String): MongoClient = apply(MongoClients.create(new ConnectionString(uri)).getSettings)
+  def apply(uri: String): MongoClient = {
+    val connectionString = new ConnectionString(uri)
+    apply(MongoClientSettings.builder()
+      .codecRegistry(DEFAULT_CODEC_REGISTRY)
+      .clusterSettings(ClusterSettings.builder().applyConnectionString(connectionString).build())
+      .connectionPoolSettings(ConnectionPoolSettings.builder().applyConnectionString(connectionString).build())
+      .serverSettings(ServerSettings.builder().build()).credentialList(connectionString.getCredentialList)
+      .sslSettings(SslSettings.builder().applyConnectionString(connectionString).build())
+      .socketSettings(SocketSettings.builder().applyConnectionString(connectionString).build())
+      .build())
+  }
 
   /**
    * Create a MongoClient instance from the MongoClientSettings
@@ -58,11 +69,7 @@ object MongoClient {
    * @return
    */
   def apply(clientSettings: MongoClientSettings): MongoClient = {
-    val newClientSettings = MongoClientSettings.builder(clientSettings).codecRegistry(fromRegistries(
-      clientSettings.getCodecRegistry,
-      DEFAULT_CODEC_REGISTRY
-    )).build()
-    MongoClient(MongoClients.create(newClientSettings))
+    MongoClient(MongoClients.create(clientSettings))
   }
 
   val DEFAULT_CODEC_REGISTRY: CodecRegistry = fromRegistries(
