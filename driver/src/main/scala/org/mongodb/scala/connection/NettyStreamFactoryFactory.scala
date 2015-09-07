@@ -16,14 +16,13 @@
 
 package org.mongodb.scala.connection
 
-import com.mongodb.connection.{ AsynchronousSocketChannelStreamFactoryFactory => JAsynchronousSocketChannelStreamFactoryFactory }
+import com.mongodb.connection.netty.{ NettyStreamFactoryFactory => JNettyStreamFactoryFactory }
 
 /**
- * A `StreamFactoryFactory` implementation for AsynchronousSocketChannel-based streams.
+ * A `StreamFactoryFactory` implementation for <a href='http://netty.io/'>Netty</a>-based streams.
  *
- * @see java.nio.channels.AsynchronousSocketChannel
  * @since 1.0
  */
-object AsynchronousSocketChannelStreamFactoryFactory {
-  def apply(): StreamFactoryFactory = new JAsynchronousSocketChannelStreamFactoryFactory()
+object NettyStreamFactoryFactory {
+  def apply(): StreamFactoryFactory = new JNettyStreamFactoryFactory()
 }

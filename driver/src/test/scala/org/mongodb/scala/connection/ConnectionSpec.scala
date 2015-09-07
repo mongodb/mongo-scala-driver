@@ -29,15 +29,17 @@ import org.scalatest.{ FlatSpec, Matchers }
 class ConnectionSpec extends FlatSpec with Matchers with MockFactory {
 
   "The connection namespace" should "have a AsynchronousSocketChannelStreamFactoryFactory companion" in {
-    val socketSettings = SocketSettings.builder.build()
-    val sslSettings = SslSettings.builder.build()
+    val asynchronousSocketChannelStreamFactoryFactory = AsynchronousSocketChannelStreamFactoryFactory()
+    asynchronousSocketChannelStreamFactoryFactory shouldBe a[StreamFactoryFactory]
+  }
 
-    val asynchronousSocketChannelStreamFactoryFactory = AsynchronousSocketChannelStreamFactoryFactory(socketSettings, sslSettings)
-    asynchronousSocketChannelStreamFactoryFactory shouldBe a[StreamFactory]
+  it should "have a NettyStreamFactoryFactory companion" in {
+    val nettyStreamFactoryFactory = NettyStreamFactoryFactory()
+    nettyStreamFactoryFactory shouldBe a[StreamFactoryFactory]
   }
 
   it should "have a ClusterSettings companion" in {
-    val scalaSetting = ClusterSettings.builder.hosts(List(ServerAddress()).asJava).build()
+    val scalaSetting = ClusterSettings.builder().hosts(List(ServerAddress()).asJava).build()
     val javaSetting = com.mongodb.connection.ClusterSettings.builder().hosts(List(ServerAddress()).asJava).build()
 
     scalaSetting shouldBe a[com.mongodb.connection.ClusterSettings]
