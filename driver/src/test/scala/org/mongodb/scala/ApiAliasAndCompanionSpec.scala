@@ -57,7 +57,8 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
         |-com.mongodb.selector.*,""".stripMargin
     )
 
-    val exceptions = new Reflections(packageName).getSubTypesOf(classOf[MongoException]).asScala.map(_.getSimpleName).toSet + "MongoException"
+    val exceptions = new Reflections(packageName).getSubTypesOf(classOf[MongoException]).asScala.map(_.getSimpleName).toSet +
+      "MongoException" - "MongoGridFSException"
 
     val objects = new Reflections(new ConfigurationBuilder()
       .setUrls(ClasspathHelper.forPackage(packageName))
@@ -101,12 +102,13 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
   }
 
   it should "mirror all com.mongodb.client.model in org.mongdb.scala.model" in {
+    val javaExclusions = Set("ParallelCollectionScanOptions")
     val packageName = "com.mongodb.client.model"
     val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
     val wrapped = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
       .asScala.filter(_.getPackage.getName == packageName)
       .filter(classFilter)
-      .map(_.getSimpleName).toSet ++ Set("MapReduceAction", "ReturnDocument")
+      .map(_.getSimpleName).toSet ++ Set("MapReduceAction", "ReturnDocument") -- javaExclusions
 
     val scalaPackageName = "org.mongodb.scala.model"
     val localPackage = currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet

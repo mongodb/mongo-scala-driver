@@ -177,15 +177,6 @@ package object model {
   type MapReduceAction = com.mongodb.client.model.MapReduceAction
 
   /**
-   * The options to use for a parallel collection scan.
-   */
-  type ParallelCollectionScanOptions = com.mongodb.client.model.ParallelCollectionScanOptions
-
-  object ParallelCollectionScanOptions {
-    def apply(): ParallelCollectionScanOptions = new com.mongodb.client.model.ParallelCollectionScanOptions()
-  }
-
-  /**
    * The options to apply when renaming a collection
    */
   type RenameCollectionOptions = com.mongodb.client.model.RenameCollectionOptions

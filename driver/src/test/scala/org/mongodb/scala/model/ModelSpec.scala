@@ -56,11 +56,6 @@ class ModelSpec extends FlatSpec with Matchers {
     options shouldBe a[com.mongodb.client.model.InsertManyOptions]
   }
 
-  it should "be able to create ParallelCollectionScanOptions" in {
-    val options = ParallelCollectionScanOptions()
-    options shouldBe a[com.mongodb.client.model.ParallelCollectionScanOptions]
-  }
-
   it should "be able to create RenameCollectionOptions" in {
     val options = RenameCollectionOptions()
     options shouldBe a[com.mongodb.client.model.RenameCollectionOptions]

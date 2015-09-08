@@ -25,5 +25,5 @@ object Resolvers {
 
   val localMaven    = "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
 
-  val mongoScalaResolvers = Seq(localMaven, sonatypeSnaps, sonatypeRels, typeSafeSnaps, typeSafeRels)
+  val mongoScalaResolvers = Seq(sonatypeSnaps, localMaven, sonatypeRels, typeSafeSnaps, typeSafeRels)
 }
