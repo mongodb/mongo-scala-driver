@@ -236,7 +236,7 @@ trait ObservableImplicits {
      * == Ensuring results from a Single Observer ==
      *
      * `recoverWith` can potentially emit results from either Observer. This often isn't desirable, so to ensure only a single Observable
-     * issues results combine with the [[collect()]] method eg:
+     * issues results combine with the [[collect]] method eg:
      *
      * {{{
      *  val results = Observable(1 to 100).collect() { case t: Throwable => observable(200 to 300).collect() }
@@ -276,7 +276,7 @@ trait ObservableImplicits {
      * == Ensuring results from a Single Observer ==
      *
      * `fallbackTo` can potentially emit results from either Observer. This often isn't desirable, so to ensure only a single Observable
-     * issues results combine with the [[collect()]] method eg:
+     * issues results combine with the [[collect]] method eg:
      *
      * {{{
      *  val results = Observable(1 to 100).collect() fallbackTo observable(200 to 300).collect()
@@ -316,7 +316,7 @@ trait ObservableImplicits {
     def andThen[U](pf: PartialFunction[Try[T], U]): Observable[T] = AndThenObservable(observable, pf)
 
     /**
-     * Collects the [[Observable]] results and converts to a [[Future]].
+     * Collects the [[Observable]] results and converts to a [[scala.concurrent.Future]].
      *
      * Automatically subscribes to the `Observable` and uses the [[collect]] method to aggregate the results.
      *
@@ -331,7 +331,7 @@ trait ObservableImplicits {
     }
 
     /**
-     * Returns the head of the [[Observable]] in a [[Future]].
+     * Returns the head of the [[Observable]] in a [[scala.concurrent.Future]].
      *
      * @return the head result of the [[Observable]].
      */

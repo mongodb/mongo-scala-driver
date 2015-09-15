@@ -18,7 +18,6 @@ package org.mongodb.scala
 
 /**
  * The bson package, contains mirrors and companion objects for `Bson` values.
- *
  */
 package object bson {
 
@@ -27,10 +26,16 @@ package object bson {
    *
    * A strictly typed `Map[String, BsonValue]` like structure that traverses the elements in insertion order. Unlike native scala maps there
    * is no variance in the value type and it always has to be a `BsonValue`.
-   *
-   * @param underlying the underlying BsonDocument which stores the data.
    */
   type Document = collection.Document
+
+
+  /**
+   * An immutable Document implementation.
+   *
+   * A strictly typed `Map[String, BsonValue]` like structure that traverses the elements in insertion order. Unlike native scala maps there
+   * is no variance in the value type and it always has to be a `BsonValue`.
+   */
   val Document = collection.Document
 
   /**

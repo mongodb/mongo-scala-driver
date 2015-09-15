@@ -111,6 +111,7 @@ object Document {
  * is no variance in the value type and it always has to be a `BsonValue`.
  *
  * @param underlying the underlying BsonDocument which stores the data.
+
  */
 case class Document(protected[scala] val underlying: BsonDocument)
   extends BaseDocument[Document] with  TraversableLike[(String, BsonValue), Document] {

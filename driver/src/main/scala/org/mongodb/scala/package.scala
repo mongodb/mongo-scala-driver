@@ -21,7 +21,7 @@ import _root_.scala.language.implicitConversions
 import _root_.scala.reflect.ClassTag
 
 /**
- * The Mongo Scala Driver package
+ * The MongoDB Scala Driver package
  *
  * Contains type aliases and companion objects to help when using the Scala API
  *
@@ -34,10 +34,15 @@ package object scala extends ObservableImplicits {
    *
    * A strictly typed `Map[String, BsonValue]` like structure that traverses the elements in insertion order. Unlike native scala maps there
    * is no variance in the value type and it always has to be a `BsonValue`.
-   *
-   * @param underlying the underlying BsonDocument which stores the data.
    */
   type Document = bson.Document
+
+  /**
+   * An immutable Document implementation.
+   *
+   * A strictly typed `Map[String, BsonValue]` like structure that traverses the elements in insertion order. Unlike native scala maps there
+   * is no variance in the value type and it always has to be a `BsonValue`.
+   */
   val Document = bson.Document
 
   /**

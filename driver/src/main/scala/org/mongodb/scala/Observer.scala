@@ -21,7 +21,7 @@ import com.mongodb.async.client.{ Observer => JObserver, Subscription => JSubscr
 /**
  * A Scala based wrapper of the `Observer` interface which provides a mechanism for receiving push-based notifications.
  *
- * Will receive a call to [[Observer.onSubscribe]] on subscription to the [[Observable]].
+ * Will receive a call to `Observer.onSubscribe(subscription: Subscription)` on subscription to the [[Observable]].
  *
  * Default implementations of this trait are greedy and will call [[Subscription.request]] with `Long.MaxValue` so that all results are
  * requested.  Custom implementations of the `onSubscribe` method can be used to control "back-pressure" and ensure that only demand that

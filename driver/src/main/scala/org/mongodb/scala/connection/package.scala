@@ -16,6 +16,9 @@
 
 package org.mongodb.scala
 
+/**
+ * The connection package contains classes that manage connecting to MongoDB servers.
+ */
 package object connection {
 
   /**

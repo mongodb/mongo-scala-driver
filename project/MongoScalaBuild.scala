@@ -80,7 +80,8 @@ object MongoScalaBuild extends Build {
   val checkAlias = addCommandAlias("check", ";clean;scalastyle;coverage;test;it:test;coverageAggregate;coverageReport")
 
   // Documentation Settings to link to the async JavaDoc
-  val apiUrl = "http://api.mongodb.org/java/3.1/"
+  val mongodbApiURL = "http://api.mongodb.org/java/current/"
+  val scalaApiURL = s"http://scala-lang.org/api/$scalaCoreVersion"
   val docSettings = Seq(
     autoAPIMappings := true,
     apiMappings ++= {
@@ -91,7 +92,10 @@ object MongoScalaBuild extends Build {
         } yield entry.data).headOption
       }
       val links = Seq(
-        findManagedDependency("org.mongodb", "mongodb-driver-async").map(d => d -> url(apiUrl))
+        findManagedDependency("org.mongodb", "mongodb-driver-async").map(d => d -> url(mongodbApiURL)),
+        findManagedDependency("org.mongodb", "mongodb-driver-core").map(d => d -> url(mongodbApiURL)),
+        findManagedDependency("org.mongodb", "bson").map(d => d -> url(mongodbApiURL)),
+        findManagedDependency("org.scala-lang", "scala-library").map(d => d -> url(scalaApiURL))
       )
       links.collect { case Some(d) => d }.toMap
     }
@@ -106,7 +110,7 @@ object MongoScalaBuild extends Build {
     }
   }
   val fixJavaLinksMatch: Match => String = m => m.group(1) + "?" + m.group(2).replace(".", "/") + ".html"
-  val javadocApiLink = List("\"(\\Q", apiUrl, "index.html\\E)#([^\"]*)\"").mkString.r
+  val javadocApiLink = List("\"(\\Q", mongodbApiURL, "index.html\\E)#([^\"]*)\"").mkString.r
   def hasJavadocApiLink(f: File): Boolean = (javadocApiLink findFirstIn IO.read(f)).nonEmpty
 
   val rootUnidocSettings = Seq(

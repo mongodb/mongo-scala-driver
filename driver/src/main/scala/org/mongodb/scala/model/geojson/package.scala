@@ -137,6 +137,7 @@ package object geojson {
      * Construct an instance with the given coordinates.
      *
      * @param coordinates  the list of Geometry objects
+     * @return the new LineString
      */
     def apply(coordinates: Seq[Position]): LineString = new Jgeojson.LineString(coordinates.asJava)
 
@@ -145,6 +146,7 @@ package object geojson {
      *
      * @param coordinateReferenceSystem the coordinate reference system
      * @param coordinates  the list of Geometry objects
+     * @return the new LineString
      */
     def apply(coordinateReferenceSystem: CoordinateReferenceSystem, coordinates: Seq[Position]): LineString =
       new Jgeojson.LineString(coordinateReferenceSystem, coordinates.asJava)
@@ -164,6 +166,7 @@ package object geojson {
      * Construct an instance with the given coordinates.
      *
      * @param coordinates the coordinates of each line
+     * @return the new MultiLineString
      */
     def apply(coordinates: Seq[Position]*): MultiLineString = new MultiLineString(coordinates.map(_.asJava).asJava)
 
@@ -172,6 +175,7 @@ package object geojson {
      *
      * @param coordinateReferenceSystem the coordinate reference system
      * @param coordinates the coordinates of each line
+     * @return the new MultiLineString
      */
     def apply(coordinateReferenceSystem: CoordinateReferenceSystem, coordinates: Seq[Position]*): MultiLineString =
       new Jgeojson.MultiLineString(coordinateReferenceSystem, coordinates.map(_.asJava).asJava)
@@ -191,6 +195,7 @@ package object geojson {
      * Construct an instance with the given coordinates.
      *
      * @param coordinates the coordinates
+     * @return the new MultiPoint
      */
     def apply(coordinates: Position*): MultiPoint = new Jgeojson.MultiPoint(coordinates.asJava)
 
@@ -199,6 +204,7 @@ package object geojson {
      *
      * @param coordinateReferenceSystem the coordinate reference system
      * @param coordinates               the coordinates
+     * @return the new MultiPoint
      */
     def apply(coordinateReferenceSystem: CoordinateReferenceSystem, coordinates: Position*): MultiPoint =
       new Jgeojson.MultiPoint(coordinateReferenceSystem, coordinates.asJava)
@@ -217,6 +223,7 @@ package object geojson {
      * Construct an instance.
      *
      * @param coordinates the coordinates
+     * @return the new MultiPolygon
      */
     def apply(coordinates: PolygonCoordinates*): MultiPolygon = new Jgeojson.MultiPolygon(coordinates.asJava)
 
@@ -225,6 +232,7 @@ package object geojson {
      *
      * @param coordinateReferenceSystem the coordinate reference system
      * @param coordinates the coordinates
+     * @return the new MultiPolygon
      */
     def apply(coordinateReferenceSystem: CoordinateReferenceSystem, coordinates: PolygonCoordinates*): MultiPolygon =
       new Jgeojson.MultiPolygon(coordinateReferenceSystem, coordinates.asJava)
@@ -258,6 +266,7 @@ package object geojson {
      * Construct an instance
      *
      * @param name the name
+     * @return the new NamedCoordinateReferenceSystem
      */
     def apply(name: String): NamedCoordinateReferenceSystem = new Jgeojson.NamedCoordinateReferenceSystem(name)
   }
@@ -275,6 +284,7 @@ package object geojson {
      * Construct an instance with the given coordinate.
      *
      * @param coordinate the non-null coordinate of the point
+     * @return the new Point
      */
     def apply(coordinate: Position): Point = new Jgeojson.Point(coordinate)
 
@@ -283,6 +293,7 @@ package object geojson {
      *
      * @param coordinateReferenceSystem the coordinate reference system
      * @param coordinate the non-null coordinate of the point
+     * @return the new Point
      */
     def apply(coordinateReferenceSystem: CoordinateReferenceSystem, coordinate: Position): Point =
       new Jgeojson.Point(coordinateReferenceSystem, coordinate)
@@ -303,6 +314,7 @@ package object geojson {
      *
      * @param exterior the exterior ring of the polygon
      * @param holes    optional interior rings of the polygon
+     * @return the new Polygon
      */
     def apply(exterior: Seq[Position], holes: Seq[Position]*): Polygon = new Jgeojson.Polygon(exterior.asJava, holes.map(_.asJava): _*)
 
@@ -310,6 +322,7 @@ package object geojson {
      * Construct an instance with the given coordinates.
      *
      * @param coordinates the coordinates
+     * @return the new Polygon
      */
     def apply(coordinates: PolygonCoordinates): Polygon = new Jgeojson.Polygon(coordinates)
 
@@ -318,6 +331,7 @@ package object geojson {
      *
      * @param coordinateReferenceSystem the coordinate reference system
      * @param coordinates               the coordinates
+     * @return the new Polygon
      */
     def apply(coordinateReferenceSystem: CoordinateReferenceSystem, coordinates: PolygonCoordinates): Polygon =
       new Jgeojson.Polygon(coordinateReferenceSystem, coordinates)
@@ -337,6 +351,7 @@ package object geojson {
      *
      * @param exterior the exterior ring of the polygon
      * @param holes    optional interior rings of the polygon
+     * @return the new PolygonCoordinates
      */
     def apply(exterior: Seq[Position], holes: Seq[Position]*): PolygonCoordinates =
       new Jgeojson.PolygonCoordinates(exterior.asJava, holes.map(_.asJava): _*)
@@ -351,6 +366,12 @@ package object geojson {
    * A representation of a GeoJSON Position.
    */
   object Position {
+    /**
+     * Construct an instance.
+     *
+     * @param values the position values
+     * @return the new Position
+     */
     def apply(values: Double*): Position = {
       val buffer = new ArrayBuffer[java.lang.Double]
       values.foreach(buffer.append(_))

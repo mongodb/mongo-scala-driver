@@ -28,7 +28,17 @@ package object model {
    */
   type BsonField = com.mongodb.client.model.BsonField
 
+  /**
+   * A representation of a BSON document field whose value is another BSON document.
+   */
   object BsonField {
+    /**
+     * Construct a new instance.
+     *
+     * @param name the name of the field
+     * @param value the value for the field
+     * @return a new BsonField instance
+     */
     def apply(name: String, value: Bson): BsonField = {
       new com.mongodb.client.model.BsonField(name, value)
     }
@@ -39,6 +49,9 @@ package object model {
    */
   type BulkWriteOptions = com.mongodb.client.model.BulkWriteOptions
 
+  /**
+   * The options to apply to a bulk write.
+   */
   object BulkWriteOptions {
     def apply(): BulkWriteOptions = new com.mongodb.client.model.BulkWriteOptions()
   }
@@ -48,16 +61,21 @@ package object model {
    */
   type CountOptions = com.mongodb.client.model.CountOptions
 
+  /**
+   * The options to apply to a count operation.
+   */
   object CountOptions {
     def apply(): CountOptions = new com.mongodb.client.model.CountOptions()
   }
 
   /**
    * Options for creating a collection
-   *
    */
   type CreateCollectionOptions = com.mongodb.client.model.CreateCollectionOptions
 
+  /**
+   * Options for creating a collection
+   */
   object CreateCollectionOptions {
     def apply(): CreateCollectionOptions = new com.mongodb.client.model.CreateCollectionOptions()
   }
@@ -70,7 +88,11 @@ package object model {
    */
   type DeleteManyModel[TResult] = com.mongodb.client.model.DeleteManyModel[TResult]
 
+  /**
+   * A model describing the removal of all documents matching the query filter.
+   */
   object DeleteManyModel {
+
     def apply(filter: Bson): DeleteManyModel[Nothing] = new com.mongodb.client.model.DeleteManyModel(filter)
   }
 
@@ -82,7 +104,17 @@ package object model {
    */
   type DeleteOneModel[TResult] = com.mongodb.client.model.DeleteOneModel[TResult]
 
+  /**
+   * A model describing the removal of at most one document matching the query filter.
+   */
   object DeleteOneModel {
+
+    /**
+     * Construct a new instance.
+     *
+     * @param filter the query filter
+     * @return the new DeleteOneModel
+     */
     def apply(filter: Bson): DeleteOneModel[Nothing] = new com.mongodb.client.model.DeleteOneModel(filter)
   }
 
@@ -91,6 +123,9 @@ package object model {
    */
   type FindOptions = com.mongodb.client.model.FindOptions
 
+  /**
+   * The options to apply to a find operation.
+   */
   object FindOptions {
     def apply(): FindOptions = new com.mongodb.client.model.FindOptions()
 
@@ -106,6 +141,9 @@ package object model {
    */
   type FindOneAndDeleteOptions = com.mongodb.client.model.FindOneAndDeleteOptions
 
+  /**
+   * The options to apply to an operation that atomically finds a document and deletes it.
+   */
   object FindOneAndDeleteOptions {
     def apply(): FindOneAndDeleteOptions = new com.mongodb.client.model.FindOneAndDeleteOptions()
   }
@@ -115,6 +153,9 @@ package object model {
    */
   type FindOneAndReplaceOptions = com.mongodb.client.model.FindOneAndReplaceOptions
 
+  /**
+   * The options to apply to an operation that atomically finds a document and replaces it.
+   */
   object FindOneAndReplaceOptions {
     def apply(): FindOneAndReplaceOptions = new com.mongodb.client.model.FindOneAndReplaceOptions()
   }
@@ -124,6 +165,9 @@ package object model {
    */
   type FindOneAndUpdateOptions = com.mongodb.client.model.FindOneAndUpdateOptions
 
+  /**
+   * The options to apply to an operation that atomically finds a document and updates it.
+   */
   object FindOneAndUpdateOptions {
     def apply(): FindOneAndUpdateOptions = new com.mongodb.client.model.FindOneAndUpdateOptions()
   }
@@ -133,6 +177,9 @@ package object model {
    */
   type InsertManyOptions = com.mongodb.client.model.InsertManyOptions
 
+  /**
+   * The options to apply to an operation that inserts multiple documents into a collection.
+   */
   object InsertManyOptions {
     def apply(): InsertManyOptions = new com.mongodb.client.model.InsertManyOptions()
   }
@@ -142,6 +189,9 @@ package object model {
    */
   type IndexOptions = com.mongodb.client.model.IndexOptions
 
+  /**
+   * The options to apply to the creation of an index.
+   */
   object IndexOptions {
     def apply(): IndexOptions = new com.mongodb.client.model.IndexOptions()
   }
@@ -151,9 +201,26 @@ package object model {
    */
   type IndexModel = com.mongodb.client.model.IndexModel
 
+  /**
+   * A model describing the creation of a single index.
+   */
   object IndexModel {
+
+    /**
+     * Construct an instance with the given keys.
+     *
+     * @param keys the index keys
+     * @return the IndexModel
+     */
     def apply(keys: Bson): IndexModel = new com.mongodb.client.model.IndexModel(keys)
 
+    /**
+     * Construct an instance with the given keys and options.
+     *
+     * @param keys the index keys
+     * @param indexOptions the index options
+     * @return the IndexModel
+     */
     def apply(keys: Bson, indexOptions: IndexOptions): IndexModel = new com.mongodb.client.model.IndexModel(keys, indexOptions)
   }
 
@@ -164,7 +231,18 @@ package object model {
    */
   type InsertOneModel[TResult] = com.mongodb.client.model.InsertOneModel[TResult]
 
+  /**
+   * A model describing an insert of a single document.
+   */
   object InsertOneModel {
+
+    /**
+     * Construct a new instance.
+     *
+     * @param document the document to insert
+     * @tparam TResult the type of document to insert. This can be of any type for which a `Codec` is registered
+     * @return the new InsertOneModel
+     */
     def apply[TResult](document: TResult): InsertOneModel[TResult] = new com.mongodb.client.model.InsertOneModel[TResult](document)
   }
 
@@ -181,6 +259,9 @@ package object model {
    */
   type RenameCollectionOptions = com.mongodb.client.model.RenameCollectionOptions
 
+  /**
+   * The options to apply when renaming a collection
+   */
   object RenameCollectionOptions {
     def apply(): RenameCollectionOptions = new com.mongodb.client.model.RenameCollectionOptions()
   }
@@ -202,10 +283,31 @@ package object model {
    */
   type ReplaceOneModel[TResult] = com.mongodb.client.model.ReplaceOneModel[TResult]
 
+  /**
+   * A model describing the replacement of at most one document that matches the query filter.
+   */
   object ReplaceOneModel {
+
+    /**
+     * Construct a new instance.
+     *
+     * @param filter    a document describing the query filter.
+     * @param replacement the replacement document
+     * @tparam TResult the type of document to insert. This can be of any type for which a `Codec` is registered
+     * @return the new ReplaceOneModel
+     */
     def apply[TResult](filter: Bson, replacement: TResult): ReplaceOneModel[TResult] =
       new com.mongodb.client.model.ReplaceOneModel[TResult](filter, replacement)
 
+    /**
+     * Construct a new instance.
+     *
+     * @param filter    a document describing the query filter.
+     * @param replacement the replacement document
+     * @param updateOptions the options to apply
+     * @tparam TResult the type of document to insert. This can be of any type for which a `Codec` is registered
+     * @return the new ReplaceOneModel
+     */
     def apply[TResult](filter: Bson, replacement: TResult, updateOptions: UpdateOptions): ReplaceOneModel[TResult] =
       new com.mongodb.client.model.ReplaceOneModel[TResult](filter, replacement, updateOptions)
   }
@@ -219,9 +321,29 @@ package object model {
    */
   type UpdateManyModel[TResult] = com.mongodb.client.model.UpdateManyModel[TResult]
 
+  /**
+   * A model describing an update to all documents that matches the query filter. The update to apply must include only update
+   * operators.
+   */
   object UpdateManyModel {
+
+    /**
+     * Construct a new instance.
+     *
+     * @param filter a document describing the query filter.
+     * @param update a document describing the update. The update to apply must include only update operators.
+     * @return the new UpdateManyModel
+     */
     def apply(filter: Bson, update: Bson): UpdateManyModel[Nothing] = new com.mongodb.client.model.UpdateManyModel(filter, update)
 
+    /**
+     * Construct a new instance.
+     *
+     * @param filter a document describing the query filter.
+     * @param update a document describing the update. The update to apply must include only update operators.
+     * @param updateOptions the options to apply
+     * @return the new UpdateManyModel
+     */
     def apply(filter: Bson, update: Bson, updateOptions: UpdateOptions): UpdateManyModel[Nothing] =
       new com.mongodb.client.model.UpdateManyModel(filter, update, updateOptions)
   }
@@ -231,6 +353,9 @@ package object model {
    */
   type UpdateOptions = com.mongodb.client.model.UpdateOptions
 
+  /**
+   * The options to apply when updating documents.
+   */
   object UpdateOptions {
     def apply(): UpdateOptions = new com.mongodb.client.model.UpdateOptions()
   }
@@ -244,9 +369,29 @@ package object model {
    */
   type UpdateOneModel[TResult] = com.mongodb.client.model.UpdateOneModel[TResult]
 
+  /**
+   * A model describing an update to at most one document that matches the query filter. The update to apply must include only update
+   * operators.
+   */
   object UpdateOneModel {
+
+    /**
+     * Construct a new instance.
+     *
+     * @param filter a document describing the query filter.
+     * @param update a document describing the update. The update to apply must include only update operators.
+     * @return the new UpdateOneModel
+     */
     def apply(filter: Bson, update: Bson): UpdateOneModel[Nothing] = new com.mongodb.client.model.UpdateOneModel(filter, update)
 
+    /**
+     * Construct a new instance.
+     *
+     * @param filter a document describing the query filter.
+     * @param update a document describing the update. The update to apply must include only update operators.
+     * @param updateOptions the options to apply
+     * @return the new UpdateOneModel
+     */
     def apply(filter: Bson, update: Bson, updateOptions: UpdateOptions): UpdateOneModel[Nothing] =
       new com.mongodb.client.model.UpdateOneModel(filter, update, updateOptions)
   }

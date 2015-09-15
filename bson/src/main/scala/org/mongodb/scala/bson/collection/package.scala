@@ -26,10 +26,15 @@ package object collection {
    *
    * A strictly typed `Map[String, BsonValue]` like structure that traverses the elements in insertion order. Unlike native scala maps there
    * is no variance in the value type and it always has to be a `BsonValue`.
-   *
-   * @param underlying the underlying BsonDocument which stores the data.
    */
   type Document = immutable.Document
+
+  /**
+   * An immutable Document implementation.
+   *
+   * A strictly typed `Map[String, BsonValue]` like structure that traverses the elements in insertion order. Unlike native scala maps there
+   * is no variance in the value type and it always has to be a `BsonValue`.
+   */
   val Document = immutable.Document
 
 }
