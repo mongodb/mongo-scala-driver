@@ -33,6 +33,9 @@ package object geojson {
    */
   type CoordinateReferenceSystemType = Jgeojson.CoordinateReferenceSystemType
 
+  /**
+   * GeoJSON coordinate reference system types.
+   */
   object CoordinateReferenceSystemType {
     /**
      * A coordinate reference system that is specifed by name
@@ -49,6 +52,10 @@ package object geojson {
    * The GeoJSON object types.
    */
   type GeoJsonObjectType = Jgeojson.GeoJsonObjectType
+
+  /**
+   * The GeoJSON object types.
+   */
   object GeoJsonObjectType {
     /**
      * A GeometryCollection
@@ -95,6 +102,10 @@ package object geojson {
    * A representation of a GeoJSON GeometryCollection.
    */
   type GeometryCollection = Jgeojson.GeometryCollection
+
+  /**
+   * A representation of a GeoJSON GeometryCollection.
+   */
   object GeometryCollection {
     /**
      * Construct an instance with the given list of Geometry objects
@@ -117,6 +128,10 @@ package object geojson {
    * A representation of a GeoJSON LineString.
    */
   type LineString = Jgeojson.LineString
+
+  /**
+   * A representation of a GeoJSON LineString.
+   */
   object LineString {
     /**
      * Construct an instance with the given coordinates.
@@ -139,6 +154,10 @@ package object geojson {
    * A representation of a GeoJSON MultiLineString.
    */
   type MultiLineString = Jgeojson.MultiLineString
+
+  /**
+   * A representation of a GeoJSON MultiLineString.
+   */
   object MultiLineString {
 
     /**
@@ -162,6 +181,10 @@ package object geojson {
    * A representation of a GeoJSON MultiPoint.
    */
   type MultiPoint = Jgeojson.MultiPoint
+
+  /**
+   * A representation of a GeoJSON MultiPoint.
+   */
   object MultiPoint {
 
     /**
@@ -185,6 +208,10 @@ package object geojson {
    * A representation of a GeoJSON MultiPolygon.
    */
   type MultiPolygon = Jgeojson.MultiPolygon
+
+  /**
+   * A representation of a GeoJSON MultiPolygon.
+   */
   object MultiPolygon {
     /**
      * Construct an instance.
@@ -207,6 +234,10 @@ package object geojson {
    * A GeoJSON named Coordinate Reference System.
    */
   type NamedCoordinateReferenceSystem = Jgeojson.NamedCoordinateReferenceSystem
+
+  /**
+   * A GeoJSON named Coordinate Reference System.
+   */
   object NamedCoordinateReferenceSystem {
     /**
      * The EPSG:4326 Coordinate Reference System.
@@ -235,6 +266,10 @@ package object geojson {
    * A representation of a GeoJSON Point.
    */
   type Point = Jgeojson.Point
+
+  /**
+   * A representation of a GeoJSON Point.
+   */
   object Point {
     /**
      * Construct an instance with the given coordinate.
@@ -257,6 +292,10 @@ package object geojson {
    * A representation of a GeoJSON Polygon.
    */
   type Polygon = Jgeojson.Polygon
+
+  /**
+   * A representation of a GeoJSON Polygon.
+   */
   object Polygon {
 
     /**
@@ -288,6 +327,10 @@ package object geojson {
    * Coordinates for a GeoJSON Polygon.
    */
   type PolygonCoordinates = Jgeojson.PolygonCoordinates
+
+  /**
+   * Coordinates for a GeoJSON Polygon.
+   */
   object PolygonCoordinates {
     /**
      * Construct an instance.
@@ -303,6 +346,10 @@ package object geojson {
    * A representation of a GeoJSON Position.
    */
   type Position = Jgeojson.Position
+
+  /**
+   * A representation of a GeoJSON Position.
+   */
   object Position {
     def apply(values: Double*): Position = {
       val buffer = new ArrayBuffer[java.lang.Double]
