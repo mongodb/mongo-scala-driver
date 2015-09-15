@@ -40,6 +40,18 @@ object Aggregates {
   def `match`(filter: Bson): Bson = JAggregates.`match`(filter) //scalastyle:ignore
 
   /**
+   * Creates a `\$match` pipeline stage for the specified filter
+   *
+   * A friendly alias for the `match` method.
+   *
+   * @param filter the filter to match against
+   * @return the `\$match` pipeline stage
+   * @see Filters
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/match/ \$match]]
+   */
+  def filter(filter: Bson): Bson = `match`(filter) //scalastyle:ignore
+
+  /**
    * Creates a `\$project` pipeline stage for the specified projection
    *
    * @param projection the projection

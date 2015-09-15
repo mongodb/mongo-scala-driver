@@ -37,7 +37,8 @@ class AggregatesSpec extends FlatSpec with Matchers {
   "Aggregates" should "have the same methods as the wrapped Aggregates" in {
     val wrapped = classOf[com.mongodb.client.model.Aggregates].getDeclaredMethods
       .filter(f => isStatic(f.getModifiers) && isPublic(f.getModifiers)).map(_.getName).toSet
-    val local = Aggregates.getClass.getDeclaredMethods.filter(f => isPublic(f.getModifiers)).map(_.getName).toSet
+    val aliases = Set("filter")
+    val local = Aggregates.getClass.getDeclaredMethods.filter(f => isPublic(f.getModifiers)).map(_.getName).toSet -- aliases
     local should equal(wrapped)
   }
 
@@ -50,6 +51,7 @@ class AggregatesSpec extends FlatSpec with Matchers {
 
   it should "should render $match" in {
     toBson(`match`(Filters.eq("author", "dave"))) should equal(Document("""{ $match : { author : "dave" } }"""))
+    toBson(filter(Filters.eq("author", "dave"))) should equal(Document("""{ $match : { author : "dave" } }"""))
   }
 
   it should "should render $project" in {
