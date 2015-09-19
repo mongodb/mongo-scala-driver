@@ -239,7 +239,10 @@ trait ObservableImplicits {
      * issues results combine with the [[collect]] method eg:
      *
      * {{{
-     *  val results = Observable(1 to 100).collect() { case t: Throwable => observable(200 to 300).collect() }
+     *  val results = Observable(1 to 100)
+     *    .collect()
+     *    .recoverWith({ case t: Throwable => Observable(200 to 300).collect() })
+     *    .subscribe((i: Seq[Int]) => print(results))
      * }}}
      *
      * @param pf the partial function used to pattern match against the `onError` throwable
@@ -279,7 +282,7 @@ trait ObservableImplicits {
      * issues results combine with the [[collect]] method eg:
      *
      * {{{
-     *  val results = Observable(1 to 100).collect() fallbackTo observable(200 to 300).collect()
+     *  val results = Observable(1 to 100).collect() fallbackTo Observable(200 to 300).collect()
      * }}}
      *
      * @param that the Observable to fallback to if `this` Observable fails
@@ -300,7 +303,7 @@ trait ObservableImplicits {
      * The following example prints out `10`:
      *
      * {{{
-     *  observable(1 to 10) andThen {
+     *  Observable(1 to 10) andThen {
      *   case r => sys.error("runtime exception")
      *  } andThen {
      *   case Success(x) => print(x)

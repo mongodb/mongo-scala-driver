@@ -211,6 +211,14 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
       .recoverWith({ case e: ArithmeticException => observable(1000 to 1001) })
       .subscribe((i: Int) => results += i)
     results should equal((1 to 50) ++ (1000 to 1001))
+
+    results = ArrayBuffer[Int]()
+    observable(fail = true)
+      .transform(i => i, (t: Throwable) => new ArithmeticException())
+      .collect()
+      .recoverWith({ case e: ArithmeticException => observable(1000 to 1001).collect() })
+      .subscribe((i: Seq[Int]) => results ++= i)
+    results should equal((1000 to 1001))
   }
 
   it should "have a zip method" in {
