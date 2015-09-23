@@ -49,16 +49,18 @@ object Publish {
           props.getProperty(username),
           props.getProperty(password)),
         publishSnapshot <<= publishSnapshotTask
-      ) ++ Seq(
-        assemblyJarName in assembly := "mongo-scala-driver-alldep.jar",
-        test in assembly := {},
-        artifact in (Compile, assembly) := {
-        val art = (artifact in (Compile, assembly)).value
-        art.copy(`classifier` = Some("alldep"))
-        }
-      ) ++ addArtifact(artifact in (Compile, assembly), assembly)
+      )
     }
   }
+
+  lazy val publishAssemblySettings = Seq(
+    assemblyJarName in assembly := "mongo-scala-driver-alldep.jar",
+    test in assembly := {},
+    artifact in (Compile, assembly) := {
+      val art = (artifact in (Compile, assembly)).value
+      art.copy(`classifier` = Some("alldep"))
+    }
+  ) ++ addArtifact(artifact in (Compile, assembly), assembly)
 
   lazy val mavenSettings = Seq(
     publishTo := {

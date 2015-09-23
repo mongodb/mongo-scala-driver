@@ -39,6 +39,7 @@ object MongoScalaBuild extends Build {
   )
 
   val publishSettings = Publish.settings
+  val publishAssemblySettings = Publish.publishAssemblySettings
   val noPublishSettings = Publish.noPublishing
 
   /*
@@ -130,6 +131,7 @@ object MongoScalaBuild extends Build {
     .settings(scoverageSettings)
     .settings(docSettings)
     .settings(publishSettings)
+    .settings(publishAssemblySettings)
     .dependsOn(bson)
 
   lazy val bson = Project(
