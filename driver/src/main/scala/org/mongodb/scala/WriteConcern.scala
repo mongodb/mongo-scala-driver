@@ -150,19 +150,9 @@ object WriteConcern {
   def apply(w: Int, wtimeout: Int, fsync: Boolean, j: Boolean): JWriteConcern = new JWriteConcern(w, wtimeout, fsync, j)
 
   /**
-   * Creates a WriteConcern object.
+   * Creates a WriteConcern object, based on a tag name
    *
-   * Specifies the number of servers to wait for on the write operation, and exception raising behavior
-   *
-   *  `w` represents the number of servers:
-   *
-   * - `w=-1` None, no checking is done
-   * - `w=0` None, network socket errors raised
-   * - `w=1` Checks server for errors as well as network socket errors raised
-   * - `w>1` Checks servers (w) for errors as well as network socket errors raised
-   *
-   *
-   * @param w        number of writes
+   * @param w        the tag name
    * @param wtimeout timeout for write operation
    * @param fsync    whether or not to fsync
    * @param j        whether writes should wait for a journaling group commit
