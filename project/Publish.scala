@@ -17,8 +17,7 @@
 import java.io.FileInputStream
 import java.util.Properties
 
-import com.typesafe.sbt.SbtPgp
-import com.typesafe.sbt.pgp.PgpKeys
+import com.typesafe.sbt.pgp.{PgpKeys, PgpSettings}
 import sbt.Keys._
 import sbt._
 import sbtassembly.AssemblyPlugin.autoImport._
@@ -39,10 +38,9 @@ object Publish {
       val props = new Properties
       val input = new FileInputStream(propFile)
       try props.load(input) finally input.close()
-
-      mavenSettings ++ SbtPgp.settings ++ Seq(
-        SbtPgp.pgpPassphrase := Some(props.getProperty(keyPassword).toArray),
-        SbtPgp.pgpSecretRing := file(props.getProperty(secretKeyRing)),
+      mavenSettings ++ Seq(
+        PgpSettings.pgpPassphrase := Some(props.getProperty(keyPassword).toArray),
+        PgpSettings.pgpSecretRing := file(props.getProperty(secretKeyRing)),
         credentials += Credentials(
           "Sonatype Nexus Repository Manager",
           "oss.sonatype.org",
@@ -55,12 +53,13 @@ object Publish {
 
   lazy val publishAssemblySettings = Seq(
     assemblyJarName in assembly := "mongo-scala-driver-alldep.jar",
+    assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false),
     test in assembly := {},
     artifact in (Compile, assembly) := {
       val art = (artifact in (Compile, assembly)).value
       art.copy(`classifier` = Some("alldep"))
     }
-  ) ++ addArtifact(artifact in (Compile, assembly), assembly)
+  ) ++ addArtifact(artifact in (Compile, assembly), assembly).settings
 
   lazy val mavenSettings = Seq(
     publishTo := {
@@ -100,7 +99,8 @@ object Publish {
     publish :=(),
     publishLocal :=(),
     publishTo := None,
-    publishSnapshot := None
+    publishSnapshot := None,
+    PgpKeys.publishSigned := ()
   )
 
   lazy val publishSnapshot: TaskKey[Unit] = TaskKey[Unit]("publish-snapshot", "publishes a snapshot")
