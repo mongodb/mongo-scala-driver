@@ -296,10 +296,9 @@ network issues, but not server errors.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Creates a WriteConcern object.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a WriteConcern object.</p><p>Specifies the number of servers to wait for on the write operation, and exception raising behavior</p><p> <code>w</code> represents the number of servers:</p><p>- <code>w=-1</code> None, no checking is done
-- <code>w=0</code> None, network socket errors raised
-- <code>w=1</code> Checks server for errors as well as network socket errors raised
-- <code>w&gt;1</code> Checks servers (w) for errors as well as network socket errors raised</p></div><dl class="paramcmts block"><dt class="param">w</dt><dd class="cmt"><p>number of writes</p></dd><dt class="param">wtimeout</dt><dd class="cmt"><p>timeout for write operation</p></dd><dt class="param">fsync</dt><dd class="cmt"><p>whether or not to fsync</p></dd><dt class="param">j</dt><dd class="cmt"><p>whether writes should wait for a journaling group commit</p></dd></dl></div>
+      <p class="shortcomment cmt">Creates a WriteConcern object, based on a tag name
+</p><div class="fullcomment"><div class="comment cmt"><p>Creates a WriteConcern object, based on a tag name
+</p></div><dl class="paramcmts block"><dt class="param">w</dt><dd class="cmt"><p>the tag name</p></dd><dt class="param">wtimeout</dt><dd class="cmt"><p>timeout for write operation</p></dd><dt class="param">fsync</dt><dd class="cmt"><p>whether or not to fsync</p></dd><dt class="param">j</dt><dd class="cmt"><p>whether writes should wait for a journaling group commit</p></dd></dl></div>
     </li><li name="org.mongodb.scala.WriteConcern#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply(w:Int,wtimeout:Int,fsync:Boolean,j:Boolean):com.mongodb.WriteConcern"></a>
       <a id="apply(Int,Int,Boolean,Boolean):com.mongodb.WriteConcern"></a>
