@@ -20,6 +20,8 @@ import _root_.scala.language.implicitConversions
 
 import _root_.scala.reflect.ClassTag
 
+import org.mongodb.scala.internal.WriteConcernImplicits
+
 /**
  * The MongoDB Scala Driver package
  *
@@ -27,7 +29,7 @@ import _root_.scala.reflect.ClassTag
  *
  * @since 1.0
  */
-package object scala extends ObservableImplicits {
+package object scala extends ObservableImplicits with WriteConcernImplicits {
 
   /**
    * An immutable Document implementation.

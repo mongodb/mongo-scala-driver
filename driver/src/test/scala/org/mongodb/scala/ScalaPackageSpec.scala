@@ -16,10 +16,13 @@
 
 package org.mongodb.scala
 
+import java.util.concurrent.TimeUnit
+
+import _root_.scala.concurrent.duration.Duration
+
 import com.mongodb.{ MongoCredential => JMongoCredential }
 
 import org.mongodb.scala
-import org.mongodb.scala.WriteConcern.Majority
 import org.mongodb.scala.bson.BsonString
 import org.mongodb.scala.model._
 import org.scalatest.{ FlatSpec, Matchers }
@@ -85,38 +88,27 @@ class ScalaPackageSpec extends FlatSpec with Matchers {
   it should "be able to create WriteConcern" in {
     WriteConcern.ACKNOWLEDGED should equal(com.mongodb.WriteConcern.ACKNOWLEDGED)
 
-    WriteConcern.UNACKNOWLEDGED should equal(com.mongodb.WriteConcern.UNACKNOWLEDGED)
+    WriteConcern.W1 should equal(new com.mongodb.WriteConcern(1))
 
-    WriteConcern.FSYNCED should equal(com.mongodb.WriteConcern.FSYNCED)
+    WriteConcern.W2 should equal(new com.mongodb.WriteConcern(2))
+
+    WriteConcern.W3 should equal(new com.mongodb.WriteConcern(3))
+
+    WriteConcern.UNACKNOWLEDGED should equal(com.mongodb.WriteConcern.UNACKNOWLEDGED)
 
     WriteConcern.JOURNALED should equal(com.mongodb.WriteConcern.JOURNALED)
 
-    WriteConcern.REPLICA_ACKNOWLEDGED should equal(com.mongodb.WriteConcern.REPLICA_ACKNOWLEDGED)
-
     WriteConcern.MAJORITY should equal(com.mongodb.WriteConcern.MAJORITY)
-
-    WriteConcern() should equal(new com.mongodb.WriteConcern())
 
     WriteConcern(1) should equal(new com.mongodb.WriteConcern(1))
 
     WriteConcern("Majority") should equal(new com.mongodb.WriteConcern("Majority"))
 
-    WriteConcern(1, 1) should equal(new com.mongodb.WriteConcern(1, 1))
+    WriteConcern(1).withJournal(true) should equal(new com.mongodb.WriteConcern(1).withJ(true))
 
-    WriteConcern(true) should equal(new com.mongodb.WriteConcern(true))
+    WriteConcern("Majority").withWTimeout(Duration(10, TimeUnit.MILLISECONDS)) should equal(new com.mongodb.WriteConcern("Majority", 10, false, false))
 
-    WriteConcern(1, 1, true) should equal(new com.mongodb.WriteConcern(1, 1, true))
-
-    WriteConcern(1, 1, true, true) should equal(new com.mongodb.WriteConcern(1, 1, true, true))
-
-    WriteConcern("Majority", 1, true, true) should equal(new com.mongodb.WriteConcern("Majority", 1, true, true))
-
-    WriteConcern.majorityWriteConcern(1, true, true) should equal(com.mongodb.WriteConcern.majorityWriteConcern(1, true, true))
-
-    Majority() should equal(new com.mongodb.WriteConcern.Majority())
-
-    Majority(1, true, true) should equal(new com.mongodb.WriteConcern.Majority(1, true, true))
-
+    WriteConcern(1).withWTimeout(Duration(10, TimeUnit.MILLISECONDS)) should equal(new com.mongodb.WriteConcern(1, 10))
   }
 
   it should "create MongoCredential" in {

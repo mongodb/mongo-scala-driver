@@ -33,7 +33,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val javaExclusions = Set("AsyncBatchCursor", "Block", "ConnectionString", "Function", "ServerCursor", "Majority", "MongoClients",
       "MongoIterable", "Observables", "SingleResultCallback")
     val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "ScalaObservable",
-      "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription", "classTagToClassOf")
+      "ScalaWriteConcern", "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription", "classTagToClassOf")
 
     val classFilter = (f: Class[_ <: Object]) => {
       isPublic(f.getModifiers) &&
@@ -148,11 +148,16 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
   }
 
   it should "mirror all com.mongodb.WriteConcern in org.mongodb.scala.WriteConcern" in {
-    val notMirrored = Set("SAFE", "serialVersionUID", "FSYNC_SAFE", "JOURNAL_SAFE", "REPLICAS_SAFE", "NAMED_CONCERNS", "NORMAL", "valueOf")
+    val notMirrored = Set("SAFE", "serialVersionUID", "FSYNCED", "FSYNC_SAFE", "JOURNAL_SAFE", "REPLICAS_SAFE", "REPLICA_ACKNOWLEDGED",
+      "NAMED_CONCERNS", "NORMAL", "majorityWriteConcern", "valueOf")
+    val scalaExclusions = Set("W1", "W2", "W3")
     val wrapped = (classOf[com.mongodb.WriteConcern].getDeclaredMethods ++ classOf[com.mongodb.WriteConcern].getDeclaredFields)
       .filter(f => isStatic(f.getModifiers) && !notMirrored.contains(f.getName)).map(_.getName).toSet
 
-    val local = WriteConcern.getClass.getDeclaredMethods.filter(f => f.getName != "apply" && isPublic(f.getModifiers)).map(_.getName).toSet
+    val local = WriteConcern.getClass.getDeclaredMethods
+      .filter(f => f.getName != "apply" && isPublic(f.getModifiers))
+      .map(_.getName).toSet -- scalaExclusions
+
     diff(local, wrapped) shouldBe empty
   }
 
