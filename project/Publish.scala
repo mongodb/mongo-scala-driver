@@ -87,9 +87,8 @@ object Publish {
         </scm>
         <developers>
           <developer>
-            <id>ross</id>
-            <name>Ross Lawley</name>
-            <url>http://rosslawley.co.uk</url>
+            <name>Various</name>
+            <organization>MongoDB</organization>
           </developer>
         </developers>
       )
