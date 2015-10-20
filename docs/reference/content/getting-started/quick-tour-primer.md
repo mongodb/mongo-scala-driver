@@ -20,25 +20,30 @@ for instructions on how to install the MongoDB Scala Driver.
 
 ## The Observable API
 
-The Scala driver is free of dependencies on any third-party frameworks for asynchronous programming. To achieve this the Scala API makes use of an custom implementation of the Observer pattern which comprises three traits:
+The Scala driver is free of dependencies on any third-party frameworks for asynchronous programming. To achieve this the Scala API makes 
+use of an custom implementation of the Observer pattern which comprises three traits:
 
 1. Observable
 2. Observer
 3. Subscription 
 
-An `Observable` is a provider of a potentially unbounded number of sequenced elements, published according to the demand received from it's `Subscription`.
+An `Observable` is a provider of a potentially unbounded number of sequenced elements, published according to the demand received from it's 
+`Subscription`.
 
-In response to a call to `Observable.subscribe(Subscriber)` the possible invocation sequences for methods on the `Observer` are given by the following protocol:
+In response to a call to `Observable.subscribe(Subscriber)` the possible invocation sequences for methods on the `Observer` are given by 
+the following protocol:
 
 ```
 onSubscribe onNext* (onError | onComplete)?
 ```
 
-This means that `onSubscribe` is always signalled, followed by a possibly unbounded number of `onNext` signals (as requested by the `Subscription`) 
-followed by an `onError` signal if there is a failure, or an `onComplete` signal when no more elements are available—all as long as 
-the `Subscription` is not cancelled.
+This means that `onSubscribe` is always signalled, followed by a possibly unbounded number of `onNext` signals (as requested by the 
+`Subscription`) followed by an `onError` signal if there is a failure, or an `onComplete` signal when no more elements are available - 
+as long as the `Subscription` is not cancelled.
 
-The implementation draws inspiration from the [ReactiveX](http://reactivex.io/) and [reactive streams](http://www.reactive-streams.org) libraries and provides easy interoperability with them.  For more information see the [integrations guide]({{< relref "integrations/index.md" >}}).
+The implementation draws inspiration from the [ReactiveX](http://reactivex.io/) and [reactive streams](http://www.reactive-streams.org) 
+libraries and provides easy interoperability with them.  For more information see the 
+[integrations guide]({{< relref "integrations/index.md" >}}).
 
 
 ## From Async Callbacks to Observables
@@ -61,7 +66,8 @@ All `Observables` returned from the API are cold, meaning that no I/O happens un
  guaranteed to see the whole sequence from the beginning. So just creating an `Observable` won't cause any network IO, and it's not until 
 `Subscriber.request()` is called that the driver executes the operation.  
 
-Each `Subscription` to an `Observable` relates to a single MongoDB operation and its "Subscriber" will receive it's own specific set of results. 
+Each `Subscription` to an `Observable` relates to a single MongoDB operation and its "Subscriber" will receive it's own specific set of 
+results. 
 {{% /note %}}
 
 ### Back Pressure
@@ -72,8 +78,9 @@ be taken to ensure that the `Observer` has the capacity to handle all the result
 
 ## Helpers used in the Quick Tour
 
-For the Quick Tour we use custom implicit helpers defined in [`Helpers.scala`]({{< srcref "examples/src/test/scala/tour/Helpers.scala">}}). These helpers get and print results and although this is an artificial scenario for asynchronous code we 
-block on  the results of one example before starting the next, so as to ensure the state of the database. The `Helpers` object
+For the Quick Tour we use custom implicit helpers defined in [`Helpers.scala`]({{< srcref "examples/src/test/scala/tour/Helpers.scala">}}). 
+These helpers get and print results and although this is an artificial scenario for asynchronous code we block on  the results of one 
+example before starting the next, so as to ensure the state of the database. The `Helpers` object
 provides the following methods:
 
 *   results()

@@ -67,7 +67,6 @@ libraryDependencies += "org.mongodb.scala" %% "{{$artifactId}}" % "{{$version}}"
     <p>You can also download the jars
         <a href="{{$ossUrl}}/org/mongodb/{{$artifactId}}/{{$version}}" target="_blank">directly</a>
         from sonatype.</a></p>
-    {{ with $dependencies}}
     <p>
         <strong>Note:</strong> <code>{{$artifactId}}</code> requires the following dependencies:
         <a href="{{$ossUrl}}/org/mongodb/bson/{{$mongoDriverVersion}}" target="_blank"><code>bson</code></a>,
@@ -75,6 +74,5 @@ libraryDependencies += "org.mongodb.scala" %% "{{$artifactId}}" % "{{$version}}"
         and
         <a href="{{$ossUrl}}/org/mongodb/mongodb-driver-async/{{$mongoDriverVersion}}" target="_blank"><code>mongodb-driver-async</code></a>.
     </p>
-    {{end}}
 </section>
 {{ end }}

@@ -50,7 +50,7 @@
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The MongoDB Scala Driver package</p><p>Contains type aliases and companion objects to help when using the Scala API
 </p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.0</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="ObservableImplicits.html" class="extype" name="org.mongodb.scala.ObservableImplicits">ObservableImplicits</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="org.mongodb.scala.internal.WriteConcernImplicits">WriteConcernImplicits</span>, <a href="ObservableImplicits.html" class="extype" name="org.mongodb.scala.ObservableImplicits">ObservableImplicits</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div><div class="toggleContainer block diagram-container" id="content-diagram-container">
                 <span class="toggle diagram-link">Content Hierarchy</span>
                 <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#diagrams" target="_blank" class="diagram-help">Learn more about scaladoc diagrams</a>
@@ -72,7 +72,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="org.mongodb.scala"><span>scala</span></li><li class="in" name="org.mongodb.scala.ObservableImplicits"><span>ObservableImplicits</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="org.mongodb.scala"><span>scala</span></li><li class="in" name="org.mongodb.scala.internal.WriteConcernImplicits"><span>WriteConcernImplicits</span></li><li class="in" name="org.mongodb.scala.ObservableImplicits"><span>ObservableImplicits</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -965,6 +965,23 @@ further events will be sent.
     </span>
       <p class="shortcomment cmt">Extends the Java <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a> and adds helpers to make Observables composable and simple to Subscribe to.</p><div class="fullcomment"><div class="comment cmt"><p>Extends the Java <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a> and adds helpers to make Observables composable and simple to Subscribe to.
 </p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the type of result the Observable emits</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ObservableImplicits.html" class="extype" name="org.mongodb.scala.ObservableImplicits">ObservableImplicits</a></dd></dl></div>
+    </li><li name="org.mongodb.scala.internal.WriteConcernImplicits.ScalaWriteConcern" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ScalaWriteConcern[T]extendsAnyRef"></a>
+      <a id="ScalaWriteConcern[T]:ScalaWriteConcern[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ScalaWriteConcern</span><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.mongodb.scala.package@ScalaWriteConcern[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>WriteConcernImplicits</dd></dl></div>
     </li><li name="org.mongodb.scala.ServerAddress" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ServerAddress=com.mongodb.ServerAddress"></a>
       <a id="ServerAddress:ServerAddress"></a>
@@ -1334,16 +1351,15 @@ to use.
     </span>
       <p class="shortcomment cmt">Controls the acknowledgment of write operations with various options.</p><div class="fullcomment"><div class="comment cmt"><p>Controls the acknowledgment of write operations with various options.</p><h4><code>w</code></h4><p>- 0: Don't wait for acknowledgement from the server
 - 1: Wait for acknowledgement, but don't wait for secondaries to replicate
-- &gt;=2: Wait for one or more secondaries to also acknowledge</p><h4><code>wtimeout</code> - how long to wait for slaves before failing </h4><p>- 0: indefinite
-- &gt;0: time to wait in milliseconds</p><h4>Other options:</h4><p>- <code>j</code>: If true block until write operations have been committed to the journal. Cannot be used in combination with
-   <code>fsync</code>. Prior to MongoDB 2.6 this option was ignored if the server was running without journaling.
-   Starting with MongoDB 2.6 write operations will fail with an exception if this option is used when the server
-   is running without journaling.
-- <code>fsync</code>: If true and the server is running without journaling, blocks until the server has synced all data files to disk.
-   If the server is running with journaling, this acts the same as the <code>j</code> option, blocking until write operations have been
-   committed to the journal. Cannot be used in combination with <code>j</code>. In almost all cases the <code>j</code> flag should be used in
-   preference to this one.
-</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.0</p></dd></dl></div>
+- &gt;=2: Wait for one or more secondaries to also acknowledge
+- &quot;majority&quot;: Wait for a majority of secondaries to also acknowledge
+- &quot;&lt;tag set name&gt;&quot;: Wait for one or more secondaries to also acknowledge based on a tag set name</p><h4><code>wTimeout</code> - how long to wait for slaves before failing </h4><p>- 0: indefinite
+- &gt;0: time to wait in milliseconds</p><h4>Other options:</h4><p>- <code>journal</code>: If true block until write operations have been committed to the journal. Cannot be used in combination with <code>fsync</code>.
+Prior to MongoDB 2.6 this option was ignored if the server was running without journaling.  Starting with MongoDB 2.6
+write operations will fail with an exception if this option is used when the server is running without journaling.</p><h4> Implicit helper </h4><p>The <a href="#ScalaWriteConcern[T]extendsAnyRef" class="extmbr" name="org.mongodb.scala.ScalaWriteConcern">ScalaWriteConcern</a> implicit allows for chainable building of the WriteConcern eg:</p><p><code><code><code>
+ val myWriteConcern = WriteConcern.ACKNOWLEDGED.withJournal(true)).withWTimeout(Duration(10, TimeUnit.MILLISECONDS))
+<code><code><code>
+</code></code></code></code></code></code></p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.0</p></dd></dl></div>
     </li><li name="org.mongodb.scala.bson" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="bson"></a>
       <a id="bson:bson"></a>
@@ -1424,7 +1440,9 @@ to use.
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="org.mongodb.scala.ObservableImplicits">
+        <div class="parent" name="org.mongodb.scala.internal.WriteConcernImplicits">
+              <h3>Inherited from <span class="extype" name="org.mongodb.scala.internal.WriteConcernImplicits">WriteConcernImplicits</span></h3>
+            </div><div class="parent" name="org.mongodb.scala.ObservableImplicits">
               <h3>Inherited from <a href="ObservableImplicits.html" class="extype" name="org.mongodb.scala.ObservableImplicits">ObservableImplicits</a></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>

@@ -51,16 +51,15 @@
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Controls the acknowledgment of write operations with various options.</p><h4><code>w</code></h4><p>- 0: Don't wait for acknowledgement from the server
 - 1: Wait for acknowledgement, but don't wait for secondaries to replicate
-- &gt;=2: Wait for one or more secondaries to also acknowledge</p><h4><code>wtimeout</code> - how long to wait for slaves before failing </h4><p>- 0: indefinite
-- &gt;0: time to wait in milliseconds</p><h4>Other options:</h4><p>- <code>j</code>: If true block until write operations have been committed to the journal. Cannot be used in combination with
-   <code>fsync</code>. Prior to MongoDB 2.6 this option was ignored if the server was running without journaling.
-   Starting with MongoDB 2.6 write operations will fail with an exception if this option is used when the server
-   is running without journaling.
-- <code>fsync</code>: If true and the server is running without journaling, blocks until the server has synced all data files to disk.
-   If the server is running with journaling, this acts the same as the <code>j</code> option, blocking until write operations have been
-   committed to the journal. Cannot be used in combination with <code>j</code>. In almost all cases the <code>j</code> flag should be used in
-   preference to this one.
-</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.0</p></dd></dl><div class="toggleContainer block">
+- &gt;=2: Wait for one or more secondaries to also acknowledge
+- &quot;majority&quot;: Wait for a majority of secondaries to also acknowledge
+- &quot;&lt;tag set name&gt;&quot;: Wait for one or more secondaries to also acknowledge based on a tag set name</p><h4><code>wTimeout</code> - how long to wait for slaves before failing </h4><p>- 0: indefinite
+- &gt;0: time to wait in milliseconds</p><h4>Other options:</h4><p>- <code>journal</code>: If true block until write operations have been committed to the journal. Cannot be used in combination with <code>fsync</code>.
+Prior to MongoDB 2.6 this option was ignored if the server was running without journaling.  Starting with MongoDB 2.6
+write operations will fail with an exception if this option is used when the server is running without journaling.</p><h4> Implicit helper </h4><p>The <a href="package.html#ScalaWriteConcern[T]extendsAnyRef" class="extmbr" name="org.mongodb.scala.ScalaWriteConcern">ScalaWriteConcern</a> implicit allows for chainable building of the WriteConcern eg:</p><p><code><code><code>
+ val myWriteConcern = WriteConcern.ACKNOWLEDGED.withJournal(true)).withWTimeout(Duration(10, TimeUnit.MILLISECONDS))
+<code><code><code>
+</code></code></code></code></code></code></p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.0</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Any" class="extype" target="_top">Any</a></div>
         </div></div>
@@ -175,23 +174,6 @@
       <p class="shortcomment cmt">Write operations that use this write concern will wait for acknowledgement from the primary server before returning.</p><div class="fullcomment"><div class="comment cmt"><p>Write operations that use this write concern will wait for acknowledgement from the primary server before returning. Exceptions are
 raised for network issues, and server errors.
 </p></div></div>
-    </li><li name="org.mongodb.scala.WriteConcern#FSYNCED" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="FSYNCED:com.mongodb.WriteConcern"></a>
-      <a id="FSYNCED:com.mongodb.WriteConcern"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">FSYNCED</span><span class="result">: <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/WriteConcern.html class="extype" target="_top">com.mongodb.WriteConcern</a></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@FSYNCED:com.mongodb.WriteConcern" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Exceptions are raised for network issues, and server errors; the write operation waits for the server to flush the data to disk.</p>
     </li><li name="org.mongodb.scala.WriteConcern#JOURNALED" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="JOURNALED:com.mongodb.WriteConcern"></a>
       <a id="JOURNALED:com.mongodb.WriteConcern"></a>
@@ -227,40 +209,6 @@ file on disk.</p>
       </a>
     </span>
       <p class="shortcomment cmt">Exceptions are raised for network issues, and server errors; waits on a majority of servers for the write operation.</p>
-    </li><li name="org.mongodb.scala.WriteConcern.Majority" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Majority"></a>
-      <a id="Majority:Majority"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="WriteConcern$$Majority$.html"><span class="name">Majority</span></a>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@Majority" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">A write concern that blocks acknowledgement of a write operation until a majority of replica set members have applied it.</p>
-    </li><li name="org.mongodb.scala.WriteConcern#REPLICA_ACKNOWLEDGED" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="REPLICA_ACKNOWLEDGED:com.mongodb.WriteConcern"></a>
-      <a id="REPLICA_ACKNOWLEDGED:com.mongodb.WriteConcern"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">REPLICA_ACKNOWLEDGED</span><span class="result">: <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/WriteConcern.html class="extype" target="_top">com.mongodb.WriteConcern</a></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@REPLICA_ACKNOWLEDGED:com.mongodb.WriteConcern" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Exceptions are raised for network issues, and server errors; waits for at least 2 servers for the write operation.</p>
     </li><li name="org.mongodb.scala.WriteConcern#UNACKNOWLEDGED" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="UNACKNOWLEDGED:com.mongodb.WriteConcern"></a>
       <a id="UNACKNOWLEDGED:com.mongodb.WriteConcern"></a>
@@ -280,103 +228,57 @@ file on disk.</p>
       <p class="shortcomment cmt">Write operations that use this write concern will return as soon as the message is written to the socket.</p><div class="fullcomment"><div class="comment cmt"><p>Write operations that use this write concern will return as soon as the message is written to the socket. Exceptions are raised for
 network issues, but not server errors.
 </p></div></div>
-    </li><li name="org.mongodb.scala.WriteConcern#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(w:String,wtimeout:Int,fsync:Boolean,j:Boolean):com.mongodb.WriteConcern"></a>
-      <a id="apply(String,Int,Boolean,Boolean):com.mongodb.WriteConcern"></a>
+    </li><li name="org.mongodb.scala.WriteConcern#W1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="W1:com.mongodb.WriteConcern"></a>
+      <a id="W1:com.mongodb.WriteConcern"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="w">w: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="wtimeout">wtimeout: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="fsync">fsync: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>, <span name="j">j: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/WriteConcern.html class="extype" target="_top">com.mongodb.WriteConcern</a></span>
+        <span class="name">W1</span><span class="result">: <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/WriteConcern.html class="extype" target="_top">com.mongodb.WriteConcern</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@apply(w:String,wtimeout:Int,fsync:Boolean,j:Boolean):com.mongodb.WriteConcern" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@W1:com.mongodb.WriteConcern" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Creates a WriteConcern object, based on a tag name
-</p><div class="fullcomment"><div class="comment cmt"><p>Creates a WriteConcern object, based on a tag name
-</p></div><dl class="paramcmts block"><dt class="param">w</dt><dd class="cmt"><p>the tag name</p></dd><dt class="param">wtimeout</dt><dd class="cmt"><p>timeout for write operation</p></dd><dt class="param">fsync</dt><dd class="cmt"><p>whether or not to fsync</p></dd><dt class="param">j</dt><dd class="cmt"><p>whether writes should wait for a journaling group commit</p></dd></dl></div>
-    </li><li name="org.mongodb.scala.WriteConcern#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(w:Int,wtimeout:Int,fsync:Boolean,j:Boolean):com.mongodb.WriteConcern"></a>
-      <a id="apply(Int,Int,Boolean,Boolean):com.mongodb.WriteConcern"></a>
+      <p class="shortcomment cmt">Write operations that use this write concern will wait for acknowledgement from a single member.</p>
+    </li><li name="org.mongodb.scala.WriteConcern#W2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="W2:com.mongodb.WriteConcern"></a>
+      <a id="W2:com.mongodb.WriteConcern"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="w">w: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="wtimeout">wtimeout: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="fsync">fsync: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>, <span name="j">j: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/WriteConcern.html class="extype" target="_top">com.mongodb.WriteConcern</a></span>
+        <span class="name">W2</span><span class="result">: <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/WriteConcern.html class="extype" target="_top">com.mongodb.WriteConcern</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@apply(w:Int,wtimeout:Int,fsync:Boolean,j:Boolean):com.mongodb.WriteConcern" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@W2:com.mongodb.WriteConcern" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Creates a WriteConcern object.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a WriteConcern object.</p><p>Specifies the number of servers to wait for on the write operation, and exception raising behavior</p><p> <code>w</code> represents the number of servers:</p><p>- <code>w=-1</code> None, no checking is done
-- <code>w=0</code> None, network socket errors raised
-- <code>w=1</code> Checks server for errors as well as network socket errors raised
-- <code>w&gt;1</code> Checks servers (w) for errors as well as network socket errors raised</p></div><dl class="paramcmts block"><dt class="param">w</dt><dd class="cmt"><p>number of writes</p></dd><dt class="param">wtimeout</dt><dd class="cmt"><p>timeout for write operation</p></dd><dt class="param">fsync</dt><dd class="cmt"><p>whether or not to fsync</p></dd><dt class="param">j</dt><dd class="cmt"><p>whether writes should wait for a journaling group commit</p></dd></dl></div>
-    </li><li name="org.mongodb.scala.WriteConcern#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(w:Int,wtimeout:Int,fsync:Boolean):com.mongodb.WriteConcern"></a>
-      <a id="apply(Int,Int,Boolean):com.mongodb.WriteConcern"></a>
+      <p class="shortcomment cmt">Write operations that use this write concern will wait for acknowledgement from two members.</p>
+    </li><li name="org.mongodb.scala.WriteConcern#W3" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="W3:com.mongodb.WriteConcern"></a>
+      <a id="W3:com.mongodb.WriteConcern"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="w">w: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="wtimeout">wtimeout: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="fsync">fsync: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/WriteConcern.html class="extype" target="_top">com.mongodb.WriteConcern</a></span>
+        <span class="name">W3</span><span class="result">: <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/WriteConcern.html class="extype" target="_top">com.mongodb.WriteConcern</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@apply(w:Int,wtimeout:Int,fsync:Boolean):com.mongodb.WriteConcern" title="Permalink" target="_top">
+      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@W3:com.mongodb.WriteConcern" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Creates a WriteConcern object.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a WriteConcern object.</p><p>Specifies the number of servers to wait for on the write operation, and exception raising behavior</p><p> <code>w</code> represents the number of servers:</p><p>- <code>w=-1</code> None, no checking is done
-- <code>w=0</code> None, network socket errors raised
-- <code>w=1</code> Checks server for errors as well as network socket errors raised
-- <code>w&gt;1</code> Checks servers (w) for errors as well as network socket errors raised</p></div><dl class="paramcmts block"><dt class="param">w</dt><dd class="cmt"><p>number of writes</p></dd><dt class="param">wtimeout</dt><dd class="cmt"><p>timeout for write operation</p></dd><dt class="param">fsync</dt><dd class="cmt"><p>whether or not to fsync</p></dd></dl></div>
-    </li><li name="org.mongodb.scala.WriteConcern#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(fsync:Boolean):com.mongodb.WriteConcern"></a>
-      <a id="apply(Boolean):com.mongodb.WriteConcern"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="fsync">fsync: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/WriteConcern.html class="extype" target="_top">com.mongodb.WriteConcern</a></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@apply(fsync:Boolean):com.mongodb.WriteConcern" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Calls <code>WriteConcern(w: Int, wtimeout: Int, fsync: Boolean)</code> with w=1 and wtimeout=0
-</p><div class="fullcomment"><div class="comment cmt"><p>Calls <code>WriteConcern(w: Int, wtimeout: Int, fsync: Boolean)</code> with w=1 and wtimeout=0
-</p></div><dl class="paramcmts block"><dt class="param">fsync</dt><dd class="cmt"><p>whether or not to fsync</p></dd></dl></div>
-    </li><li name="org.mongodb.scala.WriteConcern#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(w:Int,wtimeout:Int):com.mongodb.WriteConcern"></a>
-      <a id="apply(Int,Int):com.mongodb.WriteConcern"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="w">w: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="wtimeout">wtimeout: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/WriteConcern.html class="extype" target="_top">com.mongodb.WriteConcern</a></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@apply(w:Int,wtimeout:Int):com.mongodb.WriteConcern" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Calls <code><code>WriteConcern(w: Int, wtimeout: Int, fsync: Boolean)</code> with fsync=false
-</code></p><div class="fullcomment"><div class="comment cmt"><p>Calls <code><code>WriteConcern(w: Int, wtimeout: Int, fsync: Boolean)</code> with fsync=false
-</code></p></div><dl class="paramcmts block"><dt class="param">w</dt><dd class="cmt"><p>number of writes</p></dd><dt class="param">wtimeout</dt><dd class="cmt"><p>timeout for write operation</p></dd></dl></div>
+      <p class="shortcomment cmt">Write operations that use this write concern will wait for acknowledgement from three members.</p>
     </li><li name="org.mongodb.scala.WriteConcern#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply(w:String):com.mongodb.WriteConcern"></a>
       <a id="apply(String):com.mongodb.WriteConcern"></a>
@@ -393,9 +295,9 @@ network issues, but not server errors.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Tag based Write Concern with wtimeout=0, fsync=false, and j=false
-</p><div class="fullcomment"><div class="comment cmt"><p>Tag based Write Concern with wtimeout=0, fsync=false, and j=false
-</p></div><dl class="paramcmts block"><dt class="param">w</dt><dd class="cmt"><p>Write Concern tag</p></dd></dl></div>
+      <p class="shortcomment cmt">Tag set named write concern or a &quot;majority&quot; write concern.</p><div class="fullcomment"><div class="comment cmt"><p>Tag set named write concern or a &quot;majority&quot; write concern.
+</p></div><dl class="paramcmts block"><dt class="param">w</dt><dd class="cmt"><p>Write Concern tag set name or &quot;majority&quot;, representing the servers to ensure write propagation to before acknowledgment.
+         Do not use string representation of integer values for w.</p></dd></dl></div>
     </li><li name="org.mongodb.scala.WriteConcern#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply(w:Int):com.mongodb.WriteConcern"></a>
       <a id="apply(Int):com.mongodb.WriteConcern"></a>
@@ -412,28 +314,9 @@ network issues, but not server errors.
         <img src="../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
-      <p class="shortcomment cmt">Calls <code>WriteConcern(w: Int, wtimeout: Int, fsync: Boolean)</code> with wtimeout=0 and fsync=false
-</p><div class="fullcomment"><div class="comment cmt"><p>Calls <code>WriteConcern(w: Int, wtimeout: Int, fsync: Boolean)</code> with wtimeout=0 and fsync=false
+      <p class="shortcomment cmt">Create a WriteConcern with the set number of acknowledged writes before returning
+</p><div class="fullcomment"><div class="comment cmt"><p>Create a WriteConcern with the set number of acknowledged writes before returning
 </p></div><dl class="paramcmts block"><dt class="param">w</dt><dd class="cmt"><p>number of writes</p></dd></dl></div>
-    </li><li name="org.mongodb.scala.WriteConcern#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply():com.mongodb.WriteConcern"></a>
-      <a id="apply():com.mongodb.WriteConcern"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">apply</span><span class="params">()</span><span class="result">: <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/WriteConcern.html class="extype" target="_top">com.mongodb.WriteConcern</a></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@apply():com.mongodb.WriteConcern" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Default constructor keeping all options as default.</p><div class="fullcomment"><div class="comment cmt"><p>Default constructor keeping all options as default.  Be careful using this constructor, as it's equivalent to
-<code>WriteConcern.UNACKNOWLEDGED</code>, so writes may be lost without any errors being reported.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>WriteConcern#UNACKNOWLEDGED</p></span></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -582,24 +465,6 @@ network issues, but not server errors.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="org.mongodb.scala.WriteConcern#majorityWriteConcern" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="majorityWriteConcern(wtimeout:Int,fsync:Boolean,j:Boolean):com.mongodb.WriteConcern.Majority"></a>
-      <a id="majorityWriteConcern(Int,Boolean,Boolean):Majority"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">majorityWriteConcern</span><span class="params">(<span name="wtimeout">wtimeout: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>, <span name="fsync">fsync: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>, <span name="j">j: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>)</span><span class="result">: <span class="extype" name="com.mongodb.WriteConcern.Majority">Majority</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../index.html#org.mongodb.scala.WriteConcern$@majorityWriteConcern(wtimeout:Int,fsync:Boolean,j:Boolean):com.mongodb.WriteConcern.Majority" title="Permalink" target="_top">
-        <img src="../../../lib/permalink.png" alt="Permalink" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Create a Majority Write Concern that requires a majority of servers to acknowledge the write.</p><div class="fullcomment"><div class="comment cmt"><p>Create a Majority Write Concern that requires a majority of servers to acknowledge the write.
-</p></div><dl class="paramcmts block"><dt class="param">wtimeout</dt><dd class="cmt"><p>timeout for write operation</p></dd><dt class="param">fsync</dt><dd class="cmt"><p>whether or not to fsync</p></dd><dt class="param">j</dt><dd class="cmt"><p>whether writes should wait for a journal group commit</p></dd><dt>returns</dt><dd class="cmt"><p>Majority, a subclass of WriteConcern that represents the write concern requiring most servers to acknowledge the write</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
