@@ -20,13 +20,11 @@ import java.io.Closeable
 
 import scala.reflect.ClassTag
 
-import org.bson.codecs.configuration.CodecRegistries.{ fromProviders, fromRegistries }
 import org.bson.codecs.configuration.CodecRegistry
 import com.mongodb.ConnectionString
 import com.mongodb.async.client.{ MongoClient => JMongoClient, MongoClients }
 
 import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
-import org.mongodb.scala.bson.codecs.DocumentCodecProvider
 import org.mongodb.scala.connection.{ ClusterSettings, ConnectionPoolSettings, ServerSettings, SocketSettings, SslSettings }
 import org.mongodb.scala.internal.ObservableHelper.observe
 
@@ -70,10 +68,7 @@ object MongoClient {
    */
   def apply(clientSettings: MongoClientSettings): MongoClient = MongoClient(MongoClients.create(clientSettings))
 
-  val DEFAULT_CODEC_REGISTRY: CodecRegistry = fromRegistries(
-    MongoClients.getDefaultCodecRegistry,
-    fromProviders(DocumentCodecProvider())
-  )
+  val DEFAULT_CODEC_REGISTRY: CodecRegistry = org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
 }
 
 /**

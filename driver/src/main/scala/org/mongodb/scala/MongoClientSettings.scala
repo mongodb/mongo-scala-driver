@@ -16,7 +16,7 @@
 
 package org.mongodb.scala
 
-import com.mongodb.async.client.{ MongoClientSettings => JMongoClientSettings }
+import com.mongodb.async.client.{ MongoClientSettings => JMongoClientSettings, MongoClients => JMongoClients }
 
 /**
  * A MongoClientSettings companion object
@@ -29,7 +29,7 @@ object MongoClientSettings {
    * Creates a the default builder
    * @return a MongoClientSettings builder
    */
-  def builder(): JMongoClientSettings.Builder = JMongoClientSettings.builder()
+  def builder(): JMongoClientSettings.Builder = JMongoClientSettings.builder().codecRegistry(MongoClient.DEFAULT_CODEC_REGISTRY)
 
   /**
    * Creates a builder from an existing `MongoClientSettings`.
@@ -37,5 +37,12 @@ object MongoClientSettings {
    * @param settings the settings to create the builder from
    * @return a MongoClientSettings builder
    */
-  def builder(settings: MongoClientSettings): JMongoClientSettings.Builder = JMongoClientSettings.builder(settings)
+  def builder(settings: MongoClientSettings): JMongoClientSettings.Builder = {
+    val builder = JMongoClientSettings.builder(settings)
+    if (settings.getCodecRegistry == JMongoClients.getDefaultCodecRegistry) {
+      builder.codecRegistry(MongoClient.DEFAULT_CODEC_REGISTRY)
+    }
+    builder
+  }
+
 }

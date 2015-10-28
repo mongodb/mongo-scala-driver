@@ -15,6 +15,7 @@
  */
 
 package org.mongodb.scala
+
 import scala.collection.JavaConverters._
 
 import org.bson.BsonDocument

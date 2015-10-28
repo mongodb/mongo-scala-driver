@@ -18,7 +18,6 @@ package org.mongodb.scala.bson
 
 import org.bson.codecs.configuration.CodecRegistries._
 import org.bson.codecs.configuration.CodecRegistry
-import org.bson.codecs.{DocumentCodecProvider => ADocumentCodecProvider}
 import com.mongodb.async.client.MongoClients
 
 package object codecs {
