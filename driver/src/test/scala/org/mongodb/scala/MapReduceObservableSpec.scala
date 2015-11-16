@@ -67,6 +67,7 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('verbose)(true).once()
     wrapper.expects('sharded)(true).once()
     wrapper.expects('nonAtomic)(true).once()
+    wrapper.expects('bypassDocumentValidation)(true).once()
     wrapper.expects('toCollection)(*).once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
@@ -84,6 +85,7 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
     Observable.verbose(true)
     Observable.sharded(true)
     Observable.nonAtomic(true)
+    Observable.bypassDocumentValidation(true)
     Observable.toCollection().subscribe(observer[Completed])
     Observable.subscribe(observer[Document])
   }

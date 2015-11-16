@@ -20,9 +20,10 @@ import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
 
-import org.mongodb.scala.internal.ObservableHelper._
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.AggregateIterable
+
+import org.mongodb.scala.internal.ObservableHelper._
 
 /**
  * Observable for aggregate
@@ -67,6 +68,22 @@ case class AggregateObservable[TResult](private val wrapped: AggregateIterable[T
    */
   def useCursor(useCursor: Boolean): AggregateObservable[TResult] = {
     wrapped.useCursor(useCursor)
+    this
+  }
+
+  /**
+   * Sets the bypass document level validation flag.
+   *
+   * '''Note:''': This only applies when an `\$out` stage is specified.
+   *
+   * [[http://docs.mongodb.org/manual/reference/command/aggregate/ Aggregation]]
+   * @note Requires MongoDB 3.2 or greater
+   * @param bypassDocumentValidation If true, allows the write to opt-out of document level validation.
+   * @return this
+   * @since 1.1
+   */
+  def bypassDocumentValidation(bypassDocumentValidation: Boolean): AggregateObservable[TResult] = {
+    wrapped.bypassDocumentValidation(bypassDocumentValidation)
     this
   }
 

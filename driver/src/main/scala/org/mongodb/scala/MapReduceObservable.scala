@@ -196,6 +196,23 @@ case class MapReduceObservable[TResult](wrapped: MapReduceIterable[TResult]) ext
   }
 
   /**
+   * Sets the bypass document level validation flag.
+   *
+   * '''Note:''': This only applies when an `\$out` stage is specified.
+   *
+   * [[http://docs.mongodb.org/manual/reference/command/mapReduce#output-to-a-collection-with-an-action output with an action]]
+   *
+   * @note Requires MongoDB 3.2 or greater
+   * @param bypassDocumentValidation If true, allows the write to opt-out of document level validation.
+   * @return this
+   * @since 1.1
+   */
+  def bypassDocumentValidation(bypassDocumentValidation: Boolean): MapReduceObservable[TResult] = {
+    wrapped.bypassDocumentValidation(bypassDocumentValidation)
+    this
+  }
+
+  /**
    * Aggregates documents to a collection according to the specified map-reduce function with the given options, which must specify a
    * non-inline result.
    *

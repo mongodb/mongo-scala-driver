@@ -27,7 +27,7 @@ import org.scalatest.{ FlatSpec, Matchers }
 
 class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
 
-  def observer[T] = new Observer[T]() {
+  def observer[T]: Observer[T] = new Observer[T]() {
     override def onError(throwable: Throwable): Unit = {}
     override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
     override def onComplete(): Unit = {}
@@ -51,9 +51,10 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
 
     val duration = Duration(1, TimeUnit.SECONDS)
 
-    wrapper.expects('allowDiskUse)(java.lang.Boolean.TRUE).once()
-    wrapper.expects('useCursor)(java.lang.Boolean.TRUE).once()
+    wrapper.expects('allowDiskUse)(true).once()
+    wrapper.expects('useCursor)(true).once()
     wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
+    wrapper.expects('bypassDocumentValidation)(true).once()
     wrapper.expects('toCollection)(*).once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
@@ -61,6 +62,7 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
     Observable.allowDiskUse(true)
     Observable.useCursor(true)
     Observable.maxTime(duration)
+    Observable.bypassDocumentValidation(true)
     Observable.toCollection().subscribe(observer[Completed])
     Observable.subscribe(observer[Document])
   }
