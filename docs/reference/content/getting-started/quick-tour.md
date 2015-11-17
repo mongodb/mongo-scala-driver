@@ -252,9 +252,9 @@ will eventually print just one document:
 ```
 
 {{% note %}}
-Use the [Filters]({{< apiref "org.mongodb.scala.model.Filters$">}}), [Sorts]({{< apiref "org.mongodb.scala.model.Sorts$">}}), 
-[Projections]({{< apiref "org.mongodb.scala.model.Projections$">}}) and [Updates]({{< apiref "org.mongodb.scala.model.Updates$">}}) 
-helpers for simple and concise ways of building up queries and updates
+Use the [`Filters`]({{< relref "builders/filters.md">}}), [`Sorts`]({{< relref "builders/sorts.md">}}),
+[`Projections`]({{< relref "builders/projections.md">}}) and [`Updates`]({{< relref "builders/updates.md">}})
+helpers for simple and concise ways of building up queries.
 {{% /note %}}
 
 ## Get a Set of Documents with a Query
@@ -293,6 +293,38 @@ Below we'll sort the collection, exclude the `_id` field and output the first ma
 ```scala
 collection.find().projection(excludeId()).first().printHeadResult()
 ```
+
+## Aggregations
+
+Sometimes we need to aggregate the data stored in MongoDB. The [`Aggregates`]({{< relref "builders/aggregation.md" >}}) helper provides 
+builders for each of type of aggregation stage.
+
+Below we'll do a simple two step transformation that will calculate the value of `i * 10`. First we find all Documents 
+where `i > 0` by using the [`Aggregates.filter`]({{< relref "builders/aggregation.md#filter" >}}) 
+helper. Then we reshape the document by using [`Aggregates.project`]({{< relref "builders/aggregation.md#project" >}}) 
+in conjunction with the [`$multiply`]({{< docsref "reference/operator/aggregation/multiply/" >}}) operator to calculate the "`ITimes10`" 
+value:
+
+```scala
+collection.aggregate(Seq(filter(gt("i", 0)),
+  project(Document("""{ITimes10: {$multiply: ["$i", 10]}}""")))
+).printResults()
+```
+
+For [`$group`]({{< relref "builders/aggregation.md#group" >}}) operations use the 
+[`Accumulators`]({{< apiref "com/mongodb/client/model/Accumulators" >}}) helper for any 
+[accumulator operations]({{< docsref "reference/operator/aggregation/group/#accumulator-operator" >}}). Below we sum up all the values of 
+`i` by using the [`Aggregates.group`]({{< relref "builders/aggregation.md#group" >}}) helper in conjunction with the 
+[`Accumulators.sum`]({{< apiref "com/mongodb/client/model/Accumulators#sum-java.lang.String-TExpression-" >}}) helper:
+
+```java
+collection.aggregate(singletonList(group(null, sum("total", "$i")))).first(printDocument);
+```
+
+{{% note %}}
+Currently, there are no helpers for [aggregation expressions]({{< docsref "meta/aggregation-quick-reference/#aggregation-expressions" >}}). 
+Use the [`Document.parse()`]({{< relref "bson/extended-json.md" >}}) helper to quickly build aggregation expressions from extended JSON.
+{{% /note %}}
 
 ## Updating documents
 

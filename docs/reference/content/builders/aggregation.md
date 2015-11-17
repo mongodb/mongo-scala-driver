@@ -65,6 +65,14 @@ This example simply projects the `qty` field into a new field called `quantity`.
 project(computed("quantity", "$qty"))
 ```
 
+### Sample
+The [`$sample`]({{< docsref "reference/operator/aggregation/sample/" >}}) pipeline stage randomly select N documents from its input.
+This example creates a pipeline stage that randomly selects 5 documents from the collection:
+
+```scala
+sample(5)
+```
+
 ### Sort
   
 The [`$sort`]({{< docsref "reference/operator/aggregation/sort/" >}}) pipeline stage passes all documents to the next stage, 
@@ -101,6 +109,18 @@ This example limits the number of documents to `10`:
 limit(10)
 ```
 
+### Lookup
+
+Starting in 3.2, MongoDB provides a new [`$lookup`]({{< docsref "reference/operator/aggregation/lookup/" >}}) pipeline stage 
+that performs a left outer join with another collection to filter in documents from the joined collection for processing.
+
+This example performs a left outer join on the `fromCollection` collection, joining the `local` field to the `from` field and outputted in 
+the `joinedOutput` field:
+
+```scala
+lookup("fromCollection", "local", "from", "joinedOutput")
+```
+
 ### Group
 
 The [`$group`]({{< docsref "reference/operator/aggregation/group/" >}}) pipeline stage groups documents by some specified 
@@ -128,6 +148,19 @@ This example outputs, for each document, a document for each element in the `siz
 
 ```scala
 unwind("$sizes")
+```
+
+Available with MongoDB 3.2, this example also includes any documents that have missing or `null` values for the `$sizes` field or where 
+the `$sizes` list is empty:
+
+```scala
+unwind("$sizes", UnwindOptions().preserveNullAndEmptyArrays(true))
+```
+
+Available with MongoDB 3.2, this example unwinds the `sizes` array and also outputs the array index into the `$position` field:
+
+```scala
+unwind("$sizes", UnwindOptions().includeArrayIndex("$position"))
 ```
 
 ### Out

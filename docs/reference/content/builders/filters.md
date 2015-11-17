@@ -151,7 +151,39 @@ This example assumes a collection that has a text index in the field `abstract`.
 containing the term `coffee`:
 
 ```scala
-text("abstract", "coffee")
+text("coffee")
+```
+
+Available with MongoDB 3.2, a version 3 text index allows case-sensitive searches. This example selects documents that have an 
+`abstract` field containing the exact term `coffee`:
+
+```scala
+text("coffee", TextSearchOptions().caseSensitive(true))
+```
+
+Available with MongoDB 3.2, a version 3 text index allows diacritic-sensitive searches. This example selects documents that have an 
+`abstract` field containing the exact term `café`:
+
+```scala
+text("café", TextSearchOptions().diacriticSensitive(true))
+```
+
+### Bitwise
+
+The bitwise query operators, available with MongoDB 3.2 include:
+
+- `bitsAllSet`: Selects documents where the all the specified bits of a field are set (i.e. 1).
+- `bitsAllClear`: Selects documents where the all the specified bits of a field are clear (i.e. 0).
+- `bitsAnySet`: Selects documents where at least one of the specified bits of a field are set (i.e. 1).
+- `bitsAnyClear`: Selects documents where at least one of the specified bits of a field are clear (i.e. 0)
+
+
+#### Examples
+
+The example selects documents that have a `bitField` field with bits set at positions of the corresponding bitmask `50` (i.e. `00110010`):
+
+```scala
+bitsAllSet("bitField", 50)
 ```
 
 ### Geospatial

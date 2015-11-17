@@ -90,8 +90,8 @@ collection.drop().headResult()
 
 MongoDB supports secondary indexes. To create an index, you just
 specify the field or combination of fields, and for each field specify the direction of the index for that field.
-For `1` ascending  or `-1` for descending. The following creates an ascending index on the `i` field by using the 
-[`Sorts.ascending`]({{< apiref "org.mongodb.scala.model.Sorts$@ascending(fieldNames:String*):org.bson.conversions.Bson">}}) helper:
+For `1` ascending  or `-1` for descending. 
+We can use the [`Indexes`]({{< relref "builders/indexes.md">}}) helpers to create index keys:
 
 ```scala
 collection.createIndex(ascending("i")).printResults("Created an index named: ")
@@ -116,7 +116,8 @@ The example should print the following indexes:
 
 MongoDB also provides text indexes to support text search of string
 content. Text indexes can include any field whose value is a string or
-an array of string elements. 
+an array of string elements. To create a text index use the [`Indexes.text`]({{< relref "builders/indexes.md#text-index">}})
+static helper:
 
 The following example creates a text index by specifying the string literal "text" in the index document, then insert some sample documents.
 Using a for comprehension we can combine the two operations:
@@ -135,14 +136,14 @@ indexAndInsert.results()
 ```
 
 As of MongoDB 2.6, text indexes are now integrated into the main query
-language and enabled by default (here we use the [`Filters.text`]({{< coreapiref "com/mongodb/client/model/Filters.html#text-java.lang.String-">}}) helper):
+language and enabled by default (here we use the [`Filters.text`]({{< relref "builders/filters.md#evaluation">}}) helper):
 
 ```scala
 // Find using the text index
 collection.count(text("textual content -irrelevant")).printResults("Text search matches: ")
 
 // Find using the $language operator
-val textSearch: Bson = text("textual content -irrelevant", "english")
+val textSearch: Bson = text("textual content -irrelevant", TextSearchOptions().language("english"))
 collection.count(textSearch).printResults("Text search matches (english): ")
 
 // Find the highest scoring match

@@ -19,6 +19,7 @@ package tour
 import scala.collection.immutable.IndexedSeq
 
 import org.mongodb.scala._
+import org.mongodb.scala.model.Aggregates._
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Projections._
 import org.mongodb.scala.model.Sorts._
@@ -87,6 +88,11 @@ object QuickTour {
 
     // Projection
     collection.find().projection(excludeId()).first().printHeadResult()
+
+    //Aggregation
+    collection.aggregate(Seq(filter(gt("i", 0)),
+      project(Document("""{ITimes10: {$multiply: ["$i", 10]}}""")))
+    ).printResults()
 
     // Update One
     collection.updateOne(equal("i", 10), set("i", 110)).printHeadResult("Update Result: ")

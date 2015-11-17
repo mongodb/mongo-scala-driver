@@ -18,7 +18,7 @@ package tour
 import org.mongodb.scala.bson.conversions.Bson
 
 import org.mongodb.scala._
-import org.mongodb.scala.model.CreateCollectionOptions
+import org.mongodb.scala.model.{TextSearchOptions, CreateCollectionOptions}
 import org.mongodb.scala.model.Filters.text
 import org.mongodb.scala.model.Projections.metaTextScore
 import org.mongodb.scala.model.Sorts.ascending
@@ -84,7 +84,7 @@ object QuickTourAdmin {
     collection.count(text("textual content -irrelevant")).printResults("Text search matches: ")
 
     // Find using the $language operator
-    val textSearch: Bson = text("textual content -irrelevant", "english")
+    val textSearch: Bson = text("textual content -irrelevant", TextSearchOptions().language("english"))
     collection.count(textSearch).printResults("Text search matches (english): ")
 
     // Find the highest scoring match
