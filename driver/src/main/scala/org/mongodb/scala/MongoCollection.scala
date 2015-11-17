@@ -251,6 +251,18 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
   def insertOne(document: TResult): Observable[Completed] = observeCompleted(wrapped.insertOne(document, _: SingleResultCallback[Void]))
 
   /**
+   * Inserts the provided document. If the document is missing an identifier, the driver should generate one.
+   *
+   * @param document the document to insert
+   * @param options  the options to apply to the operation
+   * @return a Observable with a single element indicating when the operation has completed or with either a
+   *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
+   * @since 1.1
+   */
+  def insertOne(document: TResult, options: InsertOneOptions): Observable[Completed] =
+    observeCompleted(wrapped.insertOne(document, options, _: SingleResultCallback[Void]))
+
+  /**
    * Inserts a batch of documents. The preferred way to perform bulk inserts is to use the BulkWrite API. However, when talking with a
    * server &lt; 2.6, using this method will be faster due to constraints in the bulk API related to error handling.
    *

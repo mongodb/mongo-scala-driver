@@ -195,9 +195,14 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
   it should "wrap the underlying insertOne correctly" in {
     val insertDoc = Document("a" -> 1)
+    val insertOptions = InsertOneOptions().bypassDocumentValidation(true)
     wrapped.expects('insertOne)(insertDoc, *).once()
 
     mongoCollection.insertOne(insertDoc).subscribe(observer[Completed])
+
+    wrapped.expects('insertOne)(insertDoc, insertOptions, *).once()
+
+    mongoCollection.insertOne(insertDoc, insertOptions).subscribe(observer[Completed])
   }
 
   it should "wrap the underlying insertMany correctly" in {
