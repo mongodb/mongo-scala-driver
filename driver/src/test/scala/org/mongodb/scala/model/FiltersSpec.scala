@@ -148,9 +148,43 @@ class FiltersSpec extends FlatSpec with Matchers {
     toBson(model.Filters.`type`("a", BsonType.ARRAY)) should equal(Document("""{a : {$type : 4} }"""))
   }
 
+  it should "render $bitsAllClear" in {
+    toBson(model.Filters.bitsAllClear("a", 13)) should equal(Document("""{a : {$bitsAllClear : { "$numberLong" : "13" }} }"""))
+  }
+
+  it should "render $bitsAllSet" in {
+    toBson(model.Filters.bitsAllSet("a", 13)) should equal(Document("""{a : {$bitsAllSet : { "$numberLong" : "13" }} }"""))
+  }
+
+  it should "render $bitsAnyClear" in {
+    toBson(model.Filters.bitsAnyClear("a", 13)) should equal(Document("""{a : {$bitsAnyClear : { "$numberLong" : "13" }} }"""))
+  }
+
+  it should "render $bitsAnySet" in {
+    toBson(model.Filters.bitsAnySet("a", 13)) should equal(Document("""{a : {$bitsAnySet : { "$numberLong" : "13" }} }"""))
+  }
+
   it should "render $text" in {
-    toBson(model.Filters.text("I love MongoDB")) should equal(Document("""{$text : {$search : "I love MongoDB"} }"""))
-    toBson(model.Filters.text("I love MongoDB", "English")) should equal(Document("""{$text : {$search : "I love MongoDB", $language : "English"} }"""))
+    toBson(model.Filters.text("mongoDB for GIANT ideas")) should equal(Document("""{$text: {$search: "mongoDB for GIANT ideas"} }"""))
+    toBson(model.Filters.text("mongoDB for GIANT ideas", "english")) should equal(
+      Document("""{$text: {$search: "mongoDB for GIANT ideas", $language : "english"}}""")
+    )
+    toBson(model.Filters.text("mongoDB for GIANT ideas", new TextSearchOptions().language("english"))) should equal(
+      Document("""{$text : {$search : "mongoDB for GIANT ideas", $language : "english"} }""")
+    )
+    toBson(model.Filters.text("mongoDB for GIANT ideas", new TextSearchOptions().caseSensitive(true))) should equal(
+      Document("""{$text : {$search : "mongoDB for GIANT ideas", $caseSensitive : true} }""")
+    )
+    toBson(model.Filters.text("mongoDB for GIANT ideas", new TextSearchOptions().diacriticSensitive(false))) should equal(
+      Document("""{$text : {$search : "mongoDB for GIANT ideas", $diacriticSensitive : false} }""")
+    )
+    toBson(model.Filters.text("mongoDB for GIANT ideas", new TextSearchOptions().language("english").caseSensitive(false)
+      .diacriticSensitive(true))) should equal(
+      Document(
+        """{$text : {$search : "mongoDB for GIANT ideas", $language : "english", $caseSensitive : false,
+              $diacriticSensitive : true} }"""
+      )
+    )
   }
 
   it should "render $regex" in {

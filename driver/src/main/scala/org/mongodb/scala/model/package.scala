@@ -313,6 +313,51 @@ package object model {
   }
 
   /**
+   * Text search options for the [[Filters]] text helper
+   *
+   * @see [[http://docs.mongodb.org/manual/reference/operator/query/text \$text]]
+   * @since 1.1
+   */
+  type TextSearchOptions = com.mongodb.client.model.TextSearchOptions
+
+  /**
+<<<<<<< HEAD
+=======
+   * Text search options for the [[Filters]] text helper
+   * @since 1.1
+   */
+  object TextSearchOptions {
+
+    /**
+     * Construct a new instance.
+     */
+    def apply(): TextSearchOptions = new com.mongodb.client.model.TextSearchOptions()
+  }
+
+  /**
+   * Validation options for documents being inserted or updated in a collection
+   *
+   * @Note Requires MongoDB 3.2 or greater
+   * @since 1.1
+   */
+  type ValidationOptions = com.mongodb.client.model.ValidationOptions
+
+  /**
+   * Validation options for documents being inserted or updated in a collection
+   *
+   * @Note Requires MongoDB 3.2 or greater
+   * @since 1.1
+   */
+  object ValidationOptions {
+
+    /**
+     * Construct a new instance.
+     */
+    def apply(): ValidationOptions = new com.mongodb.client.model.ValidationOptions()
+  }
+
+  /**
+>>>>>>> 886e136... FILFOLD
    * A model describing an update to all documents that matches the query filter. The update to apply must include only update
    * operators.
    *

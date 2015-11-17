@@ -22,9 +22,9 @@ import scala.collection.JavaConverters._
 import scala.util.matching.Regex
 
 import org.bson._
-import org.mongodb.scala.bson.conversions.Bson
 import com.mongodb.client.model.geojson.{ Geometry, Point }
 import com.mongodb.client.model.{ Filters => JFilters }
+import org.mongodb.scala.bson.conversions.Bson
 
 //scalastyle:off null number.of.methods
 /**
@@ -312,8 +312,21 @@ object Filters {
    * @param language the language to use for stop words
    * @return the filter
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/text \$text]]
+   * @deprecated use {{{Filters.text(String, TextSearchOptions)}}} instead.
    */
-  def text(search: String, language: String): Bson = JFilters.text(search, language)
+  @Deprecated
+  def text(search: String, language: String): Bson = text(search, new TextSearchOptions().language(language))
+
+  /**
+   * Creates a filter that matches all documents matching the given search term using the given language.
+   *
+   * @param search   the search term
+   * @param textSearchOptions the text search options to use
+   * @return the filter
+   * @see [[http://docs.mongodb.org/manual/reference/operator/query/text \$text]]
+   * @since 1.1
+   */
+  def text(search: String, textSearchOptions: TextSearchOptions): Bson = JFilters.text(search, textSearchOptions)
 
   /**
    * Creates a filter that matches all documents for which the given expression is true.
@@ -355,6 +368,54 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/size \$size]]
    */
   def size(fieldName: String, size: Int): Bson = JFilters.size(fieldName, size)
+
+  /**
+   * Creates a filter that matches all documents where all of the bit positions are clear in the field.
+   *
+   * @Note Requires MongoDB 3.2 or greater
+   * @param fieldName the field name
+   * @param bitmask   the bitmask
+   * @return the filter
+   * @see [[http://docs.mongodb.org/manual/reference/operator/query/bitsAllClear \$bitsAllClear]]
+   * @since 1.1
+   */
+  def bitsAllClear(fieldName: String, bitmask: Long): Bson = JFilters.bitsAllClear(fieldName, bitmask)
+
+  /**
+   * Creates a filter that matches all documents where all of the bit positions are set in the field.
+   *
+   * @Note Requires MongoDB 3.2 or greater
+   * @param fieldName the field name
+   * @param bitmask   the bitmask
+   * @return the filter
+   * @see [[http://docs.mongodb.org/manual/reference/operator/query/bitsAllSet \$bitsAllSet]]
+   * @since 1.1
+   */
+  def bitsAllSet(fieldName: String, bitmask: Long): Bson = JFilters.bitsAllSet(fieldName, bitmask)
+
+  /**
+   * Creates a filter that matches all documents where any of the bit positions are clear in the field.
+   *
+   * @Note Requires MongoDB 3.2 or greater
+   * @param fieldName the field name
+   * @param bitmask   the bitmask
+   * @return the filter
+   * @see [[http://docs.mongodb.org/manual/reference/operator/query/bitsAnyClear \$bitsAnyClear]]
+   * @since 1.1
+   */
+  def bitsAnyClear(fieldName: String, bitmask: Long): Bson = JFilters.bitsAnyClear(fieldName, bitmask)
+
+  /**
+   * Creates a filter that matches all documents where any of the bit positions are set in the field.
+   *
+   * @Note Requires MongoDB 3.2 or greater
+   * @param fieldName the field name
+   * @param bitmask   the bitmask
+   * @return the filter
+   * @see [[http://docs.mongodb.org/manual/reference/operator/query/bitsAnySet \$bitsAnySet]]
+   * @since 1.1
+   */
+  def bitsAnySet(fieldName: String, bitmask: Long): Bson = JFilters.bitsAnySet(fieldName, bitmask)
 
   /**
    * Creates a filter that matches all documents containing a field with geospatial data that exists entirely within the specified shape.
