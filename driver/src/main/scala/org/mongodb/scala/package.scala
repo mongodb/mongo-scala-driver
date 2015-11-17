@@ -58,6 +58,14 @@ package object scala extends ObservableImplicits with WriteConcernImplicits {
   type MongoNamespace = com.mongodb.MongoNamespace
 
   /**
+   * The readConcern option allows clients to choose a level of isolation for their reads.
+   *
+   * @see [[ReadConcern]]
+   * @since 1.1
+   */
+  type ReadConcernLevel = com.mongodb.ReadConcernLevel
+
+  /**
    * Represents preferred replica set members to which a query or command can be sent.
    */
   type ReadPreference = com.mongodb.ReadPreference
@@ -77,6 +85,12 @@ package object scala extends ObservableImplicits with WriteConcernImplicits {
    * Controls the acknowledgment of write operations with various options.
    */
   type WriteConcern = com.mongodb.WriteConcern
+  /**
+   * Controls the level of isolation for reads.
+   *
+   * @since 1.1
+   */
+  type ReadConcern = com.mongodb.ReadConcern
   /**
    * The result of a successful write operation.  If the write was unacknowledged, then `wasAcknowledged` will return false and all
    * other methods with throw `MongoUnacknowledgedWriteException`.

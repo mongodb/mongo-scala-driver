@@ -24,6 +24,7 @@ import org.bson.codecs.configuration.CodecRegistries.fromProviders
 import com.mongodb.client.model.CountOptions
 import com.mongodb.async.client.{ MongoCollection => JMongoCollection }
 
+import org.mongodb.scala._
 import org.mongodb.scala.model._
 import org.mongodb.scala.result._
 import org.scalamock.scalatest.proxy.MockFactory
@@ -34,6 +35,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   val wrapped = mock[JMongoCollection[Document]]
   val mongoCollection = MongoCollection[Document](wrapped)
   val readPreference = ReadPreference.secondary()
+
   val filter = Document("filter" -> 1)
   def observer[T] = new Observer[T]() {
     override def onError(throwable: Throwable): Unit = {}
@@ -76,6 +78,12 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     mongoCollection.writeConcern
   }
 
+  it should "return the underlying getReadConcern" in {
+    wrapped.expects('getReadConcern)().once()
+
+    mongoCollection.readConcern
+  }
+
   it should "return the underlying getDocumentClass" in {
     wrapped.expects('getDocumentClass)().once()
 
@@ -101,6 +109,13 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     wrapped.expects('withWriteConcern)(writeConcern).once()
 
     mongoCollection.withWriteConcern(writeConcern)
+  }
+
+  it should "return the underlying withReadConcern" in {
+    val readConcern = ReadConcern.MAJORITY
+    wrapped.expects('withReadConcern)(readConcern).once()
+
+    mongoCollection.withReadConcern(readConcern)
   }
 
   it should "return the underlying withDocumentClass" in {
@@ -311,6 +326,11 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     wrapped.expects('dropIndex)("indexName", *).once()
 
     mongoCollection.dropIndex("indexName").subscribe(observer[Completed])
+
+    val indexDocument = Document("""{a: 1}""")
+    wrapped.expects('dropIndex)(indexDocument, *).once()
+
+    mongoCollection.dropIndex(indexDocument).subscribe(observer[Completed])
   }
 
   it should "wrap the underlying dropIndexes correctly" in {

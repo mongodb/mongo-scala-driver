@@ -77,6 +77,14 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
   lazy val writeConcern: WriteConcern = wrapped.getWriteConcern
 
   /**
+   * Get the read concern for the MongoDatabase.
+   *
+   * @return the [[ReadConcern]]
+   * @since 1.1
+   */
+  lazy val readConcern: ReadConcern = wrapped.getReadConcern
+
+  /**
    * Create a new MongoCollection instance with a different default class to cast any documents returned from the database into..
    *
    * @tparam C   The type that the new collection will encode documents from and decode documents to
@@ -108,6 +116,15 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a new MongoCollection instance with the different writeConcern
    */
   def withWriteConcern(writeConcern: WriteConcern): MongoCollection[TResult] = MongoCollection(wrapped.withWriteConcern(writeConcern))
+
+  /**
+   * Create a new MongoCollection instance with a different read concern.
+   *
+   * @param readConcern the new [[ReadConcern]] for the collection
+   * @return a new MongoCollection instance with the different ReadConcern
+   * @since 1.1
+   */
+  def withReadConcern(readConcern: ReadConcern): MongoCollection[TResult] = MongoCollection(wrapped.withReadConcern(readConcern))
 
   /**
    * Counts the number of documents in the collection.

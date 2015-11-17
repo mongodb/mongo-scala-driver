@@ -19,12 +19,12 @@ package org.mongodb.scala
 import java.lang.reflect.Modifier._
 
 import scala.collection.JavaConverters._
-import scala.reflect.runtime.{currentMirror, universe => u}
+import scala.reflect.runtime.{ currentMirror, universe => u }
 
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
-import org.reflections.util.{ClasspathHelper, ConfigurationBuilder, FilterBuilder}
-import org.scalatest.{FlatSpec, Matchers}
+import org.reflections.util.{ ClasspathHelper, ConfigurationBuilder, FilterBuilder }
+import org.scalatest.{ FlatSpec, Matchers }
 
 class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
 
@@ -33,7 +33,8 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val javaExclusions = Set("AsyncBatchCursor", "Block", "ConnectionString", "Function", "ServerCursor", "Majority", "MongoClients",
       "MongoIterable", "Observables", "SingleResultCallback")
     val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "ScalaObservable",
-      "ScalaWriteConcern", "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription", "classTagToClassOf")
+      "ScalaWriteConcern", "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription",
+      "classTagToClassOf", "ReadConcernLevel")
 
     val classFilter = (f: Class[_ <: Object]) => {
       isPublic(f.getModifiers) &&
@@ -68,7 +69,6 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       .map(_.getSimpleName.replace("Iterable", "Observable")).toSet
 
     val wrapped = objects ++ exceptions
-
     val scalaPackageName = "org.mongodb.scala"
     val local = new Reflections(scalaPackageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
       .asScala.filter(classFilter).filter(f => f.getPackage.getName == scalaPackageName)
@@ -114,7 +114,8 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val localPackage = currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet
     val localObjects = new Reflections(scalaPackageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
       .asScala.filter(classFilter).map(_.getSimpleName).toSet
-    val local = (localPackage ++ localObjects) - "package"
+    val scalaExclusions = Set("package", "ValidationAction", "ValidationLevel")
+    val local = (localPackage ++ localObjects) -- scalaExclusions
 
     diff(local, wrapped) shouldBe empty
   }

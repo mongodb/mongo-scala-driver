@@ -64,6 +64,14 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
   lazy val writeConcern: WriteConcern = wrapped.getWriteConcern
 
   /**
+   * Get the read concern for the MongoDatabase.
+   *
+   * @return the [[ReadConcern]]
+   * @since 1.1
+   */
+  lazy val readConcern: ReadConcern = wrapped.getReadConcern
+
+  /**
    * Create a new MongoDatabase instance with a different codec registry.
    *
    * @param codecRegistry the new { @link org.bson.codecs.configuration.CodecRegistry} for the collection
@@ -89,6 +97,16 @@ case class MongoDatabase(private val wrapped: JMongoDatabase) {
    */
   def withWriteConcern(writeConcern: WriteConcern): MongoDatabase =
     MongoDatabase(wrapped.withWriteConcern(writeConcern))
+
+  /**
+   * Create a new MongoDatabase instance with a different read concern.
+   *
+   * @param readConcern the new [[ReadConcern]] for the collection
+   * @return a new MongoDatabase instance with the different ReadConcern
+   * @since 1.1
+   */
+  def withReadConcern(readConcern: ReadConcern): MongoDatabase =
+    MongoDatabase(wrapped.withReadConcern(readConcern))
 
   /**
    * Gets a collection, with a specific default document class.
