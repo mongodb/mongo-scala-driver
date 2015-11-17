@@ -15,6 +15,7 @@
  */
 
 package org.mongodb.scala
+
 import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
@@ -44,6 +45,7 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
 
     val filter = Document("a" -> 1)
     val duration = Duration(1, TimeUnit.SECONDS)
+    val maxDuration = Duration(10, TimeUnit.SECONDS)
     val modifiers = Document("mod" -> 1)
     val projection = Document("proj" -> 1)
     val sort = Document("sort" -> 1)
@@ -57,6 +59,7 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('first)(*).once()
     wrapper.expects('filter)(filter).once()
     wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
+    wrapper.expects('maxAwaitTime)(maxDuration.toMillis, TimeUnit.MILLISECONDS).once()
     wrapper.expects('limit)(1).once()
     wrapper.expects('skip)(1).once()
     wrapper.expects('modifiers)(modifiers).once()
@@ -72,6 +75,7 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     Observable.first().subscribe(observer)
     Observable.filter(filter)
     Observable.maxTime(duration)
+    Observable.maxAwaitTime(maxDuration)
     Observable.limit(1)
     Observable.skip(1)
     Observable.modifiers(modifiers)
