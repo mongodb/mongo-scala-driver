@@ -467,6 +467,22 @@ package object model {
   }
 
   /**
+   * Determines whether to error on invalid documents or just warn about the violations but allow invalid documents.
+   *
+   * @note Requires MongoDB 3.2 or greater
+   * @since 1.1
+   */
+  type ValidationAction = com.mongodb.client.model.ValidationAction
+
+  /**
+   * Determines how strictly MongoDB applies the validation rules to existing documents during an insert or update.
+   *
+   * @note Requires MongoDB 3.2 or greater
+   * @since 1.1
+   */
+  type ValidationLevel = com.mongodb.client.model.ValidationLevel
+
+  /**
    * A base class for models that can be used in a bulk write operations.
    *
    * @tparam TResult the document type for storage
