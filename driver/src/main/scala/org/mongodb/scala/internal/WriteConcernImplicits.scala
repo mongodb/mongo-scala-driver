@@ -16,6 +16,8 @@
 
 package org.mongodb.scala.internal
 
+import java.util.concurrent.TimeUnit
+
 import scala.concurrent.duration.Duration
 
 import com.mongodb.{ WriteConcern => JWriteConcern }
@@ -27,26 +29,12 @@ private[scala] trait WriteConcernImplicits {
   implicit class ScalaWriteConcern[T](jWriteConcern: JWriteConcern) {
 
     /**
-     * Constructs a new WriteConcern from the current one and the specified journal value
-     *
-     * @param journal true if journalling is required for acknowledgement, false if not, or null if unspecified
-     * @return the new WriteConcern
-     */
-    def withJournal(journal: Boolean): WriteConcern = jWriteConcern.withJ(journal)
-
-    /**
      * Constructs a new WriteConcern from the current one and the specified wTimeout in the given time unit.
      *
      * @param wTimeout the wTimeout, which must be &gt;= 0 and &lt;= Integer.MAX_VALUE after conversion to milliseconds
      * @return the WriteConcern with the given wTimeout
      */
-    def withWTimeout(wTimeout: Duration): WriteConcern = {
-      jWriteConcern.getWObject.isInstanceOf[String] match {
-        case true  => new JWriteConcern(jWriteConcern.getWString, wTimeout.toMillis.toInt, jWriteConcern.getFsync, jWriteConcern.getJ)
-        case false => new JWriteConcern(jWriteConcern.getW, wTimeout.toMillis.toInt, jWriteConcern.getFsync, jWriteConcern.getJ)
-      }
-    }
-
+    def withWTimeout(wTimeout: Duration): WriteConcern = jWriteConcern.withWTimeout(wTimeout.toMillis, TimeUnit.MILLISECONDS)
   }
 
 }

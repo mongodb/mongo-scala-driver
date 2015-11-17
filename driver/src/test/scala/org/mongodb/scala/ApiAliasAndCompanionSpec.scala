@@ -19,12 +19,12 @@ package org.mongodb.scala
 import java.lang.reflect.Modifier._
 
 import scala.collection.JavaConverters._
-import scala.reflect.runtime.{ currentMirror, universe => u }
+import scala.reflect.runtime.{currentMirror, universe => u}
 
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
-import org.reflections.util.{ ClasspathHelper, ConfigurationBuilder, FilterBuilder }
-import org.scalatest.{ FlatSpec, Matchers }
+import org.reflections.util.{ClasspathHelper, ConfigurationBuilder, FilterBuilder}
+import org.scalatest.{FlatSpec, Matchers}
 
 class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
 
@@ -150,13 +150,12 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
   it should "mirror all com.mongodb.WriteConcern in org.mongodb.scala.WriteConcern" in {
     val notMirrored = Set("SAFE", "serialVersionUID", "FSYNCED", "FSYNC_SAFE", "JOURNAL_SAFE", "REPLICAS_SAFE", "REPLICA_ACKNOWLEDGED",
       "NAMED_CONCERNS", "NORMAL", "majorityWriteConcern", "valueOf")
-    val scalaExclusions = Set("W1", "W2", "W3")
     val wrapped = (classOf[com.mongodb.WriteConcern].getDeclaredMethods ++ classOf[com.mongodb.WriteConcern].getDeclaredFields)
       .filter(f => isStatic(f.getModifiers) && !notMirrored.contains(f.getName)).map(_.getName).toSet
 
     val local = WriteConcern.getClass.getDeclaredMethods
       .filter(f => f.getName != "apply" && isPublic(f.getModifiers))
-      .map(_.getName).toSet -- scalaExclusions
+      .map(_.getName).toSet
 
     diff(local, wrapped) shouldBe empty
   }

@@ -104,11 +104,11 @@ class ScalaPackageSpec extends FlatSpec with Matchers {
 
     WriteConcern("Majority") should equal(new com.mongodb.WriteConcern("Majority"))
 
-    WriteConcern(1).withJournal(true) should equal(new com.mongodb.WriteConcern(1).withJ(true))
+    WriteConcern(1).withJournal(true) should equal(new com.mongodb.WriteConcern(1).withJournal(true))
 
-    WriteConcern("Majority").withWTimeout(Duration(10, TimeUnit.MILLISECONDS)) should equal(new com.mongodb.WriteConcern("Majority", 10, false, false))
+    WriteConcern("Majority").withWTimeout(Duration(10, TimeUnit.MILLISECONDS)) should equal(new com.mongodb.WriteConcern("Majority").withWTimeout(10, TimeUnit.MILLISECONDS))
 
-    WriteConcern(1).withWTimeout(Duration(10, TimeUnit.MILLISECONDS)) should equal(new com.mongodb.WriteConcern(1, 10))
+    WriteConcern(1).withWTimeout(Duration(10, TimeUnit.MILLISECONDS)) should equal(new com.mongodb.WriteConcern(1).withWTimeout(10, TimeUnit.MILLISECONDS))
   }
 
   it should "create MongoCredential" in {
