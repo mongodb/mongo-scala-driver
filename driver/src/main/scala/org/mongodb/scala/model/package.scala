@@ -81,6 +81,25 @@ package object model {
   }
 
   /**
+   * The default options for a collection to apply on the creation of indexes.
+   *
+   * @note Requires MongoDB 3.2 or greater
+   * @see [[http://docs.mongodb.org/manual/reference/command/createIndexes Index options]]
+   * @since 1.1
+   */
+  type IndexOptionDefaults = com.mongodb.client.model.IndexOptionDefaults
+
+  /**
+   * Options for creating an index
+   */
+  object IndexOptionDefaults {
+    /**
+     * Construct a new instance.
+     */
+    def apply(): IndexOptionDefaults = new com.mongodb.client.model.IndexOptionDefaults()
+  }
+
+  /**
    * A model describing the removal of all documents matching the query filter.
    *
    * @tparam TResult the type of document to update.  In practice this doesn't actually apply to updates but is here for consistency with the

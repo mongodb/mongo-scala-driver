@@ -22,7 +22,7 @@ import org.bson.codecs.configuration.CodecRegistries.fromProviders
 import com.mongodb.client.model.CreateCollectionOptions
 import com.mongodb.async.client.{ ListCollectionsIterable, MongoDatabase => JMongoDatabase }
 
-import org.mongodb.scala.model.{ ValidationOptions, ValidationAction, ValidationLevel }
+import org.mongodb.scala.model.{ IndexOptionDefaults, ValidationOptions, ValidationAction, ValidationLevel }
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
@@ -156,7 +156,9 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
       ValidationOptions().validator(Document("""{level: {$gte: 10}}"""))
         .validationLevel(ValidationLevel.MODERATE)
         .validationAction(ValidationAction.WARN)
-    )
+    ).indexOptionDefaults(IndexOptionDefaults().storageEngine(Document("""{storageEngine: { mmapv1: {}}}""")))
+      .storageEngineOptions(Document("""{ wiredTiger: {}}"""))
+
     wrapped.expects('createCollection)("collectionName", *).once()
     wrapped.expects('createCollection)("collectionName", options, *).once()
 
