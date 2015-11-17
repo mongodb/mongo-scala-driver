@@ -31,11 +31,12 @@ object MongoScalaBuild extends Build {
   val buildSettings = Seq(
     organization := "org.mongodb.scala",
     organizationHomepage := Some(url("http://www.mongodb.org")),
-    version := "1.0.1-SNAPSHOT",
+    version := "1.0.1",
     scalaVersion := scalaCoreVersion,
     libraryDependencies ++= coreDependencies,
     resolvers := mongoScalaResolvers,
-    scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xlint", "-Xlint:-missing-interpolator" /*, "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer"*/)
+    scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xlint", "-Xlint:-missing-interpolator"
+                          /*, "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer"*/)
   )
 
   val publishSettings = Publish.settings
