@@ -68,12 +68,34 @@ class AggregatesSpec extends FlatSpec with Matchers {
     toBson(limit(5)) should equal(Document("""{ $limit : 5 }"""))
   }
 
+  it should "should render $lookup" in {
+    toBson(lookup("from", "localField", "foreignField", "as")) should equal(
+      Document("""{ $lookup : { from: "from", localField: "localField", foreignField: "foreignField", as: "as" } }""")
+    )
+  }
+
   it should "should render $skip" in {
     toBson(skip(5)) should equal(Document("""{ $skip : 5 }"""))
   }
 
+  it should "should render $sample" in {
+    toBson(sample(5)) should equal(Document("""{ $sample : { size: 5} }"""))
+  }
+
   it should "should render $unwind" in {
     toBson(unwind("$sizes")) should equal(Document("""{ $unwind : "$sizes" }"""))
+    toBson(unwind("$sizes", new UnwindOptions().preserveNullAndEmptyArrays(null))) should equal(
+      Document("""{ $unwind : { path : "$sizes" } }""")
+    )
+    toBson(unwind("$sizes", new UnwindOptions().preserveNullAndEmptyArrays(false))) should equal(Document("""
+    { $unwind : { path : "$sizes", preserveNullAndEmptyArrays : false } }"""))
+    toBson(unwind("$sizes", new UnwindOptions().preserveNullAndEmptyArrays(true))) should equal(Document("""
+    { $unwind : { path : "$sizes", preserveNullAndEmptyArrays : true } }"""))
+    toBson(unwind("$sizes", new UnwindOptions().includeArrayIndex(null))) should equal(Document("""{ $unwind : { path : "$sizes" } }"""))
+    toBson(unwind("$sizes", new UnwindOptions().includeArrayIndex("$a"))) should equal(Document("""
+    { $unwind : { path : "$sizes", includeArrayIndex : "$a" } }"""))
+    toBson(unwind("$sizes", new UnwindOptions().preserveNullAndEmptyArrays(true).includeArrayIndex("$a"))) should equal(Document("""
+    { $unwind : { path : "$sizes", preserveNullAndEmptyArrays : true, includeArrayIndex : "$a" } }"""))
   }
 
   it should "should render $out" in {
@@ -93,13 +115,15 @@ class AggregatesSpec extends FlatSpec with Matchers {
         _id : null,
         sum: { $sum: { $multiply: [ "$price", "$quantity" ] } },
         avg: { $avg: "$quantity" },
-        min: { $min: "$quantity" }
-        max: { $max: "$quantity" }
-        first: { $first: "$quantity" }
-        last: { $last: "$quantity" }
-        all: { $push: "$quantity" }
-        unique: { $addToSet: "$quantity" }
-      }
+        min: { $min: "$quantity" },
+        max: { $max: "$quantity" },
+        first: { $first: "$quantity" },
+        last: { $last: "$quantity" },
+        all: { $push: "$quantity" },
+        unique: { $addToSet: "$quantity" },
+        stdDevPop: { $stdDevPop: "$quantity" },
+        stdDevSamp: { $stdDevSamp: "$quantity" }
+       }
     }""")
 
     toBson(group(
@@ -111,7 +135,9 @@ class AggregatesSpec extends FlatSpec with Matchers {
       first("first", "$quantity"),
       last("last", "$quantity"),
       push("all", "$quantity"),
-      addToSet("unique", "$quantity")
+      addToSet("unique", "$quantity"),
+      stdDevPop("stdDevPop", "$quantity"),
+      stdDevSamp("stdDevSamp", "$quantity")
     )) should equal(groupDocument)
   }
 

@@ -81,13 +81,38 @@ object Aggregates {
   def skip(skip: Int): Bson = JAggregates.skip(skip)
 
   /**
+   * Creates a `\$sample` pipeline stage with the specified sample size
+   *
+   * @param size the sample size
+   * @return the `\$sample` pipeline stage
+   * @since 1.1
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/sample/ \$sample]]
+   */
+  def sample(size: Int): Bson = JAggregates.sample(size)
+
+  /**
    * Creates a `\$limit` pipeline stage for the specified filter
    *
    * @param limit the limit
    * @return the `\$limit` pipeline stage
-   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/limit/  \$limit]]
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/limit/ \$limit]]
    */
   def limit(limit: Int): Bson = JAggregates.limit(limit)
+
+  /**
+   * Creates a `\$lookup` pipeline stage for the specified filter
+   *
+   * '''Note:'''Requires MongoDB 3.2 or greater
+   * @param from the name of the collection in the same database to perform the join with.
+   * @param localField specifies the field from the local collection to match values against.
+   * @param foreignField specifies the field in the from collection to match values against.
+   * @param as the name of the new array field to add to the input documents.
+   * @return the `\$lookup` pipeline stage
+   * @since 1.1
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/lookup/ \$lookup]]
+   */
+  def lookup(from: String, localField: String, foreignField: String, as: String): Bson =
+    JAggregates.lookup(from, localField, foreignField, as)
 
   /**
    * Creates a `\$group` pipeline stage for the specified filter
@@ -109,6 +134,16 @@ object Aggregates {
    * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/ \$unwind]]
    */
   def unwind(fieldName: String): Bson = JAggregates.unwind(fieldName)
+
+  /**
+   * Creates a `\$unwind` pipeline stage for the specified field name, which must be prefixed by a `\$` sign.
+   *
+   * @param fieldName the field name, prefixed by a  `\$` sign
+   * @return the `\$unwind` pipeline stage
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/ \$unwind]]
+   * @since 1.1
+   */
+  def unwind(fieldName: String, unwindOptions: UnwindOptions): Bson = JAggregates.unwind(fieldName, unwindOptions)
 
   /**
    * Creates a `\$out` pipeline stage for the specified filter

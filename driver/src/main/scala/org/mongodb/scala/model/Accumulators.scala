@@ -124,4 +124,37 @@ object Accumulators {
    * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/addToSet/ \$addToSet]]
    */
   def addToSet[TExpression](fieldName: String, expression: TExpression): BsonField = JAccumulators.addToSet(fieldName, expression)
+
+  /**
+   * Gets a field name for a `\$group` operation representing the sample standard deviation of the values of the given expression
+   * when applied to all members of the group.
+   *
+   * Use if the values encompass the entire population of data you want to represent and do not wish to generalize about
+   * a larger population.
+   *
+   * @note Requires MongoDB 3.2 or greater
+   * @param fieldName the field name
+   * @param expression the expression
+   * @tparam TExpression the expression type
+   * @return the field
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/stdDevPop/ \$stdDevPop]]
+   * @since 1.1
+   */
+  def stdDevPop[TExpression](fieldName: String, expression: TExpression): BsonField = JAccumulators.stdDevPop(fieldName, expression)
+
+  /**
+   * Gets a field name for a `\$group` operation representing the sample standard deviation of the values of the given expression
+   * when applied to all members of the group.
+   *
+   * Use if the values encompass a sample of a population of data from which to generalize about the population.
+   *
+   * @note Requires MongoDB 3.2 or greater
+   * @param fieldName the field name
+   * @param expression the expression
+   * @tparam TExpression the expression type
+   * @return the field
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/stdDevSamp/ \$stdDevSamp]]
+   * @since 1.1
+   */
+  def stdDevSamp[TExpression](fieldName: String, expression: TExpression): BsonField = JAccumulators.stdDevSamp(fieldName, expression)
 }
