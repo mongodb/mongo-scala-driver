@@ -44,7 +44,7 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 </section>
 {{ else }}
 {{$ossUrl := "https://oss.sonatype.org/content/repositories/releases"}}
-<section class="maven">
+<section class="maven hidden">
 <pre><code class="ini">
 &lt;dependencies&gt;
     &lt;dependency&gt;
@@ -56,7 +56,7 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 
 </code></pre>
 </section>
-<section class="sbt hidden">
+<section class="sbt">
 <pre><code class="ini">
 libraryDependencies += "org.mongodb.scala" %% "{{$artifactId}}" % "{{$version}}"
 
