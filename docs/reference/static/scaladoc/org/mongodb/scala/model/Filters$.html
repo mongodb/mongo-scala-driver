@@ -209,6 +209,78 @@ and(eq("x", 1), lt("y", 3))
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.mongodb.scala.model.Filters#bitsAllClear" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="bitsAllClear(fieldName:String,bitmask:Long):org.mongodb.scala.bson.conversions.Bson"></a>
+      <a id="bitsAllClear(String,Long):Bson"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bitsAllClear</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bitmask">bitmask: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.model.Filters$@bitsAllClear(fieldName:String,bitmask:Long):org.mongodb.scala.bson.conversions.Bson" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a filter that matches all documents where all of the bit positions are clear in the field.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a filter that matches all documents where all of the bit positions are clear in the field.
+</p></div><dl class="paramcmts block"><dt class="param">fieldName</dt><dd class="cmt"><p>the field name</p></dd><dt class="param">bitmask</dt><dd class="cmt"><p>the bitmask</p></dd><dt>returns</dt><dd class="cmt"><p>the filter</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>Note</dt><dd><span class="cmt"><p>Requires MongoDB 3.2 or greater</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/query/bitsAllClear" target="_blank">$bitsAllClear</a></p></span></dd></dl></div>
+    </li><li name="org.mongodb.scala.model.Filters#bitsAllSet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="bitsAllSet(fieldName:String,bitmask:Long):org.mongodb.scala.bson.conversions.Bson"></a>
+      <a id="bitsAllSet(String,Long):Bson"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bitsAllSet</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bitmask">bitmask: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.model.Filters$@bitsAllSet(fieldName:String,bitmask:Long):org.mongodb.scala.bson.conversions.Bson" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a filter that matches all documents where all of the bit positions are set in the field.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a filter that matches all documents where all of the bit positions are set in the field.
+</p></div><dl class="paramcmts block"><dt class="param">fieldName</dt><dd class="cmt"><p>the field name</p></dd><dt class="param">bitmask</dt><dd class="cmt"><p>the bitmask</p></dd><dt>returns</dt><dd class="cmt"><p>the filter</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>Note</dt><dd><span class="cmt"><p>Requires MongoDB 3.2 or greater</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/query/bitsAllSet" target="_blank">$bitsAllSet</a></p></span></dd></dl></div>
+    </li><li name="org.mongodb.scala.model.Filters#bitsAnyClear" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="bitsAnyClear(fieldName:String,bitmask:Long):org.mongodb.scala.bson.conversions.Bson"></a>
+      <a id="bitsAnyClear(String,Long):Bson"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bitsAnyClear</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bitmask">bitmask: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.model.Filters$@bitsAnyClear(fieldName:String,bitmask:Long):org.mongodb.scala.bson.conversions.Bson" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a filter that matches all documents where any of the bit positions are clear in the field.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a filter that matches all documents where any of the bit positions are clear in the field.
+</p></div><dl class="paramcmts block"><dt class="param">fieldName</dt><dd class="cmt"><p>the field name</p></dd><dt class="param">bitmask</dt><dd class="cmt"><p>the bitmask</p></dd><dt>returns</dt><dd class="cmt"><p>the filter</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>Note</dt><dd><span class="cmt"><p>Requires MongoDB 3.2 or greater</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/query/bitsAnyClear" target="_blank">$bitsAnyClear</a></p></span></dd></dl></div>
+    </li><li name="org.mongodb.scala.model.Filters#bitsAnySet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="bitsAnySet(fieldName:String,bitmask:Long):org.mongodb.scala.bson.conversions.Bson"></a>
+      <a id="bitsAnySet(String,Long):Bson"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bitsAnySet</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bitmask">bitmask: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.model.Filters$@bitsAnySet(fieldName:String,bitmask:Long):org.mongodb.scala.bson.conversions.Bson" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a filter that matches all documents where any of the bit positions are set in the field.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a filter that matches all documents where any of the bit positions are set in the field.
+</p></div><dl class="paramcmts block"><dt class="param">fieldName</dt><dd class="cmt"><p>the field name</p></dd><dt class="param">bitmask</dt><dd class="cmt"><p>the bitmask</p></dd><dt>returns</dt><dd class="cmt"><p>the filter</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>Note</dt><dd><span class="cmt"><p>Requires MongoDB 3.2 or greater</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/query/bitsAnySet" target="_blank">$bitsAnySet</a></p></span></dd></dl></div>
     </li><li name="org.mongodb.scala.model.Filters#bsonType" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="bsonType(fieldName:String,bsonType:org.bson.BsonType):org.mongodb.scala.bson.conversions.Bson"></a>
       <a id="bsonType(String,BsonType):Bson"></a>
@@ -1200,23 +1272,23 @@ options applied.
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="org.mongodb.scala.model.Filters#text" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="text(search:String,language:String):org.mongodb.scala.bson.conversions.Bson"></a>
-      <a id="text(String,String):Bson"></a>
+      <a id="text(search:String,textSearchOptions:org.mongodb.scala.model.TextSearchOptions):org.mongodb.scala.bson.conversions.Bson"></a>
+      <a id="text(String,TextSearchOptions):Bson"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">text</span><span class="params">(<span name="search">search: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="language">language: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>
+        <span class="name">text</span><span class="params">(<span name="search">search: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="textSearchOptions">textSearchOptions: <a href="package.html#TextSearchOptions=com.mongodb.client.model.TextSearchOptions" class="extmbr" name="org.mongodb.scala.model.TextSearchOptions">TextSearchOptions</a></span>)</span><span class="result">: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#org.mongodb.scala.model.Filters$@text(search:String,language:String):org.mongodb.scala.bson.conversions.Bson" title="Permalink" target="_top">
+      <a href="../../../../index.html#org.mongodb.scala.model.Filters$@text(search:String,textSearchOptions:org.mongodb.scala.model.TextSearchOptions):org.mongodb.scala.bson.conversions.Bson" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" alt="Permalink" />
       </a>
     </span>
       <p class="shortcomment cmt">Creates a filter that matches all documents matching the given search term using the given language.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a filter that matches all documents matching the given search term using the given language.
-</p></div><dl class="paramcmts block"><dt class="param">search</dt><dd class="cmt"><p>the search term</p></dd><dt class="param">language</dt><dd class="cmt"><p>the language to use for stop words</p></dd><dt>returns</dt><dd class="cmt"><p>the filter</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/query/text" target="_blank">$text</a></p></span></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">search</dt><dd class="cmt"><p>the search term</p></dd><dt class="param">textSearchOptions</dt><dd class="cmt"><p>the text search options to use</p></dd><dt>returns</dt><dd class="cmt"><p>the filter</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/query/text" target="_blank">$text</a></p></span></dd></dl></div>
     </li><li name="org.mongodb.scala.model.Filters#text" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="text(search:String):org.mongodb.scala.bson.conversions.Bson"></a>
       <a id="text(String):Bson"></a>
@@ -1362,7 +1434,31 @@ options applied.
 
         
 
-        
+        <div id="values" class="values members">
+              <h3>Deprecated Value Members</h3>
+              <ol><li name="org.mongodb.scala.model.Filters#text" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="text(search:String,language:String):org.mongodb.scala.bson.conversions.Bson"></a>
+      <a id="text(String,String):Bson"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name deprecated" title="Deprecated: use Code(Filters.text(String, TextSearchOptions))">text</span><span class="params">(<span name="search">search: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="language">language: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.model.Filters$@text(search:String,language:String):org.mongodb.scala.bson.conversions.Bson" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a filter that matches all documents matching the given search term using the given language.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a filter that matches all documents matching the given search term using the given language.
+</p></div><dl class="paramcmts block"><dt class="param">search</dt><dd class="cmt"><p>the search term</p></dd><dt class="param">language</dt><dd class="cmt"><p>the language to use for stop words</p></dd><dt>returns</dt><dd class="cmt"><p>the filter</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@Deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p>use </p><pre>Filters.text(<span class="std">String</span>, TextSearchOptions)</pre></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/query/text" target="_blank">$text</a></p></span></dd></dl></div>
+    </li></ol>
+            </div>
         </div>
 
         <div id="inheritedMembers">

@@ -930,6 +930,42 @@ the <code>Observer</code> is capable of handling is requested.</p><p>After signa
 - Single invocation of <a href="Observer.html#onError(e:Throwable):Unit" class="extmbr" name="org.mongodb.scala.Observer#onError">Observer.onError</a> or <a href="Observer.html#onComplete():Unit" class="extmbr" name="org.mongodb.scala.Observer#onComplete">Observer.onComplete</a> which signals a terminal state after which no
 further events will be sent.
 </p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>The type of element signaled.</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.ReadConcern" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ReadConcern=com.mongodb.ReadConcern"></a>
+      <a id="ReadConcern:ReadConcern"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ReadConcern</span><span class="result"> = <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/ReadConcern.html class="extype" target="_top">com.mongodb.ReadConcern</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.mongodb.scala.package@ReadConcern=com.mongodb.ReadConcern" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Controls the level of isolation for reads.</p><div class="fullcomment"><div class="comment cmt"><p>Controls the level of isolation for reads.
+</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.ReadConcernLevel" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ReadConcernLevel=com.mongodb.ReadConcernLevel"></a>
+      <a id="ReadConcernLevel:ReadConcernLevel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ReadConcernLevel</span><span class="result"> = <a href=http://api.mongodb.org/java/current/index.html?com/mongodb/ReadConcernLevel.html class="extype" target="_top">com.mongodb.ReadConcernLevel</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.mongodb.scala.package@ReadConcernLevel=com.mongodb.ReadConcernLevel" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The readConcern option allows clients to choose a level of isolation for their reads.</p><div class="fullcomment"><div class="comment cmt"><p>The readConcern option allows clients to choose a level of isolation for their reads.
+</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>See also</dt><dd><span class="cmt"><p><a href="#ReadConcern=com.mongodb.ReadConcern" class="extmbr" name="org.mongodb.scala.ReadConcern">ReadConcern</a></p></span></dd></dl></div>
     </li><li name="org.mongodb.scala.ReadPreference" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ReadPreference=com.mongodb.ReadPreference"></a>
       <a id="ReadPreference:ReadPreference"></a>
@@ -1263,6 +1299,42 @@ to use.
     </span>
       <p class="shortcomment cmt">A companion object for <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>
 </p>
+    </li><li name="org.mongodb.scala.ReadConcern" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ReadConcern"></a>
+      <a id="ReadConcern:ReadConcern"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ReadConcern$.html"><span class="name">ReadConcern</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.mongodb.scala.package@ReadConcern" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The readConcern option allows clients to choose a level of isolation for their reads.</p><div class="fullcomment"><div class="comment cmt"><p>The readConcern option allows clients to choose a level of isolation for their reads.
+</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>Note</dt><dd><span class="cmt"><p>Requires MongoDB 3.2 or greater</p></span></dd></dl></div>
+    </li><li name="org.mongodb.scala.ReadConcernLevel" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ReadConcernLevel"></a>
+      <a id="ReadConcernLevel:ReadConcernLevel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ReadConcernLevel$.html"><span class="name">ReadConcernLevel</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.mongodb.scala.package@ReadConcernLevel" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The readConcern level of isolation for reads.</p><div class="fullcomment"><div class="comment cmt"><p>The readConcern level of isolation for reads.
+</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>Note</dt><dd><span class="cmt"><p>Requires MongoDB 3.2 or greater</p></span></dd></dl></div>
     </li><li name="org.mongodb.scala.ReadPreference" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ReadPreference"></a>
       <a id="ReadPreference:ReadPreference"></a>

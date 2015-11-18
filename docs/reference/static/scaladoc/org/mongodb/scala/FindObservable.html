@@ -354,6 +354,27 @@
       </a>
     </span>
       <p class="shortcomment cmt">Sets the limit to apply.</p><div class="fullcomment"><div class="comment cmt"><p>Sets the limit to apply.</p><p><a href="http://docs.mongodb.org/manual/reference/method/cursor.limit/#cursor.limit" target="_blank">Limit</a></p></div><dl class="paramcmts block"><dt class="param">limit</dt><dd class="cmt"><p>the limit, which may be null</p></dd><dt>returns</dt><dd class="cmt"><p>this</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.FindObservable#maxAwaitTime" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="maxAwaitTime(duration:scala.concurrent.duration.Duration):org.mongodb.scala.FindObservable[TResult]"></a>
+      <a id="maxAwaitTime(Duration):FindObservable[TResult]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">maxAwaitTime</span><span class="params">(<span name="duration">duration: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.concurrent.duration.Duration" class="extype" target="_top">Duration</a></span>)</span><span class="result">: <a href="" class="extype" name="org.mongodb.scala.FindObservable">FindObservable</a>[<span class="extype" name="org.mongodb.scala.FindObservable.TResult">TResult</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.mongodb.scala.FindObservable@maxAwaitTime(duration:scala.concurrent.duration.Duration):org.mongodb.scala.FindObservable[TResult]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The maximum amount of time for the server to wait on new documents to satisfy a tailable cursor
+query.</p><div class="fullcomment"><div class="comment cmt"><p>The maximum amount of time for the server to wait on new documents to satisfy a tailable cursor
+query. This only applies to a TAILABLE_AWAIT cursor. When the cursor is not a TAILABLE_AWAIT cursor,
+this option is ignored.</p><p>On servers &gt;= 3.2, this option will be specified on the getMore command as &quot;maxTimeMS&quot;. The default
+is no value: no &quot;maxTimeMS&quot; is sent to the server with the getMore command.</p><p>On servers &lt; 3.2, this option is ignored, and indicates that the driver should respect the server's default value</p><p>A zero value will be ignored.</p><p><a href="http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS/" target="_blank">Max Time</a></p></div><dl class="paramcmts block"><dt class="param">duration</dt><dd class="cmt"><p>the duration</p></dd><dt>returns</dt><dd class="cmt"><p>the maximum await execution time in the given time unit</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd></dl></div>
     </li><li name="org.mongodb.scala.FindObservable#maxTime" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="maxTime(duration:scala.concurrent.duration.Duration):org.mongodb.scala.FindObservable[TResult]"></a>
       <a id="maxTime(Duration):FindObservable[TResult]"></a>

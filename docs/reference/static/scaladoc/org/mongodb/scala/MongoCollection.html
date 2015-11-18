@@ -807,6 +807,25 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
 </p></div><dl class="paramcmts block"><dt class="param">documents</dt><dd class="cmt"><p>the documents to insert</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element indicating when the operation has completed or with either a
         com.mongodb.DuplicateKeyException or com.mongodb.MongoException</p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#insertOne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="insertOne(document:TResult,options:org.mongodb.scala.model.InsertOneOptions):org.mongodb.scala.Observable[org.mongodb.scala.Completed]"></a>
+      <a id="insertOne(TResult,InsertOneOptions):Observable[Completed]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">insertOne</span><span class="params">(<span name="document">document: <span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span></span>, <span name="options">options: <a href="model/package.html#InsertOneOptions=com.mongodb.client.model.InsertOneOptions" class="extmbr" name="org.mongodb.scala.model.InsertOneOptions">InsertOneOptions</a></span>)</span><span class="result">: <a href="Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<a href="Completed.html" class="extype" name="org.mongodb.scala.Completed">Completed</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@insertOne(document:TResult,options:org.mongodb.scala.model.InsertOneOptions):org.mongodb.scala.Observable[org.mongodb.scala.Completed]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Inserts the provided document.</p><div class="fullcomment"><div class="comment cmt"><p>Inserts the provided document. If the document is missing an identifier, the driver should generate one.
+</p></div><dl class="paramcmts block"><dt class="param">document</dt><dd class="cmt"><p>the document to insert</p></dd><dt class="param">options</dt><dd class="cmt"><p>the options to apply to the operation</p></dd><dt>returns</dt><dd class="cmt"><p>a Observable with a single element indicating when the operation has completed or with either a
+        com.mongodb.DuplicateKeyException or com.mongodb.MongoException</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.MongoCollection#insertOne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="insertOne(document:TResult):org.mongodb.scala.Observable[org.mongodb.scala.Completed]"></a>
       <a id="insertOne(TResult):Observable[Completed]"></a>
       <h4 class="signature">
@@ -947,6 +966,24 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="org.mongodb.scala.MongoCollection#readConcern" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="readConcern:org.mongodb.scala.ReadConcern"></a>
+      <a id="readConcern:ReadConcern"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">lazy val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">readConcern</span><span class="result">: <a href="package.html#ReadConcern=com.mongodb.ReadConcern" class="extmbr" name="org.mongodb.scala.ReadConcern">ReadConcern</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@readConcern:org.mongodb.scala.ReadConcern" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Get the read concern for the MongoDatabase.</p><div class="fullcomment"><div class="comment cmt"><p>Get the read concern for the MongoDatabase.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the <a href="package.html#ReadConcern=com.mongodb.ReadConcern" class="extmbr" name="org.mongodb.scala.ReadConcern">ReadConcern</a></p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#readPreference" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="readPreference:org.mongodb.scala.ReadPreference"></a>
       <a id="readPreference:ReadPreference"></a>
@@ -1235,6 +1272,24 @@ server &lt; 2.6, using this method will be faster due to constraints in the bulk
     </span>
       <p class="shortcomment cmt">Create a new MongoCollection instance with a different default class to cast any documents returned from the database into..</p><div class="fullcomment"><div class="comment cmt"><p>Create a new MongoCollection instance with a different default class to cast any documents returned from the database into..
 </p></div><dl class="paramcmts block"><dt class="tparam">C</dt><dd class="cmt"><p>The type that the new collection will encode documents from and decode documents to</p></dd><dt>returns</dt><dd class="cmt"><p>a new MongoCollection instance with the different default class</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.MongoCollection#withReadConcern" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="withReadConcern(readConcern:org.mongodb.scala.ReadConcern):org.mongodb.scala.MongoCollection[TResult]"></a>
+      <a id="withReadConcern(ReadConcern):MongoCollection[TResult]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">withReadConcern</span><span class="params">(<span name="readConcern">readConcern: <a href="package.html#ReadConcern=com.mongodb.ReadConcern" class="extmbr" name="org.mongodb.scala.ReadConcern">ReadConcern</a></span>)</span><span class="result">: <a href="" class="extype" name="org.mongodb.scala.MongoCollection">MongoCollection</a>[<span class="extype" name="org.mongodb.scala.MongoCollection.TResult">TResult</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.mongodb.scala.MongoCollection@withReadConcern(readConcern:org.mongodb.scala.ReadConcern):org.mongodb.scala.MongoCollection[TResult]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Create a new MongoCollection instance with a different read concern.</p><div class="fullcomment"><div class="comment cmt"><p>Create a new MongoCollection instance with a different read concern.
+</p></div><dl class="paramcmts block"><dt class="param">readConcern</dt><dd class="cmt"><p>the new <a href="package.html#ReadConcern=com.mongodb.ReadConcern" class="extmbr" name="org.mongodb.scala.ReadConcern">ReadConcern</a> for the collection</p></dd><dt>returns</dt><dd class="cmt"><p>a new MongoCollection instance with the different ReadConcern</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd></dl></div>
     </li><li name="org.mongodb.scala.MongoCollection#withReadPreference" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="withReadPreference(readPreference:org.mongodb.scala.ReadPreference):org.mongodb.scala.MongoCollection[TResult]"></a>
       <a id="withReadPreference(ReadPreference):MongoCollection[TResult]"></a>

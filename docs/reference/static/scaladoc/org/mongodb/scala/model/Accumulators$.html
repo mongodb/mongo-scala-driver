@@ -485,6 +485,47 @@ members of the group.
 document in a group of documents that share the same group by key.</p><div class="fullcomment"><div class="comment cmt"><p>Gets a field name for a <code>$group</code> operation representing an array of all values that results from applying an expression to each
 document in a group of documents that share the same group by key.
 </p></div><dl class="paramcmts block"><dt class="tparam">TExpression</dt><dd class="cmt"><p>the expression type</p></dd><dt class="param">fieldName</dt><dd class="cmt"><p>the field name</p></dd><dt class="param">expression</dt><dd class="cmt"><p>the expression</p></dd><dt>returns</dt><dd class="cmt"><p>the field</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/push/" target="_blank">$push</a></p></span></dd></dl></div>
+    </li><li name="org.mongodb.scala.model.Accumulators#stdDevPop" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="stdDevPop[TExpression](fieldName:String,expression:TExpression):org.mongodb.scala.model.BsonField"></a>
+      <a id="stdDevPop[TExpression](String,TExpression):BsonField"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stdDevPop</span><span class="tparams">[<span name="TExpression">TExpression</span>]</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="expression">expression: <span class="extype" name="org.mongodb.scala.model.Accumulators.stdDevPop.TExpression">TExpression</span></span>)</span><span class="result">: <a href="package.html#BsonField=com.mongodb.client.model.BsonField" class="extmbr" name="org.mongodb.scala.model.BsonField">BsonField</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.model.Accumulators$@stdDevPop[TExpression](fieldName:String,expression:TExpression):org.mongodb.scala.model.BsonField" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Gets a field name for a <code>$group</code> operation representing the sample standard deviation of the values of the given expression
+when applied to all members of the group.</p><div class="fullcomment"><div class="comment cmt"><p>Gets a field name for a <code>$group</code> operation representing the sample standard deviation of the values of the given expression
+when applied to all members of the group.</p><p>Use if the values encompass the entire population of data you want to represent and do not wish to generalize about
+a larger population.
+</p></div><dl class="paramcmts block"><dt class="tparam">TExpression</dt><dd class="cmt"><p>the expression type</p></dd><dt class="param">fieldName</dt><dd class="cmt"><p>the field name</p></dd><dt class="param">expression</dt><dd class="cmt"><p>the expression</p></dd><dt>returns</dt><dd class="cmt"><p>the field</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>Note</dt><dd><span class="cmt"><p>Requires MongoDB 3.2 or greater</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/stdDevPop/" target="_blank">$stdDevPop</a></p></span></dd></dl></div>
+    </li><li name="org.mongodb.scala.model.Accumulators#stdDevSamp" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="stdDevSamp[TExpression](fieldName:String,expression:TExpression):org.mongodb.scala.model.BsonField"></a>
+      <a id="stdDevSamp[TExpression](String,TExpression):BsonField"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stdDevSamp</span><span class="tparams">[<span name="TExpression">TExpression</span>]</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="expression">expression: <span class="extype" name="org.mongodb.scala.model.Accumulators.stdDevSamp.TExpression">TExpression</span></span>)</span><span class="result">: <a href="package.html#BsonField=com.mongodb.client.model.BsonField" class="extmbr" name="org.mongodb.scala.model.BsonField">BsonField</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.model.Accumulators$@stdDevSamp[TExpression](fieldName:String,expression:TExpression):org.mongodb.scala.model.BsonField" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Gets a field name for a <code>$group</code> operation representing the sample standard deviation of the values of the given expression
+when applied to all members of the group.</p><div class="fullcomment"><div class="comment cmt"><p>Gets a field name for a <code>$group</code> operation representing the sample standard deviation of the values of the given expression
+when applied to all members of the group.</p><p>Use if the values encompass a sample of a population of data from which to generalize about the population.
+</p></div><dl class="paramcmts block"><dt class="tparam">TExpression</dt><dd class="cmt"><p>the expression type</p></dd><dt class="param">fieldName</dt><dd class="cmt"><p>the field name</p></dd><dt class="param">expression</dt><dd class="cmt"><p>the expression</p></dd><dt>returns</dt><dd class="cmt"><p>the field</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>Note</dt><dd><span class="cmt"><p>Requires MongoDB 3.2 or greater</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/stdDevSamp/" target="_blank">$stdDevSamp</a></p></span></dd></dl></div>
     </li><li name="org.mongodb.scala.model.Accumulators#sum" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sum[TExpression](fieldName:String,expression:TExpression):org.mongodb.scala.model.BsonField"></a>
       <a id="sum[TExpression](String,TExpression):BsonField"></a>

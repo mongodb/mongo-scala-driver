@@ -372,7 +372,7 @@ object Filters {
   /**
    * Creates a filter that matches all documents where all of the bit positions are clear in the field.
    *
-   * @Note Requires MongoDB 3.2 or greater
+   * @note Requires MongoDB 3.2 or greater
    * @param fieldName the field name
    * @param bitmask   the bitmask
    * @return the filter
@@ -384,7 +384,7 @@ object Filters {
   /**
    * Creates a filter that matches all documents where all of the bit positions are set in the field.
    *
-   * @Note Requires MongoDB 3.2 or greater
+   * @note Requires MongoDB 3.2 or greater
    * @param fieldName the field name
    * @param bitmask   the bitmask
    * @return the filter
@@ -396,7 +396,7 @@ object Filters {
   /**
    * Creates a filter that matches all documents where any of the bit positions are clear in the field.
    *
-   * @Note Requires MongoDB 3.2 or greater
+   * @note Requires MongoDB 3.2 or greater
    * @param fieldName the field name
    * @param bitmask   the bitmask
    * @return the filter
@@ -408,7 +408,7 @@ object Filters {
   /**
    * Creates a filter that matches all documents where any of the bit positions are set in the field.
    *
-   * @Note Requires MongoDB 3.2 or greater
+   * @note Requires MongoDB 3.2 or greater
    * @param fieldName the field name
    * @param bitmask   the bitmask
    * @return the filter

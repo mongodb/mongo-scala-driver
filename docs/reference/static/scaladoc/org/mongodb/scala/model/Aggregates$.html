@@ -350,6 +350,23 @@
       <p class="shortcomment cmt">Creates a <code>$limit</code> pipeline stage for the specified filter
 </p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>$limit</code> pipeline stage for the specified filter
 </p></div><dl class="paramcmts block"><dt class="param">limit</dt><dd class="cmt"><p>the limit</p></dd><dt>returns</dt><dd class="cmt"><p>the <code>$limit</code> pipeline stage</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/limit/" target="_blank">$limit</a></p></span></dd></dl></div>
+    </li><li name="org.mongodb.scala.model.Aggregates#lookup" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="lookup(from:String,localField:String,foreignField:String,as:String):org.mongodb.scala.bson.conversions.Bson"></a>
+      <a id="lookup(String,String,String,String):Bson"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">lookup</span><span class="params">(<span name="from">from: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="localField">localField: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="foreignField">foreignField: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="as">as: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.model.Aggregates$@lookup(from:String,localField:String,foreignField:String,as:String):org.mongodb.scala.bson.conversions.Bson" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a <code>$lookup</code> pipeline stage for the specified filter</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>$lookup</code> pipeline stage for the specified filter</p><p><b>Note:</b>Requires MongoDB 3.2 or greater</p></div><dl class="paramcmts block"><dt class="param">from</dt><dd class="cmt"><p>the name of the collection in the same database to perform the join with.</p></dd><dt class="param">localField</dt><dd class="cmt"><p>specifies the field from the local collection to match values against.</p></dd><dt class="param">foreignField</dt><dd class="cmt"><p>specifies the field in the from collection to match values against.</p></dd><dt class="param">as</dt><dd class="cmt"><p>the name of the new array field to add to the input documents.</p></dd><dt>returns</dt><dd class="cmt"><p>the <code>$lookup</code> pipeline stage</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/lookup/" target="_blank">$lookup</a></p></span></dd></dl></div>
     </li><li name="org.mongodb.scala.model.Aggregates#match" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="match(filter:org.mongodb.scala.bson.conversions.Bson):org.mongodb.scala.bson.conversions.Bson"></a>
       <a id="match(Bson):Bson"></a>
@@ -458,6 +475,25 @@
       <p class="shortcomment cmt">Creates a <code>$project</code> pipeline stage for the specified projection
 </p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>$project</code> pipeline stage for the specified projection
 </p></div><dl class="paramcmts block"><dt class="param">projection</dt><dd class="cmt"><p>the projection</p></dd><dt>returns</dt><dd class="cmt"><p>the <code>$project</code> pipeline stage</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/project/" target="_blank">$project</a></p></span><span class="cmt"><p>Projections</p></span></dd></dl></div>
+    </li><li name="org.mongodb.scala.model.Aggregates#sample" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="sample(size:Int):org.mongodb.scala.bson.conversions.Bson"></a>
+      <a id="sample(Int):Bson"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sample</span><span class="params">(<span name="size">size: <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.model.Aggregates$@sample(size:Int):org.mongodb.scala.bson.conversions.Bson" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a <code>$sample</code> pipeline stage with the specified sample size
+</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>$sample</code> pipeline stage with the specified sample size
+</p></div><dl class="paramcmts block"><dt class="param">size</dt><dd class="cmt"><p>the sample size</p></dd><dt>returns</dt><dd class="cmt"><p>the <code>$sample</code> pipeline stage</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/sample/" target="_blank">$sample</a></p></span></dd></dl></div>
     </li><li name="org.mongodb.scala.model.Aggregates#skip" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="skip(skip:Int):org.mongodb.scala.bson.conversions.Bson"></a>
       <a id="skip(Int):Bson"></a>
@@ -530,6 +566,24 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="org.mongodb.scala.model.Aggregates#unwind" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="unwind(fieldName:String,unwindOptions:org.mongodb.scala.model.UnwindOptions):org.mongodb.scala.bson.conversions.Bson"></a>
+      <a id="unwind(String,UnwindOptions):Bson"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">unwind</span><span class="params">(<span name="fieldName">fieldName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="unwindOptions">unwindOptions: <a href="package.html#UnwindOptions=com.mongodb.client.model.UnwindOptions" class="extmbr" name="org.mongodb.scala.model.UnwindOptions">UnwindOptions</a></span>)</span><span class="result">: <span class="extype" name="org.mongodb.scala.bson.conversions.Bson">Bson</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#org.mongodb.scala.model.Aggregates$@unwind(fieldName:String,unwindOptions:org.mongodb.scala.model.UnwindOptions):org.mongodb.scala.bson.conversions.Bson" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a <code>$unwind</code> pipeline stage for the specified field name, which must be prefixed by a <code>$</code> sign.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>$unwind</code> pipeline stage for the specified field name, which must be prefixed by a <code>$</code> sign.
+</p></div><dl class="paramcmts block"><dt class="param">fieldName</dt><dd class="cmt"><p>the field name, prefixed by a  <code>$</code> sign</p></dd><dt>returns</dt><dd class="cmt"><p>the <code>$unwind</code> pipeline stage</p></dd></dl><dl class="attributes block"> <dt>Since</dt><dd><p>1.1</p></dd><dt>See also</dt><dd><span class="cmt"><p><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/unwind/" target="_blank">$unwind</a></p></span></dd></dl></div>
     </li><li name="org.mongodb.scala.model.Aggregates#unwind" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="unwind(fieldName:String):org.mongodb.scala.bson.conversions.Bson"></a>
       <a id="unwind(String):Bson"></a>
