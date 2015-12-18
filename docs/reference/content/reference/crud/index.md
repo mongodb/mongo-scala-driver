@@ -126,7 +126,7 @@ val database: MongoDatabase = client.getDatabase("mydb")
                                     .withCodecRegistry(codecRegistry)
 
 // or per collection
-val collection: MongoCollection<Document> = database.getCollection("mycoll")
+val collection: MongoCollection[Document] = database.getCollection("mycoll")
                                                     .withCodecRegistry(codecRegistry)
 ```
 
