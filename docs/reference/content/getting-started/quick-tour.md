@@ -38,7 +38,7 @@ val clusterSettings: ClusterSettings = ClusterSettings.builder().hosts(List(new 
 val settings: MongoClientSettings = MongoClientSettings.builder().clusterSettings(clusterSettings).build()
 val mongoClient: MongoClient = MongoClient(settings)
 
-val database: MongoDatabase = mongoClient.getDatabase("mydb");
+val database: MongoDatabase = mongoClient.getDatabase("mydb")
 ```
 
 At this point, the `database` object will be a connection to a MongoDB server for the specified database.
