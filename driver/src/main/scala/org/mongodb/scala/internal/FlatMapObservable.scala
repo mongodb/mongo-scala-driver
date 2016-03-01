@@ -20,7 +20,7 @@ import org.mongodb.scala._
 
 private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: T => Observable[S]) extends Observable[S] {
 
-  // scalastyle:ignore cyclomatic.complexity method.length
+  // scalastyle:off cyclomatic.complexity method.length
   override def subscribe(observer: Observer[_ >: S]): Unit = {
     observable.subscribe(
       new Observer[T] {
@@ -67,8 +67,10 @@ private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: 
         }
 
         override def onComplete(): Unit = {
-          onCompleteCalled = true
-          if (nestedSubscription.isEmpty) observer.onComplete()
+          if (!onCompleteCalled) {
+            onCompleteCalled = true
+            if (nestedSubscription.isEmpty) observer.onComplete()
+          }
         }
 
         override def onError(throwable: Throwable): Unit = observer.onError(throwable)
@@ -121,4 +123,5 @@ private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: 
       }
     )
   }
+  // scalastyle:on cyclomatic.complexity method.length
 }

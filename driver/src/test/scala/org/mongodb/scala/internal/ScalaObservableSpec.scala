@@ -94,9 +94,11 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
     myObservable(true).subscribe((s: String) => (), (fail: Throwable) => errorSeen = Some(fail))
     errorSeen.getOrElse(None) shouldBe a[Throwable]
 
-    var completed = false
-    myObservable().subscribe((s: String) => (), (t: Throwable) => t, () => completed = true)
-    completed should equal(true)
+    var completed = 0
+    var seen = 0
+    myObservable().subscribe((s: String) => seen += 1, (t: Throwable) => t, () => completed += 1)
+    seen should equal(100)
+    completed should equal(1)
   }
 
   it should "have a filter method" in {
