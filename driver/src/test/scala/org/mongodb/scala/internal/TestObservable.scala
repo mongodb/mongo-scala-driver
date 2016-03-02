@@ -40,11 +40,11 @@ case class TestObservable[A](
     failOn:       Int           = Int.MaxValue,
     errorMessage: String        = "Failed"
 ) extends Observable[A] {
-  var failed = false
 
   override def subscribe(observer: Observer[_ >: A]): Unit = {
     delegate.subscribe(
       new Observer[A] {
+        var failed = false
         var subscription: Option[Subscription] = None
         override def onError(throwable: Throwable): Unit = observer.onError(throwable)
 

@@ -26,7 +26,7 @@ private[scala] case class RecoverWithObservable[T, U >: T](
     throwOriginalException: Boolean                                   = false
 ) extends Observable[U] {
 
-  // scalastyle:ignore cyclomatic.complexity method.length
+  // scalastyle:off cyclomatic.complexity method.length
   override def subscribe(observer: Observer[_ >: U]): Unit = {
     observable.subscribe(
       new Observer[U] {
@@ -80,7 +80,9 @@ private[scala] case class RecoverWithObservable[T, U >: T](
                     if (demand > 0) subscription.request(demand)
                   }
 
-                  override def onComplete(): Unit = observer.onComplete()
+                  override def onComplete(): Unit = {
+                    observer.onComplete()
+                  }
 
                   override def onNext(tResult: U): Unit = processNext(tResult)
                 }
@@ -119,5 +121,6 @@ private[scala] case class RecoverWithObservable[T, U >: T](
       }
     )
   }
+  // scalastyle:on cyclomatic.complexity method.length
 }
 

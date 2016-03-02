@@ -124,6 +124,27 @@ class ObservableImplementationSpec extends FlatSpec with Matchers with TableDriv
     }
   }
 
+  it should "allow multiple subscriptions" in {
+    forAll(happyObservables) {
+      (observable: Observable[Int], observer: TestObserver[Int]) =>
+        {
+          val observer1 = TestObserver[Int]()
+
+          observable.subscribe(observer)
+          observable.subscribe(observer1)
+          observer.subscription.get.request(Long.MaxValue)
+          observer1.subscription.get.request(Long.MaxValue)
+
+          observer.error.isEmpty should equal(true)
+          observer1.error.isEmpty should equal(true)
+          observer.completed should equal(true)
+          observer1.completed should equal(true)
+
+          observer.results.length should equal(observer.results.length)
+        }
+    }
+  }
+
   it should "return the length of the smallest Observable from ZipObservable" in {
     forAll(zippedObservables) {
       (observable: Observable[(Int, Int)]) =>

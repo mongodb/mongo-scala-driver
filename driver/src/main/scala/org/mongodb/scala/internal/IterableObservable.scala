@@ -19,15 +19,15 @@ package org.mongodb.scala.internal
 import org.mongodb.scala.{ Observable, Observer, Subscription }
 
 private[scala] case class IterableObservable[A](from: Iterable[A]) extends Observable[A] {
-  @volatile
-  private var left: Iterable[A] = from
-  @volatile
-  private var subscribed: Boolean = false
 
   override def subscribe(observer: Observer[_ >: A]): Unit = {
-    subscribed = true
     observer.onSubscribe(
       new Subscription {
+        @volatile
+        private var left: Iterable[A] = from
+        @volatile
+        private var subscribed: Boolean = true
+
         override def isUnsubscribed: Boolean = !subscribed
 
         override def request(n: Long): Unit = {

@@ -27,66 +27,74 @@ private[scala] case class ZipObservable[T, U](
     observable2: Observable[U]
 ) extends Observable[(T, U)] {
 
-  private val thisQueue: ConcurrentLinkedQueue[(Long, T)] = new ConcurrentLinkedQueue[(Long, T)]()
-  private val thatQueue: ConcurrentLinkedQueue[(Long, U)] = new ConcurrentLinkedQueue[(Long, U)]()
-
-  @volatile
-  private var observable1Subscription: Option[Subscription] = None
-  @volatile
-  private var observable2Subscription: Option[Subscription] = None
-
   def subscribe(observer: Observer[_ >: (T, U)]): Unit = {
-    observable1.subscribe(createSubObserver[T](thisQueue, observer, firstSub = true))
-    observable2.subscribe(createSubObserver[U](thatQueue, observer, firstSub = false))
+    val helper = SubscriptionHelper(observer)
+    observable1.subscribe(helper.createFirstObserver)
+    observable2.subscribe(helper.createSecondObserver)
   }
 
-  private def createSubObserver[A](queue: ConcurrentLinkedQueue[(Long, A)], observer: Observer[_ >: (T, U)], firstSub: Boolean): Observer[A] = {
-    new Observer[A] {
-      var counter: Long = 0
-      override def onError(throwable: Throwable): Unit = observer.onError(throwable)
+  case class SubscriptionHelper(observer: Observer[_ >: (T, U)]) {
+    private val thisQueue: ConcurrentLinkedQueue[(Long, T)] = new ConcurrentLinkedQueue[(Long, T)]()
+    private val thatQueue: ConcurrentLinkedQueue[(Long, U)] = new ConcurrentLinkedQueue[(Long, U)]()
 
-      override def onSubscribe(subscription: Subscription): Unit = {
-        firstSub match {
-          case true  => observable1Subscription = Some(subscription)
-          case false => observable2Subscription = Some(subscription)
+    @volatile
+    private var observable1Subscription: Option[Subscription] = None
+    @volatile
+    private var observable2Subscription: Option[Subscription] = None
+
+    def createFirstObserver: Observer[T] = createSubObserver[T](thisQueue, observer, firstSub = true)
+
+    def createSecondObserver: Observer[U] = createSubObserver[U](thatQueue, observer, firstSub = false)
+
+    private def createSubObserver[A](queue: ConcurrentLinkedQueue[(Long, A)], observer: Observer[_ >: (T, U)], firstSub: Boolean): Observer[A] = {
+      new Observer[A] {
+        var counter: Long = 0
+        override def onError(throwable: Throwable): Unit = observer.onError(throwable)
+
+        override def onSubscribe(subscription: Subscription): Unit = {
+          firstSub match {
+            case true  => observable1Subscription = Some(subscription)
+            case false => observable2Subscription = Some(subscription)
+          }
+
+          if (observable1Subscription.nonEmpty && observable2Subscription.nonEmpty) {
+            observer.onSubscribe(jointSubscription)
+          }
         }
 
-        if (observable1Subscription.nonEmpty && observable2Subscription.nonEmpty) {
-          observer.onSubscribe(jointSubscription)
+        override def onComplete(): Unit = observer.onComplete()
+
+        override def onNext(tResult: A): Unit = {
+          counter += 1
+          queue.add((counter, tResult))
+          processNext(observer)
         }
       }
+    }
 
-      override def onComplete(): Unit = observer.onComplete()
-
-      override def onNext(tResult: A): Unit = {
-        counter += 1
-        queue.add((counter, tResult))
-        processNext(observer)
+    private def processNext(observer: Observer[_ >: (T, U)]): Unit = {
+      (Option(thisQueue.peek), Option(thatQueue.peek)) match {
+        case (Some((k1, v1)), Some((k2, v2))) if k1 == k2 => observer.onNext((thisQueue.poll()._2, thatQueue.poll()._2))
+        case _ => // Do nothing counters don't match
       }
     }
-  }
 
-  private def processNext(observer: Observer[_ >: (T, U)]): Unit = {
-    (Option(thisQueue.peek), Option(thatQueue.peek)) match {
-      case (Some((k1, v1)), Some((k2, v2))) if k1 == k2 => observer.onNext((thisQueue.poll()._2, thatQueue.poll()._2))
-      case _ => // Do nothing counters don't match
+    private val jointSubscription = new Subscription() {
+      var subscribed = true
+      override def isUnsubscribed: Boolean = !subscribed
+
+      override def request(n: Long): Unit = {
+        observable1Subscription.get.request(n)
+        observable2Subscription.get.request(n)
+      }
+
+      override def unsubscribe(): Unit = {
+        subscribed = false
+        observable1Subscription.get.unsubscribe()
+        observable2Subscription.get.unsubscribe()
+      }
     }
-  }
 
-  private val jointSubscription = new Subscription() {
-    var subscribed = true
-    override def isUnsubscribed: Boolean = !subscribed
-
-    override def request(n: Long): Unit = {
-      observable1Subscription.get.request(n)
-      observable2Subscription.get.request(n)
-    }
-
-    override def unsubscribe(): Unit = {
-      subscribed = false
-      observable1Subscription.get.unsubscribe()
-      observable2Subscription.get.unsubscribe()
-    }
   }
 
 }
