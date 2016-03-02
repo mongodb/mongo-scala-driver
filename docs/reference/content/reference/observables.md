@@ -21,6 +21,11 @@ The interfaces are similar to `Publisher`, `Subscription` and `Subscriber` inter
 ## Observable
 The [`Observable`]({{< apiref "org.mongodb.scala.Observable" >}}) represents a MongoDB operation which emits its results to the `Observer` based on demand requested by the `Subscription` to the `Observable`. 
 
+{{% note class="important" %}}
+Observables can be thought of as partial functions and like partial functions nothing happens until they are called. 
+An `Observable` can be subscribed to multiple times, with each subscription potentially causing new side effects eg: querying MongoDB or inserting data.
+{{% /note %}}
+
 ## Subscription
 
 A [`Subscription`]({{< apiref "org.mongodb.scala.Subscription" >}}) represents a one-to-one lifecycle of an `Observer` subscribing to an `Observable`.  A `Subscription` to an `Observable` can only be used by a single `Observer`.  The purpose of a `Subscription` is to control demand and to allow unsubscribing from the `Observable`.
