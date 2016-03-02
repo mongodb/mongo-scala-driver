@@ -54,7 +54,7 @@ with prior patch releases of the same minor release branch.
 ## Binaries
 
 Binaries and dependency information for Maven, SBT, Ivy and others can be found at
-[http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.mongodb.scala).
+[http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aorg.mongodb.scala).
 
 ## Build
 
