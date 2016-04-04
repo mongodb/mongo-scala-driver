@@ -11,6 +11,9 @@ title = "Changelog"
 Changes between released versions
 
 
+### 1.2
+  * Updated Mongodb Driver Async dependency to [3.2.2](https://jira.mongodb.org/browse/SCALA-237)
+
 ### 1.1
 
   * Updated to support MongoDB 3.2.
