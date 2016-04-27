@@ -4,12 +4,8 @@ scala:
   - "2.11.5"
 
 jdk:
-  - openjdk7
   - oraclejdk7
-
-addons:
- # Fix OpenJDK build. Issue: https://github.com/travis-ci/travis-ci/issues/5227
- hostname: short-hostname
+  - oraclejdk8
 
 # Branches to test
 branches:
