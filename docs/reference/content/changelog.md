@@ -11,8 +11,9 @@ title = "Changelog"
 Changes between released versions
 
 
-### 1.2
+### 1.1.1
   * Updated Mongodb Driver Async dependency to [3.2.2](https://jira.mongodb.org/browse/SCALA-237)
+  * Ensure Observables can be subscribed to multiple times [SCALA-239](https://jira.mongodb.org/browse/SCALA-239)
 
 ### 1.1
 
