@@ -31,7 +31,7 @@ object MongoScalaBuild extends Build {
   val buildSettings = Seq(
     organization := "org.mongodb.scala",
     organizationHomepage := Some(url("http://www.mongodb.org")),
-    version := "1.2.0-SNAPSHOT",
+    version := "1.1.1",
     scalaVersion := scalaCoreVersion,
     libraryDependencies ++= coreDependencies,
     resolvers := mongoScalaResolvers,
