@@ -70,7 +70,7 @@ $ ./sbt check
 
 * Ross Lawley          ross@mongodb.com
 
-Additional contributors can be found [here](https://github.com/mongodb/mongo-scala0-driver/graphs/contributors).
+Additional contributors can be found [here](https://github.com/mongodb/mongo-scala-driver/graphs/contributors).
 
 ## Supporters
 
