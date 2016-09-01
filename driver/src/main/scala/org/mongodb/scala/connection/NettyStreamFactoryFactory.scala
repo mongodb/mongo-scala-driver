@@ -24,5 +24,5 @@ import com.mongodb.connection.netty.{ NettyStreamFactoryFactory => JNettyStreamF
  * @since 1.0
  */
 object NettyStreamFactoryFactory {
-  def apply(): StreamFactoryFactory = new JNettyStreamFactoryFactory()
+  def apply(): StreamFactoryFactory = JNettyStreamFactoryFactory.builder().build()
 }
