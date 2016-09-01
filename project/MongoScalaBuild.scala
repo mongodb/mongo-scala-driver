@@ -48,7 +48,7 @@ object MongoScalaBuild extends Build {
    */
   val testSettings = Seq(
     testFrameworks += TestFrameworks.ScalaTest,
-    ScoverageKeys.coverageMinimum := 95,
+    ScoverageKeys.coverageMinimum := 90,
     ScoverageKeys.coverageFailOnMinimum := true,
     libraryDependencies ++= testDependencies
   ) ++ Defaults.itSettings

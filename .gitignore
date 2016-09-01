@@ -23,7 +23,7 @@ target
 *.idea
 workspace.xml
 atlassian-ide-plugin.xml
-
+*.sc
 
 # doc settings
 docs/reference/public
