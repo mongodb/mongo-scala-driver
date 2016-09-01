@@ -36,7 +36,7 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
 
   "MapReduceObservable" should "have the same methods as the wrapped MapReduceObservable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
-    val wrapped = classOf[MapReduceIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
+    val wrapped = classOf[MapReduceIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable - "collation"
     val local = classOf[MapReduceObservable[Document]].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {

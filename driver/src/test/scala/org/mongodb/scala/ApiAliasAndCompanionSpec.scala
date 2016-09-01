@@ -32,6 +32,8 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val packageName = "com.mongodb"
     val javaExclusions = Set("AsyncBatchCursor", "Block", "ConnectionString", "Function", "ServerCursor", "Majority", "MongoClients",
       "MongoIterable", "Observables", "SingleResultCallback")
+    val gridfsExclusions = Set("AsyncOutputStream", "AsyncInputStream", "GridFSUploadStream",
+      "AsyncStreamHelper", "GridFSDownloadStream", "AsynchronousChannelHelper", "GridFSBuckets", "GridFSFindIterable", "GridFSBucket")
     val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "ScalaObservable",
       "ScalaWriteConcern", "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription",
       "classTagToClassOf", "ReadConcernLevel")
@@ -40,7 +42,8 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       isPublic(f.getModifiers) &&
         !f.getName.contains("$") &&
         !f.getSimpleName.contains("Spec") &&
-        !javaExclusions.contains(f.getSimpleName)
+        !javaExclusions.contains(f.getSimpleName) &&
+        !gridfsExclusions.contains(f.getSimpleName)
     }
     val filters = FilterBuilder.parse(
       """
@@ -59,7 +62,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     )
 
     val exceptions = new Reflections(packageName).getSubTypesOf(classOf[MongoException]).asScala.map(_.getSimpleName).toSet +
-      "MongoException" - "MongoGridFSException"
+      "MongoException" - "MongoGridFSException" - "MongoConfigurationException"
 
     val objects = new Reflections(new ConfigurationBuilder()
       .setUrls(ClasspathHelper.forPackage(packageName))
@@ -102,7 +105,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
   }
 
   it should "mirror all com.mongodb.client.model in org.mongdb.scala.model" in {
-    val javaExclusions = Set("ParallelCollectionScanOptions")
+    val javaExclusions = Set("ParallelCollectionScanOptions", "Collation", "DeleteOptions")
     val packageName = "com.mongodb.client.model"
     val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
     val wrapped = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])

@@ -28,7 +28,7 @@ class DistinctObservableSpec extends FlatSpec with Matchers with MockFactory {
 
   "DistinctObservable" should "have the same methods as the wrapped DistinctObservable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
-    val wrapped = classOf[DistinctIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
+    val wrapped = classOf[DistinctIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable - "collation"
     val local = classOf[DistinctObservable[Document]].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {

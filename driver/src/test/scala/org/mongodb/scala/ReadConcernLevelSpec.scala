@@ -26,7 +26,7 @@ import org.scalatest.{ FlatSpec, Matchers }
 class ReadConcernLevelSpec extends FlatSpec with Matchers {
 
   "ReadConcernLevel" should "have the same static fields as the wrapped ReadConcern" in {
-    val wrappedFields = classOf[com.mongodb.ReadConcernLevel].getDeclaredFields.filter(f => isStatic(f.getModifiers)).map(_.getName).toSet
+    val wrappedFields = classOf[com.mongodb.ReadConcernLevel].getDeclaredFields.filter(f => isStatic(f.getModifiers)).map(_.getName).toSet - "LINEARIZABLE"
     val wrappedMethods = classOf[com.mongodb.ReadConcernLevel].getDeclaredMethods.filter(f => isStatic(f.getModifiers)).map(_.getName).toSet
     val exclusions = Set("$VALUES", "valueOf", "values")
 

@@ -36,7 +36,7 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
 
   "AggregateObservable" should "have the same methods as the wrapped AggregateObservable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
-    val wrapped: Set[String] = classOf[AggregateIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
+    val wrapped: Set[String] = classOf[AggregateIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable - "collation"
     val local = classOf[AggregateObservable[Document]].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {
