@@ -10,6 +10,9 @@ title = "Changelog"
 
 Changes between released versions
 
+### 1.2
+
+  * Added GridFS Support [SCALA-154](https://jira.mongodb.org/browse/SCALA-154)
 
 ### 1.1.1
   * Updated Mongodb Driver Async dependency to [3.2.2](https://jira.mongodb.org/browse/SCALA-237)

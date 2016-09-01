@@ -17,9 +17,9 @@
 package org.mongodb
 
 import _root_.scala.language.implicitConversions
-
 import _root_.scala.reflect.ClassTag
 
+import org.mongodb.scala.bson.BsonDocument
 import org.mongodb.scala.internal.WriteConcernImplicits
 
 /**
@@ -263,4 +263,11 @@ package object scala extends ObservableImplicits with WriteConcernImplicits {
    * @return the classOf[C]
    */
   implicit def classTagToClassOf[C](ct: ClassTag[C]): Class[C] = ct.runtimeClass.asInstanceOf[Class[C]]
+
+  implicit def bsonDocumentToDocument(doc: BsonDocument): Document = new Document(doc)
+
+  implicit def bsonDocumentToUntypedDocument(doc: BsonDocument): org.bson.Document = org.bson.Document.parse(doc.toJson())
+
+  implicit def documentToUntypedDocument(doc: Document): org.bson.Document = org.bson.Document.parse(doc.toJson())
+
 }

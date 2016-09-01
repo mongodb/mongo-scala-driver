@@ -31,19 +31,16 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
   "The scala package" should "mirror the com.mongodb package and com.mongodb.async.client" in {
     val packageName = "com.mongodb"
     val javaExclusions = Set("AsyncBatchCursor", "Block", "ConnectionString", "Function", "ServerCursor", "Majority", "MongoClients",
-      "MongoIterable", "Observables", "SingleResultCallback")
-    val gridfsExclusions = Set("AsyncOutputStream", "AsyncInputStream", "GridFSUploadStream",
-      "AsyncStreamHelper", "GridFSDownloadStream", "AsynchronousChannelHelper", "GridFSBuckets", "GridFSFindIterable", "GridFSBucket")
+      "MongoIterable", "Observables", "SingleResultCallback", "GridFSBuckets")
     val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "ScalaObservable",
       "ScalaWriteConcern", "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription",
-      "classTagToClassOf", "ReadConcernLevel")
+      "classTagToClassOf", "ReadConcernLevel", "bsonDocumentToDocument", "bsonDocumentToUntypedDocument", "documentToUntypedDocument")
 
     val classFilter = (f: Class[_ <: Object]) => {
       isPublic(f.getModifiers) &&
         !f.getName.contains("$") &&
         !f.getSimpleName.contains("Spec") &&
-        !javaExclusions.contains(f.getSimpleName) &&
-        !gridfsExclusions.contains(f.getSimpleName)
+        !javaExclusions.contains(f.getSimpleName)
     }
     val filters = FilterBuilder.parse(
       """
@@ -58,7 +55,9 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
         |-com.mongodb.internal.*,
         |-com.mongodb.management.*,
         |-com.mongodb.operation.*,
-        |-com.mongodb.selector.*,""".stripMargin
+        |-com.mongodb.selector.*,
+        |-com.mongodb.client.gridfs.*,
+        |-com.mongodb.async.client.gridfs.*""".stripMargin
     )
 
     val exceptions = new Reflections(packageName).getSubTypesOf(classOf[MongoException]).asScala.map(_.getSimpleName).toSet +
@@ -146,7 +145,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       .map(_.getSimpleName).toSet
 
     val scalaPackageName = "org.mongodb.scala.result"
-    val local = currentMirror.staticPackage("org.mongodb.scala.result").info.decls.map(_.name.toString).toSet - "package"
+    val local = currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet - "package"
 
     diff(local, wrapped) shouldBe empty
   }
@@ -160,6 +159,25 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val local = WriteConcern.getClass.getDeclaredMethods
       .filter(f => f.getName != "apply" && isPublic(f.getModifiers))
       .map(_.getName).toSet
+
+    diff(local, wrapped) shouldBe empty
+  }
+
+  it should "mirror com.mongodb.async.client.gridfs in org.mongdb.scala.gridfs" in {
+    val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
+    val javaExclusions = Set("GridFSBuckets", "GridFSDownloadByNameOptions")
+    val wrapped: Set[String] = Set("com.mongodb.async.client.gridfs", "com.mongodb.client.gridfs.model").flatMap(packageName =>
+      new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
+        .asScala.filter(_.getPackage.getName == packageName)
+        .filter(classFilter)
+        .map(_.getSimpleName.replace("Iterable", "Observable")).toSet) -- javaExclusions + "MongoGridFSException"
+
+    val scalaPackageName = "org.mongodb.scala.gridfs"
+    val scalaExclusions = Set("package", "ScalaAsyncInputStreamToJava", "ScalaAsyncOutputStreamToJava", "JavaAsyncOutputStreamToScala",
+      "JavaAsyncInputStreamToScala")
+    val local = new Reflections(scalaPackageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
+      .asScala.filter(classFilter).filter(f => f.getPackage.getName == scalaPackageName)
+      .map(_.getSimpleName).toSet ++ currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet -- scalaExclusions
 
     diff(local, wrapped) shouldBe empty
   }

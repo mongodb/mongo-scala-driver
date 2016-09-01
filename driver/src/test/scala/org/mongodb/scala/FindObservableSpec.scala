@@ -28,7 +28,7 @@ import org.scalatest.{ FlatSpec, Matchers }
 
 class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
 
-  "FindObservable" should "have the same methods as the wrapped FindObservable" in {
+  "FindObservable" should "have the same methods as the wrapped FindIterable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
     val wrapped = classOf[FindIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable - "collation"
     val local = classOf[FindObservable[Document]].getMethods.map(_.getName).toSet

@@ -22,7 +22,7 @@ import com.mongodb.Block
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.{ MongoIterable, Observables }
 
-import org.mongodb.scala.{ Completed, Observable }
+import org.mongodb.scala._
 
 /**
  * A helper to pass in Scala partial functions to the Observables helper
@@ -46,13 +46,14 @@ private[scala] object ObservableHelper {
     })
 
   def observeLong(block: (SingleResultCallback[java.lang.Long]) => Unit): Observable[Long] =
-    Observables.observe(new Block[SingleResultCallback[Long]] {
-      override def apply(callback: SingleResultCallback[Long]): Unit =
-        block(new SingleResultCallback[java.lang.Long]() {
-          def onResult(result: java.lang.Long, t: Throwable): Unit =
-            callback.onResult(result, t)
-        })
-    })
+    ScalaObservable(Observables.observe(new Block[SingleResultCallback[java.lang.Long]] {
+      override def apply(callback: SingleResultCallback[java.lang.Long]): Unit = block(callback)
+    })).map(result => result.longValue())
+
+  def observeInt(block: (SingleResultCallback[java.lang.Integer]) => Unit): Observable[Int] =
+    ScalaObservable(Observables.observe(new Block[SingleResultCallback[java.lang.Integer]] {
+      override def apply(callback: SingleResultCallback[java.lang.Integer]): Unit = block(callback)
+    })).map(result => result.intValue())
 
   def observeAndFlatten[T](block: (SingleResultCallback[util.List[T]]) => Unit): Observable[T] =
     Observables.observeAndFlatten(new Block[SingleResultCallback[util.List[T]]] {

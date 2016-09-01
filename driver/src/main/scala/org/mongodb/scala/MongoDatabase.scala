@@ -33,7 +33,7 @@ import org.mongodb.scala.internal.ObservableHelper.{ observe, observeCompleted }
  * @param wrapped the underlying java MongoDatabase
  * @since 1.0
  */
-case class MongoDatabase(private val wrapped: JMongoDatabase) {
+case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
 
   /**
    * Gets the name of the database.
