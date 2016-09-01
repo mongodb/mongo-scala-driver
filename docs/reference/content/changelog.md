@@ -10,8 +10,8 @@ title = "Changelog"
 
 Changes between released versions
 
-### 1.2
-
+### 1.2.0-SNAPSHOT
+  * Fixed bug where some connection string options were not applied [SCALA-253](https://jira.mongodb.org/browse/SCALA-253)
   * Added GridFS Support [SCALA-154](https://jira.mongodb.org/browse/SCALA-154)
 
 ### 1.1.1

@@ -50,14 +50,21 @@ object MongoClient {
    */
   def apply(uri: String): MongoClient = {
     val connectionString = new ConnectionString(uri)
-    apply(MongoClientSettings.builder()
+    val builder = MongoClientSettings.builder()
       .codecRegistry(DEFAULT_CODEC_REGISTRY)
       .clusterSettings(ClusterSettings.builder().applyConnectionString(connectionString).build())
       .connectionPoolSettings(ConnectionPoolSettings.builder().applyConnectionString(connectionString).build())
       .serverSettings(ServerSettings.builder().build()).credentialList(connectionString.getCredentialList)
       .sslSettings(SslSettings.builder().applyConnectionString(connectionString).build())
       .socketSettings(SocketSettings.builder().applyConnectionString(connectionString).build())
-      .build())
+
+    // scalastyle:off null
+    if (connectionString.getReadPreference != null) builder.readPreference(connectionString.getReadPreference)
+    if (connectionString.getReadConcern != null) builder.readConcern(connectionString.getReadConcern)
+    if (connectionString.getWriteConcern != null) builder.writeConcern(connectionString.getWriteConcern)
+    // scalastyle:on null
+
+    apply(builder.build())
   }
 
   /**

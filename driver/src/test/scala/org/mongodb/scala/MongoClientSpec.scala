@@ -44,7 +44,22 @@ class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
     val serverAddress = new ServerAddress("localhost", 27017)
     val mongoClient = MongoClient()
 
-    mongoClient.settings.getClusterSettings.getHosts().asScala.head shouldBe serverAddress
+    mongoClient.settings.getClusterSettings.getHosts.asScala.head shouldBe serverAddress
+  }
+
+  it should "apply read preference from connection string to settings" in {
+    MongoClient("mongodb://localhost/").settings.getReadPreference should equal(ReadPreference.primary())
+    MongoClient("mongodb://localhost/?readPreference=secondaryPreferred").settings.getReadPreference should equal(ReadPreference.secondaryPreferred())
+  }
+
+  it should "apply read concern from connection string to settings" in {
+    MongoClient("mongodb://localhost/").settings.getReadConcern should equal(ReadConcern.DEFAULT)
+    MongoClient("mongodb://localhost/?readConcernLevel=local").settings.getReadConcern should equal(ReadConcern.LOCAL)
+  }
+
+  it should "apply write concern from connection string to settings" in {
+    MongoClient("mongodb://localhost/").settings.getWriteConcern should equal(WriteConcern.ACKNOWLEDGED)
+    MongoClient("mongodb://localhost/?w=majority").settings.getWriteConcern should equal(WriteConcern.MAJORITY)
   }
 
   it should "accept MongoClientSettings" in {
@@ -52,7 +67,7 @@ class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
     val clusterSettings = ClusterSettings.builder().hosts(List(serverAddress).asJava).build()
     val mongoClient = MongoClient(MongoClientSettings.builder().clusterSettings(clusterSettings).build())
 
-    mongoClient.settings.getClusterSettings.getHosts().get(0) shouldBe serverAddress
+    mongoClient.settings.getClusterSettings.getHosts.get(0) shouldBe serverAddress
   }
 
   it should "call the underlying getSettings" in {
