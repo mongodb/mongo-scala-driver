@@ -42,9 +42,9 @@ import com.mongodb.{ WriteConcern => JWriteConcern }
  *
  * The [[ScalaWriteConcern]] implicit allows for chainable building of the WriteConcern eg:
  *
- * ```
+ * {{{
  *  val myWriteConcern = WriteConcern.ACKNOWLEDGED.withJournal(true)).withWTimeout(Duration(10, TimeUnit.MILLISECONDS))
- * ```
+ * }}}
  *
  * @since 1.0
  */
