@@ -26,7 +26,7 @@ import org.scalatest.prop.TableDrivenPropertyChecks._
 class ReadConcernSpec extends FlatSpec with Matchers {
 
   "ReadConcern" should "have the same static fields as the wrapped ReadConcern" in {
-    val wrapped = classOf[com.mongodb.ReadConcern].getDeclaredFields.filter(f => isStatic(f.getModifiers)).map(_.getName).toSet - "LINEARIZABLE"
+    val wrapped = classOf[com.mongodb.ReadConcern].getDeclaredFields.filter(f => isStatic(f.getModifiers)).map(_.getName).toSet
     val local = ReadConcern.getClass.getDeclaredMethods.map(_.getName).toSet -- Set("apply")
 
     local should equal(wrapped)
@@ -43,6 +43,7 @@ class ReadConcernSpec extends FlatSpec with Matchers {
       ("ScalaValue", "JavaValue"),
       (ReadConcern.DEFAULT, JReadConcern.DEFAULT),
       (ReadConcern.LOCAL, JReadConcern.LOCAL),
+      (ReadConcern.LINEARIZABLE, JReadConcern.LINEARIZABLE),
       (ReadConcern.MAJORITY, JReadConcern.MAJORITY),
       (ReadConcern(ReadConcernLevel.LOCAL), JReadConcern.LOCAL)
     )
