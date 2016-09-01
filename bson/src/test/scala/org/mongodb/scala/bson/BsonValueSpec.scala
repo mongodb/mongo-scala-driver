@@ -54,6 +54,15 @@ class BsonValueSpec extends FlatSpec with Matchers {
     BsonDateTime(1000) should equal(new BsonDateTime(1000))
   }
 
+  "BsonDecimal128 companion" should "create a BsonDecimal128" in {
+    val expected = new BsonDecimal128(new Decimal128(100))
+
+    BsonDecimal128(100) should equal(expected)
+    BsonDecimal128("100") should equal(expected)
+    BsonDecimal128(BigDecimal(100)) should equal(expected)
+    BsonDecimal128(new Decimal128(100)) should equal(expected)
+  }
+
   "BsonDocument companion" should "create a BsonDocument" in {
     val expected = new BsonDocument("a", BsonInt32(1))
     expected.put("b", BsonDouble(2.0))

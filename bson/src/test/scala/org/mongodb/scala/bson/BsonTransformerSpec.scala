@@ -20,8 +20,6 @@ import java.util.Date
 
 import scala.language.implicitConversions
 
-import org.bson.types.ObjectId
-
 import org.mongodb.scala.bson.collection.{immutable, mutable}
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -30,16 +28,20 @@ class BsonTransformerSpec extends FlatSpec with Matchers {
   "The BsonTransformer companion" should "not transform BsonValues" in {
     transform(BsonString("abc")) should equal(BsonString("abc"))
   }
-
   it should "transform Binary" in {
     transform(Array[Byte](128.toByte)) should equal(BsonBinary(Array[Byte](128.toByte)))
   }
-
+  it should "transform BigDecmial" in {
+    transform(BigDecimal(100)) should equal(BsonDecimal128(100))
+  }
   it should "transform Boolean" in {
     transform(true) should equal(BsonBoolean(true))
   }
   it should "transform DateTime" in {
     transform(new Date(100)) should equal(BsonDateTime(100))
+  }
+  it should "transform Decimal128" in {
+    transform(new Decimal128(100)) should equal(BsonDecimal128(100))
   }
   it should "transform Double" in {
     transform(2.0) should equal(BsonDouble(2.0))

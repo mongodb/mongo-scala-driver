@@ -21,7 +21,6 @@ import java.util.Date
 import scala.collection.JavaConverters._
 import scala.util.matching.Regex
 
-import org.bson.types.ObjectId
 import org.bson.{BsonDocument => JBsonDocument}
 
 
@@ -106,6 +105,46 @@ object BsonDateTime {
    */
   def apply(date: Date): BsonDateTime = new BsonDateTime(date.getTime)
 }
+
+/**
+ * Companion helper for a BsonDecimal128
+ * @since 1.2
+ */
+object BsonDecimal128 {
+
+  /**
+   * Creates a `BsonDecimal128`
+   *
+   * @param value the `Decimal128`
+   * @return the BigDecimal
+   */
+  def apply(value: Decimal128): BsonDecimal128 = new BsonDecimal128(value)
+
+  /**
+   * Creates a `BsonDecimal128`
+   *
+   * @param value the `BigDecimal`
+   * @return the BigDecimal
+   */
+  def apply(value: BigDecimal): BsonDecimal128 = apply(new Decimal128(value.bigDecimal))
+
+  /**
+   * Creates a `BsonDecimal128`
+   *
+   * @param value the long value to convert
+   * @return the BigDecimal
+   */
+  def apply(value: Long): BsonDecimal128 = apply(new Decimal128(value))
+
+  /**
+   * Creates a `BsonDecimal128`
+   *
+   * @param value the string value to convert
+   * @return the BigDecimal
+   */
+  def apply(value: String): BsonDecimal128 = apply(org.bson.types.Decimal128.parse(value))
+}
+
 
 /**
  * Companion helper for a BsonDocument

@@ -22,8 +22,6 @@ import scala.annotation.implicitNotFound
 import scala.collection.JavaConverters._
 import scala.util.matching.Regex
 
-import org.bson.types.ObjectId
-
 import org.mongodb.scala.bson.collection.immutable.{Document => IDocument}
 import org.mongodb.scala.bson.collection.mutable.{Document => MDocument}
 
@@ -48,11 +46,13 @@ trait BsonTransformer[-T] {
  * Maps the following native scala types to BsonValues:
  *
  *  - `BsonValue => BsonValue`
+ *  - `BigDecimal` => BsonDecimal128
  *  - `Boolean => BsonBoolean`
  *  - `String => BsonString`
  *  - `Array[Byte] => BsonBinary`
  *  - `Regex => BsonRegex`
  *  - `Date => BsonDateTime`
+ *  - `Decimal128` => BsonDecimal128
  *  - `ObjectId => BsonObjectId`
  *  - `Int => BsonInt32`
  *  - `Long => BsonInt64`
@@ -76,6 +76,13 @@ trait DefaultBsonTransformers {
    */
   implicit object TransformBsonValue extends BsonTransformer[BsonValue] {
     def apply(value: BsonValue): BsonValue = value
+  }
+
+  /**
+   * Transforms `BigDecimal` to `BsonDecimal128`
+   */
+  implicit object TransformBigDecimal extends BsonTransformer[BigDecimal] {
+    def apply(value: BigDecimal): BsonDecimal128 = BsonDecimal128(value)
   }
 
   /**
@@ -111,6 +118,13 @@ trait DefaultBsonTransformers {
    */
   implicit object TransformDateTime extends BsonTransformer[Date] {
     def apply(value: Date): BsonDateTime = BsonDateTime(value)
+  }
+
+  /**
+   * Transforms `Decimal128` to `BsonDecimal128`
+   */
+  implicit object TransformDecimal128 extends BsonTransformer[Decimal128] {
+    def apply(value: Decimal128): BsonDecimal128 = BsonDecimal128(value)
   }
 
   /**

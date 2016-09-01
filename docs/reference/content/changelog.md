@@ -11,6 +11,7 @@ title = "Changelog"
 Changes between released versions
 
 ### 1.2.0-SNAPSHOT
+  * Added support for BsonDecimal128 [SCALA-241](https://jira.mongodb.org/browse/SCALA-241)
   * Added support for ReadConcern.LINEARIZABLE [SCALA-247](https://jira.mongodb.org/browse/SCALA-247)
   * Fixed bug where some connection string options were not applied [SCALA-253](https://jira.mongodb.org/browse/SCALA-253)
   * Added GridFS Support [SCALA-154](https://jira.mongodb.org/browse/SCALA-154)

@@ -55,6 +55,11 @@ package object bson {
    */
   type BsonDateTime = org.bson.BsonDateTime
   /**
+   * Alias to `org.bson.BsonDecimal128`
+   * @since 1.2
+   */
+  type BsonDecimal128 = org.bson.BsonDecimal128
+  /**
    * Alias to `org.bson.BsonDocument`
    */
   type BsonDocument = org.bson.BsonDocument
@@ -127,6 +132,16 @@ package object bson {
    * Alias to `org.bson.BsonElement`
    */
   type BsonElement = org.bson.BsonElement
+  /**
+   * Alias to `org.bson.ObjectId`
+   * @since 1.2
+   */
+  type ObjectId = org.bson.types.ObjectId
+  /**
+   * Alias to `org.bson.Decimal128`
+   * @since 1.2
+   */
+  type Decimal128 = org.bson.types.Decimal128
 
   /**
    * Implicit value class for a [[BsonElement]] allowing easy access to the key/value pair
