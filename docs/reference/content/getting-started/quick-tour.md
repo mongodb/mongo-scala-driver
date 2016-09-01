@@ -317,7 +317,7 @@ For [`$group`]({{< relref "builders/aggregation.md#group" >}}) operations use th
 `i` by using the [`Aggregates.group`]({{< relref "builders/aggregation.md#group" >}}) helper in conjunction with the 
 [`Accumulators.sum`]({{< apiref "com/mongodb/client/model/Accumulators#sum-java.lang.String-TExpression-" >}}) helper:
 
-```java
+```scala
 collection.aggregate(singletonList(group(null, sum("total", "$i")))).first(printDocument);
 ```
 
