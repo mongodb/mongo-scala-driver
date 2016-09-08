@@ -104,19 +104,23 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
   }
 
   it should "mirror all com.mongodb.client.model in org.mongdb.scala.model" in {
-    val javaExclusions = Set("ParallelCollectionScanOptions", "Collation", "DeleteOptions")
+    val javaExclusions = Set("ParallelCollectionScanOptions")
     val packageName = "com.mongodb.client.model"
     val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
-    val wrapped = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
-      .asScala.filter(_.getPackage.getName == packageName)
+
+    val objectsAndEnums = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object]).asScala ++
+      new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Enum[_]]).asScala
+
+    val wrapped = objectsAndEnums
+      .filter(_.getPackage.getName == packageName)
       .filter(classFilter)
-      .map(_.getSimpleName).toSet ++ Set("MapReduceAction", "ReturnDocument") -- javaExclusions
+      .map(_.getSimpleName).toSet -- javaExclusions
 
     val scalaPackageName = "org.mongodb.scala.model"
     val localPackage = currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet
     val localObjects = new Reflections(scalaPackageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
       .asScala.filter(classFilter).map(_.getSimpleName).toSet
-    val scalaExclusions = Set("package", "ValidationAction", "ValidationLevel")
+    val scalaExclusions = Set("package")
     val local = (localPackage ++ localObjects) -- scalaExclusions
 
     diff(local, wrapped) shouldBe empty

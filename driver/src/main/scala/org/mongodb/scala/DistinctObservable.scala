@@ -24,6 +24,8 @@ import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.internal.ObservableHelper._
 import com.mongodb.async.client.DistinctIterable
 
+import org.mongodb.scala.model.Collation
+
 /**
  * Observable for distinct
  *
@@ -53,6 +55,20 @@ case class DistinctObservable[TResult](private val wrapped: DistinctIterable[TRe
    */
   def maxTime(duration: Duration): DistinctObservable[TResult] = {
     wrapped.maxTime(duration.toMillis, TimeUnit.MILLISECONDS)
+    this
+  }
+
+  /**
+   * Sets the collation options
+   *
+   * @param collation the collation options to use
+   * @return this
+   * @since 1.2
+   * @note A null value represents the server default.
+   * @note Requires MongoDB 3.4 or greater
+   */
+  def collation(collation: Collation): DistinctObservable[TResult] = {
+    wrapped.collation(collation)
     this
   }
 

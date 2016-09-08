@@ -295,12 +295,33 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
   def deleteOne(filter: Bson): Observable[DeleteResult] = observe(wrapped.deleteOne(filter, _: SingleResultCallback[DeleteResult]))
 
   /**
+   * Removes at most one document from the collection that matches the given filter.  If no documents match, the collection is not
+   * modified.
+   *
+   * @param filter the query filter to apply the the delete operation
+   * @param options the options to apply to the delete operation
+   * @return a Observable with a single element the DeleteResult or with an com.mongodb.MongoException
+   */
+  def deleteOne(filter: Bson, options: DeleteOptions): Observable[DeleteResult] =
+    observe(wrapped.deleteOne(filter, options, _: SingleResultCallback[DeleteResult]))
+
+  /**
    * Removes all documents from the collection that match the given query filter.  If no documents match, the collection is not modified.
    *
    * @param filter the query filter to apply the the delete operation
    * @return a Observable with a single element the DeleteResult or with an com.mongodb.MongoException
    */
   def deleteMany(filter: Bson): Observable[DeleteResult] = observe(wrapped.deleteMany(filter, _: SingleResultCallback[DeleteResult]))
+
+  /**
+   * Removes all documents from the collection that match the given query filter.  If no documents match, the collection is not modified.
+   *
+   * @param filter the query filter to apply the the delete operation
+   * @param options the options to apply to the delete operation
+   * @return a Observable with a single element the DeleteResult or with an com.mongodb.MongoException
+   */
+  def deleteMany(filter: Bson, options: DeleteOptions): Observable[DeleteResult] =
+    observe(wrapped.deleteMany(filter, options, _: SingleResultCallback[DeleteResult]))
 
   /**
    * Replace a document in the collection according to the specified arguments.

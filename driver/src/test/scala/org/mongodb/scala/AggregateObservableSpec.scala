@@ -22,6 +22,7 @@ import scala.concurrent.duration.Duration
 
 import com.mongodb.async.client.{ AggregateIterable, MongoIterable }
 
+import org.mongodb.scala.model.Collation
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
@@ -36,7 +37,7 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
 
   "AggregateObservable" should "have the same methods as the wrapped AggregateObservable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
-    val wrapped: Set[String] = classOf[AggregateIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable - "collation"
+    val wrapped: Set[String] = classOf[AggregateIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
     val local = classOf[AggregateObservable[Document]].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {
@@ -50,12 +51,14 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
     val Observable = AggregateObservable(wrapper)
 
     val duration = Duration(1, TimeUnit.SECONDS)
+    val collation = Collation.builder().locale("en").build()
 
     wrapper.expects('allowDiskUse)(true).once()
     wrapper.expects('useCursor)(true).once()
     wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
     wrapper.expects('bypassDocumentValidation)(true).once()
     wrapper.expects('toCollection)(*).once()
+    wrapper.expects('collation)(collation).once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
@@ -63,6 +66,7 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
     Observable.useCursor(true)
     Observable.maxTime(duration)
     Observable.bypassDocumentValidation(true)
+    Observable.collation(collation)
     Observable.toCollection().subscribe(observer[Completed])
     Observable.subscribe(observer[Document])
   }

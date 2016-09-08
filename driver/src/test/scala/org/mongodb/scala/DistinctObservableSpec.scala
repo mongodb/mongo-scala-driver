@@ -21,6 +21,7 @@ import scala.concurrent.duration.Duration
 
 import com.mongodb.async.client.{ DistinctIterable, MongoIterable }
 
+import org.mongodb.scala.model.Collation
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
@@ -28,7 +29,7 @@ class DistinctObservableSpec extends FlatSpec with Matchers with MockFactory {
 
   "DistinctObservable" should "have the same methods as the wrapped DistinctObservable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
-    val wrapped = classOf[DistinctIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable - "collation"
+    val wrapped = classOf[DistinctIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
     val local = classOf[DistinctObservable[Document]].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {
@@ -43,6 +44,7 @@ class DistinctObservableSpec extends FlatSpec with Matchers with MockFactory {
 
     val filter = Document("a" -> 1)
     val duration = Duration(1, TimeUnit.SECONDS)
+    val collation = Collation.builder().locale("en").build()
     val observer = new Observer[Document]() {
       override def onError(throwable: Throwable): Unit = {}
       override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
@@ -52,11 +54,14 @@ class DistinctObservableSpec extends FlatSpec with Matchers with MockFactory {
 
     wrapper.expects('filter)(filter).once()
     wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
+
+    wrapper.expects('collation)(collation).once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
     Observable.filter(filter)
     Observable.maxTime(duration)
+    Observable.collation(collation)
     Observable.subscribe(observer)
   }
 }

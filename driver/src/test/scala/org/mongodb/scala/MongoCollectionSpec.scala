@@ -35,6 +35,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   val wrapped = mock[JMongoCollection[Document]]
   val mongoCollection = MongoCollection[Document](wrapped)
   val readPreference = ReadPreference.secondary()
+  val collation = Collation.builder().locale("en").build()
 
   val filter = Document("filter" -> 1)
   def observer[T] = new Observer[T]() {
@@ -217,15 +218,21 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "wrap the underlying deleteOne correctly" in {
+    val options = new DeleteOptions().collation(collation)
     wrapped.expects('deleteOne)(filter, *).once()
+    wrapped.expects('deleteOne)(filter, options, *).once()
 
     mongoCollection.deleteOne(filter).subscribe(observer[DeleteResult])
+    mongoCollection.deleteOne(filter, options).subscribe(observer[DeleteResult])
   }
 
   it should "wrap the underlying deleteMany correctly" in {
+    val options = new DeleteOptions().collation(collation)
     wrapped.expects('deleteMany)(filter, *).once()
+    wrapped.expects('deleteMany)(filter, options, *).once()
 
     mongoCollection.deleteMany(filter).subscribe(observer[DeleteResult])
+    mongoCollection.deleteMany(filter, options).subscribe(observer[DeleteResult])
   }
 
   it should "wrap the underlying replaceOne correctly" in {

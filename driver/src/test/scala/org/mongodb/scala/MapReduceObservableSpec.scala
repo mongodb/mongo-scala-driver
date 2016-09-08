@@ -22,6 +22,7 @@ import scala.concurrent.duration.Duration
 import com.mongodb.client.model.MapReduceAction
 import com.mongodb.async.client.{ MapReduceIterable, MongoIterable }
 
+import org.mongodb.scala.model.Collation
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
@@ -36,7 +37,7 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
 
   "MapReduceObservable" should "have the same methods as the wrapped MapReduceObservable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
-    val wrapped = classOf[MapReduceIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable - "collation"
+    val wrapped = classOf[MapReduceIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
     val local = classOf[MapReduceObservable[Document]].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {
@@ -53,6 +54,7 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
     val duration = Duration(1, TimeUnit.SECONDS)
     val sort = Document("sort" -> 1)
     val scope = Document("mod" -> 1)
+    val collation = Collation.builder().locale("en").build()
 
     wrapper.expects('filter)(filter).once()
     wrapper.expects('scope)(scope).once()
@@ -68,6 +70,7 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('sharded)(true).once()
     wrapper.expects('nonAtomic)(true).once()
     wrapper.expects('bypassDocumentValidation)(true).once()
+    wrapper.expects('collation)(collation).once()
     wrapper.expects('toCollection)(*).once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
@@ -86,6 +89,7 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
     Observable.sharded(true)
     Observable.nonAtomic(true)
     Observable.bypassDocumentValidation(true)
+    Observable.collation(collation)
     Observable.toCollection().subscribe(observer[Completed])
     Observable.subscribe(observer[Document])
   }

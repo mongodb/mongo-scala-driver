@@ -24,6 +24,7 @@ import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.AggregateIterable
 
 import org.mongodb.scala.internal.ObservableHelper._
+import org.mongodb.scala.model.Collation
 
 /**
  * Observable for aggregate
@@ -84,6 +85,20 @@ case class AggregateObservable[TResult](private val wrapped: AggregateIterable[T
    */
   def bypassDocumentValidation(bypassDocumentValidation: Boolean): AggregateObservable[TResult] = {
     wrapped.bypassDocumentValidation(bypassDocumentValidation)
+    this
+  }
+
+  /**
+   * Sets the collation options
+   *
+   * @param collation the collation options to use
+   * @return this
+   * @since 1.2
+   * @note A null value represents the server default.
+   * @note Requires MongoDB 3.4 or greater
+   */
+  def collation(collation: Collation): AggregateObservable[TResult] = {
+    wrapped.collation(collation)
     this
   }
 

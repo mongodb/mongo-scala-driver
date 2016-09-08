@@ -22,9 +22,12 @@ import scala.concurrent.duration.Duration
 
 import org.mongodb.scala.bson.conversions.Bson
 import com.mongodb.CursorType
+
 import org.mongodb.scala.internal.ObservableHelper._
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.FindIterable
+
+import org.mongodb.scala.model.Collation
 
 /**
  * Observable interface for Find.
@@ -191,6 +194,20 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
    */
   def cursorType(cursorType: CursorType): FindObservable[TResult] = {
     wrapped.cursorType(cursorType)
+    this
+  }
+
+  /**
+   * Sets the collation options
+   *
+   * @param collation the collation options to use
+   * @return this
+   * @since 1.2
+   * @note A null value represents the server default.
+   * @note Requires MongoDB 3.4 or greater
+   */
+  def collation(collation: Collation): FindObservable[TResult] = {
+    wrapped.collation(collation)
     this
   }
 

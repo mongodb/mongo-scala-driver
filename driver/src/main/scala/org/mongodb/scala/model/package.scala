@@ -55,7 +55,26 @@ package object model {
   object BulkWriteOptions {
     def apply(): BulkWriteOptions = new com.mongodb.client.model.BulkWriteOptions()
   }
-
+  /**
+   * The collation options.
+   */
+  type Collation = com.mongodb.client.model.Collation
+  /**
+   * The collation alternative options.
+   */
+  type CollationAlternate = com.mongodb.client.model.CollationAlternate
+  /**
+   * The collation max variable options
+   */
+  type CollationMaxVariable = com.mongodb.client.model.CollationMaxVariable
+  /**
+   * The collation configuration of how character cases are handled
+   */
+  type CollationCaseFirst = com.mongodb.client.model.CollationCaseFirst
+  /**
+   * The collation configuration of how differences between characters are handled.
+   */
+  type CollationStrength = com.mongodb.client.model.CollationStrength
   /**
    * The options to apply to a count operation.
    */
@@ -100,6 +119,18 @@ package object model {
   }
 
   /**
+   * The options to apply for delete operations
+   */
+  type DeleteOptions = com.mongodb.client.model.DeleteOptions
+
+  /**
+   * The options to apply for delete operations.
+   */
+  object DeleteOptions {
+    def apply(): DeleteOptions = new com.mongodb.client.model.DeleteOptions()
+  }
+
+  /**
    * A model describing the removal of all documents matching the query filter.
    *
    * @tparam TResult the type of document to update.  In practice this doesn't actually apply to updates but is here for consistency with the
@@ -111,7 +142,8 @@ package object model {
    * A model describing the removal of all documents matching the query filter.
    */
   object DeleteManyModel {
-    def apply(filter: Bson): DeleteManyModel[Nothing] = new com.mongodb.client.model.DeleteManyModel(filter)
+    def apply[T](filter: Bson): DeleteManyModel[T] = new com.mongodb.client.model.DeleteManyModel[T](filter)
+    def apply[T](filter: Bson, options: DeleteOptions): DeleteManyModel[T] = new com.mongodb.client.model.DeleteManyModel[T](filter, options)
   }
 
   /**

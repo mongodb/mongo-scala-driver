@@ -27,6 +27,8 @@ import org.mongodb.scala.internal.ObservableHelper._
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.MapReduceIterable
 
+import org.mongodb.scala.model.Collation
+
 /**
  * Observable for map reduce.
  *
@@ -209,6 +211,20 @@ case class MapReduceObservable[TResult](wrapped: MapReduceIterable[TResult]) ext
    */
   def bypassDocumentValidation(bypassDocumentValidation: Boolean): MapReduceObservable[TResult] = {
     wrapped.bypassDocumentValidation(bypassDocumentValidation)
+    this
+  }
+
+  /**
+   * Sets the collation options
+   *
+   * @param collation the collation options to use
+   * @return this
+   * @since 1.2
+   * @note A null value represents the server default.
+   * @note Requires MongoDB 3.4 or greater
+   */
+  def collation(collation: Collation): MapReduceObservable[TResult] = {
+    wrapped.collation(collation)
     this
   }
 

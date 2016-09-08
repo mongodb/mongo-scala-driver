@@ -23,6 +23,7 @@ import scala.concurrent.duration.Duration
 import com.mongodb.CursorType
 import com.mongodb.async.client.{ FindIterable, MongoIterable }
 
+import org.mongodb.scala.model.Collation
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
@@ -30,7 +31,7 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
 
   "FindObservable" should "have the same methods as the wrapped FindIterable" in {
     val mongoIterable: Set[String] = classOf[MongoIterable[Document]].getMethods.map(_.getName).toSet
-    val wrapped = classOf[FindIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable - "collation"
+    val wrapped = classOf[FindIterable[Document]].getMethods.map(_.getName).toSet -- mongoIterable
     val local = classOf[FindObservable[Document]].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {
@@ -49,6 +50,8 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     val modifiers = Document("mod" -> 1)
     val projection = Document("proj" -> 1)
     val sort = Document("sort" -> 1)
+    val collation = Collation.builder().locale("en").build()
+
     val observer = new Observer[Document]() {
       override def onError(throwable: Throwable): Unit = {}
       override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
@@ -69,6 +72,7 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('oplogReplay)(true).once()
     wrapper.expects('partial)(true).once()
     wrapper.expects('cursorType)(CursorType.NonTailable).once()
+    wrapper.expects('collation)(collation).once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
@@ -85,6 +89,7 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     Observable.oplogReplay(true)
     Observable.partial(true)
     Observable.cursorType(CursorType.NonTailable)
+    Observable.collation(collation)
     Observable.subscribe(observer)
   }
 }
