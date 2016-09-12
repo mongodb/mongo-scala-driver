@@ -36,7 +36,7 @@ class AggregatesSpec extends FlatSpec with Matchers {
 
   "Aggregates" should "have the same methods as the wrapped Aggregates" in {
     val wrapped = classOf[com.mongodb.client.model.Aggregates].getDeclaredMethods
-      .filter(f => isStatic(f.getModifiers) && isPublic(f.getModifiers)).map(_.getName).toSet
+      .filter(f => isStatic(f.getModifiers) && isPublic(f.getModifiers)).map(_.getName).toSet - "graphLookup"
     val aliases = Set("filter")
     val local = Aggregates.getClass.getDeclaredMethods.filter(f => isPublic(f.getModifiers)).map(_.getName).toSet -- aliases
     local should equal(wrapped)

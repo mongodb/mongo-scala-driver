@@ -27,7 +27,7 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
     database =>
       val client = mongoClient()
       val document = Document("_id" -> 1)
-      def updatedDocument = Document("_id" -> 1, "a" -> 1)
+      val updatedDocument = Document("_id" -> 1, "a" -> 1)
 
       val names = client.listDatabaseNames().futureValue
 

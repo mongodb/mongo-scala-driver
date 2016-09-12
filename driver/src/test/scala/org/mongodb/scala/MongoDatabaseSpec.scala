@@ -40,7 +40,7 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   "MongoDatabase" should "have the same methods as the wrapped MongoDatabase" in {
-    val wrapped = classOf[JMongoDatabase].getMethods.map(_.getName).toSet
+    val wrapped = classOf[JMongoDatabase].getMethods.map(_.getName).toSet - "createView"
     val local = classOf[MongoDatabase].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {
