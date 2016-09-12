@@ -18,8 +18,10 @@ package org.mongodb.scala
 
 import scala.reflect.ClassTag
 
+import scala.collection.JavaConverters._
+
 import org.bson.codecs.configuration.CodecRegistry
-import com.mongodb.client.model.CreateCollectionOptions
+import com.mongodb.client.model.{ CreateCollectionOptions, CreateViewOptions }
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.{ MongoDatabase => JMongoDatabase }
 
@@ -190,4 +192,31 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    */
   def createCollection(collectionName: String, options: CreateCollectionOptions): Observable[Completed] =
     observeCompleted(wrapped.createCollection(collectionName, options, _: SingleResultCallback[Void]))
+
+  /**
+   * Creates a view with the given name, backing collection/view name, and aggregation pipeline that defines the view.
+   *
+   * [[http://docs.mongodb.org/manual/reference/commands/create Create Command]]
+   * @param viewName the name of the view to create
+   * @param viewOn   the backing collection/view for the view
+   * @param pipeline the pipeline that defines the view
+   * @since 1.2
+   * @note Requires MongoDB 3.4 or greater
+   */
+  def createView(viewName: String, viewOn: String, pipeline: Seq[Bson]): Observable[Completed] =
+    observeCompleted(wrapped.createView(viewName, viewOn, pipeline.asJava, _: SingleResultCallback[Void]))
+
+  /**
+   * Creates a view with the given name, backing collection/view name, aggregation pipeline, and options that defines the view.
+   *
+   * [[http://docs.mongodb.org/manual/reference/commands/create Create Command]]
+   * @param viewName          the name of the view to create
+   * @param viewOn            the backing collection/view for the view
+   * @param pipeline          the pipeline that defines the view
+   * @param createViewOptions various options for creating the view
+   * @since 1.2
+   * @note Requires MongoDB 3.4 or greater
+   */
+  def createView(viewName: String, viewOn: String, pipeline: Seq[Bson], createViewOptions: CreateViewOptions): Observable[Completed] =
+    observeCompleted(wrapped.createView(viewName, viewOn, pipeline.asJava, createViewOptions, _: SingleResultCallback[Void]))
 }

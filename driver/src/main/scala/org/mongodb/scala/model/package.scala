@@ -100,6 +100,24 @@ package object model {
   }
 
   /**
+   * Options for creating a view
+   *
+   * @since 1.2
+   * @note Requires MongoDB 3.4 or greater
+   */
+  type CreateViewOptions = com.mongodb.client.model.CreateViewOptions
+
+  /**
+   * Options for creating a view
+   *
+   * @since 1.2
+   * @note Requires MongoDB 3.4 or greater
+   */
+  object CreateViewOptions {
+    def apply(): CreateViewOptions = new com.mongodb.client.model.CreateViewOptions()
+  }
+
+  /**
    * The default options for a collection to apply on the creation of indexes.
    *
    * @note Requires MongoDB 3.2 or greater

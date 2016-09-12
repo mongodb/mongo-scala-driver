@@ -104,7 +104,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
   }
 
   it should "mirror all com.mongodb.client.model in org.mongdb.scala.model" in {
-    val javaExclusions = Set("ParallelCollectionScanOptions", "GraphLookupOptions", "CreateViewOptions")
+    val javaExclusions = Set("ParallelCollectionScanOptions", "GraphLookupOptions")
     val packageName = "com.mongodb.client.model"
     val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
 

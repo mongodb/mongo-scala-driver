@@ -19,6 +19,8 @@ package org.mongodb.scala
 import scala.language.implicitConversions
 
 import org.bson.BsonString
+import org.mongodb.scala.model.Aggregates.filter
+import org.mongodb.scala.model.Filters.gte
 
 
 class SmokeTestISpec extends RequiresMongoDBISpec {
@@ -44,6 +46,16 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       info("The collection name should be in the collection names list")
       val collectionNames = database.listCollectionNames().futureValue
       collectionNames should contain(collectionName)
+
+      info("Creating a view")
+      val viewName = "viewName"
+      val createdView = database.createView(viewName, collectionName, Seq(filter(gte("a", 1)))).futureValue.head
+      createdView should equal(Completed())
+      createdView.toString() should equal("The operation completed successfully")
+
+      info("Collection names should include the new view")
+      val collectionAndViewNames = database.listCollectionNames().futureValue
+      collectionAndViewNames should contain(viewName)
 
       info("The collection should be empty")
       val collection = database.getCollection(collectionName)

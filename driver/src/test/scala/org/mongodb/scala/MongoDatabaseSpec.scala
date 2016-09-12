@@ -16,13 +16,15 @@
 
 package org.mongodb.scala
 
+import scala.collection.JavaConverters._
+
 import org.bson.BsonDocument
 import org.bson.codecs.BsonValueCodecProvider
 import org.bson.codecs.configuration.CodecRegistries.fromProviders
-import com.mongodb.client.model.CreateCollectionOptions
 import com.mongodb.async.client.{ ListCollectionsIterable, MongoDatabase => JMongoDatabase }
 
-import org.mongodb.scala.model.{ IndexOptionDefaults, ValidationOptions, ValidationAction, ValidationLevel }
+import org.mongodb.scala.bson.conversions.Bson
+import org.mongodb.scala.model._
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{ FlatSpec, Matchers }
 
@@ -40,7 +42,7 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   "MongoDatabase" should "have the same methods as the wrapped MongoDatabase" in {
-    val wrapped = classOf[JMongoDatabase].getMethods.map(_.getName).toSet - "createView"
+    val wrapped = classOf[JMongoDatabase].getMethods.map(_.getName).toSet
     val local = classOf[MongoDatabase].getMethods.map(_.getName).toSet
 
     wrapped.foreach((name: String) => {
@@ -152,7 +154,7 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "call the underlying createCollection()" in {
-    val options = new CreateCollectionOptions().capped(true).validationOptions(
+    val options = CreateCollectionOptions().capped(true).validationOptions(
       ValidationOptions().validator(Document("""{level: {$gte: 10}}"""))
         .validationLevel(ValidationLevel.MODERATE)
         .validationAction(ValidationAction.WARN)
@@ -166,4 +168,14 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
     mongoDatabase.createCollection("collectionName", options).subscribe(observer[Completed])
   }
 
+  it should "call the underlying createView()" in {
+    val options = CreateViewOptions().collation(Collation.builder().locale("en").build())
+    val pipeline = List.empty[Bson]
+
+    wrapped.expects('createView)("viewName", "collectionName", pipeline.asJava, *).once()
+    wrapped.expects('createView)("viewName", "collectionName", pipeline.asJava, options, *).once()
+
+    mongoDatabase.createView("viewName", "collectionName", pipeline).subscribe(observer[Completed])
+    mongoDatabase.createView("viewName", "collectionName", pipeline, options).subscribe(observer[Completed])
+  }
 }
