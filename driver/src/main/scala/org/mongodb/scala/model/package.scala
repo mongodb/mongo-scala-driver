@@ -16,8 +16,11 @@
 
 package org.mongodb.scala
 
+import scala.collection.JavaConverters._
+
 import org.mongodb.scala.bson.conversions.Bson
 
+// scalastyle:off number.of.methods number.of.types
 /**
  * The model package containing models and options that help describe `MongoCollection` operations
  */
@@ -43,6 +46,46 @@ package object model {
       new com.mongodb.client.model.BsonField(name, value)
     }
   }
+
+  /**
+   * The options for a \$bucketAuto aggregation pipeline stage
+   *
+   * @since 1.2
+   */
+  type BucketAutoOptions = com.mongodb.client.model.BucketAutoOptions
+
+  /**
+   * The options for a \$bucketAuto aggregation pipeline stage
+   *
+   * @since 1.2
+   */
+  object BucketAutoOptions {
+    def apply(): BucketAutoOptions = new com.mongodb.client.model.BucketAutoOptions()
+  }
+
+  /**
+   * The options for a \$bucket aggregation pipeline stage
+   *
+   * @since 1.2
+   */
+  type BucketOptions = com.mongodb.client.model.BucketOptions
+
+  /**
+   * The options for a \$bucket aggregation pipeline stage
+   *
+   * @since 1.2
+   */
+  object BucketOptions {
+    def apply(): BucketOptions = new com.mongodb.client.model.BucketOptions()
+  }
+
+  /**
+   * Granularity values for automatic bucketing.
+   *
+   * @see [[https://en.wikipedia.org/wiki/Preferred_number">Preferred numbers]]
+   * @since 1.2
+   */
+  type BucketGranularity = com.mongodb.client.model.BucketGranularity
 
   /**
    * The options to apply to a bulk write.
@@ -187,6 +230,59 @@ package object model {
   }
 
   /**
+   * Defines a Facet for use in \$facet pipeline stages.
+   *
+   * @since 1.2
+   */
+  type Facet = com.mongodb.client.model.Facet
+
+  /**
+   * Defines a Facet for use in \$facet pipeline stages.
+   *
+   * @since 1.2
+   */
+  object Facet {
+
+    /**
+     * Construct a new instance
+     *
+     * @param name     the name of this facet
+     * @param pipeline the facet definition pipeline
+     * @return the \$facet pipeline stage
+     */
+    def apply(name: String, pipeline: Bson*): Facet = {
+      new com.mongodb.client.model.Facet(name, pipeline.asJava)
+    }
+  }
+
+  /**
+   * A helper to define new fields for the \$addFields pipeline stage
+   *
+   * @tparam TExpression the expression type
+   * @since 1.2
+   */
+  type Field[TExpression] = com.mongodb.client.model.Field[TExpression]
+
+  /**
+   * A helper to define new fields for the \$addFields pipeline stage
+   *
+   * @since 1.2
+   */
+  object Field {
+
+    /**
+     * Construct a new instance.
+     *
+     * @param name  the name of the new field
+     * @param value the value of the new field
+     * @tparam TExpression the expression type
+     */
+    def apply[TExpression](name: String, value: TExpression): Field[TExpression] =
+      new com.mongodb.client.model.Field(name, value)
+
+  }
+
+  /**
    * The options to apply to a find operation.
    */
   type FindOptions = com.mongodb.client.model.FindOptions
@@ -238,6 +334,20 @@ package object model {
    */
   object FindOneAndUpdateOptions {
     def apply(): FindOneAndUpdateOptions = new com.mongodb.client.model.FindOneAndUpdateOptions()
+  }
+
+  /**
+   * The options for a graphLookup aggregation pipeline stage
+   * @since 1.2
+   */
+  type GraphLookupOptions = com.mongodb.client.model.GraphLookupOptions
+
+  /**
+   * The options for a graphLookup aggregation pipeline stage
+   * @since 1.2
+   */
+  object GraphLookupOptions {
+    def apply(): GraphLookupOptions = new com.mongodb.client.model.GraphLookupOptions()
   }
 
   /**
@@ -581,3 +691,5 @@ package object model {
   type WriteModel[TResult] = com.mongodb.client.model.WriteModel[TResult]
 
 }
+
+// scalastyle:on number.of.methods number.of.types

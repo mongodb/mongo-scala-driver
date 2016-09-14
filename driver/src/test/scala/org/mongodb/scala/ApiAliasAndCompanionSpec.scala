@@ -19,7 +19,7 @@ package org.mongodb.scala
 import java.lang.reflect.Modifier._
 
 import scala.collection.JavaConverters._
-import scala.reflect.runtime.{currentMirror, universe => u}
+import scala.reflect.runtime.currentMirror
 
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
@@ -104,7 +104,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
   }
 
   it should "mirror all com.mongodb.client.model in org.mongdb.scala.model" in {
-    val javaExclusions = Set("ParallelCollectionScanOptions", "GraphLookupOptions")
+    val javaExclusions = Set("ParallelCollectionScanOptions")
     val packageName = "com.mongodb.client.model"
     val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
 
