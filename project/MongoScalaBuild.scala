@@ -15,11 +15,15 @@
   */
 
 import scala.util.matching.Regex.Match
+import scalariform.formatter.preferences.FormattingPreferences
 
+import com.typesafe.sbt.GitVersioning
 import com.typesafe.sbt.SbtScalariform._
 import org.scalastyle.sbt.ScalastylePlugin._
 import sbt.Keys._
 import sbt._
+import sbtbuildinfo.BuildInfoKeys.{buildInfoKeys, buildInfoPackage}
+import sbtbuildinfo.{BuildInfoKey, BuildInfoPlugin}
 import sbtunidoc.Plugin._
 import scoverage.ScoverageSbtPlugin._
 
@@ -28,10 +32,11 @@ object MongoScalaBuild extends Build {
   import Dependencies._
   import Resolvers._
 
+  val baseVersion = "1.2.0"
+
   val buildSettings = Seq(
     organization := "org.mongodb.scala",
     organizationHomepage := Some(url("http://www.mongodb.org")),
-    version := "1.2.0-SNAPSHOT",
     scalaVersion := scalaCoreVersion,
     libraryDependencies ++= coreDependencies,
     resolvers := mongoScalaResolvers,
@@ -39,6 +44,11 @@ object MongoScalaBuild extends Build {
                           /*, "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer"*/)
   )
 
+  val versionSettings = Versioning.settings(baseVersion)
+  val buildInfoSettings = Seq(
+    buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion),
+    buildInfoPackage := "org.mongodb.scala"
+  )
   val publishSettings = Publish.settings
   val publishAssemblySettings = Publish.publishAssemblySettings
   val noPublishSettings = Publish.noPublishing
@@ -60,7 +70,7 @@ object MongoScalaBuild extends Build {
   /*
    * Style and formatting
    */
-  def scalariFormFormattingPreferences = {
+  def scalariFormFormattingPreferences: FormattingPreferences = {
     import scalariform.formatter.preferences._
     FormattingPreferences()
       .setPreference(AlignParameters, true)
@@ -126,6 +136,7 @@ object MongoScalaBuild extends Build {
   ).configs(IntegrationTest)
     .configs(UnitTest)
     .settings(buildSettings)
+    .settings(buildInfoSettings)
     .settings(testSettings)
     .settings(customScalariformSettings)
     .settings(scalaStyleSettings)
@@ -134,6 +145,7 @@ object MongoScalaBuild extends Build {
     .settings(publishSettings)
     .settings(publishAssemblySettings)
     .dependsOn(bson)
+    .enablePlugins(GitVersioning, BuildInfoPlugin)
 
   lazy val bson = Project(
     id = "mongo-scala-bson",
@@ -141,10 +153,12 @@ object MongoScalaBuild extends Build {
   ).configs(IntegrationTest)
     .configs(UnitTest)
     .settings(buildSettings)
+    .settings(versionSettings)
     .settings(testSettings)
     .settings(scalaStyleSettings)
     .settings(docSettings)
     .settings(publishSettings)
+    .enablePlugins(GitVersioning, BuildInfoPlugin)
 
   lazy val examples = Project(
     id = "mongo-scala-driver-examples",
@@ -173,6 +187,6 @@ object MongoScalaBuild extends Build {
     .settings(initialCommands in console := """import org.mongodb.scala._""")
     .dependsOn(driver)
 
-  override def rootProject = Some(root)
+  override def rootProject: Some[Project] = Some(root)
 
 }

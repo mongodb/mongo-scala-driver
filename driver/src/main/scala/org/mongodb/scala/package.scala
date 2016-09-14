@@ -113,6 +113,24 @@ package object scala extends ObservableImplicits with WriteConcernImplicits {
   type ServerAddress = com.mongodb.ServerAddress
 
   /**
+   * The MongoDriverInformation class allows driver and library authors to add extra information about their library. This information is
+   * then available in the MongoD/MongoS logs.
+   *
+   * The following metadata can be included when creating a `MongoClient`.
+   *
+   *  - The driver name. Eg: `mongo-scala-driver`
+   *  - The driver version. Eg: `1.2.0`
+   *  - Extra platform information. Eg: `Scala 2.11`
+   *
+   * '''Note:''' Library authors are responsible for accepting `MongoDriverInformation` from external libraries using their library.
+   * Also all the meta data is limited to 512 bytes and any excess data will be truncated.
+   *
+   * @since 1.2
+   * @note Requires MongoDB 3.4 or greater
+   */
+  type MongoDriverInformation = com.mongodb.client.MongoDriverInformation
+
+  /**
    * Various settings to control the behavior of a `MongoClient`.
    */
   type MongoClientSettings = com.mongodb.async.client.MongoClientSettings

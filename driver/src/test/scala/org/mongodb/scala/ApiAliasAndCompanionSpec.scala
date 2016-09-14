@@ -25,8 +25,11 @@ import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
 import org.reflections.util.{ClasspathHelper, ConfigurationBuilder, FilterBuilder}
 import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.Inspectors.forEvery
 
 class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
+
+  val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
 
   "The scala package" should "mirror the com.mongodb package and com.mongodb.async.client" in {
     val packageName = "com.mongodb"
@@ -34,7 +37,8 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       "MongoIterable", "Observables", "SingleResultCallback", "GridFSBuckets")
     val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "ScalaObservable",
       "ScalaWriteConcern", "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription",
-      "classTagToClassOf", "ReadConcernLevel", "bsonDocumentToDocument", "bsonDocumentToUntypedDocument", "documentToUntypedDocument")
+      "classTagToClassOf", "ReadConcernLevel", "bsonDocumentToDocument", "bsonDocumentToUntypedDocument", "documentToUntypedDocument",
+      "MongoDriverInformation", "BuildInfo")
 
     val classFilter = (f: Class[_ <: Object]) => {
       isPublic(f.getModifiers) &&
@@ -87,8 +91,6 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       "QueryResult", "RandomStringGenerator", "Server", "ServerDescription", "ServerId", "ServerVersion", "SocketStreamFactory", "Stream")
 
     val filters = FilterBuilder.parse("-com.mongodb.connection.netty.*")
-    val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers)
-
     val wrapped = new Reflections(new ConfigurationBuilder()
       .setUrls(ClasspathHelper.forPackage(packageName))
       .setScanners(new SubTypesScanner(false))
@@ -103,10 +105,25 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     diff(local, wrapped) shouldBe empty
   }
 
+  it should "mirror all com.mongodb.client. into org.mongdb.scala." in {
+    val packageName = "com.mongodb.client"
+    val wrapped = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
+      .asScala.filter(_.getPackage.getName == packageName)
+      .filter(classFilter)
+      .map(_.getSimpleName).toSet
+
+    val scalaPackageName = "org.mongodb.scala"
+    val local = new Reflections(scalaPackageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
+      .asScala.filter(_.getPackage.getName == scalaPackageName)
+      .filter((f: Class[_ <: Object]) => isPublic(f.getModifiers))
+      .map(_.getSimpleName.replace("$", "")).toSet
+
+    forEvery(wrapped) { (className: String) => local should contain(className) }
+  }
+
   it should "mirror all com.mongodb.client.model in org.mongdb.scala.model" in {
     val javaExclusions = Set("ParallelCollectionScanOptions")
     val packageName = "com.mongodb.client.model"
-    val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
 
     val objectsAndEnums = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object]).asScala ++
       new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Enum[_]]).asScala
@@ -128,7 +145,6 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
 
   it should "mirror all com.mongodb.client.model.geojson in org.mongdb.scala.model.geojson" in {
     val packageName = "com.mongodb.client.model.geojson"
-    val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
     val wrapped = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
       .asScala.filter(_.getPackage.getName == packageName)
       .filter(classFilter)
@@ -142,7 +158,6 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
 
   it should "mirror all com.mongodb.client.result in org.mongdb.scala.result" in {
     val packageName = "com.mongodb.client.result"
-    val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers)
     val wrapped = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
       .asScala.filter(_.getPackage.getName == packageName)
       .filter(classFilter)
@@ -168,7 +183,6 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
   }
 
   it should "mirror com.mongodb.async.client.gridfs in org.mongdb.scala.gridfs" in {
-    val classFilter = (f: Class[_ <: Object]) => isPublic(f.getModifiers) && !f.getName.contains("$")
     val javaExclusions = Set("GridFSBuckets", "GridFSDownloadByNameOptions")
     val wrapped: Set[String] = Set("com.mongodb.async.client.gridfs", "com.mongodb.client.gridfs.model").flatMap(packageName =>
       new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])

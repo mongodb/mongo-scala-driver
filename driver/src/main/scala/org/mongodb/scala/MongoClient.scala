@@ -22,7 +22,7 @@ import scala.reflect.ClassTag
 
 import org.bson.codecs.configuration.CodecRegistry
 import com.mongodb.ConnectionString
-import com.mongodb.async.client.{MongoClient => JMongoClient, MongoClients}
+import com.mongodb.async.client.{MongoClients, MongoClient => JMongoClient}
 
 import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
 import org.mongodb.scala.connection.{ClusterSettings, ConnectionPoolSettings, ServerSettings, SocketSettings, SslSettings}
@@ -48,7 +48,17 @@ object MongoClient {
    * @param uri the connection string
    * @return MongoClient
    */
-  def apply(uri: String): MongoClient = {
+  def apply(uri: String): MongoClient = MongoClient(uri, None)
+
+  /**
+   * Create a MongoClient instance from a connection string uri
+   *
+   * @param uri the connection string
+   * @param mongoDriverInformation any driver information to associate with the MongoClient
+   * @return MongoClient
+   * @note the `mongoDriverInformation` is intended for driver and library authors to associate extra driver metadata with the connections.
+   */
+  def apply(uri: String, mongoDriverInformation: Option[MongoDriverInformation]): MongoClient = {
     val connectionString = new ConnectionString(uri)
     val builder = MongoClientSettings.builder()
       .codecRegistry(DEFAULT_CODEC_REGISTRY)
@@ -64,16 +74,33 @@ object MongoClient {
     if (connectionString.getWriteConcern != null) builder.writeConcern(connectionString.getWriteConcern)
     // scalastyle:on null
 
-    apply(builder.build())
+    apply(builder.build(), mongoDriverInformation)
   }
 
   /**
    * Create a MongoClient instance from the MongoClientSettings
    *
    * @param clientSettings MongoClientSettings to use for the MongoClient
-   * @return
+   * @return MongoClient
    */
-  def apply(clientSettings: MongoClientSettings): MongoClient = MongoClient(MongoClients.create(clientSettings))
+  def apply(clientSettings: MongoClientSettings): MongoClient = MongoClient(clientSettings, None)
+
+  /**
+   * Create a MongoClient instance from the MongoClientSettings
+   *
+   * @param clientSettings MongoClientSettings to use for the MongoClient
+   * @param mongoDriverInformation any driver information to associate with the MongoClient
+   * @return MongoClient
+   * @note the `mongoDriverInformation` is intended for driver and library authors to associate extra driver metadata with the connections.
+   */
+  def apply(clientSettings: MongoClientSettings, mongoDriverInformation: Option[MongoDriverInformation]): MongoClient = {
+    val builder = mongoDriverInformation match {
+      case Some(info) => MongoDriverInformation.builder(info)
+      case None       => MongoDriverInformation.builder()
+    }
+    builder.driverName(BuildInfo.name).driverVersion(BuildInfo.version).driverPlatform(s"Scala/${BuildInfo.scalaVersion}")
+    MongoClient(MongoClients.create(clientSettings, builder.build()))
+  }
 
   val DEFAULT_CODEC_REGISTRY: CodecRegistry = org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
 }

@@ -70,6 +70,11 @@ class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
     mongoClient.settings.getClusterSettings.getHosts.get(0) shouldBe serverAddress
   }
 
+  it should "accept MongoDriverInformation" in {
+    val driverInformation = MongoDriverInformation.builder().driverName("test").driverVersion("1.2.0").build()
+    val mongoClient = MongoClient("mongodb://localhost", Some(driverInformation))
+  }
+
   it should "call the underlying getSettings" in {
     wrapped.expects('getSettings)().once()
 
