@@ -47,16 +47,6 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       val collectionNames = database.listCollectionNames().futureValue
       collectionNames should contain(collectionName)
 
-      info("Creating a view")
-      val viewName = "viewName"
-      val createdView = database.createView(viewName, collectionName, Seq(filter(gte("a", 1)))).futureValue.head
-      createdView should equal(Completed())
-      createdView.toString() should equal("The operation completed successfully")
-
-      info("Collection names should include the new view")
-      val collectionAndViewNames = database.listCollectionNames().futureValue
-      collectionAndViewNames should contain(viewName)
-
       info("The collection should be empty")
       val collection = database.getCollection(collectionName)
       collection.count().futureValue.head shouldBe 0
