@@ -16,7 +16,7 @@
 
 package org.mongodb.scala
 
-import com.mongodb.{ WriteConcern => JWriteConcern }
+import com.mongodb.{WriteConcern => JWriteConcern}
 
 /**
  * Controls the acknowledgment of write operations with various options.

@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
 
-import com.mongodb.{ WriteConcern => JWriteConcern }
+import com.mongodb.{WriteConcern => JWriteConcern}
 
 import org.mongodb.scala.WriteConcern
 

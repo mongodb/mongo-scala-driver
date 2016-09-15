@@ -17,13 +17,13 @@
 package org.mongodb.scala.gridfs
 
 import org.bson.types.ObjectId
-import com.mongodb.async.client.gridfs.{ GridFSBucket => JGridFSBucket }
+import com.mongodb.async.client.gridfs.{GridFSBucket => JGridFSBucket}
 
 import org.mongodb.scala.bson.BsonObjectId
 import org.mongodb.scala.bson.collection.immutable.Document
-import org.mongodb.scala.{ ReadConcern, ReadPreference, WriteConcern }
+import org.mongodb.scala.{ReadConcern, ReadPreference, WriteConcern}
 import org.scalamock.scalatest.proxy.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class GridFSBucketSpec extends FlatSpec with Matchers with MockFactory {
   val wrapper = mock[JGridFSBucket]

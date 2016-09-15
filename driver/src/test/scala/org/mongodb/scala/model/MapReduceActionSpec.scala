@@ -18,9 +18,9 @@ package org.mongodb.scala.model
 
 import java.lang.reflect.Modifier._
 
-import com.mongodb.client.model.{ MapReduceAction => JMapReduceAction }
+import com.mongodb.client.model.{MapReduceAction => JMapReduceAction}
 
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class MapReduceActionSpec extends FlatSpec with Matchers {
 

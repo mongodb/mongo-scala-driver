@@ -16,15 +16,15 @@
 
 package org.mongodb.scala.connection
 
-import java.net.{ InetAddress, InetSocketAddress }
+import java.net.{InetAddress, InetSocketAddress}
 
 import scala.collection.JavaConverters._
 
-import com.mongodb.{ ServerAddress => JServerAddress }
+import com.mongodb.{ServerAddress => JServerAddress}
 
 import org.mongodb.scala.ServerAddress
 import org.scalamock.scalatest.proxy.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class ConnectionSpec extends FlatSpec with Matchers with MockFactory {
 

@@ -16,7 +16,7 @@
 
 package org.mongodb.scala
 
-import com.mongodb.async.client.{ Subscription => JSubscription }
+import com.mongodb.async.client.{Subscription => JSubscription}
 
 /**
  * A `Subscription` represents a one-to-one lifecycle of a [[Observer]] subscribing to an [[Observable]].

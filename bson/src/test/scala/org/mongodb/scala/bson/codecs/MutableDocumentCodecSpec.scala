@@ -22,13 +22,13 @@ import java.util.Date
 import scala.collection.JavaConverters._
 
 import org.bson._
-import org.bson.codecs.{DecoderContext, EncoderContext}
-import org.bson.io.{BasicOutputBuffer, ByteBufferBsonInput}
+import org.bson.codecs.{ DecoderContext, EncoderContext }
+import org.bson.io.{ BasicOutputBuffer, ByteBufferBsonInput }
 import org.bson.types.ObjectId
 
 import org.mongodb.scala.bson.collection.mutable
 import org.mongodb.scala.bson.collection.mutable.Document
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
 class MutableDocumentCodecSpec extends FlatSpec with Matchers {
 

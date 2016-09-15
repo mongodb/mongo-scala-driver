@@ -23,7 +23,7 @@ import org.bson.json.JsonParseException
 import org.mongodb.scala.bson._
 import org.mongodb.scala.bson.collection.immutable.Document
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
 class ImmutableDocumentSpec extends FlatSpec with Matchers {
 

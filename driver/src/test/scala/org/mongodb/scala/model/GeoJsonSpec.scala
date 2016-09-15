@@ -19,11 +19,11 @@ package org.mongodb.scala.model
 import java.lang.reflect.Modifier._
 
 import scala.collection.JavaConverters._
-import scala.reflect.runtime.{ universe => u }
+import scala.reflect.runtime.{universe => u}
 
 import org.mongodb.scala.model.geojson.NamedCoordinateReferenceSystem._
 import org.mongodb.scala.model.geojson._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class GeoJsonSpec extends FlatSpec with Matchers {
 

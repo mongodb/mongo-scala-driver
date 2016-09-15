@@ -21,11 +21,11 @@ import scala.language.postfixOps
 import scala.collection.mutable
 
 import org.bson.json.JsonParseException
-import org.bson.{BsonArray, BsonDocument, BsonValue}
+import org.bson.{ BsonArray, BsonDocument, BsonValue }
 
-import org.mongodb.scala.bson.{BsonBoolean, BsonString}
+import org.mongodb.scala.bson.{ BsonBoolean, BsonString }
 import org.mongodb.scala.bson.collection.mutable.Document
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
 class MutableDocumentSpec extends FlatSpec with Matchers {
 

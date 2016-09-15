@@ -16,7 +16,7 @@
 
 package org.mongodb.scala
 
-import com.mongodb.{ MongoNamespace => JMongoNamespace }
+import com.mongodb.{MongoNamespace => JMongoNamespace}
 
 /**
  * A companion object for MongoNamespace

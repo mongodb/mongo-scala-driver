@@ -16,9 +16,9 @@
 
 package org.mongodb.scala
 
-import java.net.{ InetAddress, InetSocketAddress }
+import java.net.{InetAddress, InetSocketAddress}
 
-import com.mongodb.{ ServerAddress => JServerAddress }
+import com.mongodb.{ServerAddress => JServerAddress}
 
 /**
  * Represents the location of a MongoDB server - i.e. server name and port number

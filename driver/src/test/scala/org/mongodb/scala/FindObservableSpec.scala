@@ -21,11 +21,11 @@ import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.Duration
 
 import com.mongodb.CursorType
-import com.mongodb.async.client.{ FindIterable, MongoIterable }
+import com.mongodb.async.client.{FindIterable, MongoIterable}
 
 import org.mongodb.scala.model.Collation
 import org.scalamock.scalatest.proxy.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
 

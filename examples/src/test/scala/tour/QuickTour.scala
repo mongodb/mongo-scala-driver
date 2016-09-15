@@ -53,7 +53,7 @@ object QuickTour {
 
     // make a document and insert it
     val doc: Document = Document("_id" -> 0, "name" -> "MongoDB", "type" -> "database",
-                                 "count" -> 1, "info" -> Document("x" -> 203, "y" -> 102))
+      "count" -> 1, "info" -> Document("x" -> 203, "y" -> 102))
 
     collection.insertOne(doc).results()
 
@@ -90,9 +90,10 @@ object QuickTour {
     collection.find().projection(excludeId()).first().printHeadResult()
 
     //Aggregation
-    collection.aggregate(Seq(filter(gt("i", 0)),
-      project(Document("""{ITimes10: {$multiply: ["$i", 10]}}""")))
-    ).printResults()
+    collection.aggregate(Seq(
+      filter(gt("i", 0)),
+      project(Document("""{ITimes10: {$multiply: ["$i", 10]}}"""))
+    )).printResults()
 
     // Update One
     collection.updateOne(equal("i", 10), set("i", 110)).printHeadResult("Update Result: ")
@@ -111,7 +112,7 @@ object QuickTour {
     // ordered bulk writes
     val writes: List[WriteModel[_ <: Document]] = List(
       InsertOneModel(Document("_id" -> 4)),
-      InsertOneModel(Document("_id"-> 5)),
+      InsertOneModel(Document("_id" -> 5)),
       InsertOneModel(Document("_id" -> 6)),
       UpdateOneModel(Document("_id" -> 1), set("x", 2)),
       DeleteOneModel(Document("_id" -> 2)),

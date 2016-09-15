@@ -19,10 +19,10 @@ import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
 
-import com.mongodb.async.client.{ ListCollectionsIterable, MongoIterable }
+import com.mongodb.async.client.{ListCollectionsIterable, MongoIterable}
 
 import org.scalamock.scalatest.proxy.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class ListCollectionsObservableSpec extends FlatSpec with Matchers with MockFactory {
 

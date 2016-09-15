@@ -19,12 +19,12 @@ package org.mongodb.scala.model
 import java.lang.reflect.Modifier._
 
 import org.mongodb.scala.bson.conversions.Bson
-import org.bson.{ BsonDocument, BsonType }
+import org.bson.{BsonDocument, BsonType}
 
 import org.mongodb.scala.bson.collection.immutable.Document
-import org.mongodb.scala.model.geojson.{ Point, Polygon, Position }
-import org.mongodb.scala.{ MongoClient, model }
-import org.scalatest.{ FlatSpec, Matchers }
+import org.mongodb.scala.model.geojson.{Point, Polygon, Position}
+import org.mongodb.scala.{MongoClient, model}
+import org.scalatest.{FlatSpec, Matchers}
 
 class FiltersSpec extends FlatSpec with Matchers {
   val registry = MongoClient.DEFAULT_CODEC_REGISTRY

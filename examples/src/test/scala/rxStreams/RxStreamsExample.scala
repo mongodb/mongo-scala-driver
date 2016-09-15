@@ -19,7 +19,7 @@ package rxStreams
 import scala.collection.immutable.IndexedSeq
 import scala.concurrent.duration.Duration
 
-import org.mongodb.scala.{Document, _}
+import org.mongodb.scala.{ Document, _ }
 import rxStreams.Implicits._
 
 object RxStreamsExample {
@@ -48,7 +48,6 @@ object RxStreamsExample {
     dropSubscriber.awaitTerminalEvent(Duration(10, "s"))
     dropSubscriber.assertNoErrors()
     dropSubscriber.assertReceivedOnNext(Seq(Completed()))
-
 
     // Insert some documents
     println("Inserting documents")

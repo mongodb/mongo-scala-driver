@@ -20,7 +20,7 @@ import java.util.Date
 
 import scala.collection.JavaConverters._
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
 class BsonValueSpec extends FlatSpec with Matchers {
 

@@ -16,7 +16,7 @@
 
 package org.mongodb.scala.internal
 
-import org.mongodb.scala.{ Observable, Observer, Subscription }
+import org.mongodb.scala.{Observable, Observer, Subscription}
 
 private[scala] case class FilterObservable[T](observable: Observable[T], p: T => Boolean) extends Observable[T] {
   override def subscribe(observer: Observer[_ >: T]): Unit = {

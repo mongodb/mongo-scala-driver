@@ -16,7 +16,7 @@
 
 package org.mongodb.scala
 
-import com.mongodb.async.client.{ MongoClientSettings => JMongoClientSettings, MongoClients => JMongoClients }
+import com.mongodb.async.client.{MongoClientSettings => JMongoClientSettings, MongoClients => JMongoClients}
 
 /**
  * A MongoClientSettings companion object

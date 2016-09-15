@@ -16,19 +16,19 @@
 
 package org.mongodb.scala.internal
 
-import java.util.concurrent.{ CountDownLatch, TimeUnit }
+import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
 import com.mongodb.MongoException
-import com.mongodb.async.client.{ Observable => JObservable, Observer => JObserver, Subscription => JSubscription }
+import com.mongodb.async.client.{Observable => JObservable, Observer => JObserver, Subscription => JSubscription}
 
 import org.mongodb.scala._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class ScalaObservableSpec extends FlatSpec with Matchers {
 

@@ -18,7 +18,7 @@ package org.mongodb.scala.gridfs
 
 import java.nio.ByteBuffer
 
-import org.mongodb.scala.{ Completed, Observable }
+import org.mongodb.scala.{Completed, Observable}
 
 /**
  * The Async Input Stream interface represents some asynchronous input stream of bytes.

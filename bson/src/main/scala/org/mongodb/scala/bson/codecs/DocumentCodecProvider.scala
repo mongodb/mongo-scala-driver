@@ -17,8 +17,8 @@
 package org.mongodb.scala.bson.codecs
 
 import org.bson.codecs.Codec
-import org.bson.codecs.configuration.{CodecProvider, CodecRegistry}
-import org.mongodb.scala.bson.collection.{immutable, mutable}
+import org.bson.codecs.configuration.{ CodecProvider, CodecRegistry }
+import org.mongodb.scala.bson.collection.{ immutable, mutable }
 
 /**
  * A [[http://api.mongodb.org/java/current/org/bson/codecs/configuration/CodecProvider.html CodecProvider]] for the Document
@@ -34,8 +34,8 @@ case class DocumentCodecProvider() extends CodecProvider {
   def get[T](clazz: Class[T], registry: CodecRegistry): Codec[T] = {
     clazz match {
       case IMMUTABLE => ImmutableDocumentCodec(registry).asInstanceOf[Codec[T]]
-      case MUTABLE   => MutableDocumentCodec(registry).asInstanceOf[Codec[T]]
-      case _         => null
+      case MUTABLE => MutableDocumentCodec(registry).asInstanceOf[Codec[T]]
+      case _ => null
     }
   }
   // scalastyle:on null

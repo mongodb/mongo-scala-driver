@@ -16,7 +16,7 @@
 
 package org.mongodb.scala
 
-import com.mongodb.{ MongoCredential => JMongoCredential }
+import com.mongodb.{MongoCredential => JMongoCredential}
 
 /**
  * Represents credentials to authenticate to a MongoDB server, as well as the source of the credentials and the authentication mechanism

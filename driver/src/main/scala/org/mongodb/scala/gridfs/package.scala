@@ -19,9 +19,9 @@ package org.mongodb.scala
 import java.nio.ByteBuffer
 
 import com.mongodb.async.SingleResultCallback
-import com.mongodb.async.client.gridfs.{ AsyncInputStream => JAsyncInputStream, AsyncOutputStream => JAsyncOutputStream }
+import com.mongodb.async.client.gridfs.{AsyncInputStream => JAsyncInputStream, AsyncOutputStream => JAsyncOutputStream}
 
-import org.mongodb.scala.internal.ObservableHelper.{ observeCompleted, observeInt }
+import org.mongodb.scala.internal.ObservableHelper.{observeCompleted, observeInt}
 
 package object gridfs {
 

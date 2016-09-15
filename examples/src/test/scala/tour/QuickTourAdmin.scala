@@ -18,7 +18,7 @@ package tour
 import org.mongodb.scala.bson.conversions.Bson
 
 import org.mongodb.scala._
-import org.mongodb.scala.model.{TextSearchOptions, CreateCollectionOptions}
+import org.mongodb.scala.model.{ TextSearchOptions, CreateCollectionOptions }
 import org.mongodb.scala.model.Filters.text
 import org.mongodb.scala.model.Projections.metaTextScore
 import org.mongodb.scala.model.Sorts.ascending
@@ -53,7 +53,8 @@ object QuickTourAdmin {
     mongoClient.getDatabase("databaseToBeDropped").drop().headResult()
 
     // create a collection
-    database.createCollection("cappedCollection",
+    database.createCollection(
+      "cappedCollection",
       CreateCollectionOptions().capped(true).sizeInBytes(0x100000)
     ).printHeadResult("Collection Created! ")
 
@@ -74,8 +75,8 @@ object QuickTourAdmin {
       insertResults <- collection.insertMany(List(
         Document("_id" -> 0, "content" -> "textual content"),
         Document("_id" -> 1, "content" -> "additional content"),
-        Document("_id" -> 2, "content" -> "irrelevant content"))
-      )
+        Document("_id" -> 2, "content" -> "irrelevant content")
+      ))
     } yield insertResults
 
     indexAndInsert.results()
@@ -92,7 +93,6 @@ object QuickTourAdmin {
       .projection(metaTextScore("score"))
       .first()
       .printHeadResult("Highest scoring document: ")
-
 
     // Run a command
     database.runCommand(Document("buildInfo" -> 1)).printHeadResult()

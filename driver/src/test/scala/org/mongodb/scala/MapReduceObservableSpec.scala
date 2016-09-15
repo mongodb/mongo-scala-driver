@@ -20,11 +20,11 @@ import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.Duration
 
 import com.mongodb.client.model.MapReduceAction
-import com.mongodb.async.client.{ MapReduceIterable, MongoIterable }
+import com.mongodb.async.client.{MapReduceIterable, MongoIterable}
 
 import org.mongodb.scala.model.Collation
 import org.scalamock.scalatest.proxy.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
 

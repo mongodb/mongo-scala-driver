@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 import scala.collection.JavaConverters._
 import scala.concurrent.duration.Duration
 
-import com.mongodb.{ ReadPreference => JReadPreference }
+import com.mongodb.{ReadPreference => JReadPreference}
 
 /**
  * The preferred replica set members to which a query or command can be sent.

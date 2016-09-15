@@ -16,7 +16,7 @@
 
 package org.mongodb.scala
 
-import com.mongodb.async.client.{ Observer => JObserver, Subscription => JSubscription }
+import com.mongodb.async.client.{Observer => JObserver, Subscription => JSubscription}
 
 /**
  * A Scala based wrapper of the `Observer` interface which provides a mechanism for receiving push-based notifications.

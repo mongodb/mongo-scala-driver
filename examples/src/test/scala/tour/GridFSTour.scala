@@ -19,7 +19,7 @@ package tour
 import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousFileChannel
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Path, Paths, StandardOpenOption}
+import java.nio.file.{ Path, Paths, StandardOpenOption }
 
 import scala.util.Success
 
@@ -131,7 +131,7 @@ object GridFSTour {
     /*
      * Rename
      */
-    gridFSBucket.rename(fileId, "mongodbTutorial").andThen({ case Success(r)  => println("renamed") }).results()
+    gridFSBucket.rename(fileId, "mongodbTutorial").andThen({ case Success(r) => println("renamed") }).results()
     println("renamed")
 
     /*

@@ -23,7 +23,7 @@ import scala.reflect.ClassTag
 
 import org.bson.codecs.configuration.CodecRegistry
 import com.mongodb.async.SingleResultCallback
-import com.mongodb.async.client.{ MongoCollection => JMongoCollection }
+import com.mongodb.async.client.{MongoCollection => JMongoCollection}
 
 import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
 import org.mongodb.scala.bson.conversions.Bson

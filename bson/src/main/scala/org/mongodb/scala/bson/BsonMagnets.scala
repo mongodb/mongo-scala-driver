@@ -87,7 +87,7 @@ protected[bson] object BsonMagnets {
   /**
    * Represents a sequence of [[BsonElement]]s
    *
-   *This is essentially a `Iterable[(String, BsonValue)]` of key value pairs.  Any pair of `(String, T)` where type `T` has a
+   * This is essentially a `Iterable[(String, BsonValue)]` of key value pairs.  Any pair of `(String, T)` where type `T` has a
    * [[BsonTransformer]] in scope into a [[BsonValue]] is also a valid pair.
    */
   sealed trait CanBeBsonElements extends Any {
@@ -107,7 +107,7 @@ protected[bson] object BsonMagnets {
    */
   implicit def iterableToCanBeBsonElements[T](elems: Iterable[(String, T)])(implicit transformer: BsonTransformer[T]): CanBeBsonElements =
     new CanBeBsonElements {
-        override val values: Iterable[BsonElement] = elems.map(kv => BsonElement(kv._1, transformer(kv._2)))
+      override val values: Iterable[BsonElement] = elems.map(kv => BsonElement(kv._1, transformer(kv._2)))
     }
 
 }

@@ -17,10 +17,10 @@
 package org.mongodb.scala
 
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.{ Future, Promise }
+import scala.concurrent.{Future, Promise}
 import scala.util.Try
 
-import com.mongodb.async.client.{ Observable => JObservable, Observer => JObserver, Subscription => JSubscription }
+import com.mongodb.async.client.{Observable => JObservable, Observer => JObserver, Subscription => JSubscription}
 
 import org.mongodb.scala.internal._
 

@@ -19,11 +19,10 @@ package org.mongodb.scala.bson.collection.immutable
 import scala.collection.JavaConverters._
 import scala.collection.generic.CanBuildFrom
 import scala.collection.mutable.ListBuffer
-import scala.collection.{Traversable, TraversableLike, mutable}
+import scala.collection.{ Traversable, TraversableLike, mutable }
 
 import org.mongodb.scala.bson._
 import org.mongodb.scala.bson.collection.BaseDocument
-
 
 /**
  * The immutable [[Document]] companion object for easy creation.
@@ -103,7 +102,6 @@ object Document {
   }
 }
 
-
 /**
  * An immutable Document implementation.
  *
@@ -111,10 +109,10 @@ object Document {
  * is no variance in the value type and it always has to be a `BsonValue`.
  *
  * @param underlying the underlying BsonDocument which stores the data.
-
+ *
  */
 case class Document(protected[scala] val underlying: BsonDocument)
-  extends BaseDocument[Document] with  TraversableLike[(String, BsonValue), Document] {
+    extends BaseDocument[Document] with TraversableLike[(String, BsonValue), Document] {
 
   /**
    * Creates a new immutable document

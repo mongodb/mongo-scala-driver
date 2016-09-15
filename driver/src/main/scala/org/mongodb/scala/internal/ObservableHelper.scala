@@ -20,7 +20,7 @@ import java.util
 
 import com.mongodb.Block
 import com.mongodb.async.SingleResultCallback
-import com.mongodb.async.client.{ MongoIterable, Observables }
+import com.mongodb.async.client.{MongoIterable, Observables}
 
 import org.mongodb.scala._
 

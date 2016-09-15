@@ -18,7 +18,7 @@ package org.mongodb.scala.model
 
 import scala.collection.JavaConverters._
 import org.mongodb.scala.bson.conversions.Bson
-import com.mongodb.client.model.{ Indexes => JIndexes }
+import com.mongodb.client.model.{Indexes => JIndexes}
 
 /**
  * A factory for defining index keys. A convenient way to use this class is to statically import all of its methods, which allows usage

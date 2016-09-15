@@ -22,8 +22,8 @@ import scala.annotation.implicitNotFound
 import scala.collection.JavaConverters._
 import scala.util.matching.Regex
 
-import org.mongodb.scala.bson.collection.immutable.{Document => IDocument}
-import org.mongodb.scala.bson.collection.mutable.{Document => MDocument}
+import org.mongodb.scala.bson.collection.immutable.{ Document => IDocument }
+import org.mongodb.scala.bson.collection.mutable.{ Document => MDocument }
 
 /**
  * BsonTransformers allow the transformation of type `T` to their corresponding [[BsonValue]].
@@ -33,8 +33,7 @@ import org.mongodb.scala.bson.collection.mutable.{Document => MDocument}
  * @tparam T the type of value to be transformed into a [[BsonValue]].
  * @since 1.0
  */
-@implicitNotFound("No bson implicit transformer found for type ${T}. Implement or import an implicit BsonTransformer for this type."
-)
+@implicitNotFound("No bson implicit transformer found for type ${T}. Implement or import an implicit BsonTransformer for this type.")
 trait BsonTransformer[-T] {
   /**
    * Convert the object into a [[BsonValue]]

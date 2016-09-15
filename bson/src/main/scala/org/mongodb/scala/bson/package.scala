@@ -29,7 +29,6 @@ package object bson {
    */
   type Document = collection.Document
 
-
   /**
    * An immutable Document implementation.
    *

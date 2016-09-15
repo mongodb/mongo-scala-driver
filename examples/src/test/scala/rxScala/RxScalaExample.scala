@@ -19,7 +19,7 @@ package rxScala
 import scala.collection.immutable.IndexedSeq
 
 import org.mongodb.scala._
-import rx.lang.{scala => rx}
+import rx.lang.{ scala => rx }
 import rxScala.Implicits._
 
 /**

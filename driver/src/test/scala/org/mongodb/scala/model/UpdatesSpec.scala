@@ -23,8 +23,8 @@ import org.mongodb.scala.bson.conversions.Bson
 
 import org.mongodb.scala.bson.collection.immutable.Document
 import org.mongodb.scala.model.Updates._
-import org.mongodb.scala.{ MongoClient, model }
-import org.scalatest.{ FlatSpec, Matchers }
+import org.mongodb.scala.{MongoClient, model}
+import org.scalatest.{FlatSpec, Matchers}
 
 class UpdatesSpec extends FlatSpec with Matchers {
   val registry = MongoClient.DEFAULT_CODEC_REGISTRY

@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 import scala.language.implicitConversions
 
-import org.mongodb.{scala => mongoDB}
-import org.{reactivestreams => rxStreams}
+import org.mongodb.{ scala => mongoDB }
+import org.{ reactivestreams => rxStreams }
 
 object Implicits {
 
@@ -40,7 +40,8 @@ object Implicits {
                   subscriber.onError(new IllegalArgumentException(
                     """3.9 While the Subscription is not cancelled,
                       |Subscription.request(long n) MUST throw a java.lang.IllegalArgumentException if the
-                      |argument is <= 0.""".stripMargin))
+                      |argument is <= 0.""".stripMargin
+                  ))
                 } else {
                   subscription.request(n)
                 }
@@ -57,7 +58,8 @@ object Implicits {
           def onError(e: Throwable): Unit = subscriber.onError(e)
 
           def onComplete(): Unit = subscriber.onComplete()
-        })
+        }
+      )
     }
   }
 

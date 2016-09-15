@@ -18,10 +18,10 @@ package org.mongodb.scala.model
 
 import java.lang.reflect.Modifier._
 
-import scala.util.{ Success, Try }
+import scala.util.{Success, Try}
 
 import org.scalatest.prop.TableDrivenPropertyChecks._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class CollationMaxVariableSpec extends FlatSpec with Matchers {
 

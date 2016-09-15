@@ -20,11 +20,11 @@ import java.nio.ByteBuffer
 
 import org.bson.types.ObjectId
 import com.mongodb.async.SingleResultCallback
-import com.mongodb.async.client.gridfs.{ GridFSUploadStream => JGridFSUploadStream }
+import com.mongodb.async.client.gridfs.{GridFSUploadStream => JGridFSUploadStream}
 
 import org.mongodb.scala.bson.BsonValue
-import org.mongodb.scala.internal.ObservableHelper.{ observeCompleted, observeInt }
-import org.mongodb.scala.{ Completed, Observable }
+import org.mongodb.scala.internal.ObservableHelper.{observeCompleted, observeInt}
+import org.mongodb.scala.{Completed, Observable}
 
 /**
  * A GridFS OutputStream for uploading data into GridFS

@@ -19,7 +19,7 @@ package org.mongodb.scala.model
 import scala.collection.JavaConverters._
 
 import org.mongodb.scala.bson.conversions.Bson
-import com.mongodb.client.model.{ Aggregates => JAggregates }
+import com.mongodb.client.model.{Aggregates => JAggregates}
 
 /**
  * Builders for aggregation pipeline stages.

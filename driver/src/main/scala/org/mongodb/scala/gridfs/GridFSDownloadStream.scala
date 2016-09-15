@@ -19,10 +19,10 @@ package org.mongodb.scala.gridfs
 import java.nio.ByteBuffer
 
 import com.mongodb.async.SingleResultCallback
-import com.mongodb.async.client.gridfs.{ GridFSDownloadStream => JGridFSDownloadStream }
+import com.mongodb.async.client.gridfs.{GridFSDownloadStream => JGridFSDownloadStream}
 
-import org.mongodb.scala.internal.ObservableHelper.{ observe, observeCompleted, observeInt }
-import org.mongodb.scala.{ Completed, Observable }
+import org.mongodb.scala.internal.ObservableHelper.{observe, observeCompleted, observeInt}
+import org.mongodb.scala.{Completed, Observable}
 
 /**
  * A GridFS InputStream for downloading data from GridFS

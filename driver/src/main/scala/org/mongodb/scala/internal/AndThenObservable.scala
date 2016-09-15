@@ -16,9 +16,9 @@
 
 package org.mongodb.scala.internal
 
-import scala.util.{ Failure, Try }
+import scala.util.{Failure, Try}
 
-import org.mongodb.scala.{ Observable, Observer, Subscription }
+import org.mongodb.scala.{Observable, Observer, Subscription}
 
 private[scala] case class AndThenObservable[T, U](observable: Observable[T], pf: PartialFunction[Try[T], U]) extends Observable[T] {
   override def subscribe(observer: Observer[_ >: T]): Unit = {

@@ -20,8 +20,8 @@ import java.util.Date
 
 import scala.language.implicitConversions
 
-import org.mongodb.scala.bson.collection.{immutable, mutable}
-import org.scalatest.{FlatSpec, Matchers}
+import org.mongodb.scala.bson.collection.{ immutable, mutable }
+import org.scalatest.{ FlatSpec, Matchers }
 
 class BsonTransformerSpec extends FlatSpec with Matchers {
 
@@ -75,7 +75,7 @@ class BsonTransformerSpec extends FlatSpec with Matchers {
   it should "transform Regex" in {
     transform("/.*/".r) should equal(BsonRegularExpression("/.*/"))
   }
-  it should "transform Seq[T]" in  {
+  it should "transform Seq[T]" in {
     transform(Seq("a", "b", "c")) should equal(BsonArray("a", "b", "c"))
   }
   it should "transform String" in {

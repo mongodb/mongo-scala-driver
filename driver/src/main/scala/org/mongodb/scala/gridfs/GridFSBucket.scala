@@ -18,12 +18,12 @@ package org.mongodb.scala.gridfs
 
 import org.bson.types.ObjectId
 import com.mongodb.async.SingleResultCallback
-import com.mongodb.async.client.gridfs.{ GridFSBuckets, GridFSBucket => JGridFSBucket }
+import com.mongodb.async.client.gridfs.{GridFSBuckets, GridFSBucket => JGridFSBucket}
 
 import org.mongodb.scala.bson.BsonValue
 import org.mongodb.scala.bson.conversions.Bson
-import org.mongodb.scala.internal.ObservableHelper.{ observe, observeCompleted, observeLong }
-import org.mongodb.scala.{ Completed, MongoDatabase, Observable, ReadConcern, ReadPreference, WriteConcern }
+import org.mongodb.scala.internal.ObservableHelper.{observe, observeCompleted, observeLong}
+import org.mongodb.scala.{Completed, MongoDatabase, Observable, ReadConcern, ReadPreference, WriteConcern}
 
 /**
  * A factory for GridFSBucket instances.

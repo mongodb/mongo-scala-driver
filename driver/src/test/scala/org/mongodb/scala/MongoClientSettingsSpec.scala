@@ -18,9 +18,9 @@ package org.mongodb.scala
 
 import org.bson.codecs.configuration.CodecRegistries._
 
-import org.mongodb.scala.bson.codecs.{ DEFAULT_CODEC_REGISTRY, DocumentCodecProvider }
+import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, DocumentCodecProvider}
 import org.scalamock.scalatest.proxy.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class MongoClientSettingsSpec extends FlatSpec with Matchers with MockFactory {
 

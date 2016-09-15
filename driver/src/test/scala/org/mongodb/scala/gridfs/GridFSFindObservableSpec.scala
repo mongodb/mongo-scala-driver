@@ -23,9 +23,9 @@ import scala.concurrent.duration.Duration
 import com.mongodb.async.client.MongoIterable
 import com.mongodb.async.client.gridfs.GridFSFindIterable
 
-import org.mongodb.scala.{ Document, Observer, Subscription }
+import org.mongodb.scala.{Document, Observer, Subscription}
 import org.scalamock.scalatest.proxy.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class GridFSFindObservableSpec extends FlatSpec with Matchers with MockFactory {
   val wrapper = mock[GridFSFindIterable]

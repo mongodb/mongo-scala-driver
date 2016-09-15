@@ -23,5 +23,5 @@ package object conversions {
   /**
    * Type alias to the Bson interface - an interface for types that are able to render themselves into a `BsonDocument`.
    */
-  type Bson =  org.bson.conversions.Bson
+  type Bson = org.bson.conversions.Bson
 }

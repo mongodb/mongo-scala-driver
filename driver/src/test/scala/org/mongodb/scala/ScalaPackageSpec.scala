@@ -20,12 +20,12 @@ import java.util.concurrent.TimeUnit
 
 import _root_.scala.concurrent.duration.Duration
 
-import com.mongodb.{ MongoCredential => JMongoCredential }
+import com.mongodb.{MongoCredential => JMongoCredential}
 
 import org.mongodb.scala
 import org.mongodb.scala.bson.BsonString
 import org.mongodb.scala.model._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class ScalaPackageSpec extends FlatSpec with Matchers {
 

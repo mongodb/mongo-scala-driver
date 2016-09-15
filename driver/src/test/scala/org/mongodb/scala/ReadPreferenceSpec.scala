@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit.SECONDS
 import scala.collection.JavaConverters._
 import scala.concurrent.duration.Duration
 
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class ReadPreferenceSpec extends FlatSpec with Matchers {
 

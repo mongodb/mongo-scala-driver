@@ -16,11 +16,11 @@
 
 package org.mongodb.scala.internal
 
-import scala.util.{ Failure, Success }
+import scala.util.{Failure, Success}
 
 import org.mongodb.scala._
 import org.scalatest.prop.TableDrivenPropertyChecks
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class ObservableImplementationSpec extends FlatSpec with Matchers with TableDrivenPropertyChecks {
 

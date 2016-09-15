@@ -17,8 +17,8 @@
 package org.mongodb.scala.bson.codecs
 
 import org.bson.codecs.configuration.CodecRegistry
-import org.bson.codecs.{BsonDocumentCodec, CollectibleCodec, DecoderContext, EncoderContext}
-import org.bson.{BsonReader, BsonValue, BsonWriter}
+import org.bson.codecs.{ BsonDocumentCodec, CollectibleCodec, DecoderContext, EncoderContext }
+import org.bson.{ BsonReader, BsonValue, BsonWriter }
 import org.mongodb.scala.bson.collection.immutable.Document
 
 /**

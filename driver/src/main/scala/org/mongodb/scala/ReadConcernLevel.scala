@@ -18,7 +18,7 @@ package org.mongodb.scala
 
 import scala.util.Try
 
-import com.mongodb.{ ReadConcernLevel => JReadConcernLevel }
+import com.mongodb.{ReadConcernLevel => JReadConcernLevel}
 
 /**
  * The readConcern level of isolation for reads.

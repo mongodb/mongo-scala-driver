@@ -18,9 +18,9 @@ package org.mongodb.scala
 
 import java.lang.reflect.Modifier._
 
-import com.mongodb.{ ReadConcern => JReadConcern }
+import com.mongodb.{ReadConcern => JReadConcern}
 
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.prop.TableDrivenPropertyChecks._
 
 class ReadConcernSpec extends FlatSpec with Matchers {

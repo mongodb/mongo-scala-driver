@@ -22,7 +22,7 @@ import scala.concurrent.duration.Duration
 
 import com.mongodb.async.client.gridfs.GridFSFindIterable
 
-import org.mongodb.scala.{ Observable, Observer }
+import org.mongodb.scala.{Observable, Observer}
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.internal.ObservableHelper.observe
 

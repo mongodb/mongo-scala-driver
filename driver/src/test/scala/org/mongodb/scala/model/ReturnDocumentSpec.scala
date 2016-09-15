@@ -18,9 +18,9 @@ package org.mongodb.scala.model
 
 import java.lang.reflect.Modifier._
 
-import com.mongodb.client.model.{ ReturnDocument => JReturnDocument }
+import com.mongodb.client.model.{ReturnDocument => JReturnDocument}
 
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class ReturnDocumentSpec extends FlatSpec with Matchers {
 

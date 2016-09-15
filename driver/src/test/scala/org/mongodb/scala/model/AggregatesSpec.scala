@@ -27,7 +27,7 @@ import org.mongodb.scala.model.Accumulators._
 import org.mongodb.scala.model.Aggregates._
 import org.mongodb.scala.model.Projections._
 import org.mongodb.scala.model.Sorts._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class AggregatesSpec extends FlatSpec with Matchers {
   val registry = MongoClient.DEFAULT_CODEC_REGISTRY

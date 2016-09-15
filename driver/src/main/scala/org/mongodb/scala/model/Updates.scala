@@ -19,7 +19,7 @@ package org.mongodb.scala.model
 import scala.collection.JavaConverters._
 
 import org.mongodb.scala.bson.conversions.Bson
-import com.mongodb.client.model.{ PushOptions => JPushOptions, Updates => JUpdates }
+import com.mongodb.client.model.{PushOptions => JPushOptions, Updates => JUpdates}
 
 /**
  * A factory for document updates. A convenient way to use this class is to statically import all of its methods, which allows usage like:

@@ -18,7 +18,7 @@ package org.mongodb.scala.model
 
 import scala.util.Try
 
-import com.mongodb.client.model.{ CollationCaseFirst => JCollationCaseFirst }
+import com.mongodb.client.model.{CollationCaseFirst => JCollationCaseFirst}
 
 /**
  * Collation support allows the specific configuration of how character cases are handled.

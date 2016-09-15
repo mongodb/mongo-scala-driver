@@ -16,12 +16,12 @@
 
 package org.mongodb.scala.gridfs.helpers
 
-import java.io.{ InputStream, OutputStream }
+import java.io.{InputStream, OutputStream}
 import java.nio.ByteBuffer
 
-import com.mongodb.async.client.gridfs.helpers.{ AsyncStreamHelper => JAsyncStreamHelper }
+import com.mongodb.async.client.gridfs.helpers.{AsyncStreamHelper => JAsyncStreamHelper}
 
-import org.mongodb.scala.gridfs.{ AsyncInputStream, AsyncOutputStream }
+import org.mongodb.scala.gridfs.{AsyncInputStream, AsyncOutputStream}
 
 /**
  * A general helper class that creates [[org.mongodb.scala.gridfs.AsyncInputStream]] or

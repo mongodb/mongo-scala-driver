@@ -18,10 +18,10 @@ package org.mongodb.scala
 
 import java.lang.reflect.Modifier._
 
-import scala.util.{ Success, Try }
+import scala.util.{Success, Try}
 
 import org.scalatest.prop.TableDrivenPropertyChecks._
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class ReadConcernLevelSpec extends FlatSpec with Matchers {
 

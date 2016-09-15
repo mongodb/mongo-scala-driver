@@ -16,7 +16,7 @@
 
 package org.mongodb.scala.internal
 
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 import org.mongodb.scala._
 

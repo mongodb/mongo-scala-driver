@@ -19,7 +19,7 @@ package org.mongodb.scala.model
 import scala.collection.JavaConverters._
 
 import org.mongodb.scala.bson.conversions.Bson
-import com.mongodb.client.model.{ Sorts => JSorts }
+import com.mongodb.client.model.{Sorts => JSorts}
 
 /**
  * A factory for sort specifications.   A convenient way to use this class is to statically import all of its methods, which allows

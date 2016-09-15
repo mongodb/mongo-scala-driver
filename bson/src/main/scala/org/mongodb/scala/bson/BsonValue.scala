@@ -21,8 +21,7 @@ import java.util.Date
 import scala.collection.JavaConverters._
 import scala.util.matching.Regex
 
-import org.bson.{BsonDocument => JBsonDocument}
-
+import org.bson.{ BsonDocument => JBsonDocument }
 
 /**
  * Companion helper for a BsonArray
@@ -145,7 +144,6 @@ object BsonDecimal128 {
   def apply(value: String): BsonDecimal128 = apply(org.bson.types.Decimal128.parse(value))
 }
 
-
 /**
  * Companion helper for a BsonDocument
  * @since 1.0
@@ -171,7 +169,6 @@ object BsonDocument {
     elems.foreach(kv => bsonDocument.put(kv._1, kv._2))
     bsonDocument
   }
-
 
   /**
    * Creates a `BsonDocument` from key value pairs

@@ -22,10 +22,10 @@ import scala.reflect.ClassTag
 
 import org.bson.codecs.configuration.CodecRegistry
 import com.mongodb.ConnectionString
-import com.mongodb.async.client.{ MongoClient => JMongoClient, MongoClients }
+import com.mongodb.async.client.{MongoClient => JMongoClient, MongoClients}
 
 import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
-import org.mongodb.scala.connection.{ ClusterSettings, ConnectionPoolSettings, ServerSettings, SocketSettings, SslSettings }
+import org.mongodb.scala.connection.{ClusterSettings, ConnectionPoolSettings, ServerSettings, SocketSettings, SslSettings}
 import org.mongodb.scala.internal.ObservableHelper.observe
 
 /**

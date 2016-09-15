@@ -16,14 +16,14 @@
 
 package rxStreams
 
-import java.util.concurrent.{CountDownLatch, TimeUnit}
+import java.util.concurrent.{ CountDownLatch, TimeUnit }
 
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration.Duration
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 import org.mongodb.scala.Completed
-import org.reactivestreams.{Subscriber, Subscription}
+import org.reactivestreams.{ Subscriber, Subscription }
 
 object TestSubscriber {
   def apply[T](): TestSubscriber[T] = {
@@ -46,7 +46,6 @@ case class TestSubscriber[T](delegate: Subscriber[T]) extends Subscriber[T] {
   private final val onCompleteEvents: ArrayBuffer[Completed] = new ArrayBuffer[Completed]
 
   private var subscription: Option[Subscription] = None
-
 
   def onSubscribe(subscription: Subscription) {
     this.subscription = Some(subscription)
@@ -89,7 +88,7 @@ case class TestSubscriber[T](delegate: Subscriber[T]) extends Subscriber[T] {
    * The obserable will not call this method if it calls `onError`.
    *
    */
-  def onComplete(): Unit =  {
+  def onComplete(): Unit = {
     try {
       onCompleteEvents += Completed()
       delegate.onComplete()
@@ -204,7 +203,6 @@ case class TestSubscriber[T](delegate: Subscriber[T]) extends Subscriber[T] {
     }
   }
 
-
   /**
    * Blocks until this `Subscriber` receives a notification that the `Observable` is complete (either an `onCompleted` or
    * `onError` notification).
@@ -224,7 +222,7 @@ case class TestSubscriber[T](delegate: Subscriber[T]) extends Subscriber[T] {
    *
    * @param duration the duration of the timeout
    * @throws RuntimeException
-     *          if the Subscriber is interrupted before the Observable is able to complete
+   *          if the Subscriber is interrupted before the Observable is able to complete
    */
   def awaitTerminalEvent(duration: Duration) {
     Try(latch.await(duration.toMillis, TimeUnit.MILLISECONDS)) match {

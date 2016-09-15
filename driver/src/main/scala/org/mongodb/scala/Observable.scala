@@ -16,7 +16,7 @@
 
 package org.mongodb.scala
 
-import com.mongodb.async.client.{ Observable => JObservable, Observer => JObserver, Subscription => JSubscription }
+import com.mongodb.async.client.{Observable => JObservable, Observer => JObserver, Subscription => JSubscription}
 
 import org.mongodb.scala.internal._
 

@@ -21,12 +21,12 @@ import scala.collection.JavaConverters._
 import org.bson.BsonDocument
 import org.bson.codecs.BsonValueCodecProvider
 import org.bson.codecs.configuration.CodecRegistries.fromProviders
-import com.mongodb.async.client.{ ListCollectionsIterable, MongoDatabase => JMongoDatabase }
+import com.mongodb.async.client.{ListCollectionsIterable, MongoDatabase => JMongoDatabase}
 
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model._
 import org.scalamock.scalatest.proxy.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
 

@@ -18,7 +18,7 @@ package org.mongodb.scala.internal
 
 import com.mongodb.MongoException
 
-import org.mongodb.scala.{ Observable, Observer, Subscription }
+import org.mongodb.scala.{Observable, Observer, Subscription}
 
 object TestObservable {
 

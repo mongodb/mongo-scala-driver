@@ -20,10 +20,10 @@ import scala.collection.JavaConverters._
 
 import org.bson.BsonDocument
 import com.mongodb.connection.ClusterSettings
-import com.mongodb.async.client.{ MongoClient => JMongoClient }
+import com.mongodb.async.client.{MongoClient => JMongoClient}
 
 import org.scalamock.scalatest.proxy.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 
 class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
 

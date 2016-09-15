@@ -16,7 +16,7 @@
 
 package org.mongodb.scala.internal
 
-import org.mongodb.scala.{ Observable, Observer, Subscription }
+import org.mongodb.scala.{Observable, Observer, Subscription}
 
 private[scala] case class FoldLeftObservable[T, S](observable: Observable[T], initialValue: S, accumulator: (S, T) => S) extends Observable[S] {
 

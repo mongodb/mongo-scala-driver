@@ -16,13 +16,12 @@
 
 package rxScala
 
-
 import java.util.concurrent.atomic.AtomicBoolean
 
 import scala.language.implicitConversions
 
 import org.mongodb.scala._
-import rx.lang.{scala => rx}
+import rx.lang.{ scala => rx }
 
 object Implicits {
 
@@ -50,9 +49,9 @@ object Implicits {
             }
 
             override def isUnsubscribed: Boolean = subscription match {
-                case Some(sub) => sub.isUnsubscribed
-                case None => true
-              }
+              case Some(sub) => sub.isUnsubscribed
+              case None => true
+            }
           })
         }
 

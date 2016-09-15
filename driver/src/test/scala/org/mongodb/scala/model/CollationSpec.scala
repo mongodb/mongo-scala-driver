@@ -18,7 +18,7 @@ package org.mongodb.scala.model
 
 import java.lang.reflect.Modifier.isStatic
 
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.{FlatSpec, Matchers}
 import com.mongodb.client.model.{
   Collation => JCollation,
   CollationAlternate => JCollationAlternate,

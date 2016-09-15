@@ -16,11 +16,11 @@
 
 package org.mongodb.scala.gridfs.helpers
 
-import java.nio.channels.{ AsynchronousByteChannel, AsynchronousFileChannel }
+import java.nio.channels.{AsynchronousByteChannel, AsynchronousFileChannel}
 
-import com.mongodb.async.client.gridfs.helpers.{ AsynchronousChannelHelper => JAsynchronousChannelHelper }
+import com.mongodb.async.client.gridfs.helpers.{AsynchronousChannelHelper => JAsynchronousChannelHelper}
 
-import org.mongodb.scala.gridfs.{ AsyncInputStream, AsyncOutputStream }
+import org.mongodb.scala.gridfs.{AsyncInputStream, AsyncOutputStream}
 
 /**
  * A helper class to convert to AsynchronousByteChannel or AsynchronousFileChannel instances into

@@ -16,7 +16,7 @@
 
 package org.mongodb.scala.model
 
-import com.mongodb.client.model.{ Accumulators => JAccumulators }
+import com.mongodb.client.model.{Accumulators => JAccumulators}
 
 /**
  * Builders for accumulators used in the group pipeline stage of an aggregation pipeline.

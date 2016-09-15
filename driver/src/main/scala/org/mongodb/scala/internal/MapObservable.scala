@@ -16,7 +16,7 @@
 
 package org.mongodb.scala.internal
 
-import org.mongodb.scala.{ Observable, Observer, Subscription }
+import org.mongodb.scala.{Observable, Observer, Subscription}
 
 private[scala] case class MapObservable[T, S](observable: Observable[T], s: T => S,
                                               f: Throwable => Throwable = t => t) extends Observable[S] {

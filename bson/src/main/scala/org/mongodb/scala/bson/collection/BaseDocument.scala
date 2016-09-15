@@ -17,9 +17,9 @@
 package org.mongodb.scala.bson.collection
 
 import scala.collection.JavaConverters._
-import scala.collection.{GenTraversableOnce, Traversable}
+import scala.collection.{ GenTraversableOnce, Traversable }
 import scala.reflect.ClassTag
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 import org.bson.json.JsonWriterSettings
 
@@ -66,7 +66,7 @@ private[bson] trait BaseDocument[T] extends Traversable[(String, BsonValue)] wit
   def apply[TResult <: BsonValue](key: String)(implicit e: TResult DefaultsTo BsonValue, ct: ClassTag[TResult]): TResult = {
     get[TResult](key) match {
       case Some(value) => value
-      case None        => throw new NoSuchElementException("key not found: " + key)
+      case None => throw new NoSuchElementException("key not found: " + key)
     }
   }
 
@@ -81,7 +81,7 @@ private[bson] trait BaseDocument[T] extends Traversable[(String, BsonValue)] wit
    */
   def getOrElse[B >: BsonValue](key: String, default: CanBeBsonValue): B = get(key) match {
     case Some(v) => v
-    case None    => default.value
+    case None => default.value
   }
 
   //scalastyle:off spaces.after.plus  method.name
@@ -155,7 +155,7 @@ private[bson] trait BaseDocument[T] extends Traversable[(String, BsonValue)] wit
   def get[TResult <: BsonValue](key: String)(implicit e: TResult DefaultsTo BsonValue, ct: ClassTag[TResult]): Option[TResult] = {
     underlying.containsKey(key) match {
       case true => Try(ct.runtimeClass.cast(underlying.get(key))) match {
-        case Success(v)  => Some(v.asInstanceOf[TResult])
+        case Success(v) => Some(v.asInstanceOf[TResult])
         case Failure(ex) => None
       }
       case false => None
