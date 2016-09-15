@@ -18,7 +18,7 @@ import sbt._
 
 object Dependencies {
   // Versions
-  val scalaCoreVersion        = "2.11.7"
+  val scalaCoreVersion        = "2.11.8"
   val mongodbDriverVersion    = "3.4.0-SNAPSHOT"
 
   val scalaTestVersion        = "2.2.4"
