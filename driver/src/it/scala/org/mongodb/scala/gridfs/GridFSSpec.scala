@@ -108,7 +108,7 @@ class GridFSSpec extends RequiresMongoDBISpec {
           val query: Document = rawUpdate.asDocument.getDocument("q")
           val update: mutable.Document = mutable.Document(rawUpdate.asDocument.getDocument("u"))
           update.put("$set", parseHexDocument(update.get[BsonDocument]("$set").get))
-          collection.updateMany(query, update).head()
+          collection.updateMany(query, update).head().futureValue
         }
       } else {
         throw new IllegalArgumentException("Unsupported arrange: " + document)
