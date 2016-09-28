@@ -301,6 +301,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param filter the query filter to apply the the delete operation
    * @param options the options to apply to the delete operation
    * @return a Observable with a single element the DeleteResult or with an com.mongodb.MongoException
+   * @since 1.2
    */
   def deleteOne(filter: Bson, options: DeleteOptions): Observable[DeleteResult] =
     observe(wrapped.deleteOne(filter, options, _: SingleResultCallback[DeleteResult]))
@@ -319,6 +320,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param filter the query filter to apply the the delete operation
    * @param options the options to apply to the delete operation
    * @return a Observable with a single element the DeleteResult or with an com.mongodb.MongoException
+   * @since 1.2
    */
   def deleteMany(filter: Bson, options: DeleteOptions): Observable[DeleteResult] =
     observe(wrapped.deleteMany(filter, options, _: SingleResultCallback[DeleteResult]))
