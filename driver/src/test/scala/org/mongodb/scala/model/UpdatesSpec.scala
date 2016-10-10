@@ -46,6 +46,8 @@ class UpdatesSpec extends FlatSpec with Matchers {
 
   it should "should render $setOnInsert" in {
     toBson(setOnInsert("x", 1)) should equal(Document("""{$setOnInsert : { x : 1} }"""))
+    toBson(setOnInsert("x", List(1, 2, 3))) should equal(Document("""{$setOnInsert : { x : [1, 2, 3]} }"""))
+    toBson(setOnInsert("x", Map("a" -> 1, "b" -> 2, "c" -> 3))) should equal(Document("""{$setOnInsert : { x : {a: 1, b: 2, c: 3}} }"""))
     toBson(setOnInsert("x", null)) should equal(Document("""{$setOnInsert : { x : null } }"""))
   }
 

@@ -21,5 +21,26 @@ import org.bson.codecs.configuration.CodecRegistry
 import com.mongodb.async.client.MongoClients
 
 package object codecs {
-  val DEFAULT_CODEC_REGISTRY: CodecRegistry = fromRegistries(MongoClients.getDefaultCodecRegistry, fromProviders(DocumentCodecProvider()))
+  val DEFAULT_CODEC_REGISTRY: CodecRegistry = fromRegistries(
+    MongoClients.getDefaultCodecRegistry,
+    fromProviders(DocumentCodecProvider(), IterableCodecProvider())
+  )
+
+  /**
+   * Type alias to the `BsonTypeClassMap`
+   */
+  type BsonTypeClassMap = org.bson.codecs.BsonTypeClassMap
+
+  /**
+   * Companion to return the default `BsonTypeClassMap`
+   */
+  object BsonTypeClassMap {
+    def apply(): BsonTypeClassMap = new BsonTypeClassMap()
+  }
+
+  /**
+   * Type alias to the `BsonTypeCodecMap`
+   */
+  type BsonTypeCodecMap = org.bson.codecs.BsonTypeCodecMap
+
 }
