@@ -14,6 +14,7 @@
   * limitations under the License.
   */
 
+import sbt.Keys.scalaVersion
 import sbt._
 
 object Dependencies {
@@ -34,6 +35,7 @@ object Dependencies {
 
   // Libraries
   val mongodbDriver = "org.mongodb" % "mongodb-driver-async" % mongodbDriverVersion
+  val scalaReflect  =  scalaVersion("org.scala-lang" % "scala-reflect" % _)
 
   // Test
   val scalaTest         = "org.scalatest" %% "scalatest" % scalaTestVersion % "it,test"
