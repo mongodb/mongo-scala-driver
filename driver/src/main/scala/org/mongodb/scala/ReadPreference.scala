@@ -68,7 +68,8 @@ object ReadPreference {
   /**
    * Gets a read preference that forces reads to the primary if available, otherwise to a secondary.
    *
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads primary if available.
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -78,7 +79,8 @@ object ReadPreference {
   /**
    * Gets a read preference that forces reads to a secondary.
    *
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads secondary.
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -88,7 +90,8 @@ object ReadPreference {
   /**
    * Gets a read preference that forces reads to a secondary if one is available, otherwise to the primary.
    *
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads secondary if available, otherwise from primary.
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -98,7 +101,8 @@ object ReadPreference {
   /**
    * Gets a read preference that forces reads to a primary or a secondary.
    *
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads nearest
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -141,7 +145,8 @@ object ReadPreference {
    * Gets a read preference that forces reads to the primary if available, otherwise to a secondary with the given set of tags.
    *
    * @param tagSet       the set of tags to limit the list of secondaries to.
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads primary if available, otherwise a secondary respective of tags.
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -153,7 +158,8 @@ object ReadPreference {
    * Gets a read preference that forces reads to a secondary with the given set of tags.
    *
    * @param tagSet       the set of tags to limit the list of secondaries to
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads secondary respective of tags.
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -165,7 +171,8 @@ object ReadPreference {
    * Gets a read preference that forces reads to a secondary with the given set of tags, or the primary is none are available.
    *
    * @param tagSet       the set of tags to limit the list of secondaries to
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads secondary if available respective of tags, otherwise from primary irrespective of tags.
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -177,7 +184,8 @@ object ReadPreference {
    * Gets a read preference that forces reads to the primary or a secondary with the given set of tags.
    *
    * @param tagSet       the set of tags to limit the list of secondaries to
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads nearest node respective of tags.
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -230,7 +238,8 @@ object ReadPreference {
    * or failing if no secondary can be found that matches any of the tag sets in the list.
    *
    * @param tagSetList   the list of tag sets to limit the list of secondaries to
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads primary if available, otherwise a secondary respective of tags.
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -244,7 +253,8 @@ object ReadPreference {
    * or failing if no secondary can be found that matches any of the tag sets in the list.
    *
    * @param tagSetList   the list of tag sets to limit the list of secondaries to
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads secondary respective of tags.
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -258,7 +268,8 @@ object ReadPreference {
    * or the primary if none are available.
    *
    * @param tagSetList   the list of tag sets to limit the list of secondaries to
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads secondary if available respective of tags, otherwise from primary irrespective of tags.
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -272,7 +283,8 @@ object ReadPreference {
    * or the primary if none are available.
    *
    * @param tagSetList   the list of tag sets to limit the list of secondaries to
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return ReadPreference which reads nearest node respective of tags.
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
@@ -302,7 +314,8 @@ object ReadPreference {
    *
    * @param name       the name of the read preference
    * @param tagSetList the list of tag sets
-   * @param maxStaleness the max allowable staleness of secondaries.  A zero duration indicates the absence of a maximum.
+   * @param maxStaleness the max allowable staleness of secondaries. The minimum value is either 90 seconds, or the heartbeat frequency
+   *                     plus 10 seconds, whichever is greatest.
    * @return the taggable read preference
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
