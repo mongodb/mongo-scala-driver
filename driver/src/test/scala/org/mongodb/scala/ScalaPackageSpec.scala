@@ -129,12 +129,16 @@ class ScalaPackageSpec extends FlatSpec with Matchers {
     val javaCredential3 = JMongoCredential.createMongoX509Credential("userName")
     scalaCredential3 should equal(javaCredential3)
 
-    val scalaCredential4 = MongoCredential.createPlainCredential("userName", "database", "password".toCharArray)
-    val javaCredential4 = JMongoCredential.createPlainCredential("userName", "database", "password".toCharArray)
+    val scalaCredential4 = MongoCredential.createMongoX509Credential()
+    val javaCredential4 = JMongoCredential.createMongoX509Credential()
     scalaCredential4 should equal(javaCredential4)
 
-    val scalaCredential5 = MongoCredential.createGSSAPICredential("userName")
-    val javaCredential5 = JMongoCredential.createGSSAPICredential("userName")
+    val scalaCredential5 = MongoCredential.createPlainCredential("userName", "database", "password".toCharArray)
+    val javaCredential5 = JMongoCredential.createPlainCredential("userName", "database", "password".toCharArray)
     scalaCredential5 should equal(javaCredential5)
+
+    val scalaCredential6 = MongoCredential.createGSSAPICredential("userName")
+    val javaCredential6 = JMongoCredential.createGSSAPICredential("userName")
+    scalaCredential6 should equal(javaCredential6)
   }
 }

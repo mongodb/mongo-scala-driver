@@ -11,6 +11,7 @@ title = "Changelog"
 Changes between released versions
 
 ### 1.2.0
+  * Added support for MONGODB-X509 auth without username. [SCALA-279](https://jira.mongodb.org/browse/SCALA-279)
   * Added support for library authors to extend the handshake metadata. [SCALA-252](https://jira.mongodb.org/browse/SCALA-252)
   * Added support for the new Aggregation stages in 3.4 [SCALA-258](https://jira.mongodb.org/browse/SCALA-258)
   * Added support for views [SCALA-255](https://jira.mongodb.org/browse/SCALA-255)

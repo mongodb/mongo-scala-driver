@@ -88,6 +88,17 @@ object MongoCredential {
   def createMongoX509Credential(userName: String): JMongoCredential = JMongoCredential.createMongoX509Credential(userName)
 
   /**
+   * Creates a MongoCredential instance for the MongoDB X.509 protocol where the distinguished subject name of the client certificate
+   * acts as the userName.
+   *
+   * @return the credential
+   * @see [[http://docs.mongodb.org/manual/core/authentication/#x-509-certificate-authentication X-509]]
+   * @since 1.2
+   * @note Requires MongoDB 3.4 or greater
+   */
+  def createMongoX509Credential(): JMongoCredential = JMongoCredential.createMongoX509Credential()
+
+  /**
    * Creates a MongoCredential instance for the PLAIN SASL mechanism.
    *
    * @param userName the non-null user name
