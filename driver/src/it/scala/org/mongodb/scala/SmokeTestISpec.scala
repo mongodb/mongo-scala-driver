@@ -41,7 +41,6 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       info("Database names should include the new collection")
       val updatedNames = client.listDatabaseNames().futureValue
       updatedNames should contain(databaseName)
-      updatedNames.length shouldBe names.length + 1
 
       info("The collection name should be in the collection names list")
       val collectionNames = database.listCollectionNames().futureValue
