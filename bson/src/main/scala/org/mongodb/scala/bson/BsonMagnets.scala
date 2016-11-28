@@ -90,7 +90,7 @@ protected[bson] object BsonMagnets {
    * This is essentially a `Iterable[(String, BsonValue)]` of key value pairs.  Any pair of `(String, T)` where type `T` has a
    * [[BsonTransformer]] in scope into a [[BsonValue]] is also a valid pair.
    */
-  sealed trait CanBeBsonElements extends Any {
+  sealed trait CanBeBsonElements {
     /**
      * The `BsonElement` sequence
      */

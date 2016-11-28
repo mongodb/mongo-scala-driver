@@ -38,6 +38,7 @@ object MongoScalaBuild extends Build {
     organization := "org.mongodb.scala",
     organizationHomepage := Some(url("http://www.mongodb.org")),
     scalaVersion := scalaCoreVersion,
+    crossScalaVersions := scalaVersions,
     libraryDependencies ++= coreDependencies,
     resolvers := mongoScalaResolvers,
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xlint", "-Xlint:-missing-interpolator"

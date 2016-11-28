@@ -18,7 +18,8 @@ import sbt._
 
 object Dependencies {
   // Versions
-  val scalaCoreVersion        = "2.11.8"
+  val scalaVersions           = Seq("2.11.8", "2.12.0")
+  val scalaCoreVersion        = "2.12.0"
   val mongodbDriverVersion    = "3.4.0"
 
   val scalaTestVersion        = "3.0.1"
@@ -28,7 +29,7 @@ object Dependencies {
   val javaxServeletApiVersion = "2.5"
   val nettyVersion            = "4.0.26.Final"
 
-  val rxScalaVersion          = "0.25.0"
+  val rxScalaVersion          = "0.26.4"
   val rxStreamsVersion        = "1.0.0"
 
   // Libraries

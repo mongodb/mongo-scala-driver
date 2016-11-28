@@ -19,7 +19,7 @@ package org.mongodb.scala.gridfs
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, InputStream}
 import javax.xml.bind.DatatypeConverter
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
 import scala.util.Try
@@ -49,7 +49,7 @@ class GridFSSpec extends RequiresMongoDBISpec {
         chunksCollection = Some(database.getCollection(chunksCollectionName))
         val definition = BsonDocument(Source.fromFile(file).getLines.mkString)
         val data = definition.getDocument("data")
-        val tests = definition.getArray("tests").map(_.asDocument())
+        val tests = definition.getArray("tests").asScala.map(_.asDocument())
 
         forEvery(tests) { (test: BsonDocument) =>
           info(test.getString("description").getValue)
@@ -72,10 +72,10 @@ class GridFSSpec extends RequiresMongoDBISpec {
     if (filesDocuments.nonEmpty) filesCollection.map(_.insertMany(filesDocuments)).get.futureValue
     if (chunksDocuments.nonEmpty) chunksCollection.map(_.insertMany(chunksDocuments)).get.futureValue
 
-    for (fileToArrange <- arrange.getArray("data", new BsonArray)) {
+    for (fileToArrange <- arrange.getArray("data", new BsonArray).asScala) {
       val document = fileToArrange.asDocument
       if (document.containsKey("delete") && document.containsKey("deletes")) {
-        for (toDelete <- document.getArray("deletes")) {
+        for (toDelete <- document.getArray("deletes").asScala) {
 
           val collection = document.getString("delete") match {
             case isFilesCollection(_) => filesCollection.get
@@ -104,7 +104,7 @@ class GridFSSpec extends RequiresMongoDBISpec {
           case isChunksCollection(_) => chunksCollection.get
           case x => throw new IllegalArgumentException(s"Unknown collection to update: $x")
         }
-        for (rawUpdate <- document.getArray("updates")) {
+        for (rawUpdate <- document.getArray("updates").asScala) {
           val query: Document = rawUpdate.asDocument.getDocument("q")
           val update: mutable.Document = mutable.Document(rawUpdate.asDocument.getDocument("u"))
           update.put("$set", parseHexDocument(update.get[BsonDocument]("$set").get))
@@ -135,9 +135,9 @@ class GridFSSpec extends RequiresMongoDBISpec {
       case true => result should be a 'failure
       case false =>
         result should be a 'success
-        for (rawDataItem <- assertion.getArray("data")) {
+        for (rawDataItem <- assertion.getArray("data").asScala) {
         val dataItem: BsonDocument = rawDataItem.asDocument
-        for (deletedItem <- dataItem.getArray("deletes", new BsonArray)) {
+        for (deletedItem <- dataItem.getArray("deletes", new BsonArray).asScala) {
           val delete: String = dataItem.getString("delete", new BsonString("none")).getValue
           val id: BsonObjectId = delete match {
             case "expected.files" => deletedItem.asDocument.getDocument("q").getObjectId("_id")
@@ -211,7 +211,7 @@ class GridFSSpec extends RequiresMongoDBISpec {
       case false =>
         result should be a 'success
         val objectId = result.get
-        for (rawDataItem <- assertion.getArray("data", new BsonArray)) {
+        for (rawDataItem <- assertion.getArray("data", new BsonArray).asScala) {
           val dataItem: BsonDocument = rawDataItem.asDocument
           val insert: String = dataItem.getString("insert", new BsonString("none")).getValue
           insert match {
@@ -249,14 +249,14 @@ class GridFSSpec extends RequiresMongoDBISpec {
 
   private def processFiles(bsonArray: BsonArray): List[Document] = {
     val documents = ListBuffer[Document]()
-    for (rawDocument <- bsonArray.getValues) {
+    for (rawDocument <- bsonArray.getValues.asScala) {
       if (rawDocument.isDocument) {
         val document: BsonDocument = rawDocument.asDocument
         if (document.get("length").isInt32) document.put("length", BsonInt64(document.getInt32("length").getValue))
         if (document.containsKey("metadata") && document.getDocument("metadata").isEmpty) document.remove("metadata")
         if (document.containsKey("aliases") && document.getArray("aliases").getValues.size == 0) document.remove("aliases")
         if (document.containsKey("contentType") && document.getString("contentType").getValue.length == 0) document.remove("contentType")
-        documents.add(document)
+        documents += document
       }
     }
     documents.toList
@@ -264,8 +264,8 @@ class GridFSSpec extends RequiresMongoDBISpec {
 
   private def processChunks(bsonArray: BsonArray): List[Document] = {
     val documents = ListBuffer[Document]()
-    for (rawDocument <- bsonArray.getValues) {
-      if (rawDocument.isDocument) documents.add(parseHexDocument(rawDocument.asDocument))
+    for (rawDocument <- bsonArray.getValues.asScala) {
+      if (rawDocument.isDocument) documents += parseHexDocument(rawDocument.asDocument)
     }
     documents.toList
   }

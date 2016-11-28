@@ -32,7 +32,7 @@ class CollationStrengthSpec extends FlatSpec with Matchers {
     val exclusions = Set("$VALUES", "valueOf", "values")
 
     val wrapped = (wrappedFields ++ wrappedMethods) -- exclusions
-    val local = CollationStrength.getClass.getDeclaredMethods.map(_.getName).toSet -- Set("apply")
+    val local = CollationStrength.getClass.getDeclaredMethods.map(_.getName).toSet -- Set("apply", "$deserializeLambda$", "$anonfun$fromInt$1")
 
     local should equal(wrapped)
   }

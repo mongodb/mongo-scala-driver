@@ -32,7 +32,7 @@ class ValidationLevelSpec extends FlatSpec with Matchers {
     val exclusions = Set("$VALUES", "valueOf", "values")
 
     val wrapped = (wrappedFields ++ wrappedMethods) -- exclusions
-    val local = ValidationLevel.getClass.getDeclaredMethods.map(_.getName).toSet -- Set("apply")
+    val local = ValidationLevel.getClass.getDeclaredMethods.map(_.getName).toSet -- Set("apply", "$deserializeLambda$", "$anonfun$fromString$1")
 
     local should equal(wrapped)
   }

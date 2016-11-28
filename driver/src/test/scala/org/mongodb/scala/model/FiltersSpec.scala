@@ -35,7 +35,8 @@ class FiltersSpec extends FlatSpec with Matchers {
     val wrapped = classOf[com.mongodb.client.model.Filters].getDeclaredMethods
       .filter(f => isStatic(f.getModifiers) && isPublic(f.getModifiers)).map(_.getName).toSet
     val aliases = Set("equal", "notEqual", "bsonType")
-    val local = model.Filters.getClass.getDeclaredMethods.filter(f => isPublic(f.getModifiers)).map(_.getName).toSet -- aliases
+    val ignore = Set("$anonfun$geoWithinPolygon$1")
+    val local = model.Filters.getClass.getDeclaredMethods.filter(f => isPublic(f.getModifiers)).map(_.getName).toSet -- aliases -- ignore
     local should equal(wrapped)
   }
 
