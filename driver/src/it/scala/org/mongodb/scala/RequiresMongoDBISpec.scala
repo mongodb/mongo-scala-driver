@@ -25,16 +25,21 @@
 
 package org.mongodb.scala
 
-import scala.language.implicitConversions
+import java.util
 
+import scala.language.implicitConversions
+import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration.Duration
-import scala.concurrent.{ Await, Future, Promise }
-import scala.util.{ Failure, Properties, Success, Try }
+import scala.concurrent.{Await, Future, Promise}
+import scala.util.{Failure, Properties, Success, Try}
 
+import com.mongodb.connection.ServerVersion
+
+import org.mongodb.scala.bson.BsonString
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.time.{ Millis, Seconds, Span }
+import org.scalatest.time.{Millis, Seconds, Span}
 
 trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
 
@@ -106,6 +111,24 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
     }
   }
 
+  lazy val buildInfo: Document = {
+    if (mongoDBOnline) {
+      mongoClient().getDatabase("admin").runCommand(Document("buildInfo" -> 1)).futureValue.head
+    } else {
+      Document()
+    }
+  }
+
+  def serverVersionAtLeast(minServerVersion: List[Int]): Boolean = {
+    buildInfo.get[BsonString]("version") match {
+      case Some(version) =>
+        val serverVersion = version.getValue.split("\\.").map(_.toInt).padTo(3, 0).take(3).toList.asJava
+        new ServerVersion(serverVersion.asInstanceOf[java.util.List[Integer]]).compareTo(
+          new ServerVersion(minServerVersion.asJava.asInstanceOf[java.util.List[Integer]])) >= 1
+      case None => false
+    }
+  }
+
   override def beforeAll() {
     if (mongoDBOnline) {
       val client = mongoClient()
@@ -130,7 +153,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
     }
   }
 
-  implicit def ObservableToFuture[TResult](observable: Observable[TResult]): Future[List[TResult]] = {
+  implicit def observableToFuture[TResult](observable: Observable[TResult]): Future[List[TResult]] = {
     val promise = Promise[List[TResult]]()
     class FetchingObserver extends Observer[TResult]() {
       val results = new ListBuffer[TResult]()
@@ -153,7 +176,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
     promise.future
   }
 
-  implicit def ObservableToFutureConcept[T](Observable: Observable[T]): FutureConcept[List[T]] = {
+  implicit def observableToFutureConcept[T](Observable: Observable[T]): FutureConcept[List[T]] = {
     val future: Future[List[T]] = Observable
     new FutureConcept[List[T]] {
       def eitherValue: Option[Either[Throwable, List[T]]] = {
