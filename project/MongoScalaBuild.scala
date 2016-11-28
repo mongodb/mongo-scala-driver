@@ -25,7 +25,7 @@ import sbt._
 import sbtbuildinfo.BuildInfoKeys.{buildInfoKeys, buildInfoPackage}
 import sbtbuildinfo.{BuildInfoKey, BuildInfoPlugin}
 import sbtunidoc.Plugin._
-import scoverage.ScoverageSbtPlugin._
+import scoverage.ScoverageKeys
 
 object MongoScalaBuild extends Build {
 
