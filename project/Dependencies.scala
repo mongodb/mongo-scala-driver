@@ -21,8 +21,8 @@ object Dependencies {
   val scalaCoreVersion        = "2.11.8"
   val mongodbDriverVersion    = "3.4.0"
 
-  val scalaTestVersion        = "2.2.4"
-  val scalaMockVersion        = "3.2.2"
+  val scalaTestVersion        = "3.0.1"
+  val scalaMockVersion        = "3.4.1"
   val logbackVersion          = "1.1.3"
   val reflectionsVersion      = "0.9.10"
   val javaxServeletApiVersion = "2.5"
