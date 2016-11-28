@@ -19,8 +19,6 @@ package org.mongodb.scala
 import scala.language.implicitConversions
 
 import org.bson.BsonString
-import org.mongodb.scala.model.Aggregates.filter
-import org.mongodb.scala.model.Filters.gte
 
 
 class SmokeTestISpec extends RequiresMongoDBISpec {

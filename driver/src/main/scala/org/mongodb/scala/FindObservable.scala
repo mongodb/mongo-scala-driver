@@ -20,13 +20,12 @@ import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
 
-import org.mongodb.scala.bson.conversions.Bson
 import com.mongodb.CursorType
-
-import org.mongodb.scala.internal.ObservableHelper._
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.FindIterable
 
+import org.mongodb.scala.bson.conversions.Bson
+import org.mongodb.scala.internal.ObservableHelper._
 import org.mongodb.scala.model.Collation
 
 /**

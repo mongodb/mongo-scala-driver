@@ -20,8 +20,9 @@ import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
 
-import org.mongodb.scala.internal.ObservableHelper._
 import com.mongodb.async.client.ListIndexesIterable
+
+import org.mongodb.scala.internal.ObservableHelper._
 
 /**
  * Observable interface for ListIndexes.

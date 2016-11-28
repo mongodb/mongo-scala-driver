@@ -16,8 +16,8 @@
 
 package org.mongodb.scala.model
 
-import scala.collection.mutable.ArrayBuffer
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ArrayBuffer
 
 import com.mongodb.client.model.{geojson => Jgeojson}
 

@@ -18,14 +18,9 @@ package org.mongodb.scala.model
 
 import java.lang.reflect.Modifier.isStatic
 
+import com.mongodb.client.model.{Collation => JCollation, CollationAlternate => JCollationAlternate, CollationCaseFirst => JCollationCaseFirst, CollationMaxVariable => JCollationMaxVariable, CollationStrength => JCollationStrength}
+
 import org.scalatest.{FlatSpec, Matchers}
-import com.mongodb.client.model.{
-  Collation => JCollation,
-  CollationAlternate => JCollationAlternate,
-  CollationCaseFirst => JCollationCaseFirst,
-  CollationMaxVariable => JCollationMaxVariable,
-  CollationStrength => JCollationStrength
-}
 
 class CollationSpec extends FlatSpec with Matchers {
 

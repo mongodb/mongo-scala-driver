@@ -20,8 +20,8 @@ import java.lang.reflect.Modifier._
 
 import com.mongodb.{ReadConcern => JReadConcern}
 
-import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.prop.TableDrivenPropertyChecks._
+import org.scalatest.{FlatSpec, Matchers}
 
 class ReadConcernSpec extends FlatSpec with Matchers {
 

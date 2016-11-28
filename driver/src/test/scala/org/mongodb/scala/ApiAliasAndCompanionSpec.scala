@@ -24,8 +24,8 @@ import scala.reflect.runtime.currentMirror
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
 import org.reflections.util.{ClasspathHelper, ConfigurationBuilder, FilterBuilder}
-import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.Inspectors.forEvery
+import org.scalatest.{FlatSpec, Matchers}
 
 class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
 

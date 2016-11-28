@@ -17,7 +17,6 @@
 package org.mongodb.scala
 
 import scala.language.implicitConversions
-
 import scala.reflect.ClassTag
 
 /**

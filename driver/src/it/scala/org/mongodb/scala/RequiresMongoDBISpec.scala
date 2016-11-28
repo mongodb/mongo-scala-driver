@@ -25,13 +25,11 @@
 
 package org.mongodb.scala
 
-import java.util
-
-import scala.language.implicitConversions
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future, Promise}
+import scala.language.implicitConversions
 import scala.util.{Failure, Properties, Success, Try}
 
 import com.mongodb.connection.ServerVersion

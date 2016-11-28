@@ -19,8 +19,8 @@ package org.mongodb.scala
 import scala.collection.JavaConverters._
 
 import org.bson.BsonDocument
-import com.mongodb.connection.ClusterSettings
 import com.mongodb.async.client.{MongoClient => JMongoClient}
+import com.mongodb.connection.ClusterSettings
 
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{FlatSpec, Matchers}

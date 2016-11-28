@@ -21,10 +21,9 @@ import scala.collection.JavaConverters._
 import org.bson.BsonDocument
 import org.bson.codecs.BsonValueCodecProvider
 import org.bson.codecs.configuration.CodecRegistries.fromProviders
-import com.mongodb.client.model.CountOptions
 import com.mongodb.async.client.{MongoCollection => JMongoCollection}
+import com.mongodb.client.model.CountOptions
 
-import org.mongodb.scala._
 import org.mongodb.scala.model._
 import org.mongodb.scala.result._
 import org.scalamock.scalatest.proxy.MockFactory

@@ -19,7 +19,6 @@ package org.mongodb.scala
 import java.io.File
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable
 import scala.io.Source
 
 import org.bson.BsonValue

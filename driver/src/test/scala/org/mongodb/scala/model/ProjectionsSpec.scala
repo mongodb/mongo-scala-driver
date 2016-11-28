@@ -19,9 +19,9 @@ package org.mongodb.scala.model
 import java.lang.reflect.Modifier._
 
 import org.bson.BsonDocument
-import org.mongodb.scala.bson.conversions.Bson
 
 import org.mongodb.scala.bson.collection.immutable.Document
+import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.{MongoClient, model}
 import org.scalatest.{FlatSpec, Matchers}
 

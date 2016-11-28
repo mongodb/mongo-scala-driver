@@ -17,8 +17,10 @@
 package org.mongodb.scala.model
 
 import scala.collection.JavaConverters._
-import org.mongodb.scala.bson.conversions.Bson
+
 import com.mongodb.client.model.{Projections => JProjections}
+
+import org.mongodb.scala.bson.conversions.Bson
 
 /**
  * A factory for projections. A convenient way to use this class is to statically import all of its methods, which allows usage like:

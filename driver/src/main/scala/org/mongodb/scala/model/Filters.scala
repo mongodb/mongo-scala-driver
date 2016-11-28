@@ -24,6 +24,7 @@ import scala.util.matching.Regex
 import org.bson._
 import com.mongodb.client.model.geojson.{Geometry, Point}
 import com.mongodb.client.model.{Filters => JFilters}
+
 import org.mongodb.scala.bson.conversions.Bson
 
 //scalastyle:off null number.of.methods

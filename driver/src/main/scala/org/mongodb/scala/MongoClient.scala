@@ -25,7 +25,7 @@ import com.mongodb.ConnectionString
 import com.mongodb.async.client.{MongoClients, MongoClient => JMongoClient}
 
 import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
-import org.mongodb.scala.connection.{ClusterSettings, ConnectionPoolSettings, ServerSettings, SocketSettings, SslSettings}
+import org.mongodb.scala.connection._
 import org.mongodb.scala.internal.ObservableHelper.observe
 
 /**

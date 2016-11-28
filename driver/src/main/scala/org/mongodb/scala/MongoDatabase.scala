@@ -16,14 +16,13 @@
 
 package org.mongodb.scala
 
+import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
-import scala.collection.JavaConverters._
-
 import org.bson.codecs.configuration.CodecRegistry
-import com.mongodb.client.model.{CreateCollectionOptions, CreateViewOptions}
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.{MongoDatabase => JMongoDatabase}
+import com.mongodb.client.model.{CreateCollectionOptions, CreateViewOptions}
 
 import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
 import org.mongodb.scala.bson.conversions.Bson

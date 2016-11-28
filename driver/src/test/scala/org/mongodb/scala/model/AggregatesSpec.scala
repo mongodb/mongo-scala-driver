@@ -19,10 +19,10 @@ package org.mongodb.scala.model
 import java.lang.reflect.Modifier._
 
 import org.bson.BsonDocument
-import org.mongodb.scala.bson.conversions.Bson
 
 import org.mongodb.scala.MongoClient
 import org.mongodb.scala.bson.collection.immutable.Document
+import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model.Accumulators._
 import org.mongodb.scala.model.Aggregates._
 import org.mongodb.scala.model.Projections._
