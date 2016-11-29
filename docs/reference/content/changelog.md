@@ -10,6 +10,10 @@ title = "Changelog"
 
 Changes between released versions
 
+### 1.2.1
+
+  * Removed erroneous scala-reflect dependency. [SCALA-288](https://jira.mongodb.org/browse/SCALA-288) 
+
 ### 1.2.0
 
   * Added support for maxStaleness for secondary reads. [SCALA-251](https://jira.mongodb.org/browse/SCALA-251) [SCALA-280](https://jira.mongodb.org/browse/SCALA-280)

@@ -36,7 +36,6 @@ object Dependencies {
   val mongodbDriver = "org.mongodb" % "mongodb-driver-async" % mongodbDriverVersion
 
   // Test
-  val scalaReflection   = "org.scala-lang" % "scala-reflect" % scalaCoreVersion
   val scalaTest         = "org.scalatest" %% "scalatest" % scalaTestVersion % "it,test"
   val scalaMock         = "org.scalamock" %% "scalamock-scalatest-support" % scalaMockVersion % "test"
   val logback           = "ch.qos.logback" % "logback-classic" % logbackVersion % "it,test"
@@ -50,6 +49,6 @@ object Dependencies {
 
   // Projects
   val coreDependencies     = Seq(mongodbDriver)
-  val testDependencies     = Seq(scalaReflection, scalaTest, scalaMock, logback, reflections, javaxServeletApi, netty)
+  val testDependencies     = Seq(scalaTest, scalaMock, logback, reflections, javaxServeletApi, netty)
   val examplesDependencies = Seq(rxScala, rxStreams)
 }
