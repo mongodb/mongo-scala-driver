@@ -1,9 +1,9 @@
 driverName = "mongo-scala-driver"
 githubRepo = "mongo-scala-driver"
-current = "1.2.0"
+current = "1.2.1"
 
 [[versions]]
-  version = "1.2.0"
+  version = "1.2.1"
   docs = "./1.2"
   api = "./1.2/scaladoc"
 
