@@ -4,12 +4,12 @@ current = "1.2.1"
 
 [[versions]]
   version = "1.2.1"
+  status = "current"
   docs = "./1.2"
   api = "./1.2/scaladoc"
 
 [[versions]]
   version = "1.1.1"
-  status = "current"
   docs = "./1.1"
   api = "./1.1/scaladoc"
 
