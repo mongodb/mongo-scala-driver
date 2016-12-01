@@ -13,6 +13,7 @@ object Versioning {
     git.baseVersion := baseVersion,
     git.uncommittedSignifier := None,
     git.useGitDescribe := true,
+    git.formattedShaVersion := git.gitHeadCommit.value map(sha => s"$baseVersion-${sha take 7}$snapshotSuffix"),
     git.gitTagToVersionNumber := {
       case releasedVersion(v) => Some(v)
       case releasedCandidateVersion(rc) => Some(rc)
