@@ -58,6 +58,7 @@ class ObservableImplementationSpec extends FlatSpec with Matchers with TableDriv
         {
           observable.subscribe(observer)
 
+          val expectedCompleted = observable.isInstanceOf[FoldLeftObservable[_, _]]
           val subscription = observer.subscription.get
           subscription.request(1)
           subscription.request(2)
@@ -70,7 +71,7 @@ class ObservableImplementationSpec extends FlatSpec with Matchers with TableDriv
 
           observer.error should equal(None)
           observer.results.length should be <= 10
-          observer.completed should equal(false)
+          observer.completed should equal(expectedCompleted)
         }
     }
   }

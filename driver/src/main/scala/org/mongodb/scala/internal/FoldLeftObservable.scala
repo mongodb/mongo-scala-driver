@@ -20,16 +20,35 @@ import org.mongodb.scala.{Observable, Observer, Subscription}
 
 private[scala] case class FoldLeftObservable[T, S](observable: Observable[T], initialValue: S, accumulator: (S, T) => S) extends Observable[S] {
 
-  @volatile
-  private var currentValue: S = initialValue
-
   override def subscribe(observer: Observer[_ >: S]): Unit = {
     observable.subscribe(
       new Observer[T] {
 
+        @volatile
+        private var currentValue: S = initialValue
+        @volatile
+        private var requested = false
+
         override def onError(throwable: Throwable): Unit = observer.onError(throwable)
 
-        override def onSubscribe(subscription: Subscription): Unit = observer.onSubscribe(subscription)
+        override def onSubscribe(subscription: Subscription): Unit = {
+          val masterSub = new Subscription() {
+            override def isUnsubscribed: Boolean = subscription.isUnsubscribed
+
+            override def request(n: Long): Unit = {
+              if (n < 1) {
+                throw new IllegalArgumentException(s"Number requested cannot be negative: $n")
+              }
+              if (!requested) {
+                requested = true
+                subscription.request(Long.MaxValue)
+              }
+            }
+            override def unsubscribe(): Unit = subscription.unsubscribe()
+          }
+
+          observer.onSubscribe(masterSub)
+        }
 
         override def onComplete(): Unit = {
           observer.onNext(currentValue)

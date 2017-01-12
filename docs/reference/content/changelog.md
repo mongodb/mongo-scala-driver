@@ -12,6 +12,7 @@ Changes between released versions
 
 ### 2.0.0
 
+  * Fixed FoldLeftObservable, ensuring that only one request for data is actioned and that all the data is requested. [SCALA-289](https://jira.mongodb.org/browse/SCALA-289)
   * Added SingleObservable trait and implicits for easy conversion and identification of Observables that return a single result. [SCALA-234](https://jira.mongodb.org/browse/SCALA-234)
   * MongoCollection methods now default to the collection type rather than Document. [SCALA-250](https://jira.mongodb.org/browse/SCALA-250) 
 
