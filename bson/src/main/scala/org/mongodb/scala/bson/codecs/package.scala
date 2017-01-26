@@ -16,7 +16,7 @@
 
 package org.mongodb.scala.bson
 
-import org.bson.codecs.configuration.CodecRegistries._
+import org.bson.codecs.configuration.CodecRegistries.{ fromRegistries, fromProviders }
 import org.bson.codecs.configuration.CodecRegistry
 import com.mongodb.async.client.MongoClients
 
