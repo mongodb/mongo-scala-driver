@@ -317,7 +317,7 @@ tasks:
       commands:
         - func: "exec script"
           vars:
-            file: ".evergreen/compile.sh"
+            file: ".evergreen/scalastyle.sh"
         - func: "upload build"
 
     - name: "unit-test"
@@ -335,7 +335,7 @@ tasks:
         - func: "bootstrap mongo-orchestration"
         - func: "run integration tests"
 
-    - name: publish-snapshot
+    - name: "publish-snapshot"
       depends_on:
         - variant: "integration-test"
           name: "integration-tests"
