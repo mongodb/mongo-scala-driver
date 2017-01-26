@@ -24,7 +24,8 @@ import sbtassembly.AssemblyPlugin.autoImport._
 
 object Publish {
 
-  val propFile = new File(Path.userHome / ".gradle", "gradle.properties")
+  val propFilename: String = sys.props.getOrElse("publishProperties", Path.userHome.getAbsolutePath + ".gradle/gradle.properties")
+  val propFile = new File(propFilename)
 
   val username = "nexusUsername"
   val password = "nexusPassword"
@@ -33,8 +34,10 @@ object Publish {
   val keyPassword = "signing.password"
 
   lazy val settings: Seq[Def.Setting[_]] = {
-    if (!propFile.exists) Seq.empty
-    else {
+    if (!propFile.exists) {
+      println(s"Missing publish properties file: $propFilename") //scalastyle:ignore
+      Seq.empty
+    } else {
       val props = new Properties
       val input = new FileInputStream(propFile)
       try props.load(input) finally input.close()
@@ -64,10 +67,11 @@ object Publish {
   lazy val mavenSettings = Seq(
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
-      if (isSnapshot.value)
+      if (isSnapshot.value) {
         Some("snapshots" at nexus + "content/repositories/snapshots")
-      else
+      } else {
         Some("releases" at nexus + "service/local/staging/deploy/maven2")
+      }
     },
     publishMavenStyle := true,
     publishArtifact in Test := false,
