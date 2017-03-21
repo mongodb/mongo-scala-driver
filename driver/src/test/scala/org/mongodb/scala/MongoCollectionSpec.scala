@@ -120,8 +120,10 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
   it should "return the underlying withDocumentClass" in {
     wrapped.expects('withDocumentClass)(classOf[Document]).once()
+    wrapped.expects('withDocumentClass)(classOf[Document]).once()
     wrapped.expects('withDocumentClass)(classOf[BsonDocument]).once()
 
+    mongoCollection.withDocumentClass()
     mongoCollection.withDocumentClass[Document]()
     mongoCollection.withDocumentClass[BsonDocument]()
   }

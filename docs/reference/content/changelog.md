@@ -10,6 +10,10 @@ title = "Changelog"
 
 Changes between released versions
 
+### 2.0.0
+
+  * MongoCollection methods now default to the collection type rather than Document. [SCALA-250](https://jira.mongodb.org/browse/SCALA-250) 
+
 ### 1.2.1
 
   * Removed erroneous scala-reflect dependency. [SCALA-288](https://jira.mongodb.org/browse/SCALA-288) 

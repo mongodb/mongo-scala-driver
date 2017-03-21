@@ -182,7 +182,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @tparam C   the target document type of the iterable.
    * @return the find Observable
    */
-  def find[C]()(implicit e: C DefaultsTo Document, ct: ClassTag[C]): FindObservable[C] =
+  def find[C]()(implicit e: C DefaultsTo TResult, ct: ClassTag[C]): FindObservable[C] =
     FindObservable(wrapped.find[C](ct))
 
   /**
@@ -193,7 +193,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @tparam C    the target document type of the iterable.
    * @return the find Observable
    */
-  def find[C](filter: Bson)(implicit e: C DefaultsTo Document, ct: ClassTag[C]): FindObservable[C] =
+  def find[C](filter: Bson)(implicit e: C DefaultsTo TResult, ct: ClassTag[C]): FindObservable[C] =
     FindObservable(wrapped.find(filter, ct))
 
   /**
@@ -203,7 +203,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable containing the result of the aggregation operation
    *         [[http://docs.mongodb.org/manual/aggregation/ Aggregation]]
    */
-  def aggregate[C](pipeline: Seq[Bson])(implicit e: C DefaultsTo Document, ct: ClassTag[C]): AggregateObservable[C] =
+  def aggregate[C](pipeline: Seq[Bson])(implicit e: C DefaultsTo TResult, ct: ClassTag[C]): AggregateObservable[C] =
     AggregateObservable(wrapped.aggregate[C](pipeline.asJava, ct))
 
   /**
@@ -215,7 +215,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable containing the result of the map-reduce operation
    *         [[http://docs.mongodb.org/manual/reference/command/mapReduce/ map-reduce]]
    */
-  def mapReduce[C](mapFunction: String, reduceFunction: String)(implicit e: C DefaultsTo Document, ct: ClassTag[C]): MapReduceObservable[C] =
+  def mapReduce[C](mapFunction: String, reduceFunction: String)(implicit e: C DefaultsTo TResult, ct: ClassTag[C]): MapReduceObservable[C] =
     MapReduceObservable(wrapped.mapReduce(mapFunction, reduceFunction, ct))
 
   /**
