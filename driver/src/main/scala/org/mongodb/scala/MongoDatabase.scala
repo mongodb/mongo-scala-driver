@@ -126,7 +126,7 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    * @tparam TResult the type of the class to use instead of [[Document]].
    * @return a Observable containing the command result
    */
-  def runCommand[TResult](command: Bson)(implicit e: TResult DefaultsTo Document, ct: ClassTag[TResult]): Observable[TResult] =
+  def runCommand[TResult](command: Bson)(implicit e: TResult DefaultsTo Document, ct: ClassTag[TResult]): SingleObservable[TResult] =
     observe(wrapped.runCommand[TResult](command, ct, _: SingleResultCallback[TResult]))
 
   /**
@@ -143,7 +143,7 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
   )(
     implicit
     e: TResult DefaultsTo Document, ct: ClassTag[TResult]
-  ): Observable[TResult] =
+  ): SingleObservable[TResult] =
     observe(wrapped.runCommand(command, readPreference, ct, _: SingleResultCallback[TResult]))
 
   /**
@@ -152,7 +152,7 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    * [[http://docs.mongodb.org/manual/reference/commands/dropDatabase/#dbcmd.dropDatabase Drop database]]
    * @return a Observable identifying when the database has been dropped
    */
-  def drop(): Observable[Completed] = observeCompleted(wrapped.drop(_: SingleResultCallback[Void]))
+  def drop(): SingleObservable[Completed] = observeCompleted(wrapped.drop(_: SingleResultCallback[Void]))
 
   /**
    * Gets the names of all the collections in this database.
@@ -178,7 +178,7 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    * @param collectionName the name for the new collection to create
    * @return a Observable identifying when the collection has been created
    */
-  def createCollection(collectionName: String): Observable[Completed] =
+  def createCollection(collectionName: String): SingleObservable[Completed] =
     observeCompleted(wrapped.createCollection(collectionName, _: SingleResultCallback[Void]))
 
   /**
@@ -189,7 +189,7 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    * @param options        various options for creating the collection
    * @return a Observable identifying when the collection has been created
    */
-  def createCollection(collectionName: String, options: CreateCollectionOptions): Observable[Completed] =
+  def createCollection(collectionName: String, options: CreateCollectionOptions): SingleObservable[Completed] =
     observeCompleted(wrapped.createCollection(collectionName, options, _: SingleResultCallback[Void]))
 
   /**
@@ -202,7 +202,7 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
    */
-  def createView(viewName: String, viewOn: String, pipeline: Seq[Bson]): Observable[Completed] =
+  def createView(viewName: String, viewOn: String, pipeline: Seq[Bson]): SingleObservable[Completed] =
     observeCompleted(wrapped.createView(viewName, viewOn, pipeline.asJava, _: SingleResultCallback[Void]))
 
   /**
@@ -216,6 +216,6 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    * @since 1.2
    * @note Requires MongoDB 3.4 or greater
    */
-  def createView(viewName: String, viewOn: String, pipeline: Seq[Bson], createViewOptions: CreateViewOptions): Observable[Completed] =
+  def createView(viewName: String, viewOn: String, pipeline: Seq[Bson], createViewOptions: CreateViewOptions): SingleObservable[Completed] =
     observeCompleted(wrapped.createView(viewName, viewOn, pipeline.asJava, createViewOptions, _: SingleResultCallback[Void]))
 }

@@ -131,7 +131,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    *
    * @return a Observable with a single element indicating the number of documents
    */
-  def count(): Observable[Long] = observeLong(wrapped.count(_: SingleResultCallback[java.lang.Long]))
+  def count(): SingleObservable[Long] = observeLong(wrapped.count(_: SingleResultCallback[java.lang.Long]))
 
   /**
    * Counts the number of documents in the collection according to the given options.
@@ -139,7 +139,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param filter the query filter
    * @return a Observable with a single element indicating the number of documents
    */
-  def count(filter: Bson): Observable[Long] = observeLong(wrapped.count(filter, _: SingleResultCallback[java.lang.Long]))
+  def count(filter: Bson): SingleObservable[Long] = observeLong(wrapped.count(filter, _: SingleResultCallback[java.lang.Long]))
 
   /**
    * Counts the number of documents in the collection according to the given options.
@@ -148,7 +148,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param options the options describing the count
    * @return a Observable with a single element indicating the number of documents
    */
-  def count(filter: Bson, options: CountOptions): Observable[Long] =
+  def count(filter: Bson, options: CountOptions): SingleObservable[Long] =
     observeLong(wrapped.count(filter, options, _: SingleResultCallback[java.lang.Long]))
 
   /**
@@ -224,7 +224,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param requests the writes to execute
    * @return a Observable with a single element the BulkWriteResult
    */
-  def bulkWrite(requests: Seq[_ <: WriteModel[_ <: TResult]]): Observable[BulkWriteResult] =
+  def bulkWrite(requests: Seq[_ <: WriteModel[_ <: TResult]]): SingleObservable[BulkWriteResult] =
     observe(wrapped.bulkWrite(requests.asJava.asInstanceOf[util.List[_ <: WriteModel[_ <: TResult]]], _: SingleResultCallback[BulkWriteResult]))
 
   /**
@@ -234,7 +234,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param options  the options to apply to the bulk write operation
    * @return a Observable with a single element the BulkWriteResult
    */
-  def bulkWrite(requests: Seq[_ <: WriteModel[_ <: TResult]], options: BulkWriteOptions): Observable[BulkWriteResult] =
+  def bulkWrite(requests: Seq[_ <: WriteModel[_ <: TResult]], options: BulkWriteOptions): SingleObservable[BulkWriteResult] =
     observe(wrapped.bulkWrite(
       requests.asJava.asInstanceOf[util.List[_ <: WriteModel[_ <: TResult]]],
       options,
@@ -248,7 +248,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element indicating when the operation has completed or with either a
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    */
-  def insertOne(document: TResult): Observable[Completed] = observeCompleted(wrapped.insertOne(document, _: SingleResultCallback[Void]))
+  def insertOne(document: TResult): SingleObservable[Completed] = observeCompleted(wrapped.insertOne(document, _: SingleResultCallback[Void]))
 
   /**
    * Inserts the provided document. If the document is missing an identifier, the driver should generate one.
@@ -259,7 +259,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    * @since 1.1
    */
-  def insertOne(document: TResult, options: InsertOneOptions): Observable[Completed] =
+  def insertOne(document: TResult, options: InsertOneOptions): SingleObservable[Completed] =
     observeCompleted(wrapped.insertOne(document, options, _: SingleResultCallback[Void]))
 
   /**
@@ -270,7 +270,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element indicating when the operation has completed or with either a
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    */
-  def insertMany(documents: Seq[_ <: TResult]): Observable[Completed] =
+  def insertMany(documents: Seq[_ <: TResult]): SingleObservable[Completed] =
     observeCompleted(wrapped.insertMany(documents.asJava, _: SingleResultCallback[Void]))
 
   /**
@@ -282,7 +282,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element indicating when the operation has completed or with either a
    *         com.mongodb.DuplicateKeyException or com.mongodb.MongoException
    */
-  def insertMany(documents: Seq[_ <: TResult], options: InsertManyOptions): Observable[Completed] =
+  def insertMany(documents: Seq[_ <: TResult], options: InsertManyOptions): SingleObservable[Completed] =
     observeCompleted(wrapped.insertMany(documents.asJava, options, _: SingleResultCallback[Void]))
 
   /**
@@ -292,7 +292,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param filter the query filter to apply the the delete operation
    * @return a Observable with a single element the DeleteResult or with an com.mongodb.MongoException
    */
-  def deleteOne(filter: Bson): Observable[DeleteResult] = observe(wrapped.deleteOne(filter, _: SingleResultCallback[DeleteResult]))
+  def deleteOne(filter: Bson): SingleObservable[DeleteResult] = observe(wrapped.deleteOne(filter, _: SingleResultCallback[DeleteResult]))
 
   /**
    * Removes at most one document from the collection that matches the given filter.  If no documents match, the collection is not
@@ -303,7 +303,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element the DeleteResult or with an com.mongodb.MongoException
    * @since 1.2
    */
-  def deleteOne(filter: Bson, options: DeleteOptions): Observable[DeleteResult] =
+  def deleteOne(filter: Bson, options: DeleteOptions): SingleObservable[DeleteResult] =
     observe(wrapped.deleteOne(filter, options, _: SingleResultCallback[DeleteResult]))
 
   /**
@@ -312,7 +312,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param filter the query filter to apply the the delete operation
    * @return a Observable with a single element the DeleteResult or with an com.mongodb.MongoException
    */
-  def deleteMany(filter: Bson): Observable[DeleteResult] = observe(wrapped.deleteMany(filter, _: SingleResultCallback[DeleteResult]))
+  def deleteMany(filter: Bson): SingleObservable[DeleteResult] = observe(wrapped.deleteMany(filter, _: SingleResultCallback[DeleteResult]))
 
   /**
    * Removes all documents from the collection that match the given query filter.  If no documents match, the collection is not modified.
@@ -322,7 +322,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element the DeleteResult or with an com.mongodb.MongoException
    * @since 1.2
    */
-  def deleteMany(filter: Bson, options: DeleteOptions): Observable[DeleteResult] =
+  def deleteMany(filter: Bson, options: DeleteOptions): SingleObservable[DeleteResult] =
     observe(wrapped.deleteMany(filter, options, _: SingleResultCallback[DeleteResult]))
 
   /**
@@ -333,7 +333,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param replacement the replacement document
    * @return a Observable with a single element the UpdateResult
    */
-  def replaceOne(filter: Bson, replacement: TResult): Observable[UpdateResult] =
+  def replaceOne(filter: Bson, replacement: TResult): SingleObservable[UpdateResult] =
     observe(wrapped.replaceOne(filter, replacement, _: SingleResultCallback[UpdateResult]))
 
   /**
@@ -345,7 +345,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param options     the options to apply to the replace operation
    * @return a Observable with a single element the UpdateResult
    */
-  def replaceOne(filter: Bson, replacement: TResult, options: UpdateOptions): Observable[UpdateResult] =
+  def replaceOne(filter: Bson, replacement: TResult, options: UpdateOptions): SingleObservable[UpdateResult] =
     observe(wrapped.replaceOne(filter, replacement, options, _: SingleResultCallback[UpdateResult]))
 
   /**
@@ -359,7 +359,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    *               can be of any type for which a { @code Codec} is registered
    * @return a Observable with a single element the UpdateResult
    */
-  def updateOne(filter: Bson, update: Bson): Observable[UpdateResult] =
+  def updateOne(filter: Bson, update: Bson): SingleObservable[UpdateResult] =
     observe(wrapped.updateOne(filter, update, _: SingleResultCallback[UpdateResult]))
 
   /**
@@ -374,7 +374,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param options the options to apply to the update operation
    * @return a Observable with a single element the UpdateResult
    */
-  def updateOne(filter: Bson, update: Bson, options: UpdateOptions): Observable[UpdateResult] =
+  def updateOne(filter: Bson, update: Bson, options: UpdateOptions): SingleObservable[UpdateResult] =
     observe(wrapped.updateOne(filter, update, options, _: SingleResultCallback[UpdateResult]))
 
   /**
@@ -388,7 +388,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    *               can be of any type for which a { @code Codec} is registered
    * @return a Observable with a single element the UpdateResult
    */
-  def updateMany(filter: Bson, update: Bson): Observable[UpdateResult] =
+  def updateMany(filter: Bson, update: Bson): SingleObservable[UpdateResult] =
     observe(wrapped.updateMany(filter, update, _: SingleResultCallback[UpdateResult]))
 
   /**
@@ -403,7 +403,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param options the options to apply to the update operation
    * @return a Observable with a single element the UpdateResult
    */
-  def updateMany(filter: Bson, update: Bson, options: UpdateOptions): Observable[UpdateResult] =
+  def updateMany(filter: Bson, update: Bson, options: UpdateOptions): SingleObservable[UpdateResult] =
     observe(wrapped.updateMany(filter, update, options, _: SingleResultCallback[UpdateResult]))
 
   /**
@@ -413,7 +413,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element the document that was removed.  If no documents matched the query filter, then null will be
    *         returned
    */
-  def findOneAndDelete(filter: Bson): Observable[TResult] = observe(wrapped.findOneAndDelete(filter, _: SingleResultCallback[TResult]))
+  def findOneAndDelete(filter: Bson): SingleObservable[TResult] = observe(wrapped.findOneAndDelete(filter, _: SingleResultCallback[TResult]))
 
   /**
    * Atomically find a document and remove it.
@@ -423,7 +423,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element the document that was removed.  If no documents matched the query filter, then null will be
    *         returned
    */
-  def findOneAndDelete(filter: Bson, options: FindOneAndDeleteOptions): Observable[TResult] =
+  def findOneAndDelete(filter: Bson, options: FindOneAndDeleteOptions): SingleObservable[TResult] =
     observe(wrapped.findOneAndDelete(filter, options, _: SingleResultCallback[TResult]))
 
   /**
@@ -435,7 +435,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    *         property, this will either be the document as it was before the update or as it is after the update.  If no documents matched the
    *         query filter, then null will be returned
    */
-  def findOneAndReplace(filter: Bson, replacement: TResult): Observable[TResult] =
+  def findOneAndReplace(filter: Bson, replacement: TResult): SingleObservable[TResult] =
     observe(wrapped.findOneAndReplace(filter, replacement, _: SingleResultCallback[TResult]))
 
   /**
@@ -448,7 +448,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    *         property, this will either be the document as it was before the update or as it is after the update.  If no documents matched the
    *         query filter, then null will be returned
    */
-  def findOneAndReplace(filter: Bson, replacement: TResult, options: FindOneAndReplaceOptions): Observable[TResult] =
+  def findOneAndReplace(filter: Bson, replacement: TResult, options: FindOneAndReplaceOptions): SingleObservable[TResult] =
     observe(wrapped.findOneAndReplace(filter, replacement, options, _: SingleResultCallback[TResult]))
 
   /**
@@ -461,7 +461,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element the document that was updated before the update was applied.  If no documents matched the
    *         query filter, then null will be returned
    */
-  def findOneAndUpdate(filter: Bson, update: Bson): Observable[TResult] =
+  def findOneAndUpdate(filter: Bson, update: Bson): SingleObservable[TResult] =
     observe(wrapped.findOneAndUpdate(filter, update, _: SingleResultCallback[TResult]))
 
   /**
@@ -476,7 +476,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    *         property, this will either be the document as it was before the update or as it is after the update.  If no documents matched the
    *         query filter, then null will be returned
    */
-  def findOneAndUpdate(filter: Bson, update: Bson, options: FindOneAndUpdateOptions): Observable[TResult] =
+  def findOneAndUpdate(filter: Bson, update: Bson, options: FindOneAndUpdateOptions): SingleObservable[TResult] =
     observe(wrapped.findOneAndUpdate(filter, update, options, _: SingleResultCallback[TResult]))
 
   /**
@@ -485,7 +485,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element indicating when the operation has completed
    *         [[http://docs.mongodb.org/manual/reference/command/drop/ Drop Collection]]
    */
-  def drop(): Observable[Completed] = observeCompleted(wrapped.drop(_: SingleResultCallback[Void]))
+  def drop(): SingleObservable[Completed] = observeCompleted(wrapped.drop(_: SingleResultCallback[Void]))
 
   /**
    * Create an Index
@@ -495,7 +495,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with a single element indicating when the operation has completed
    *         [[http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex Ensure Index]]
    */
-  def createIndex(key: Bson): Observable[String] = observe(wrapped.createIndex(key, _: SingleResultCallback[String]))
+  def createIndex(key: Bson): SingleObservable[String] = observe(wrapped.createIndex(key, _: SingleResultCallback[String]))
 
   /**
    * [[http://docs.mongodb.org/manual/reference/command/createIndexes Create Index]]
@@ -504,7 +504,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param options the options for the index
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def createIndex(key: Bson, options: IndexOptions): Observable[String] =
+  def createIndex(key: Bson, options: IndexOptions): SingleObservable[String] =
     observe(wrapped.createIndex(key, options, _: SingleResultCallback[String]))
 
   /**
@@ -512,7 +512,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param models the list of indexes to create
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def createIndexes(models: Seq[IndexModel]): Observable[String] =
+  def createIndexes(models: Seq[IndexModel]): SingleObservable[String] =
     observeAndFlatten(wrapped.createIndexes(models.asJava, _: SingleResultCallback[util.List[String]]))
 
   /**
@@ -532,7 +532,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param indexName the name of the index to remove
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def dropIndex(indexName: String): Observable[Completed] = observeCompleted(wrapped.dropIndex(indexName, _: SingleResultCallback[Void]))
+  def dropIndex(indexName: String): SingleObservable[Completed] = observeCompleted(wrapped.dropIndex(indexName, _: SingleResultCallback[Void]))
 
   /**
    * Drops the index given the keys used to create it.
@@ -540,7 +540,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param keys the keys of the index to remove
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def dropIndex(keys: Bson): Observable[Completed] = observeCompleted(wrapped.dropIndex(keys, _: SingleResultCallback[Void]))
+  def dropIndex(keys: Bson): SingleObservable[Completed] = observeCompleted(wrapped.dropIndex(keys, _: SingleResultCallback[Void]))
 
   /**
    * Drop all the indexes on this collection, except for the default on _id.
@@ -548,7 +548,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * [[http://docs.mongodb.org/manual/reference/command/dropIndexes/ Drop Indexes]]
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def dropIndexes(): Observable[Completed] = observeCompleted(wrapped.dropIndexes(_: SingleResultCallback[Void]))
+  def dropIndexes(): SingleObservable[Completed] = observeCompleted(wrapped.dropIndexes(_: SingleResultCallback[Void]))
 
   /**
    * Rename the collection with oldCollectionName to the newCollectionName.
@@ -557,7 +557,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param newCollectionNamespace the namespace the collection will be renamed to
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def renameCollection(newCollectionNamespace: MongoNamespace): Observable[Completed] =
+  def renameCollection(newCollectionNamespace: MongoNamespace): SingleObservable[Completed] =
     observeCompleted(wrapped.renameCollection(newCollectionNamespace, _: SingleResultCallback[Void]))
 
   /**
@@ -568,7 +568,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param options                the options for renaming a collection
    * @return a Observable with a single element indicating when the operation has completed
    */
-  def renameCollection(newCollectionNamespace: MongoNamespace, options: RenameCollectionOptions): Observable[Completed] =
+  def renameCollection(newCollectionNamespace: MongoNamespace, options: RenameCollectionOptions): SingleObservable[Completed] =
     observeCompleted(wrapped.renameCollection(newCollectionNamespace, options, _: SingleResultCallback[Void]))
 
 }

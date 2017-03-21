@@ -363,9 +363,7 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
       Await.result(TestObservable[Int](Observable[Int](1 to 10), failOn = 1).head(), Duration(10, TimeUnit.SECONDS))
     }
 
-    intercept[IllegalStateException] {
-      Await.result(TestObservable[Int](Observable(List[Int]())).head(), Duration(10, TimeUnit.SECONDS))
-    }
+    Option(Await.result(TestObservable[Int](Observable(List[Int]())).head(), Duration(10, TimeUnit.SECONDS))) should equal(None)
   }
 
   it should "work with Java Observer" in {

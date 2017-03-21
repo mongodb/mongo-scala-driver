@@ -231,7 +231,7 @@ class GridFSSpec extends RequiresMongoDBISpec {
               val documents: List[Document] = processChunks(dataItem.getArray("documents", new BsonArray))
               getChunksCount(new BsonDocument) should equal(documents.size)
 
-              val actualDocuments: List[Document] = chunksCollection.map(_.find()).get.futureValue
+              val actualDocuments: Seq[Document] = chunksCollection.map(_.find()).get.futureValue
 
               for ((expected, actual) <- documents zip actualDocuments) {
                 new BsonObjectId(objectId) should equal(actual.get[BsonObjectId]("files_id").get)

@@ -18,7 +18,7 @@ package org.mongodb.scala
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.{Future, Promise}
-import scala.util.Try
+import scala.util.{Success, Try}
 
 import com.mongodb.async.client.{Observable => JObservable, Observer => JObserver, Subscription => JSubscription}
 
@@ -188,7 +188,7 @@ trait ObservableImplicits {
      * @see Uses [[foldLeft]] underneath
      * @return an Observable that emits a single item, the result of accumulator.
      */
-    def collect[S](): Observable[Seq[T]] =
+    def collect[S](): SingleObservable[Seq[T]] =
       FoldLeftObservable(observable, ListBuffer[T](), (l: ListBuffer[T], v: T) => l += v).map(_.toSeq)
 
     /**
@@ -209,7 +209,7 @@ trait ObservableImplicits {
      *                    used in the next accumulator call.
      * @return an Observable that emits a single item, the result of accumulator.
      */
-    def foldLeft[S](initialValue: S)(accumulator: (S, T) => S): Observable[S] = FoldLeftObservable(observable, initialValue, accumulator)
+    def foldLeft[S](initialValue: S)(accumulator: (S, T) => S): SingleObservable[S] = FoldLeftObservable(observable, initialValue, accumulator)
 
     /**
      * Creates a new [[Observable]] that will handle any matching throwable that this Observable might contain.
@@ -359,7 +359,7 @@ trait ObservableImplicits {
           sub.request(1)
         }
 
-        override def onComplete(): Unit = promise.failure(new IllegalStateException("Observable completed without returning a result"))
+        override def onComplete(): Unit = promise.complete(Success(null).asInstanceOf[Try[T]]) // scalastyle:ignore
 
         override def onNext(tResult: T): Unit = {
           subscription.get.unsubscribe()
@@ -367,6 +367,55 @@ trait ObservableImplicits {
         }
       })
       promise.future
+    }
+  }
+
+  /**
+   * Extends [[SingleObservable]] to provide simple conversion to a future.
+   *
+   * @param observable the single result observable
+   * @tparam T the type of result
+   * @since 2.0
+   */
+  implicit class ScalaSingleObservable[T](observable: SingleObservable[T]) {
+    /**
+     * Collects the [[Observable]] result and converts to a [[scala.concurrent.Future]].
+     * @return a future representation of the Observable
+     */
+    def toFuture(): Future[T] = observable.head()
+  }
+
+  /**
+   * Converts an observable to a SingleObservable
+   *
+   * @param observable the observable
+   * @tparam T the type of element signaled.
+   * @since 2.0
+   */
+  implicit class ToSingleObservable[T](observable: Observable[T]) extends SingleObservable[T] {
+
+    override def subscribe(observer: Observer[_ >: T]): Unit = {
+      observable.subscribe(
+        new Observer[T] {
+          @volatile
+          var subscription: Option[Subscription] = None
+
+          override def onError(throwable: Throwable): Unit = observer.onError(throwable)
+
+          override def onSubscribe(sub: Subscription): Unit = {
+            subscription = Some(sub)
+            observer.onSubscribe(sub)
+          }
+
+          override def onComplete(): Unit = observer.onComplete()
+
+          override def onNext(tResult: T): Unit = {
+            subscription.get.unsubscribe()
+            observer.onNext(tResult)
+            onComplete()
+          }
+        }
+      )
     }
   }
 

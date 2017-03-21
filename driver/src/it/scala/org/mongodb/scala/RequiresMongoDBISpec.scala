@@ -111,7 +111,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
 
   lazy val buildInfo: Document = {
     if (mongoDBOnline) {
-      mongoClient().getDatabase("admin").runCommand(Document("buildInfo" -> 1)).futureValue.head
+      mongoClient().getDatabase("admin").runCommand(Document("buildInfo" -> 1)).futureValue
     } else {
       Document()
     }
@@ -151,33 +151,29 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
     }
   }
 
-  implicit def observableToFuture[TResult](observable: Observable[TResult]): Future[List[TResult]] = {
-    val promise = Promise[List[TResult]]()
-    class FetchingObserver extends Observer[TResult]() {
-      val results = new ListBuffer[TResult]()
+  implicit def observableToFuture[TResult](observable: Observable[TResult]): Future[Seq[TResult]] = observable.toFuture()
 
-      override def onSubscribe(s: Subscription): Unit = {
-        s.request(Int.MaxValue)
+  implicit def observableToFutureConcept[T](observable: Observable[T]): FutureConcept[Seq[T]] = {
+    val future: Future[Seq[T]] = observable
+    new FutureConcept[Seq[T]] {
+      def eitherValue: Option[Either[Throwable, Seq[T]]] = {
+        future.value.map {
+          case Success(o) => Right(o)
+          case Failure(e) => Left(e)
+        }
       }
+      def isExpired: Boolean = false
 
-      override def onError(t: Throwable): Unit = {
-        promise.failure(t)
-      }
-
-      override def onComplete(): Unit = {
-        promise.success(results.toList)
-      }
-
-      override def onNext(t: TResult): Unit = results.append(t)
+      // Scala Futures themselves don't support the notion of a timeout
+      def isCanceled: Boolean = false // Scala Futures don't seem to be cancelable either
     }
-    observable.subscribe(new FetchingObserver())
-    promise.future
   }
 
-  implicit def observableToFutureConcept[T](Observable: Observable[T]): FutureConcept[List[T]] = {
-    val future: Future[List[T]] = Observable
-    new FutureConcept[List[T]] {
-      def eitherValue: Option[Either[Throwable, List[T]]] = {
+  implicit def observableToFuture[TResult](observable: SingleObservable[TResult]): Future[TResult] = observable.toFuture()
+  implicit def observableToFutureConcept[T](observable: SingleObservable[T]): FutureConcept[T] = {
+    val future: Future[T] = observable.toFuture()
+    new FutureConcept[T] {
+      def eitherValue: Option[Either[Throwable, T]] = {
         future.value.map {
           case Success(o) => Right(o)
           case Failure(e) => Left(e)

@@ -32,7 +32,7 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       val names = client.listDatabaseNames().futureValue
 
       info("Creating a collection")
-      val created = database.createCollection(collectionName).futureValue.head
+      val created = database.createCollection(collectionName).futureValue
       created should equal(Completed())
       created.toString() should equal("The operation completed successfully")
 
@@ -46,37 +46,37 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
 
       info("The collection should be empty")
       val collection = database.getCollection(collectionName)
-      collection.count().futureValue.head shouldBe 0
+      collection.count().futureValue shouldBe 0
 
       info("find first should return null if no documents")
-      collection.find().first().futureValue shouldBe List.empty // This should be an option
+      collection.find().first().futureValue shouldBe null // scalastyle:ignore
 
       info("Insert a document")
-      collection.insertOne(document).futureValue.head should equal(Completed())
+      collection.insertOne(document).futureValue should equal(Completed())
 
       info("The count should be one")
-      collection.count().futureValue.head shouldBe 1
+      collection.count().futureValue shouldBe 1
 
       info("the find that document")
       collection.find().futureValue.head shouldBe document
 
       info("update that document")
-      collection.updateOne(document, Document("$set" -> Document("a" -> 1))).futureValue.head.wasAcknowledged shouldBe true
+      collection.updateOne(document, Document("$set" -> Document("a" -> 1))).futureValue.wasAcknowledged shouldBe true
 
       info("the find the updated document")
-      collection.find().first().futureValue.head shouldBe updatedDocument
+      collection.find().first().futureValue shouldBe updatedDocument
 
       info("aggregate the collection")
       collection.aggregate(List(Document("$match" -> Document("a" -> 1)))).futureValue.head shouldBe updatedDocument
 
       info("remove all documents")
-      collection.deleteOne(Document()).futureValue.head.getDeletedCount() shouldBe 1
+      collection.deleteOne(Document()).futureValue.getDeletedCount() shouldBe 1
 
       info("The count is zero")
-      collection.count().futureValue.head shouldBe 0
+      collection.count().futureValue shouldBe 0
 
       info("create an index")
-      collection.createIndex(Document("test" -> 1)).futureValue.head shouldBe "test_1"
+      collection.createIndex(Document("test" -> 1)).futureValue shouldBe "test_1"
 
       info("has the newly created index")
       val indexNames = collection.listIndexes().futureValue.map(doc => doc[BsonString]("name")).map(name => name.getValue)
@@ -84,21 +84,21 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       indexNames should contain("test_1")
 
       info("drop the index")
-      collection.dropIndex("test_1").futureValue.head should equal(Completed())
+      collection.dropIndex("test_1").futureValue should equal(Completed())
 
       info("has a single index left '_id'")
       collection.listIndexes.futureValue.length shouldBe 1
 
       info("can rename the collection")
       val newCollectionName = "new" + collectionName.capitalize
-      collection.renameCollection(MongoNamespace(databaseName, newCollectionName)).futureValue.head should equal(Completed())
+      collection.renameCollection(MongoNamespace(databaseName, newCollectionName)).futureValue should equal(Completed())
 
       info("the new collection name is in the collection names list")
       database.listCollectionNames().futureValue should contain(newCollectionName)
 
       info("drop the new collection")
       val newCollection = database.getCollection(newCollectionName)
-      newCollection.drop().futureValue.head should equal(Completed())
+      newCollection.drop().futureValue should equal(Completed())
 
       info("there are no indexes")
       newCollection.listIndexes().futureValue.length shouldBe 0

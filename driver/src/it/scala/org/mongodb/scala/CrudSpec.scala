@@ -126,7 +126,7 @@ class CrudSpec extends RequiresMongoDBISpec {
     if (arguments.containsKey("skip")) options.skip(arguments.getNumber("skip").intValue)
     if (arguments.containsKey("limit")) options.limit(arguments.getNumber("limit").intValue)
     if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
-    BsonInt32(collection.get.count(arguments.getDocument("filter"), options).futureValue.head.toInt)
+    BsonInt32(collection.get.count(arguments.getDocument("filter"), options).futureValue.toInt)
   }
 
   private def doDistinct(arguments: BsonDocument): BsonValue = {
@@ -147,14 +147,14 @@ class CrudSpec extends RequiresMongoDBISpec {
   private def doDeleteMany(arguments: BsonDocument): BsonValue = {
     val options: DeleteOptions = new DeleteOptions
     if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
-    val result = collection.get.deleteMany(arguments.getDocument("filter"), options).futureValue.head
+    val result = collection.get.deleteMany(arguments.getDocument("filter"), options).futureValue
     new BsonDocument("deletedCount", BsonInt32(result.getDeletedCount.toInt))
   }
 
   private def doDeleteOne(arguments: BsonDocument): BsonValue = {
     val options: DeleteOptions = new DeleteOptions
     if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
-    val result = collection.get.deleteOne(arguments.getDocument("filter"), options).futureValue.head
+    val result = collection.get.deleteOne(arguments.getDocument("filter"), options).futureValue
     new BsonDocument("deletedCount", BsonInt32(result.getDeletedCount.toInt))
   }
 
@@ -163,7 +163,7 @@ class CrudSpec extends RequiresMongoDBISpec {
     if (arguments.containsKey("projection")) options.projection(arguments.getDocument("projection"))
     if (arguments.containsKey("sort")) options.sort(arguments.getDocument("sort"))
     if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
-    collection.get.findOneAndDelete(arguments.getDocument("filter"), options).futureValue.headOption.getOrElse(BsonNull())
+    Option(collection.get.findOneAndDelete(arguments.getDocument("filter"), options).futureValue).getOrElse(BsonNull())
   }
 
   private def doFindOneAndReplace(arguments: BsonDocument): BsonValue = {
@@ -176,8 +176,8 @@ class CrudSpec extends RequiresMongoDBISpec {
       options.returnDocument(rd)
     }
     if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
-    collection.get.findOneAndReplace(arguments.getDocument("filter"),
-      arguments.getDocument("replacement"), options).futureValue.headOption.getOrElse(BsonNull())
+    Option(collection.get.findOneAndReplace(arguments.getDocument("filter"),
+      arguments.getDocument("replacement"), options).futureValue).getOrElse(BsonNull())
   }
 
   private def doFindOneAndUpdate(arguments: BsonDocument): BsonValue = {
@@ -190,8 +190,8 @@ class CrudSpec extends RequiresMongoDBISpec {
       options.returnDocument(rd)
     }
     if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
-    collection.get.findOneAndUpdate(arguments.getDocument("filter"),
-      arguments.getDocument("update"), options).futureValue.headOption.getOrElse(BsonNull())
+    Option(collection.get.findOneAndUpdate(arguments.getDocument("filter"),
+      arguments.getDocument("update"), options).futureValue).getOrElse(BsonNull())
   }
 
   private def doInsertOne(arguments: BsonDocument): BsonValue = {
@@ -209,7 +209,7 @@ class CrudSpec extends RequiresMongoDBISpec {
     if (arguments.containsKey("upsert")) options.upsert(arguments.getBoolean("upsert").getValue)
     if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
     val result = collection.get.replaceOne(arguments.getDocument("filter"),
-      arguments.getDocument("replacement"), options).futureValue.head
+      arguments.getDocument("replacement"), options).futureValue
     convertUpdateResult(result)
   }
 
@@ -218,7 +218,7 @@ class CrudSpec extends RequiresMongoDBISpec {
       if (arguments.containsKey("upsert")) options.upsert(arguments.getBoolean("upsert").getValue)
       if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
     val result = collection.get.updateMany(arguments.getDocument("filter"),
-      arguments.getDocument("update"), options).futureValue.head
+      arguments.getDocument("update"), options).futureValue
     convertUpdateResult(result)
   }
 
@@ -226,7 +226,7 @@ class CrudSpec extends RequiresMongoDBISpec {
     val options: UpdateOptions = new UpdateOptions
     if (arguments.containsKey("upsert")) options.upsert(arguments.getBoolean("upsert").getValue)
     if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
-    val result = collection.get.updateOne(arguments.getDocument("filter"), arguments.getDocument("update"), options).futureValue.head
+    val result = collection.get.updateOne(arguments.getDocument("filter"), arguments.getDocument("update"), options).futureValue
     convertUpdateResult(result)
   }
 

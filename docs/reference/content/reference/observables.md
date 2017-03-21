@@ -26,6 +26,10 @@ Observables can be thought of as partial functions and like partial functions no
 An `Observable` can be subscribed to multiple times, with each subscription potentially causing new side effects eg: querying MongoDB or inserting data.
 {{% /note %}}
 
+### SingleObservable
+Introduced in 2.0.0 the [`SingleObservable`]({{< apiref "org.mongodb.scala.SingleObservable" >}}) trait is an `Observable` implementation that will only return a single item.
+It can be used in the same way as ordinary `Observables`.
+
 ## Subscription
 
 A [`Subscription`]({{< apiref "org.mongodb.scala.Subscription" >}}) represents a one-to-one lifecycle of an `Observer` subscribing to an `Observable`.  A `Subscription` to an `Observable` can only be used by a single `Observer`.  The purpose of a `Subscription` is to control demand and to allow unsubscribing from the `Observable`.
@@ -140,3 +144,8 @@ The full list of Monadic operators available are:
     Provides for-comprehensions support to Observables.
  - *[`zip`]({{< apiref "org.mongodb.scala.ObservableImplicits$ScalaObservable@zip[U](that:org.mongodb.scala.Observable[U]):org.mongodb.scala.Observable[(T,U)]">}})* :
     Zips the values of this and that `Observable`, and creates a new `Observable` holding the tuple of their results.
+
+### SingleObservable
+
+As we know that a `SingleObservable[T]` will only return a single item the `toFuture()` method will return a `Future[T]` in the same way as the `head` method does.
+There is also an implicit converter that converts an `Observable` to a `SingleObservable`

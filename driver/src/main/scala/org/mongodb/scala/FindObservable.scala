@@ -43,7 +43,7 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
    *
    * @return a Observable which will return the first item
    */
-  def first(): Observable[TResult] = observe(wrapped.first(_: SingleResultCallback[TResult]))
+  def first(): SingleObservable[TResult] = observe(wrapped.first(_: SingleResultCallback[TResult]))
 
   /**
    * Sets the query filter to apply to the query.

@@ -22,7 +22,7 @@ import com.mongodb.Block
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.{MongoIterable, Observables}
 
-import org.mongodb.scala._
+import org.mongodb.scala.{Subscription, _}
 
 /**
  * A helper to pass in Scala partial functions to the Observables helper

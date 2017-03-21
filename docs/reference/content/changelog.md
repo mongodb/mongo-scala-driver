@@ -12,6 +12,7 @@ Changes between released versions
 
 ### 2.0.0
 
+  * Added SingleObservable trait and implicits for easy conversion and identification of Observables that return a single result. [SCALA-234](https://jira.mongodb.org/browse/SCALA-234)
   * MongoCollection methods now default to the collection type rather than Document. [SCALA-250](https://jira.mongodb.org/browse/SCALA-250) 
 
 ### 1.2.1

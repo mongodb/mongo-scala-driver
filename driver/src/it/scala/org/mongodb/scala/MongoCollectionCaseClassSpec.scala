@@ -46,10 +46,10 @@ class MongoCollectionCaseClassSpec  extends RequiresMongoDBISpec {
       val expectedDocument = Document(
         """{_id: 1, age: 30, username: "Bob", hobbies: ["hiking", "music"],
           | contacts: [{phone: "123 12314"}, {phone: "234 234234"}]}""".stripMargin)
-      collection.find[Document]().first().futureValue.head should equal(expectedDocument)
+      collection.find[Document]().first().futureValue should equal(expectedDocument)
 
       info("The collection should find and return the user")
-      collection.find().first().futureValue.head should equal(user)
+      collection.find().first().futureValue should equal(user)
   }
 
   it should "handle optional values" in withDatabase(databaseName) {
@@ -61,10 +61,10 @@ class MongoCollectionCaseClassSpec  extends RequiresMongoDBISpec {
 
       info("The collection should have the expected document")
       val expectedDocument = Document("{_id: 1, optional: null}")
-      collection.find[Document]().first().futureValue.head should equal(expectedDocument)
+      collection.find[Document]().first().futureValue should equal(expectedDocument)
 
       info("The collection should find and return the optional")
-      collection.find().first().futureValue.head should equal(none)
+      collection.find().first().futureValue should equal(none)
 
       collection.drop().futureValue
 
@@ -72,16 +72,16 @@ class MongoCollectionCaseClassSpec  extends RequiresMongoDBISpec {
       collection.insertOne(some).futureValue
 
       info("The collection should find and return the optional")
-      collection.find().first().futureValue.head should equal(some)
+      collection.find().first().futureValue should equal(some)
   }
 
   it should "handle converting to case classes where there is extra data" in withDatabase(databaseName) {
     database =>
       val collection = database.getCollection[Contact](collectionName).withCodecRegistry(codecRegistry)
 
-      database.getCollection(collectionName).insertOne(Document("""{_id: 5, phone: "555 232323", active: true}""")).futureValue.head
+      database.getCollection(collectionName).insertOne(Document("""{_id: 5, phone: "555 232323", active: true}""")).futureValue
       val contact = Contact("555 232323")
-      collection.find().first().futureValue.head should equal(contact)
+      collection.find().first().futureValue should equal(contact)
   }
 
 }
