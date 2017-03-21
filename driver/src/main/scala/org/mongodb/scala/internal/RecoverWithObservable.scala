@@ -28,7 +28,7 @@ private[scala] case class RecoverWithObservable[T, U >: T](
 
   // scalastyle:off cyclomatic.complexity method.length
   override def subscribe(observer: Observer[_ >: U]): Unit = {
-    observable.subscribe(
+    observable.subscribe(SubscriptionCheckingObserver(
       new Observer[U] {
 
         @volatile
@@ -119,7 +119,7 @@ private[scala] case class RecoverWithObservable[T, U >: T](
         }
 
       }
-    )
+    ))
   }
   // scalastyle:on cyclomatic.complexity method.length
 }

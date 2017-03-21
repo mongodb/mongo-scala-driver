@@ -20,7 +20,7 @@ import org.mongodb.scala.{Observable, Observer, Subscription}
 
 private[scala] case class FilterObservable[T](observable: Observable[T], p: T => Boolean) extends Observable[T] {
   override def subscribe(observer: Observer[_ >: T]): Unit = {
-    observable.subscribe(
+    observable.subscribe(SubscriptionCheckingObserver(
       new Observer[T] {
         override def onError(throwable: Throwable): Unit = observer.onError(throwable)
 
@@ -30,6 +30,6 @@ private[scala] case class FilterObservable[T](observable: Observable[T], p: T =>
 
         override def onNext(tResult: T): Unit = if (p(tResult)) observer.onNext(tResult)
       }
-    )
+    ))
   }
 }

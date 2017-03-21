@@ -21,7 +21,7 @@ import org.mongodb.scala.{Observable, Observer, Subscription}
 private[scala] case class FoldLeftObservable[T, S](observable: Observable[T], initialValue: S, accumulator: (S, T) => S) extends Observable[S] {
 
   override def subscribe(observer: Observer[_ >: S]): Unit = {
-    observable.subscribe(
+    observable.subscribe(SubscriptionCheckingObserver(
       new Observer[T] {
 
         @volatile
@@ -59,6 +59,6 @@ private[scala] case class FoldLeftObservable[T, S](observable: Observable[T], in
           currentValue = accumulator(currentValue, tResult)
         }
       }
-    )
+    ))
   }
 }

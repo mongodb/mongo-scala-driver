@@ -29,8 +29,8 @@ private[scala] case class ZipObservable[T, U](
 
   def subscribe(observer: Observer[_ >: (T, U)]): Unit = {
     val helper = SubscriptionHelper(observer)
-    observable1.subscribe(helper.createFirstObserver)
-    observable2.subscribe(helper.createSecondObserver)
+    observable1.subscribe(SubscriptionCheckingObserver(helper.createFirstObserver))
+    observable2.subscribe(SubscriptionCheckingObserver(helper.createSecondObserver))
   }
 
   case class SubscriptionHelper(observer: Observer[_ >: (T, U)]) {

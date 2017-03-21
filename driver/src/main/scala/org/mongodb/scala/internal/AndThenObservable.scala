@@ -22,16 +22,18 @@ import org.mongodb.scala.{Observable, Observer, Subscription}
 
 private[scala] case class AndThenObservable[T, U](observable: Observable[T], pf: PartialFunction[Try[T], U]) extends Observable[T] {
   override def subscribe(observer: Observer[_ >: T]): Unit = {
-    observable.subscribe(
+    observable.subscribe(SubscriptionCheckingObserver[T](
       new Observer[T] {
-        var finalResult: Option[T] = None
+        private var finalResult: Option[T] = None
 
         override def onError(throwable: Throwable): Unit = {
           observer.onError(throwable)
           Try(pf(Failure(throwable)))
         }
 
-        override def onSubscribe(subscription: Subscription): Unit = observer.onSubscribe(subscription)
+        override def onSubscribe(sub: Subscription): Unit = {
+          observer.onSubscribe(sub)
+        }
 
         override def onComplete(): Unit = {
           observer.onComplete()
@@ -43,6 +45,6 @@ private[scala] case class AndThenObservable[T, U](observable: Observable[T], pf:
           observer.onNext(tResult)
         }
       }
-    )
+    ))
   }
 }

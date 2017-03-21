@@ -22,7 +22,7 @@ private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: 
 
   // scalastyle:off cyclomatic.complexity method.length
   override def subscribe(observer: Observer[_ >: S]): Unit = {
-    observable.subscribe(
+    observable.subscribe(SubscriptionCheckingObserver(
       new Observer[T] {
 
         @volatile
@@ -121,7 +121,7 @@ private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: 
           demand
         }
       }
-    )
+    ))
   }
   // scalastyle:on cyclomatic.complexity method.length
 }

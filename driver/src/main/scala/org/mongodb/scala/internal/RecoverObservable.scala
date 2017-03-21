@@ -26,7 +26,7 @@ private[scala] case class RecoverObservable[T, U >: T](
 ) extends Observable[U] {
 
   override def subscribe(observer: Observer[_ >: U]): Unit = {
-    observable.subscribe(
+    observable.subscribe(SubscriptionCheckingObserver(
       new Observer[U] {
         override def onError(throwable: Throwable): Unit = {
           Try(pf(throwable)) match {
@@ -44,7 +44,7 @@ private[scala] case class RecoverObservable[T, U >: T](
 
         override def onNext(tResult: U): Unit = observer.onNext(tResult)
       }
-    )
+    ))
   }
 }
 

@@ -23,9 +23,10 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
+import org.scalatest.prop.TableDrivenPropertyChecks._
 
 import com.mongodb.MongoException
-import com.mongodb.async.client.{Observable => JObservable, Observer => JObserver, Subscription => JSubscription}
+import com.mongodb.async.client.{Observer => JObserver, Subscription => JSubscription}
 
 import org.mongodb.scala._
 import org.scalatest.{FlatSpec, Matchers}
@@ -393,6 +394,46 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
 
     Option(Await.result(TestObservable[Int](Observable(List[Int]())).head(), Duration(10, TimeUnit.SECONDS))) should equal(None)
   }
+
+  it should "let the user know the Observable hasn't been subscribed to" in {
+    forAll(observableErrorScenarios) { (obs: (() => Observable[_])) =>
+      val futureError = intercept[IllegalStateException] {
+        Await.result(obs().toFuture(), Duration(10, TimeUnit.SECONDS))
+      }
+      futureError.getMessage should equal("The Observable has not been subscribed to.")
+
+      val headError = intercept[IllegalStateException] {
+        Await.result(obs().head(), Duration(10, TimeUnit.SECONDS))
+      }
+      headError.getMessage should equal("The Observable has not been subscribed to.")
+    }
+  }
+
+  def badObservable[T](t: T*): Observable[T] = {
+    (observer: Observer[_ >: T]) =>
+      {
+        for (tee <- t) {
+          observer onNext tee
+        }
+        observer onComplete ()
+      }
+  }
+
+  val observableErrorScenarios =
+    Table(
+      "Bad Observables",
+      () => badObservable(1, 2, 3).flatMap((i: Int) => badObservable(i, i)),
+      () => badObservable(1, 2, 3).map((i: Int) => badObservable(i, i)),
+      () => badObservable(1, 2, 3).andThen {
+        case Success(r)  => 1
+        case Failure(ex) => 0
+      },
+      () => badObservable(1, 2, 3).collect(),
+      () => badObservable(1, 2, 3).foldLeft(0)((v: Int, i: Int) => v + i),
+      () => badObservable(1, 2, 3).recoverWith { case t: Throwable => badObservable(1, 2, 3) },
+      () => badObservable(1, 2, 3).zip(badObservable(1, 2, 3)),
+      () => badObservable(1, 2, 3).filter((i: Int) => i > 1)
+    )
 
   it should "work with Java Observer" in {
     var results = ArrayBuffer[Int]()

@@ -21,7 +21,7 @@ import org.mongodb.scala.{Observable, Observer, Subscription}
 private[scala] case class MapObservable[T, S](observable: Observable[T], s: T => S,
                                               f: Throwable => Throwable = t => t) extends Observable[S] {
   override def subscribe(observer: Observer[_ >: S]): Unit = {
-    observable.subscribe(
+    observable.subscribe(SubscriptionCheckingObserver(
       new Observer[T] {
         override def onError(throwable: Throwable): Unit = observer.onError(f(throwable))
 
@@ -31,6 +31,6 @@ private[scala] case class MapObservable[T, S](observable: Observable[T], s: T =>
 
         override def onNext(tResult: T): Unit = observer.onNext(s(tResult))
       }
-    )
+    ))
   }
 }
