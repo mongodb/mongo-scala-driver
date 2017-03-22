@@ -16,19 +16,19 @@
 
 package org.mongodb.scala.internal
 
-import java.util.concurrent.{CountDownLatch, TimeUnit}
+import java.util.concurrent._
 
 import scala.collection.mutable.ArrayBuffer
-import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext}
 import scala.util.{Failure, Success}
-import org.scalatest.prop.TableDrivenPropertyChecks._
 
 import com.mongodb.MongoException
 import com.mongodb.async.client.{Observer => JObserver, Subscription => JSubscription}
 
 import org.mongodb.scala._
+import org.scalatest.prop.TableDrivenPropertyChecks._
 import org.scalatest.{FlatSpec, Matchers}
 
 class ScalaObservableSpec extends FlatSpec with Matchers {
@@ -474,7 +474,31 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
     errorSeen.getOrElse(None) shouldBe a[Throwable]
   }
 
-  def observable[A](from: Iterable[A] = (1 to 100).toIterable, fail: Boolean = false): Observable[A] = {
+  it should "should be able to use custom execution contexts" in {
+    var originalThreadId: Long = 0
+    var observeOnThreadId1: Long = 0
+    var observeOnThreadId2: Long = 0
+    val ctx1 = ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(5))
+    val ctx2 = ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(5))
+
+    Await.result(observable().map((i: Int) => {
+      originalThreadId = Thread.currentThread().getId
+      i
+    }).observeOn(ctx1).map((i: Int) => {
+      observeOnThreadId1 = Thread.currentThread().getId
+      i
+    }).observeOn(ctx2).map((i: Int) => {
+      observeOnThreadId2 = Thread.currentThread().getId
+      i
+    }).toFuture(), Duration(10, TimeUnit.SECONDS))
+    ctx1.shutdown()
+    ctx2.shutdown()
+
+    originalThreadId should not be observeOnThreadId1
+    observeOnThreadId1 should not be observeOnThreadId2
+  }
+
+  def observable[A](from: Iterable[A] = (1 to 100), fail: Boolean = false): Observable[A] = {
     fail match {
       case true  => TestObservable[A](Observable(from), failOn = 51)
       case false => TestObservable[A](Observable(from))

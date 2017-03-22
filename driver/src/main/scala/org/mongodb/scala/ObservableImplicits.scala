@@ -17,7 +17,7 @@
 package org.mongodb.scala
 
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.{Future, Promise}
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.{Success, Try}
 
 import com.mongodb.async.client.{Observable => JObservable, Observer => JObserver, Subscription => JSubscription}
@@ -371,6 +371,15 @@ trait ObservableImplicits {
       })
       promise.future
     }
+
+    /**
+     * Use a specific execution context for future operations
+     *
+     * @param context the execution context
+     * @return an Observable that uses the specified execution context
+     */
+    def observeOn(context: ExecutionContext): Observable[T] = ExecutionContextObservable(context, observable)
+
   }
 
   /**

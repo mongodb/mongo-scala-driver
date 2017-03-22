@@ -131,6 +131,8 @@ The full list of Monadic operators available are:
     Returns the head of the `Observable` in a `Future`.
  - *[`map`]({{< apiref "org.mongodb.scala.ObservableImplicits$ScalaObservable@map[S](mapFunction:T=>S):org.mongodb.scala.Observable[S]">}})* :
     Creates a new Observable by applying a function to each emitted result of the Observable.
+ - *[`observeOn`]({{< apiref "org.mongodb.scala.ObservableImplicits$ScalaObservable@observeOn[S](context:ExecutionContext):org.mongodb.scala.Observable[S]">}})* :
+    Creates a new Observable that uses a specific `ExecutionContext` for future operations.
  - *[`recover`]({{< apiref "org.mongodb.scala.ObservableImplicits$ScalaObservable@recover[U>:T](pf:PartialFunction[Throwable,U]):org.mongodb.scala.Observable[U]">}})* :
     Creates a new `Observable` that will handle any matching throwable that this `Observable` might contain by assigning it a value of 
     another `Observable`.
