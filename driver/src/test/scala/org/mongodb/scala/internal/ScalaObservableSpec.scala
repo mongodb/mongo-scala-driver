@@ -410,13 +410,14 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
   }
 
   def badObservable[T](t: T*): Observable[T] = {
-    (observer: Observer[_ >: T]) =>
-      {
+    new Observable[T] {
+      override def subscribe(observer: Observer[_ >: T]): Unit = {
         for (tee <- t) {
-          observer onNext tee
+          observer.onNext(tee)
         }
-        observer onComplete ()
+        observer.onComplete()
       }
+    }
   }
 
   val observableErrorScenarios =
