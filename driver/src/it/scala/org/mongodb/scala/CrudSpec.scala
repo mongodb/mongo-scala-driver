@@ -44,7 +44,7 @@ class CrudSpec extends RequiresMongoDBISpec {
         val data = definition.getArray("data").asScala.map(_.asDocument())
         val tests = definition.getArray("tests").asScala.map(_.asDocument())
 
-        if (serverAtLeastMinVersion(definition)) {
+        if (serverAtLeastMinVersion(definition) && serverLessThanMaxVersion(definition)) {
           forEvery(tests) { (test: BsonDocument) =>
             val description = test.getString("description").getValue
             val operation: BsonDocument = test.getDocument("operation", BsonDocument())
@@ -54,10 +54,7 @@ class CrudSpec extends RequiresMongoDBISpec {
             prepCollection(data)
             val results: BsonValue = runOperation(operation)
             val expectedResults: BsonValue = outcome.get("result")
-
-            if (checkResult(operation.getString("name").getValue, description)) {
-              results should equal(expectedResults)
-            }
+            results should equal(expectedResults)
 
             if (outcome.containsKey("collection")) {
               val collectionData = outcome.getDocument("collection")
@@ -195,22 +192,23 @@ class CrudSpec extends RequiresMongoDBISpec {
   }
 
   private def doInsertOne(arguments: BsonDocument): BsonValue = {
-    collection.get.insertOne(arguments.getDocument("document")).futureValue
-    BsonNull()
+    val document = arguments.getDocument("document")
+    collection.get.insertOne(document).futureValue
+    Document(("insertedId", document.getOrDefault("_id", BsonNull()))).underlying
   }
 
   private def doInsertMany(arguments: BsonDocument): BsonValue = {
-    collection.get.insertMany(arguments.getArray("documents").asScala.map(_.asDocument())).futureValue
-    BsonNull()
+    val documents = arguments.getArray("documents").asScala.map(_.asDocument())
+    collection.get.insertMany(documents).futureValue
+    Document(("insertedIds", documents.map(_.getOrDefault("_id", BsonNull())))).underlying
   }
 
   private def doReplaceOne(arguments: BsonDocument): BsonValue = {
     val options: UpdateOptions = new UpdateOptions
     if (arguments.containsKey("upsert")) options.upsert(arguments.getBoolean("upsert").getValue)
     if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
-    val result = collection.get.replaceOne(arguments.getDocument("filter"),
-      arguments.getDocument("replacement"), options).futureValue
-    convertUpdateResult(result)
+    val rawResult = collection.get.replaceOne(arguments.getDocument("filter"), arguments.getDocument("replacement"), options).futureValue
+    convertUpdateResult(rawResult)
   }
 
   private def doUpdateMany(arguments: BsonDocument): BsonValue = {
@@ -228,24 +226,6 @@ class CrudSpec extends RequiresMongoDBISpec {
     if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
     val result = collection.get.updateOne(arguments.getDocument("filter"), arguments.getDocument("update"), options).futureValue
     convertUpdateResult(result)
-  }
-
-  /*
-   * We don't return any id's for insert commands
-   * Pre 3.0 versions of MongoDB return an empty document rather than a null
-   * ModifiedCount is not accessible pre 2.6
-   */
-  private def checkResult(name: String, description: String): Boolean = {
-    if (Seq("insertOne", "insertMany").contains(name)) {
-      false
-    } else if (!serverVersionAtLeast(List(3, 0, 0))
-      && description.contains("when no documents match with upsert returning the document before modification")) {
-      false
-    } else if (!serverVersionAtLeast(List(2, 6, 0)) && Seq("replaceOne", "updateMany", "updateOne").contains(name)) {
-      false
-    } else {
-      true
-    }
   }
 
   private def getCollation(bsonCollation: BsonDocument): Collation = {
@@ -267,14 +247,26 @@ class CrudSpec extends RequiresMongoDBISpec {
     if (result.isModifiedCountAvailable) {
       resultDoc.append("modifiedCount", new BsonInt32(result.getModifiedCount.toInt))
     }
-    if (Option(result.getUpsertedId).isDefined) resultDoc.append("upsertedId", result.getUpsertedId)
+
+    if (Option(result.getUpsertedId).isDefined && !result.getUpsertedId.isObjectId) resultDoc.append("upsertedId", result.getUpsertedId)
+    resultDoc.append("upsertedCount", if (Option(result.getUpsertedId).isEmpty) new BsonInt32(0) else new BsonInt32(1))
     resultDoc
   }
+
+
 
   private def serverAtLeastMinVersion(definition: Document): Boolean = {
     definition.get[BsonString]("minServerVersion") match {
       case Some(minServerVersion) =>
         serverVersionAtLeast(minServerVersion.getValue.split("\\.").map(_.toInt).padTo(3, 0).take(3).toList)
+      case None => true
+    }
+  }
+
+  private def serverLessThanMaxVersion(definition: Document): Boolean = {
+    definition.get[BsonString]("maxServerVersion") match {
+      case Some(maxServerVersion) =>
+        serverVersionLessThan(maxServerVersion.getValue.split("\\.").map(_.toInt).padTo(3, 0).take(3).toList)
       case None => true
     }
   }
