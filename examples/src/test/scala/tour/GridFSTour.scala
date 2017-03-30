@@ -33,7 +33,7 @@ import org.mongodb.scala._
 import tour.Helpers._
 
 /**
- * The GridFSTour code example see: https://mongodb.github.io/mongo-scala-driver/1.2/getting-started
+ * The GridFSTour code example see: https://mongodb.github.io/mongo-scala-driver/2.0/getting-started
  */
 object GridFSTour {
 

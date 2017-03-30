@@ -1,4 +1,4 @@
-baseurl = "/mongo-scala-driver/1.2"
+baseurl = "/mongo-scala-driver/2.0"
 languageCode = "en-us"
 title = "MongoDB Scala Driver"
 theme = "mongodb"
@@ -11,13 +11,13 @@ canonifyurls = false
 [[menu.main]]
     name = "API Documentation"
     pre = "<i class='fa fa-file-text-o'></i>"
-    weight = 90
+    weight = 100
     identifier = "apiDocs"
     url = "/scaladoc"
 
 [[menu.main]]
     name = "Source Code"
     pre = "<i class='fa fa-github'></i>"
-    weight = 90
+    weight = 100
     identifier = "githubLink"
     url = "https://github.com/mongodb/mongo-scala-driver/tree/master"

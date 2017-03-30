@@ -26,9 +26,10 @@ import org.mongodb.scala.model.Sorts.ascending
 import tour.Helpers._
 
 /**
- * The QuickTourAdmin code example see: https://mongodb.github.io/mongo-scala-driver/1.0/getting-started
+ * The QuickTourAdmin code example see: https://mongodb.github.io/mongo-scala-driver/2.0/getting-started
  */
 object QuickTourAdmin {
+  //scalastyle:off method.length
 
   /**
    * Run this main method to see the output of this quick example.

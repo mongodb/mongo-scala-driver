@@ -29,9 +29,10 @@ import org.mongodb.scala.model._
 import tour.Helpers._
 
 /**
- * The QuickTour code example see: https://mongodb.github.io/mongo-scala-driver/1.0/getting-started
+ * The QuickTour code example see: https://mongodb.github.io/mongo-scala-driver/2.0/getting-started
  */
 object QuickTour {
+  //scalastyle:off method.length
 
   /**
    * Run this main method to see the output of this quick example.

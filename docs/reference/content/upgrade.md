@@ -1,6 +1,6 @@
 +++
 date = "2015-11-18T09:56:14Z"
-title = "Changelog"
+title = "Upgrading"
 [menu.main]
   weight = 95
   pre = "<i class='fa fa-wrench'></i>"
