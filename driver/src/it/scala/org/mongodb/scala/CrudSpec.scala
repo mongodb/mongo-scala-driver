@@ -194,13 +194,13 @@ class CrudSpec extends RequiresMongoDBISpec {
   private def doInsertOne(arguments: BsonDocument): BsonValue = {
     val document = arguments.getDocument("document")
     collection.get.insertOne(document).futureValue
-    Document(("insertedId", document.getOrDefault("_id", BsonNull()))).underlying
+    Document(("insertedId", Option(document.get("_id")).getOrElse(BsonNull()))).underlying
   }
 
   private def doInsertMany(arguments: BsonDocument): BsonValue = {
     val documents = arguments.getArray("documents").asScala.map(_.asDocument())
     collection.get.insertMany(documents).futureValue
-    Document(("insertedIds", documents.map(_.getOrDefault("_id", BsonNull())))).underlying
+    Document(("insertedIds", documents.map(doc => Option(doc.get("_id")).getOrElse(BsonNull())))).underlying
   }
 
   private def doReplaceOne(arguments: BsonDocument): BsonValue = {

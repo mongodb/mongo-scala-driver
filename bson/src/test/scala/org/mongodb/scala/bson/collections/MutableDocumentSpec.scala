@@ -311,7 +311,7 @@ class MutableDocumentSpec extends FlatSpec with Matchers {
     doc1 should equal(Document("key" -> BsonString("value")))
   }
 
-  it should "support clearn" in {
+  it should "support clear" in {
     val doc1: Document = Document("key" -> BsonString("value"), "key2" -> BsonString("value2"))
 
     doc1.clear()
