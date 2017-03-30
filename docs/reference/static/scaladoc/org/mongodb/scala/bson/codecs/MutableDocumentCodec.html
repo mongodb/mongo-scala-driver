@@ -164,6 +164,24 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="org.mongodb.scala.bson">bson</a></dd></dl></div>
+    </li><li name="org.mongodb.scala.bson.codecs.macrocodecs" visbl="pub" class="indented6 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="macrocodecs"></a><a id="macrocodecs:macrocodecs"></a>
+      <span class="permalink">
+      <a href="../../../../../org/mongodb/scala/bson/codecs/index.html#macrocodecs" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="macrocodecs/index.html">
+              <span class="name">macrocodecs</span>
+            </a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="org.mongodb.scala.bson.codecs">codecs</a></dd></dl></div>
     </li><li class="current-entities indented5">
                         <span class="separator"></span>
                         <a class="object" href="package$$BsonTypeClassMap$.html" title="Companion to return the default BsonTypeClassMap
@@ -201,6 +219,12 @@ class and all the default Codec implementations on which it depends.">
                           IterableCodecProvider
                         </a>
                       </li><li class="current-entities indented5">
+                        <span class="separator"></span>
+                        <a class="object" href="Macros$.html" title="Macro based Codecs"></a>
+                        <a href="Macros$.html" title="Macro based Codecs">
+                          Macros
+                        </a>
+                      </li><li class="current-entities indented5">
                         <a class="object" href="MutableDocumentCodec$.html" title="Companion helper for mutable Document instances."></a>
                         <a class="class" href="" title="A Codec for mutable Document instances."></a>
                         <a href="" title="A Codec for mutable Document instances.">
@@ -231,7 +255,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">MutableDocumentCodec</span><span class="params">(<span name="registry">registry: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/configuration/CodecRegistry.html class="extype" target="_top">CodecRegistry</a>]</span>)</span><span class="result"> extends <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/CollectibleCodec.html class="extype" target="_top">CollectibleCodec</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>] with <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
+        <span class="name">MutableDocumentCodec</span><span class="params">(<span name="registry">registry: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/configuration/CodecRegistry.html class="extype" target="_top">CodecRegistry</a>]</span>)</span><span class="result"> extends <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/CollectibleCodec.html class="extype" target="_top">CollectibleCodec</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>] with <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Product" class="extype" target="_top">Product</a> with <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></span>
       </span>
       </h4>
 
@@ -241,18 +265,8 @@ class and all the default Codec implementations on which it depends.">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/CollectibleCodec.html class="extype" target="_top">CollectibleCodec</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>], <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/Codec.html class="extype" target="_top">Codec</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>], <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/Decoder.html class="extype" target="_top">Decoder</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>], <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/Encoder.html class="extype" target="_top">Encoder</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>], <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></div>
-        </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
-                <span class="toggle diagram-link">
-                  Type Hierarchy
-                </span>
-                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 487.00 118.00" height="118pt" width="487pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 114)" class="graph" id="graph0"><polygon points="-4,4 -4,-114 483,-114 483,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this class" id="graph1_0"><g id="a_this class|graph1_0"><a xlink:title="org.mongodb.scala.bson.codecs.MutableDocumentCodec (this class)" xlink:href="#inheritance-diagram"><path d="M380.667,-49C380.667,-49 256.333,-49 256.333,-49 252.167,-49 248,-44.8333 248,-40.6667 248,-40.6667 248,-32.3333 248,-32.3333 248,-28.1667 252.167,-24 256.333,-24 256.333,-24 380.667,-24 380.667,-24 384.833,-24 389,-28.1667 389,-32.3333 389,-32.3333 389,-40.6667 389,-40.6667 389,-44.8333 384.833,-49 380.667,-49" stroke="#418565" fill="#418565"></path><image xlink:href="../../../../../lib/class_diagram.png" y="-43.5" x="258.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-34.628" x="279.1" text-anchor="start">MutableDocumentCodec</text></a></g></g><!-- node1 --><g class="node trait" id="graph1_1"><g id="a_trait|graph1_1"><a xlink:title="org.bson.codecs.CollectibleCodec"><path d="M252.667,-110C252.667,-110 8.33333,-110 8.33333,-110 4.16667,-110 0,-105.833 0,-101.667 0,-101.667 0,-93.3333 0,-93.3333 0,-89.1667 4.16667,-85 8.33333,-85 8.33333,-85 252.667,-85 252.667,-85 256.833,-85 261,-89.1667 261,-93.3333 261,-93.3333 261,-101.667 261,-101.667 261,-105.833 256.833,-110 252.667,-110" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../../../../../lib/trait_diagram.png" y="-104.5" x="10.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-95.628" x="31.1" text-anchor="start">CollectibleCodec[collection.mutable.Document]</text></a></g></g><!-- node1&#45;&gt;node0 --><g class="edge inheritance" id="graph1_1_0"><g id="a_inheritance|graph1_1_0"><a xlink:title="MutableDocumentCodec is a subtype of CollectibleCodec[collection.mutable.Document]"><path d="M173.966,-82.8592C206.558,-72.6307 250.685,-58.7823 281.577,-49.0875" stroke="#d4d4d4" fill="none"></path><polygon points="173.14,-80.5505 167.195,-84.9841 174.607,-85.2257 173.14,-80.5505" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node2 --><g class="node trait" id="graph1_2"><g id="a_trait|graph1_2"><a xlink:title="scala.Product"><path d="M349.667,-110C349.667,-110 287.333,-110 287.333,-110 283.167,-110 279,-105.833 279,-101.667 279,-101.667 279,-93.3333 279,-93.3333 279,-89.1667 283.167,-85 287.333,-85 287.333,-85 349.667,-85 349.667,-85 353.833,-85 358,-89.1667 358,-93.3333 358,-93.3333 358,-101.667 358,-101.667 358,-105.833 353.833,-110 349.667,-110" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../../../../../lib/trait_diagram.png" y="-104.5" x="289.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-95.628" x="310.3" text-anchor="start">Product</text></a></g></g><!-- node2&#45;&gt;node0 --><g class="edge inheritance" id="graph1_2_0"><g id="a_inheritance|graph1_2_0"><a xlink:title="MutableDocumentCodec is a subtype of Product"><path d="M318.5,-77.7603C318.5,-68.3675 318.5,-57.2882 318.5,-49.1323" stroke="#d4d4d4" fill="none"></path><polygon points="316.05,-77.8435 318.5,-84.8435 320.95,-77.8435 316.05,-77.8435" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node3 --><g class="node trait" id="graph1_3"><g id="a_trait|graph1_3"><a xlink:title="scala.Serializable"><path d="M470.667,-110C470.667,-110 384.333,-110 384.333,-110 380.167,-110 376,-105.833 376,-101.667 376,-101.667 376,-93.3333 376,-93.3333 376,-89.1667 380.167,-85 384.333,-85 384.333,-85 470.667,-85 470.667,-85 474.833,-85 479,-89.1667 479,-93.3333 479,-93.3333 479,-101.667 479,-101.667 479,-105.833 474.833,-110 470.667,-110" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../../../../../lib/trait_diagram.png" y="-104.5" x="386.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-95.628" x="407.3" text-anchor="start">Serializable</text></a></g></g><!-- node3&#45;&gt;node0 --><g class="edge inheritance" id="graph1_3_0"><g id="a_inheritance|graph1_3_0"><a xlink:title="MutableDocumentCodec is a subtype of Serializable"><path d="M399.671,-81.4367C381.15,-71.4116 357.175,-58.4344 340.094,-49.1884" stroke="#d4d4d4" fill="none"></path><polygon points="398.903,-83.8065 406.225,-84.9841 401.235,-79.4973 398.903,-83.8065" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
-                <div id="diagram-controls" class="hiddenContent">
-                  <button id="diagram-zoom-out" class="diagram-btn"><i class="material-icons"></i></button>
-                  <button id="diagram-zoom-in" class="diagram-btn"><i class="material-icons"></i></button>
-                  <button title="Toggle full-screen" id="diagram-fs" class="diagram-btn to-full"><i class="material-icons"></i></button>
-                </div>
-              </div></div>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Serializable" class="extype" target="_top">Serializable</a>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Product" class="extype" target="_top">Product</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Equals" class="extype" target="_top">Equals</a>, <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/CollectibleCodec.html class="extype" target="_top">CollectibleCodec</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>], <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/Codec.html class="extype" target="_top">Codec</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>], <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/Decoder.html class="extype" target="_top">Decoder</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>], <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/Encoder.html class="extype" target="_top">Encoder</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>], <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></div>
+        </div></div>
         
 
       <div id="mbrsel">
@@ -309,7 +323,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">MutableDocumentCodec</span><span class="params">(<span name="registry">registry: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/configuration/CodecRegistry.html class="extype" target="_top">CodecRegistry</a>]</span>)</span>
+        <span class="name">MutableDocumentCodec</span><span class="params">(<span name="registry">registry: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/configuration/CodecRegistry.html class="extype" target="_top">CodecRegistry</a>]</span>)</span>
       </span>
       
       
@@ -335,7 +349,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -351,7 +365,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -367,7 +381,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
@@ -399,7 +413,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -437,7 +451,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">documentHasId</span><span class="params">(<span name="document">document: <a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">documentHasId</span><span class="params">(<span name="document">document: <a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.mongodb.scala.bson.codecs.MutableDocumentCodec">MutableDocumentCodec</a> → CollectibleCodec</dd></dl></div>
@@ -453,7 +467,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">encode</span><span class="params">(<span name="writer">writer: <a href=http://api.mongodb.org/java/current/index.html?org/bson/BsonWriter.html class="extype" target="_top">BsonWriter</a></span>, <span name="value">value: <a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a></span>, <span name="encoderContext">encoderContext: <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/EncoderContext.html class="extype" target="_top">EncoderContext</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">encode</span><span class="params">(<span name="writer">writer: <a href=http://api.mongodb.org/java/current/index.html?org/bson/BsonWriter.html class="extype" target="_top">BsonWriter</a></span>, <span name="value">value: <a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a></span>, <span name="encoderContext">encoderContext: <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/EncoderContext.html class="extype" target="_top">EncoderContext</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="org.mongodb.scala.bson.codecs.MutableDocumentCodec">MutableDocumentCodec</a> → Encoder</dd></dl></div>
@@ -469,7 +483,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -485,7 +499,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -571,7 +585,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
@@ -587,7 +601,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Boolean" class="extype" target="_top">Boolean</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -603,7 +617,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -619,7 +633,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
@@ -635,7 +649,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">registry</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/configuration/CodecRegistry.html class="extype" target="_top">CodecRegistry</a>]</span>
+        <span class="name">registry</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Option" class="extype" target="_top">Option</a>[<a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/configuration/CodecRegistry.html class="extype" target="_top">CodecRegistry</a>]</span>
       </span>
       
       
@@ -683,7 +697,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -705,7 +719,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Int" class="extype" target="_top">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -727,7 +741,7 @@ class and all the default Codec implementations on which it depends.">
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Long" class="extype" target="_top">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Unit" class="extype" target="_top">Unit</a></span>
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -748,13 +762,13 @@ class and all the default Codec implementations on which it depends.">
 
         <div id="inheritedMembers">
         <div class="parent" name="scala.Serializable">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Serializable" class="extype" target="_top">Serializable</a></h3>
             </div><div class="parent" name="java.io.Serializable">
               <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
             </div><div class="parent" name="scala.Product">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Product" class="extype" target="_top">Product</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Product" class="extype" target="_top">Product</a></h3>
             </div><div class="parent" name="scala.Equals">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Equals" class="extype" target="_top">Equals</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Equals" class="extype" target="_top">Equals</a></h3>
             </div><div class="parent" name="org.bson.codecs.CollectibleCodec">
               <h3>Inherited from <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/CollectibleCodec.html class="extype" target="_top">CollectibleCodec</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>]</h3>
             </div><div class="parent" name="org.bson.codecs.Codec">
@@ -764,9 +778,9 @@ class and all the default Codec implementations on which it depends.">
             </div><div class="parent" name="org.bson.codecs.Encoder">
               <h3>Inherited from <a href=http://api.mongodb.org/java/current/index.html?org/bson/codecs/Encoder.html class="extype" target="_top">Encoder</a>[<a href="../collection/mutable/Document.html" class="extype" name="org.mongodb.scala.bson.collection.mutable.Document">collection.mutable.Document</a>]</h3>
             </div><div class="parent" name="scala.AnyRef">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.AnyRef" class="extype" target="_top">AnyRef</a></h3>
             </div><div class="parent" name="scala.Any">
-              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.0/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.1/index.html#scala.Any" class="extype" target="_top">Any</a></h3>
             </div>
         
         </div>

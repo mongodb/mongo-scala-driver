@@ -34,15 +34,16 @@ case class Person(_id: ObjectId, firstName: String, lastName: String)
 ```
 
 {{% note %}}
-You'll notice in the companion object we automatically assign a `_id` when creating new instances that don't include it. The `_id` is the 
-primary key for a document, so by having a `_id` field in the case class it allows access to the primary key. 
+You'll notice in the companion object the apply method can automatically assign a `_id` when creating new instances that don't include it. 
+In MongoDB the `_id` field represents the primary key for a document, so by having a `_id` field in the case class it allows access to the 
+primary key. 
 {{% /note %}}
 
 ## Configuring case classes
 
-Then when using `Person` with our collection we must have a `Codec` that can convert it to and from `BSON`. The `bson` package provides 
-macros that automatically generate a codec at compile time. In the following example we create a new `CodecRegistry` that includes a 
-codec for the `Person` case class:
+Then when using `Person` with a collection, there must be a `Codec` that can convert it to and from `BSON`. The 
+`org.mongodb.scala.bson.codecs.Macros` companion object provides macros that can automatically generate a codec for case classes at compile 
+time. In the following example we create a new `CodecRegistry` that includes a codec for the `Person` case class:
 
 
 ```scala
@@ -53,7 +54,8 @@ import org.bson.codecs.configuration.CodecRegistries.{fromRegistries, fromProvid
 val codecRegistry = fromRegistries(fromProviders(classOf[Person]), DEFAULT_CODEC_REGISTRY )
 ```
 
-Once we have the `codecRegistry` configured then we can use that to create a `MongoCollection[Person]`.  In the following we get the `test` collection on the `mydb` database. Notice the `codecRegistry` is set at the database level, it could have been set when creating the `MongoClient` or even via the `MongoCollection.withCodecRegistry` method.
+Once the `codecRegistry` is configured, the next step is to create a `MongoCollection[Person]`. The following example uses `test` 
+collection on the `mydb` database.
 
 ```scala
 // To directly connect to the default server localhost on port 27017
@@ -62,9 +64,14 @@ val database: MongoDatabase = mongoClient.getDatabase("mydb").withCodecRegistry(
 val collection: MongoCollection[Person] = database.getCollection("test")
 ```
 
+{{% note %}}
+The `codecRegistry` can be set when creating a `MongoClient`, at the database level or at the collection level. The API is flexible, 
+allowing for different `CodecRegistries` as required.
+{{% /note %}}
+
 ## Insert a person
 
-Once you have the collection object, you can insert `Person` instances into the collection:
+With the correctly configured `MongoCollection`, inserting `Person` instances into the collection is simple:
 
 ```scala
 val person: Person = Person("Ada", "Lovelace")
@@ -73,7 +80,8 @@ collection.insertOne(person).results()
 
 ## Add multiple instances
 
-To add multiple `Person` instances, you can use the `insertMany()` method and print the results of the operation:
+To add multiple `Person` instances, use the `insertMany()`. The following uses the `printResults()` implicit and blocks until the observer 
+is completed and then prints each result:
 
 ```scala
 val people: Seq[Person] = Seq(
@@ -90,7 +98,8 @@ val people: Seq[Person] = Seq(
 )
 collection.insertMany(people).printResults()
 ```
-And we should the following output:
+
+It will output the following message:
 
 ```
 The operation completed successfully
@@ -101,9 +110,9 @@ The operation completed successfully
 Use the [find()]({{< apiref "org.mongodb.scala.MongoCollection@find[C](filter:org.bson.conversions.Bson)(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.FindObservable[C]">}})
 method to query the collection.
 
-### Find the First Person in a Collection
+### Find the first person in a collection
 
-You can query the collection in the same as shown in the [quick tour]({{< relref "getting-started/quick-tour.md" >}}).
+Querying the collection is the same as shown in the [quick tour]({{< relref "getting-started/quick-tour.md" >}}):
 
 ```scala
 collection.find().first().printHeadResult()
@@ -117,11 +126,9 @@ Person(58dd0a68218de22333435fa4, Ada, Lovelace)
 
 ### Find all people in the collection
 
-To retrieve all the people in the collection, we will use the
-`find()` method. The `find()` method returns a `FindObservable` instance that
-provides a fluent interface for chaining or controlling find operations. 
-The following code retrieves all documents in the collection and prints them out
-(101 documents). Using the `printResults()` implicit we block until the observer is completed and then print each result:
+To retrieve all the people in the collection, use the `find()` method. The `find()` method returns a `FindObservable` instance that
+provides a fluent interface for chaining or controlling find operations. The following uses prints all the people in the collection:
+
 ```scala
 collection.find().printResults()
 ```
@@ -129,10 +136,8 @@ collection.find().printResults()
 
 ## Get a single person with a query filter
 
-We can create a filter to pass to the find() method to get a subset of
-the documents in our collection. For example, if we wanted to find the
-document for which the value of the "firstName" is "Ida", we would do the
-following:
+To return a subset of the documents in our collection, pass a filter to the find() method . For example, the following will return the first 
+`Person` whose first name is Ida:
 
 ```scala
 import org.mongodb.scala.model.Filters._
@@ -140,7 +145,7 @@ import org.mongodb.scala.model.Filters._
 collection.find(equal("firstName", "Ida")).first().printHeadResult()
 ```
 
-will eventually print just one Person:
+This will print:
 
 ```
 Person(58dd0a68218de22333435fa4, Ida, Rhodes)
@@ -154,9 +159,7 @@ helpers for simple and concise ways of building up queries.
 
 ## Get a set of people with a query
 
-We can use the query to get a set of people from our collection. For
-example, if we wanted to get all documents where the `firstName` starts with `G` and sort by `lastName` we could
-write:
+The following filter will find all `Person` instances where the `firstName` starts with `G`, sorted by `lastName`:
 
 ```scala
 collection.find(regex("firstName", "^G")).sort(ascending("lastName")).printResults()
@@ -167,9 +170,9 @@ Which will print out the Person instances for Gertrude, George and Grace.
 ## Updating documents
 
 There are numerous [update operators](http://docs.mongodb.org/manual/reference/operator/update-field/)
-supported by MongoDB.  We can use the [Updates]({{< apiref "org.mongodb.scala.model.Updates$">}}) helpers to help update documents in the database.
+supported by MongoDB.  Use the [Updates]({{< apiref "org.mongodb.scala.model.Updates$">}}) helpers to help update documents in the database.
 
-In the following we update and correct the hyphenation of Tim Berners-Lee: 
+The following update corrects the hyphenation for Tim Berners-Lee: 
 
 ```scala
 collection.updateOne(equal("lastName", "Berners Lee"), set("lastName", "Berners-Lee")).printHeadResult("Update Result: ")
@@ -180,7 +183,7 @@ which provides information about the operation including the number of documents
 
 ## Deleting documents
 
-To delete at most a single document (may be 0 if none match the filter) use the [`deleteOne`]({{< apiref "org.mongodb.scala.MongoCollection@deleteOne(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]">}})
+To delete at most a single document (may be 0 if none match the filter) use the [`deleteOne`]({{< apiref "org.mongodb.scala.MongoCollection@deleteOne(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]">}}) 
 method:
 
 ```scala
