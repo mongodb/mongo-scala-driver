@@ -74,7 +74,7 @@ val codecRegistry = fromRegistries( fromProviders(classOf[ClubMember], classOf[P
 
 Hierarchical class structures are supported via sealed classes. Each subclass is handled specifically by the generated codec, so you only 
 need create a `CodecProvider` for the parent sealed class. Internally an extra field (`_t`) is stored alongside the data so that 
-the correct subclass can be hyrdated when decoding the data.  Below is an example of a tree like structure containing branch and leaf nodes:
+the correct subclass can be hydrated when decoding the data.  Below is an example of a tree like structure containing branch and leaf nodes:
 
 
 ```scala

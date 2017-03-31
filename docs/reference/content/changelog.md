@@ -12,6 +12,7 @@ Changes between released versions
 
 ### 2.0.0
 
+  * Added Case class support. [SCALA-168](https://jira.mongodb.org/browse/SCALA-168)
   * Added `observeOn(context: ExecutionContext)` so alternative execution contexts can be used with `Observables`. [SCALA-242](https://jira.mongodb.org/browse/SCALA-242)
   * Improved error message when actioning unsubscribed to Observables. [SCALA-248](https://jira.mongodb.org/browse/SCALA-248) 
   * Fixed FoldLeftObservable, ensuring that only one request for data is actioned and that all the data is requested. [SCALA-289](https://jira.mongodb.org/browse/SCALA-289)
