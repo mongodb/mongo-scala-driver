@@ -416,6 +416,7 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec {
   }
 
   it should "be able to update" in withCollection { collection =>
+    assume(serverVersionAtLeast(List(2, 6, 0)))
 
     //Start Example 51
     collection.insertMany(Seq(
