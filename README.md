@@ -2,8 +2,7 @@
 
 A modern idiomatic MongoDB Scala Driver.
 
-[![Build Status](https://travis-ci.org/mongodb/mongo-scala-driver.svg?branch=master)]
-(https://travis-ci.org/mongodb/mongo-scala-driver)  | [![Build Status](https://jenkins.10gen.com/job/mongo-scala-driver/badge/icon)](https://jenkins.10gen.com/job/mongo-scala-driver/)
+[![Build Status](https://travis-ci.org/mongodb/mongo-scala-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-scala-driver) | [![Build Status](https://jenkins.10gen.com/job/mongo-scala-driver/badge/icon)](https://jenkins.10gen.com/job/mongo-scala-driver/)
 
 ## Documentation
 
@@ -14,8 +13,7 @@ Documentation for all the main versions is available on http://mongodb.github.io
 For issues with, questions about, or feedback for the MongoDB Scala driver, please look into
 our [support channels](http://www.mongodb.org/about/support). Please
 do not email any of the Scala driver developers directly with issues or
-questions - you're more likely to get an answer on the [mongodb-user]
-(http://groups.google.com/group/mongodb-user) list on Google Groups.
+questions - you're more likely to get an answer on the [mongodb-user](http://groups.google.com/group/mongodb-user) list on Google Groups.
 
 At a minimum, please include in your description the exact version of the driver that you are using.  If you are having
 connectivity issues, it's often also useful to paste in the line of code where you construct the MongoClient instance,
@@ -34,8 +32,7 @@ case in our issue management tool, JIRA:
 Bug reports in JIRA for the driver and the Core Server (i.e. SERVER) project are **public**.
 
 If you’ve identified a security vulnerability in a driver or any other
-MongoDB project, please report it according to the [instructions here]
-(http://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report).
+MongoDB project, please report it according to the [instructions here](http://docs.mongodb.org/manual/tutorial/create-a-vulnerability-report).
 
 ## Versioning
 
@@ -76,5 +73,4 @@ Additional contributors can be found [here](https://github.com/mongodb/mongo-sca
 
 JetBrains is supporting this open source project with:
 
-[![Intellij IDEA](http://www.jetbrains.com/img/logos/logo_intellij_idea.png)]
-(http://www.jetbrains.com/idea/)
+[![Intellij IDEA](http://www.jetbrains.com/img/logos/logo_intellij_idea.png)](http://www.jetbrains.com/idea/)
