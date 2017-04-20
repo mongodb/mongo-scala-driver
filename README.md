@@ -2,7 +2,7 @@
 
 A modern idiomatic MongoDB Scala Driver.
 
-[![Build Status](https://travis-ci.org/mongodb/mongo-scala-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-scala-driver) | [![Build Status](https://jenkins.10gen.com/job/mongo-scala-driver/badge/icon)](https://jenkins.10gen.com/job/mongo-scala-driver/)
+[![Build Status](https://travis-ci.org/mongodb/mongo-scala-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-scala-driver)
 
 ## Documentation
 
