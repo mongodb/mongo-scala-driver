@@ -233,7 +233,7 @@ private[codecs] object CaseClassCodec {
         case (name, f) =>
           val key = keyNameTerm(name)
           f match {
-            case optional if isOption(optional) => q"$name = Option(fieldData($key)).asInstanceOf[$f]"
+            case optional if isOption(optional) => q"$name = (if (fieldData.contains($key)) Option(fieldData($key)) else None).asInstanceOf[$f]"
             case _ => q"$name = fieldData($key).asInstanceOf[$f]"
           }
       })

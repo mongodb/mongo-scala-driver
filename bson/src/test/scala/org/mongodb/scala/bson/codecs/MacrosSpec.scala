@@ -134,6 +134,13 @@ class MacrosSpec extends FlatSpec with Matchers {
     )
   }
 
+  it should "be able to decode case classes missing optional values" in {
+    val registry = CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[OptionalValue]), DEFAULT_CODEC_REGISTRY)
+    val buffer = encode(registry.get(classOf[Document]), Document("name" -> "Bob"))
+
+    decode(registry.get(classOf[OptionalValue]), buffer) should equal(OptionalValue("Bob", None))
+  }
+
   it should "roundtrip all the supported bson types" in {
     val value =
       roundTrip(
