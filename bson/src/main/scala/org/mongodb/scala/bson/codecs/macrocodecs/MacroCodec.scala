@@ -86,7 +86,12 @@ trait MacroCodec[T] extends Codec[T] {
   protected val unknownTypeArgs: List[Class[BsonValue]] = List[Class[BsonValue]](classOf[BsonValue])
   protected val bsonNull = BsonNull()
 
-  override def encode(writer: BsonWriter, value: T, encoderContext: EncoderContext): Unit = writeValue(writer, value, encoderContext)
+  override def encode(writer: BsonWriter, value: T, encoderContext: EncoderContext): Unit = {
+    if (value == null) { // scalastyle:ignore
+      throw new CodecConfigurationException(s"Invalid value for $encoderClass found a `null` value.")
+    }
+    writeValue(writer, value, encoderContext)
+  }
 
   override def decode(reader: BsonReader, decoderContext: DecoderContext): T = {
     val className = getClassname(reader, decoderContext)
@@ -140,6 +145,13 @@ trait MacroCodec[T] extends Codec[T] {
       writer.writeName(classFieldName)
       this.writeValue(writer, className, encoderContext)
     }
+  }
+
+  protected def writeFieldValue[V](fieldName: String, writer: BsonWriter, value: V, encoderContext: EncoderContext): Unit = {
+    if (value == null) { // scalastyle:ignore
+      throw new CodecConfigurationException(s"Invalid value for $fieldName found a `null` value.")
+    }
+    writeValue(writer, value, encoderContext)
   }
 
   protected def writeValue[V](writer: BsonWriter, value: V, encoderContext: EncoderContext): Unit = {

@@ -210,6 +210,17 @@ class MacrosSpec extends FlatSpec with Matchers {
     }
   }
 
+  it should "throw a CodecConfigurationException when encountering null values in case classes" in {
+    val registry = CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[Person]), DEFAULT_CODEC_REGISTRY)
+    an[CodecConfigurationException] should be thrownBy {
+      encode(registry.get(classOf[Person]), null)
+    }
+
+    an[CodecConfigurationException] should be thrownBy {
+      encode(registry.get(classOf[Person]), Person(null, null))
+    }
+  }
+
   it should "not compile case classes with unsupported values" in {
     "Macros.createCodecProvider(classOf[UnsupportedTuple])" shouldNot compile
     "Macros.createCodecProvider(classOf[UnsupportedMap])" shouldNot compile

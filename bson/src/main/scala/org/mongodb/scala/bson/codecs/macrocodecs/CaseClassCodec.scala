@@ -197,14 +197,14 @@ private[codecs] object CaseClassCodec {
               val localVal = instanceValue.$name
               writer.writeName($key)
               if (localVal.isDefined) {
-                this.writeValue(writer, localVal.get, encoderContext)
+                this.writeFieldValue($key, writer, localVal.get, encoderContext)
               } else {
-                this.writeValue(writer, this.bsonNull, encoderContext)
+                this.writeFieldValue($key, writer, this.bsonNull, encoderContext)
               }"""
             case _ => q"""
               val localVal = instanceValue.$name
               writer.writeName($key)
-              this.writeValue(writer, localVal, encoderContext)
+              this.writeFieldValue($key, writer, localVal, encoderContext)
               """
           }
       })
