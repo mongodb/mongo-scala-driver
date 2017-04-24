@@ -536,12 +536,7 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/near/ \$near]]
    */
   def near(fieldName: String, geometry: Point, maxDistance: Option[Double], minDistance: Option[Double]): Bson = {
-    (maxDistance, minDistance) match {
-      case (Some(_), Some(_)) => JFilters.near(fieldName, geometry, maxDistance.get, minDistance.get)
-      case (Some(_), None)    => JFilters.near(fieldName, geometry, maxDistance.get, null)
-      case (None, Some(_))    => JFilters.near(fieldName, geometry, null, minDistance.get)
-      case (None, None)       => JFilters.near(fieldName, geometry, null, null)
-    }
+    JFilters.near(fieldName, geometry, maxDistance.asJava, minDistance.asJava)
   }
 
   /**
@@ -565,12 +560,7 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/near/ \$near]]
    */
   def near(fieldName: String, geometry: Bson, maxDistance: Option[Double], minDistance: Option[Double]): Bson = {
-    (maxDistance, minDistance) match {
-      case (Some(_), Some(_)) => JFilters.near(fieldName, geometry, maxDistance.get, minDistance.get)
-      case (Some(_), None)    => JFilters.near(fieldName, geometry, maxDistance.get, null)
-      case (None, Some(_))    => JFilters.near(fieldName, geometry, null, minDistance.get)
-      case (None, None)       => JFilters.near(fieldName, geometry, null, null)
-    }
+    JFilters.near(fieldName, geometry, maxDistance.asJava, minDistance.asJava)
   }
   /**
    * Creates a filter that matches all documents containing a field with geospatial data that is near the specified point.
@@ -595,12 +585,7 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/near/ \$near]]
    */
   def near(fieldName: String, x: Double, y: Double, maxDistance: Option[Double], minDistance: Option[Double]): Bson = {
-    (maxDistance, minDistance) match {
-      case (Some(_), Some(_)) => JFilters.near(fieldName, x, y, maxDistance.get, minDistance.get)
-      case (Some(_), None)    => JFilters.near(fieldName, x, y, maxDistance.get, null)
-      case (None, Some(_))    => JFilters.near(fieldName, x, y, null, minDistance.get)
-      case (None, None)       => JFilters.near(fieldName, x, y, null, null)
-    }
+    JFilters.near(fieldName, x, y, maxDistance.asJava, minDistance.asJava)
   }
 
   /**
@@ -626,12 +611,7 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/near/ \$near]]
    */
   def nearSphere(fieldName: String, geometry: Point, maxDistance: Option[Double], minDistance: Option[Double]): Bson = {
-    (maxDistance, minDistance) match {
-      case (Some(_), Some(_)) => JFilters.nearSphere(fieldName, geometry, maxDistance.get, minDistance.get)
-      case (Some(_), None)    => JFilters.nearSphere(fieldName, geometry, maxDistance.get, null)
-      case (None, Some(_))    => JFilters.nearSphere(fieldName, geometry, null, minDistance.get)
-      case (None, None)       => JFilters.nearSphere(fieldName, geometry, null, null)
-    }
+    JFilters.nearSphere(fieldName, geometry, maxDistance.asJava, minDistance.asJava)
   }
 
   /**
@@ -657,12 +637,7 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/near/ \$near]]
    */
   def nearSphere(fieldName: String, geometry: Bson, maxDistance: Option[Double], minDistance: Option[Double]): Bson = {
-    (maxDistance, minDistance) match {
-      case (Some(_), Some(_)) => JFilters.nearSphere(fieldName, geometry, maxDistance.get, minDistance.get)
-      case (Some(_), None)    => JFilters.nearSphere(fieldName, geometry, maxDistance.get, null)
-      case (None, Some(_))    => JFilters.nearSphere(fieldName, geometry, null, minDistance.get)
-      case (None, None)       => JFilters.nearSphere(fieldName, geometry, null, null)
-    }
+    JFilters.nearSphere(fieldName, geometry, maxDistance.asJava, minDistance.asJava)
   }
 
   /**
@@ -690,12 +665,12 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/near/ \$near]]
    */
   def nearSphere(fieldName: String, x: Double, y: Double, maxDistance: Option[Double], minDistance: Option[Double]): Bson = {
-    (maxDistance, minDistance) match {
-      case (Some(_), Some(_)) => JFilters.nearSphere(fieldName, x, y, maxDistance.get, minDistance.get)
-      case (Some(_), None)    => JFilters.nearSphere(fieldName, x, y, maxDistance.get, null)
-      case (None, Some(_))    => JFilters.nearSphere(fieldName, x, y, null, minDistance.get)
-      case (None, None)       => JFilters.nearSphere(fieldName, x, y, null, null)
-    }
+    JFilters.nearSphere(fieldName, x, y, maxDistance.asJava, minDistance.asJava)
   }
+
+  private implicit class ScalaOptionDoubleToJavaDoubleOrNull(maybeDouble: Option[Double]) {
+    def asJava: java.lang.Double = maybeDouble.map(double2Double).orNull
+  }
+
 }
 //scalastyle:on null number.of.methods
