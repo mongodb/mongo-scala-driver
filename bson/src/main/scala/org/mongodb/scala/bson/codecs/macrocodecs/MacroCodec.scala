@@ -89,7 +89,7 @@ trait MacroCodec[T] extends Codec[T] {
   override def encode(writer: BsonWriter, value: T, encoderContext: EncoderContext): Unit = writeValue(writer, value, encoderContext)
 
   override def decode(reader: BsonReader, decoderContext: DecoderContext): T = {
-    val className = getClassname(reader, decoderContext)
+    val className = getClassName(reader, decoderContext)
     val fieldTypeArgsMap = classFieldTypeArgsMap(className)
     val map = mutable.Map[String, Any]()
     reader.readStartDocument()
@@ -104,28 +104,30 @@ trait MacroCodec[T] extends Codec[T] {
 
   override def getEncoderClass: Class[T] = encoderClass
 
-  protected def getClassname(reader: BsonReader, decoderContext: DecoderContext): String = {
+  protected def getClassName(reader: BsonReader, decoderContext: DecoderContext): String = {
     if (hasClassFieldName) {
       // Find the class name
-      reader.mark()
-      reader.readStartDocument()
-      var optionalClassName: Option[String] = None
-      while (optionalClassName.isEmpty && (reader.readBsonType ne BsonType.END_OF_DOCUMENT)) {
-        val name = reader.readName
-        if (name == classFieldName) {
-          optionalClassName = Some(codecRegistry.get(classOf[String]).decode(reader, decoderContext))
+      @scala.annotation.tailrec
+      def readOptionalClassName(): Option[String] = {
+        if (reader.readBsonType == BsonType.END_OF_DOCUMENT) {
+          None
+        } else if (reader.readName == classFieldName) {
+          Some(codecRegistry.get(classOf[String]).decode(reader, decoderContext))
         } else {
           reader.skipValue()
+          readOptionalClassName()
         }
       }
+
+      reader.mark()
+      reader.readStartDocument()
+      val optionalClassName: Option[String] = readOptionalClassName()
       reader.reset()
 
-      // Validate the class name
-      if (optionalClassName.isEmpty) {
+      val className = optionalClassName.getOrElse {
         throw new CodecConfigurationException(s"Could not decode sealed case class. Missing '$classFieldName' field.")
       }
 
-      val className = optionalClassName.get
       if (!caseClassesMap.contains(className)) {
         throw new CodecConfigurationException(s"Could not decode sealed case class, unknown class $className.")
       }
