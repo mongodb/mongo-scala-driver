@@ -84,3 +84,17 @@ case class Leaf(value: Int) extends Tree
 
 val codecRegistry = fromRegistries( fromProviders(classOf[Tree]), DEFAULT_CODEC_REGISTRY )
 ```
+
+
+## Options and None values.
+
+By default `Option` values are always stored. In 2.1.0 a new macro helpers were added so that `None` values would not be stored in the 
+database. In the following example only if an address is present will it be stored in the database:
+
+```scala
+import org.mongodb.scala.bson.codecs.Macros
+
+case class Person(firstName: String, secondName: String, address: Option[Address])
+
+val personCodecProvider = Macros.createCodecProviderIgnoreNone[Person]()
+```

@@ -22,10 +22,27 @@ import org.bson.codecs.configuration.{ CodecProvider, CodecRegistry }
 
 private[codecs] object CaseClassProvider {
 
-  def createCaseClassProviderWithClass[T: c.WeakTypeTag](c: whitebox.Context)(clazz: c.Expr[Class[T]]): c.Expr[CodecProvider] =
-    createCaseClassProvider[T](c)().asInstanceOf[c.Expr[CodecProvider]]
+  def createCodecProviderEncodeNone[T: c.WeakTypeTag](c: whitebox.Context)(): c.Expr[CodecProvider] = {
+    import c.universe._
+    createCodecProvider[T](c)(c.Expr[Boolean](q"true"))
+  }
 
-  def createCaseClassProvider[T: c.WeakTypeTag](c: whitebox.Context)(): c.Expr[CodecProvider] = {
+  def createCodecProviderWithClassEncodeNone[T: c.WeakTypeTag](c: whitebox.Context)(clazz: c.Expr[Class[T]]): c.Expr[CodecProvider] = {
+    import c.universe._
+    createCodecProvider[T](c)(c.Expr[Boolean](q"true"))
+  }
+
+  def createCodecProviderWithClassIgnoreNone[T: c.WeakTypeTag](c: whitebox.Context)(clazz: c.Expr[Class[T]]): c.Expr[CodecProvider] = {
+    import c.universe._
+    createCodecProvider[T](c)(c.Expr[Boolean](q"false"))
+  }
+
+  def createCodecProviderIgnoreNone[T: c.WeakTypeTag](c: whitebox.Context)(): c.Expr[CodecProvider] = {
+    import c.universe._
+    createCodecProvider[T](c)(c.Expr[Boolean](q"false"))
+  }
+
+  def createCodecProvider[T: c.WeakTypeTag](c: whitebox.Context)(encodeNone: c.Expr[Boolean]): c.Expr[CodecProvider] = {
     import c.universe._
 
     // Declared type
@@ -34,7 +51,7 @@ private[codecs] object CaseClassProvider {
 
     // Names
     def exprCodecRegistry = c.Expr[CodecRegistry](q"codecRegistry")
-    def codec = CaseClassCodec.createCodec[T](c)(exprCodecRegistry)
+    def codec = CaseClassCodec.createCodec[T](c)(exprCodecRegistry, encodeNone)
 
     c.Expr[CodecProvider](
       q"""

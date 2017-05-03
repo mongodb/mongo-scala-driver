@@ -24,18 +24,38 @@ import org.bson.codecs.configuration.CodecRegistry
 
 private[codecs] object CaseClassCodec {
 
-  def createCodecNoArgs[T: c.WeakTypeTag](c: whitebox.Context)(): c.Expr[Codec[T]] = {
+  def createCodecDefaultCodecRegistryEncodeNone[T: c.WeakTypeTag](c: whitebox.Context)(): c.Expr[Codec[T]] = {
+    import c.universe._
+    createCodecDefaultCodecRegistry[T](c)(c.Expr[Boolean](q"true"))
+  }
+
+  def createCodecEncodeNone[T: c.WeakTypeTag](c: whitebox.Context)(codecRegistry: c.Expr[CodecRegistry]): c.Expr[Codec[T]] = {
+    import c.universe._
+    createCodec[T](c)(codecRegistry, c.Expr[Boolean](q"true"))
+  }
+
+  def createCodecDefaultCodecRegistryIgnoreNone[T: c.WeakTypeTag](c: whitebox.Context)(): c.Expr[Codec[T]] = {
+    import c.universe._
+    createCodecDefaultCodecRegistry[T](c)(c.Expr[Boolean](q"false"))
+  }
+
+  def createCodecIgnoreNone[T: c.WeakTypeTag](c: whitebox.Context)(codecRegistry: c.Expr[CodecRegistry]): c.Expr[Codec[T]] = {
+    import c.universe._
+    createCodec[T](c)(codecRegistry, c.Expr[Boolean](q"false"))
+  }
+
+  def createCodecDefaultCodecRegistry[T: c.WeakTypeTag](c: whitebox.Context)(encodeNone: c.Expr[Boolean]): c.Expr[Codec[T]] = {
     import c.universe._
     createCodec[T](c)(c.Expr[CodecRegistry](
       q"""
          import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
          DEFAULT_CODEC_REGISTRY
       """
-    )).asInstanceOf[c.Expr[Codec[T]]]
+    ), encodeNone)
   }
 
   // scalastyle:off method.length
-  def createCodec[T: c.WeakTypeTag](c: whitebox.Context)(codecRegistry: c.Expr[CodecRegistry]): c.Expr[Codec[T]] = {
+  def createCodec[T: c.WeakTypeTag](c: whitebox.Context)(codecRegistry: c.Expr[CodecRegistry], encodeNone: c.Expr[Boolean]): c.Expr[Codec[T]] = {
     import c.universe._
 
     // Declared types
@@ -195,10 +215,11 @@ private[codecs] object CaseClassCodec {
           f match {
             case optional if isOption(optional) => q"""
               val localVal = instanceValue.$name
-              writer.writeName($key)
               if (localVal.isDefined) {
+                writer.writeName($key)
                 this.writeFieldValue($key, writer, localVal.get, encoderContext)
-              } else {
+              } else if ($encodeNone) {
+                writer.writeName($key)
                 this.writeFieldValue($key, writer, this.bsonNull, encoderContext)
               }"""
             case _ => q"""
