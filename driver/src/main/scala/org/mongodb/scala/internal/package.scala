@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.client
+package org.mongodb.scala
 
 /**
  * Internal companion objects for easy interaction with the Java based async library
