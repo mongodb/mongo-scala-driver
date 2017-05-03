@@ -65,7 +65,7 @@ package object gridfs {
   implicit class ScalaAsyncInputStreamToJava(wrapped: AsyncInputStream) extends JAsyncInputStream {
     // scalastyle:off null
     override def close(callback: SingleResultCallback[Void]): Unit = wrapped.close().subscribe(
-      (res: Completed) => (),
+      (_: Completed) => (),
       (e: Throwable) => callback.onResult(null, e),
       () => callback.onResult(null, null)
     )
@@ -75,7 +75,7 @@ package object gridfs {
         var bytesRead: Option[Int] = None
         override def onError(e: Throwable): Unit = callback.onResult(null, e)
 
-        override def onComplete(): Unit = callback.onResult(bytesRead.get, null)
+        override def onComplete(): Unit = bytesRead.foreach(callback.onResult(_, null))
 
         override def onNext(result: Int): Unit = bytesRead = Some(result)
       }
@@ -91,14 +91,14 @@ package object gridfs {
 
         override def onError(e: Throwable): Unit = callback.onResult(null, e)
 
-        override def onComplete(): Unit = callback.onResult(bytesWritten.get, null)
+        override def onComplete(): Unit = bytesWritten.foreach(callback.onResult(_, null))
 
         override def onNext(result: Int): Unit = bytesWritten = Some(result)
       }
     )
 
     override def close(callback: SingleResultCallback[Void]): Unit = wrapped.close().subscribe(
-      (res: Completed) => (),
+      (_: Completed) => (),
       (e: Throwable) => callback.onResult(null, e),
       () => callback.onResult(null, null)
     )
