@@ -34,8 +34,6 @@ private[scala] case class RecoverWithObservable[T, U >: T](
         @volatile
         private var recoverySubscription: Option[Subscription] = None
         @volatile
-        private var originalException: Option[Throwable] = None
-        @volatile
         private var inRecovery: Boolean = false
         @volatile
         private var demand: Long = 0
@@ -45,14 +43,13 @@ private[scala] case class RecoverWithObservable[T, U >: T](
             override def isUnsubscribed: Boolean = subscription.isUnsubscribed
 
             override def request(n: Long): Unit = {
-              if (n < 1) {
-                throw new IllegalArgumentException(s"Number requested cannot be negative: $n")
-              }
+              require(n > 0L, s"Number requested cannot be negative: $n")
 
               val localDemand: Long = addDemand(n)
-              inRecovery match {
-                case true  => recoverySubscription.get.request(localDemand)
-                case false => subscription.request(localDemand)
+              if (inRecovery) {
+                recoverySubscription.foreach(_.request(localDemand))
+              } else {
+                subscription.request(localDemand)
               }
             }
 
@@ -61,18 +58,14 @@ private[scala] case class RecoverWithObservable[T, U >: T](
           observer.onSubscribe(initialSub)
         }
 
-        override def onError(throwable: Throwable): Unit = {
-          originalException = Some(throwable)
-          Try(pf(throwable)) recover pf match {
+        override def onError(originalException: Throwable): Unit = {
+          Try(pf(originalException)) recover pf match {
             case Success(recoverObservable) =>
               inRecovery = true
               recoverObservable.subscribe(
                 new Observer[U] {
                   override def onError(throwable: Throwable): Unit = {
-                    throwOriginalException match {
-                      case true  => observer.onError(originalException.get)
-                      case false => observer.onError(throwable)
-                    }
+                    observer.onError(if (throwOriginalException) originalException else throwable)
                   }
 
                   override def onSubscribe(subscription: Subscription): Unit = {
@@ -80,14 +73,12 @@ private[scala] case class RecoverWithObservable[T, U >: T](
                     if (demand > 0) subscription.request(demand)
                   }
 
-                  override def onComplete(): Unit = {
-                    observer.onComplete()
-                  }
+                  override def onComplete(): Unit = observer.onComplete()
 
                   override def onNext(tResult: U): Unit = processNext(tResult)
                 }
               )
-            case Failure(ex) => observer.onError(throwable)
+            case Failure(_) => observer.onError(originalException)
           }
         }
 
