@@ -31,9 +31,7 @@ private[scala] case class IterableObservable[A](from: Iterable[A]) extends Obser
         override def isUnsubscribed: Boolean = !subscribed
 
         override def request(n: Long): Unit = {
-          if (n < 1) {
-            throw new IllegalArgumentException(s"Number requested cannot be negative: $n")
-          }
+          require(n > 0L, s"Number requested cannot be negative: $n")
           var counter = n
           while (subscribed && counter > 0 && left.nonEmpty) {
             val head = left.head
