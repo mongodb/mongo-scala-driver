@@ -29,7 +29,7 @@ import org.scalatest.{ FlatSpec, Matchers }
 
 class MutableDocumentSpec extends FlatSpec with Matchers {
 
-  val emptyDoc = Document.empty
+  val emptyDoc: Document = Document.empty
   val doc: Document = Document("key" -> "value", "key2" -> "value2", "key3" -> "value3")
   val docMap: Map[String, BsonValue] = doc.toMap
 

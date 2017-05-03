@@ -22,6 +22,7 @@ import java.util.Date
 import scala.collection.JavaConverters._
 
 import org.bson._
+import org.bson.codecs.configuration.CodecRegistry
 import org.bson.codecs.{ DecoderContext, EncoderContext }
 import org.bson.io.{ BasicOutputBuffer, ByteBufferBsonInput }
 import org.bson.types.ObjectId
@@ -31,7 +32,7 @@ import org.scalatest.{ FlatSpec, Matchers }
 
 class ImmutableDocumentCodecSpec extends FlatSpec with Matchers {
 
-  val registry = DEFAULT_CODEC_REGISTRY
+  val registry: CodecRegistry = DEFAULT_CODEC_REGISTRY
 
   "MutableDocumentCodec" should "encode and decode all default types with readers and writers" in {
     val original: Document = Document(

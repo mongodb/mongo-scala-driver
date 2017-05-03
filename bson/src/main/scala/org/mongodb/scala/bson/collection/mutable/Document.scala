@@ -176,7 +176,7 @@ case class Document(protected[scala] val underlying: BsonDocument)
    *  @param key    The key to update
    *  @param value  The new value
    */
-  def update[B](key: String, value: B)(implicit transformer: BsonTransformer[B]) { this += ((key, value)) }
+  def update[B](key: String, value: B)(implicit transformer: BsonTransformer[B]): Unit = { this += ((key, value)) }
 
   /**
    *  Adds a new key/value pair to this document and optionally returns previously bound value.
@@ -259,7 +259,7 @@ case class Document(protected[scala] val underlying: BsonDocument)
   /**
    * Removes all bindings from the document. After this operation has completed the document will be empty.
    */
-  def clear() { underlying.clear(); }
+  def clear(): Unit = { underlying.clear(); }
 
   /**
    * Applies a transformation function to all values contained in this document.
