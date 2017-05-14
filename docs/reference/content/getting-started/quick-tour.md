@@ -133,7 +133,7 @@ Only when an `Observable` is subscribed to and data requested will the operation
 
 ```scala
 // Explictly subscribe:
-observable.insertOne(doc).subscribe(new Observer[Completed] {
+observable.subscribe(new Observer[Completed] {
 
   override def onNext(result: Completed): Unit = println("Inserted")
 
