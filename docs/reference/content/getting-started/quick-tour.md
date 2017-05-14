@@ -27,6 +27,8 @@ The following example shows multiple ways to connect to the database `mydb` on t
 
 
 ```scala
+import org.mongodb.scala._
+
 // To directly connect to the default server localhost on port 27017
 val mongoClient: MongoClient = MongoClient()
 
