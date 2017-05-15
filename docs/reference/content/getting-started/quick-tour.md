@@ -27,6 +27,8 @@ The following example shows multiple ways to connect to the database `mydb` on t
 
 
 ```scala
+import org.mongodb.scala._
+
 // To directly connect to the default server localhost on port 27017
 val mongoClient: MongoClient = MongoClient()
 
@@ -126,14 +128,14 @@ In the API all methods returning a `Observables` are "cold" streams meaning that
 The example below does nothing:
 
 ```scala
-val observable: Observable<Completed> = collection.insertOne(doc)
+val observable: Observable[Completed] = collection.insertOne(doc)
 ```
 
 Only when an `Observable` is subscribed to and data requested will the operation happen:
 
 ```scala
 // Explictly subscribe:
-observable.insertOne(doc).subscribe(new Observer[Completed] {
+observable.subscribe(new Observer[Completed] {
 
   override def onNext(result: Completed): Unit = println("Inserted")
 
@@ -281,6 +283,8 @@ We add a sort to a find query by calling the `sort()` method on a `FindObservabl
 [`descending("i")`]({{< apiref "org.mongodb.scala.model.Sorts$@descending(fieldNames:String*):org.bson.conversions.Bson">}}) helper to sort our documents:
 
 ```scala
+import org.mongodb.scala.model.Sorts._
+
 collection.find(exists("i")).sort(descending("i")).first().printHeadResult()
 ```
 
@@ -291,6 +295,8 @@ helpers can be used to build the projection parameter for the find operation and
 Below we'll sort the collection, exclude the `_id` field and output the first matching document:
 
 ```scala
+import org.mongodb.scala.model.Projections._
+
 collection.find().projection(excludeId()).first().printHeadResult()
 ```
 
@@ -306,6 +312,8 @@ in conjunction with the [`$multiply`]({{< docsref "reference/operator/aggregatio
 value:
 
 ```scala
+import org.mongodb.scala.model.Aggregates._
+
 collection.aggregate(Seq(filter(gt("i", 0)),
   project(Document("""{ITimes10: {$multiply: ["$i", 10]}}""")))
 ).printResults()
@@ -318,7 +326,7 @@ For [`$group`]({{< relref "builders/aggregation.md#group" >}}) operations use th
 [`Accumulators.sum`]({{< apiref "com/mongodb/client/model/Accumulators#sum-java.lang.String-TExpression-" >}}) helper:
 
 ```scala
-collection.aggregate(singletonList(group(null, sum("total", "$i")))).first(printDocument);
+collection.aggregate(List(group(null, sum("total", "$i")))).printHeadResult()
 ```
 
 {{% note %}}
@@ -336,6 +344,8 @@ To update at most a single document (may be 0 if none match the filter), use the
 method to specify the filter and the update document.  Here we update the first document that meets the filter `i` equals `10` and set the value of `i` to `110`:
 
 ```scala
+import org.mongodb.scala.model.Updates._
+
 collection.updateOne(equal("i", 10), set("i", 110)).printHeadResult("Update Result: ")
 ```
 
