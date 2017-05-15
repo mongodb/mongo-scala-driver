@@ -26,9 +26,10 @@
 package org.mongodb.scala
 
 import scala.collection.JavaConverters._
-import scala.collection.mutable.ListBuffer
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future, Promise}
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 import scala.language.implicitConversions
 import scala.util.{Failure, Properties, Success, Try}
 
@@ -41,19 +42,19 @@ import org.scalatest.time.{Millis, Seconds, Span}
 
 trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
 
-  implicit val defaultPatience = PatienceConfig(timeout = Span(60, Seconds), interval = Span(5, Millis))
-  implicit val ec = scala.concurrent.ExecutionContext.Implicits.global
+  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(60, Seconds), interval = Span(5, Millis))
+  implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   private val DEFAULT_URI: String = "mongodb://localhost:27017/"
   private val MONGODB_URI_SYSTEM_PROPERTY_NAME: String = "org.mongodb.test.uri"
-  private val WAIT_DURATION = Duration(10, "second")
+  private val WAIT_DURATION: Duration = 10.seconds
   private val DB_PREFIX = "mongo-scala-"
   private var _currentTestName: Option[String] = None
   private var mongoDBOnline: Boolean = false
 
   protected override def runTest(testName: String, args: Args): Status = {
     _currentTestName = Some(testName.split("should")(1))
-    mongoDBOnline = isMongoDBOnline()
+    mongoDBOnline = isMongoDBOnline
     super.runTest(testName, args)
   }
 
@@ -67,12 +68,12 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
    */
   def collectionName: String = _currentTestName.getOrElse(suiteName).filter(_.isLetterOrDigit)
 
-  val mongoClientURI = Properties.propOrElse(MONGODB_URI_SYSTEM_PROPERTY_NAME, DEFAULT_URI)
+  val mongoClientURI: String = Properties.propOrElse(MONGODB_URI_SYSTEM_PROPERTY_NAME, DEFAULT_URI)
 
-  def mongoClient() = MongoClient(mongoClientURI)
+  def mongoClient(): MongoClient = MongoClient(mongoClientURI)
 
-  def isMongoDBOnline(): Boolean = {
-    Try(Await.result(MongoClient(mongoClientURI).listDatabaseNames(), Duration(10, "second"))).isSuccess
+  def isMongoDBOnline: Boolean = {
+    Try(Await.result(MongoClient(mongoClientURI).listDatabaseNames(), WAIT_DURATION)).isSuccess
   }
 
   def checkMongoDB() {

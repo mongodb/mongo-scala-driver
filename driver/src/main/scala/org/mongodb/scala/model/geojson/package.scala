@@ -38,14 +38,14 @@ package object geojson {
    */
   object CoordinateReferenceSystemType {
     /**
-     * A coordinate reference system that is specifed by name
+     * A coordinate reference system that is specified by name
      */
-    val NAME = Jgeojson.CoordinateReferenceSystemType.NAME
+    val NAME: CoordinateReferenceSystemType = Jgeojson.CoordinateReferenceSystemType.NAME
 
     /**
-     * A coordinate reference system that is specifed by a dereferenceable URI
+     * A coordinate reference system that is specified by a dereferenceable URI
      */
-    val LINK = Jgeojson.CoordinateReferenceSystemType.LINK
+    val LINK: CoordinateReferenceSystemType = Jgeojson.CoordinateReferenceSystemType.LINK
   }
 
   /**
@@ -60,37 +60,37 @@ package object geojson {
     /**
      * A GeometryCollection
      */
-    val GEOMETRY_COLLECTION = Jgeojson.GeoJsonObjectType.GEOMETRY_COLLECTION
+    val GEOMETRY_COLLECTION: GeoJsonObjectType = Jgeojson.GeoJsonObjectType.GEOMETRY_COLLECTION
 
     /**
      * A LineString
      */
-    val LINE_STRING = Jgeojson.GeoJsonObjectType.LINE_STRING
+    val LINE_STRING: GeoJsonObjectType = Jgeojson.GeoJsonObjectType.LINE_STRING
 
     /**
      * A MultiLineString
      */
-    val MULTI_LINE_STRING = Jgeojson.GeoJsonObjectType.MULTI_LINE_STRING
+    val MULTI_LINE_STRING: GeoJsonObjectType = Jgeojson.GeoJsonObjectType.MULTI_LINE_STRING
 
     /**
      * A MultiPoint
      */
-    val MULTI_POINT = Jgeojson.GeoJsonObjectType.MULTI_POINT
+    val MULTI_POINT: GeoJsonObjectType = Jgeojson.GeoJsonObjectType.MULTI_POINT
 
     /**
      * A MultiPolygon
      */
-    val MULTI_POLYGON = Jgeojson.GeoJsonObjectType.MULTI_POLYGON
+    val MULTI_POLYGON: GeoJsonObjectType = Jgeojson.GeoJsonObjectType.MULTI_POLYGON
 
     /**
      * A Point
      */
-    val POINT = Jgeojson.GeoJsonObjectType.POINT
+    val POINT: GeoJsonObjectType = Jgeojson.GeoJsonObjectType.POINT
 
     /**
      * A Polygon
      */
-    val POLYGON = Jgeojson.GeoJsonObjectType.POLYGON
+    val POLYGON: GeoJsonObjectType = Jgeojson.GeoJsonObjectType.POLYGON
   }
 
   /**

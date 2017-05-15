@@ -31,19 +31,19 @@ object MapReduceAction {
   /**
    * Replace the contents of the `collectionName` if the collection with the `collectionName` exists.
    */
-  val REPLACE = JMapReduceAction.REPLACE
+  val REPLACE: JMapReduceAction = JMapReduceAction.REPLACE
 
   /**
    * Merge the new result with the existing result if the output collection already exists. If an existing document has the same key
    * as the new result, overwrite that existing document.
    */
-  val MERGE = JMapReduceAction.MERGE
+  val MERGE: JMapReduceAction = JMapReduceAction.MERGE
 
   /**
    * Merge the new result with the existing result if the output collection already exists. If an existing document has the same key
    * as the new result, apply the reduce function to both the new and the existing documents and overwrite the existing document with
    * the result.
    */
-  val REDUCE = JMapReduceAction.REDUCE
+  val REDUCE: JMapReduceAction = JMapReduceAction.REDUCE
 
 }

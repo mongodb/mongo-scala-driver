@@ -27,10 +27,10 @@ object ReturnDocument {
   /**
    * Indicates to return the document before the update, replacement, or insert occurred.
    */
-  val BEFORE = JReturnDocument.BEFORE
+  val BEFORE: JReturnDocument = JReturnDocument.BEFORE
 
   /**
    * Indicates to return the document after the update, replacement, or insert occurred.
    */
-  val AFTER = JReturnDocument.AFTER
+  val AFTER: JReturnDocument = JReturnDocument.AFTER
 }

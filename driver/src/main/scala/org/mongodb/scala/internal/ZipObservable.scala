@@ -52,9 +52,10 @@ private[scala] case class ZipObservable[T, U](
         override def onError(throwable: Throwable): Unit = observer.onError(throwable)
 
         override def onSubscribe(subscription: Subscription): Unit = {
-          firstSub match {
-            case true  => observable1Subscription = Some(subscription)
-            case false => observable2Subscription = Some(subscription)
+          if (firstSub) {
+            observable1Subscription = Some(subscription)
+          } else {
+            observable2Subscription = Some(subscription)
           }
 
           if (observable1Subscription.nonEmpty && observable2Subscription.nonEmpty) {
@@ -73,25 +74,25 @@ private[scala] case class ZipObservable[T, U](
     }
 
     private def processNext(observer: Observer[_ >: (T, U)]): Unit = {
-      (Option(thisQueue.peek), Option(thatQueue.peek)) match {
-        case (Some((k1, v1)), Some((k2, v2))) if k1 == k2 => observer.onNext((thisQueue.poll()._2, thatQueue.poll()._2))
+      (thisQueue.peek, thatQueue.peek) match {
+        case ((k1: Long, _), (k2: Long, _)) if k1 == k2 => observer.onNext((thisQueue.poll()._2, thatQueue.poll()._2))
         case _ => // Do nothing counters don't match
       }
     }
 
     private val jointSubscription = new Subscription() {
-      var subscribed = true
+      var subscribed: Boolean = true
       override def isUnsubscribed: Boolean = !subscribed
 
       override def request(n: Long): Unit = {
-        observable1Subscription.get.request(n)
-        observable2Subscription.get.request(n)
+        observable1Subscription.foreach(_.request(n))
+        observable2Subscription.foreach(_.request(n))
       }
 
       override def unsubscribe(): Unit = {
         subscribed = false
-        observable1Subscription.get.unsubscribe()
-        observable2Subscription.get.unsubscribe()
+        observable1Subscription.foreach(_.unsubscribe())
+        observable2Subscription.foreach(_.unsubscribe())
       }
     }
 

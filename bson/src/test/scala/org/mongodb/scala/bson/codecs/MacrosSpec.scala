@@ -160,15 +160,14 @@ class MacrosSpec extends FlatSpec with Matchers {
   }
 
   it should "roundtrip all the supported bson types" in {
-    val value =
-      roundTrip(
-        AllTheBsonTypes(Map("a" -> "b"), Seq("a", "b", "c"), new Date(123), boolean = true, 1.0, 10, 100L, "string",
-          Binary(Array[Byte](123)), None),
-        """{"documentMap" : { "a" : "b" }, "array" : ["a", "b", "c"], "date" : { "$date" : 123 }, "boolean" : true,
-        | "double" : 1.0, "int32" : 10, "int64" : { "$numberLong" : "100" }, "string" : "string",
-        | "binary" : { "binary": { "$binary" : "ew==", "$type" : "00" } }, "none" : null }""".stripMargin,
-        classOf[Binary], classOf[AllTheBsonTypes]
-      )
+    roundTrip(
+      AllTheBsonTypes(Map("a" -> "b"), Seq("a", "b", "c"), new Date(123), boolean = true, 1.0, 10, 100L, "string",
+        Binary(Array[Byte](123)), None),
+      """{"documentMap" : { "a" : "b" }, "array" : ["a", "b", "c"], "date" : { "$date" : 123 }, "boolean" : true,
+      | "double" : 1.0, "int32" : 10, "int64" : { "$numberLong" : "100" }, "string" : "string",
+      | "binary" : { "binary": { "$binary" : "ew==", "$type" : "00" } }, "none" : null }""".stripMargin,
+      classOf[Binary], classOf[AllTheBsonTypes]
+    )
   }
 
   it should "support ADT sealed case classes" in {

@@ -22,7 +22,7 @@ import org.mongodb.scala.{Observer, Subscription}
 
 object TestObserver {
 
-  def apply[A]() = {
+  def apply[A](): TestObserver[A] = {
     new TestObserver[A](new Observer[A] {
       override def onError(throwable: Throwable): Unit = {}
 

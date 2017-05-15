@@ -16,6 +16,8 @@
 
 package org.mongodb.scala.internal
 
+import java.util.concurrent.atomic.AtomicBoolean
+
 import org.mongodb.scala.{Observable, Observer, Subscription}
 
 private[scala] case class FoldLeftObservable[T, S](observable: Observable[T], initialValue: S, accumulator: (S, T) => S) extends Observable[S] {
@@ -26,8 +28,8 @@ private[scala] case class FoldLeftObservable[T, S](observable: Observable[T], in
 
         @volatile
         private var currentValue: S = initialValue
-        @volatile
-        private var requested = false
+
+        private val requested = new AtomicBoolean(false)
 
         override def onError(throwable: Throwable): Unit = observer.onError(throwable)
 
@@ -36,13 +38,8 @@ private[scala] case class FoldLeftObservable[T, S](observable: Observable[T], in
             override def isUnsubscribed: Boolean = subscription.isUnsubscribed
 
             override def request(n: Long): Unit = {
-              if (n < 1) {
-                throw new IllegalArgumentException(s"Number requested cannot be negative: $n")
-              }
-              if (!requested) {
-                requested = true
-                subscription.request(Long.MaxValue)
-              }
+              require(n > 0L, s"Number requested cannot be negative: $n")
+              if (requested.compareAndSet(false, true)) subscription.request(Long.MaxValue)
             }
             override def unsubscribe(): Unit = subscription.unsubscribe()
           }
