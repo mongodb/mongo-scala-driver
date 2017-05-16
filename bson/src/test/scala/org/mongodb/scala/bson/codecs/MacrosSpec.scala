@@ -88,6 +88,13 @@ class MacrosSpec extends FlatSpec with Matchers {
   case class UnsupportedTuple(value: (String, String))
   case class UnsupportedMap(value: Map[Int, Int])
 
+  type SimpleTypeAlias = Map[String, String]
+  case class ContainsSimpleTypeAlias(a: String, b: SimpleTypeAlias = Map.empty)
+  type CaseClassTypeAlias = Person
+  case class ContainsCaseClassTypeAlias(a: String, b: CaseClassTypeAlias)
+  type ADTCaseClassTypeAlias = ContainsADT
+  case class ContainsADTCaseClassTypeAlias(a: String, b: ADTCaseClassTypeAlias)
+
   "Macros" should "be able to round trip simple case classes" in {
     roundTrip(Empty(), "{}", classOf[Empty])
     roundTrip(Person("Bob", "Jones"), """{firstName: "Bob", lastName: "Jones"}""", classOf[Person])
@@ -174,16 +181,8 @@ class MacrosSpec extends FlatSpec with Matchers {
   it should "support ADT sealed case classes" in {
     val leaf = Leaf(1)
     val branch = Branch(Branch(Leaf(1), Leaf(2), 3), Branch(Leaf(4), Leaf(5), 6), 3) // scalastyle:ignore
-
-    def createJson(tree: Tree): String = {
-      tree match {
-        case l: Leaf => s"""{_t: "Leaf", value: ${l.value}}"""
-        case b: Branch => s"""{_t: "Branch", b1: ${createJson(b.b1)}, b2: ${createJson(b.b2)}, value: ${b.value}}"""
-        case _ => "{}"
-      }
-    }
-    val leafJson = createJson(leaf)
-    val branchJson = createJson(branch)
+    val leafJson = createTreeJson(leaf)
+    val branchJson = createTreeJson(branch)
 
     roundTrip(leaf, leafJson, classOf[Tree])
     roundTrip(branch, branchJson, classOf[Tree])
@@ -205,6 +204,17 @@ class MacrosSpec extends FlatSpec with Matchers {
 
     roundTrip(nodeA, nodeAJson, classOf[Graph])
     roundTrip(nodeB, nodeBJson, classOf[Graph])
+  }
+
+  it should "support type aliases in case classes" in {
+    roundTrip(ContainsSimpleTypeAlias("c", Map("d" -> "c")), """{a: "c", b: {d: "c"}}""", classOf[ContainsSimpleTypeAlias])
+    roundTrip(ContainsCaseClassTypeAlias("c", Person("Tom", "Jones")), """{a: "c", b: {firstName: "Tom", lastName: "Jones"}}""",
+      classOf[ContainsCaseClassTypeAlias],  classOf[CaseClassTypeAlias])
+
+    val branch = Branch(Branch(Leaf(1), Leaf(2), 3), Branch(Leaf(4), Leaf(5), 6), 3) // scalastyle:ignore
+    val branchJson = createTreeJson(branch)
+    roundTrip(ContainsADTCaseClassTypeAlias("c", ContainsADT("Tom", branch)), s"""{a: "c", b: {name: "Tom", tree: $branchJson}}""",
+      classOf[ContainsADTCaseClassTypeAlias], classOf[ADTCaseClassTypeAlias], classOf[Tree])
   }
 
   it should "support throw a CodecConfigurationException missing _t field" in {
@@ -277,5 +287,13 @@ class MacrosSpec extends FlatSpec with Matchers {
   }
 
   val documentCodec: Codec[Document] = DEFAULT_CODEC_REGISTRY.get(classOf[Document])
+
+  def createTreeJson(tree: Tree): String = {
+    tree match {
+      case l: Leaf => s"""{_t: "Leaf", value: ${l.value}}"""
+      case b: Branch => s"""{_t: "Branch", b1: ${createTreeJson(b.b1)}, b2: ${createTreeJson(b.b2)}, value: ${b.value}}"""
+      case _ => "{}"
+    }
+  }
 
 }

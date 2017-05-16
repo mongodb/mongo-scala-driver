@@ -109,10 +109,11 @@ private[codecs] object CaseClassCodec {
      * Removes Option type as the Option value is wrapped automatically below.
      * Throws if the case class contains a Tuple
      *
-     * @param t the type to flatten the arguments for
+     * @param at the type to flatten the arguments for
      * @return a list of the type arguments for the type
      */
-    def flattenTypeArgs(t: Type): List[c.universe.Type] = {
+    def flattenTypeArgs(at: Type): List[c.universe.Type] = {
+      val t = at.dealias
       val typeArgs = if (isMap(t)) {
         if (t.typeArgs.head != stringType) c.abort(c.enclosingPosition, "Maps must contain string types for keys")
         t.typeArgs.tail

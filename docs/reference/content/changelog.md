@@ -12,6 +12,7 @@ Changes between released versions
 
 ### 2.1.0
 
+  * Added support for type aliases in the CaseClassCodec. [SCALA-305](https://jira.mongodb.org/browse/SCALA-305)
   * Added the ability to ignore `None` values when encoding `Option` fields. [SCALA-300](https://jira.mongodb.org/browse/SCALA-300)
   * Added the ability to handle missing values for `Option` fields. [SCALA-299](https://jira.mongodb.org/browse/SCALA-299)
   * Improved the CaseClassCodec handling of `null` values. [SCALA-301](https://jira.mongodb.org/browse/SCALA-301)
