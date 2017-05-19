@@ -56,7 +56,7 @@ import org.bson.codecs.configuration.CodecRegistries.{fromRegistries, fromProvid
 val codecRegistry = fromRegistries( fromProviders(personCodecProvider), DEFAULT_CODEC_REGISTRY )
 ```
 
-The `Macros` helper also has an implicit `createCodecProvider` method that takes the `Class[T]` and will create a `CodecProvider` from that.
+The `Macros` helper also has an implicit `fromProviders` method that takes the `Class[T]` and will create a `CodecProvider` from that.
 As you can see in the example below it's much more concise especially when defining multiple providers:
 
 ```scala
