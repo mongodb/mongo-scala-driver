@@ -1,7 +1,7 @@
 githubUser = "mongodb"
 githubRepo = "mongo-scala-driver"
 githubBranch = "master"
-currentVersion = "2.0"
+currentVersion = "2.1"
 highlightTheme = "idea.css"
 apiUrl = "/scaladoc/index.html"
 coreApiUrl = "http://api.mongodb.org/java/3.4/"
