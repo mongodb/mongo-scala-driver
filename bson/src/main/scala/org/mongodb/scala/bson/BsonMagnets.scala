@@ -44,7 +44,7 @@ protected[bson] object BsonMagnets {
    */
   implicit def singleToCanBeBsonValue[T](v: T)(implicit transformer: BsonTransformer[T]): CanBeBsonValue = {
     new CanBeBsonValue {
-      override val value = transformer(v)
+      override val value: BsonValue = transformer(v)
     }
   }
 

@@ -30,8 +30,6 @@ private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: 
         @volatile
         private var nestedSubscription: Option[Subscription] = None
         @volatile
-        private var started = false
-        @volatile
         private var demand: Long = 0
         @volatile
         private var onCompleteCalled: Boolean = false
@@ -41,22 +39,11 @@ private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: 
           val masterSub = new Subscription() {
             override def isUnsubscribed: Boolean = subscription.isUnsubscribed
 
-            override def request(n: Long): Unit = {
-              if (n < 1) {
-                throw new IllegalArgumentException(s"Number requested cannot be negative: $n")
-              }
-
-              val requestFirst = !started
+            def request(n: Long): Unit = {
+              require(n > 0L, s"Number requested must be greater than zero: $n")
               val localDemand = addDemand(n)
-              if (!started) started = true
-
-              requestFirst match {
-                case true => subscription.request(1)
-                case false => nestedSubscription match {
-                  case Some(nestedSub) => nestedSub.request(localDemand)
-                  case None            => subscription.request(1)
-                }
-              }
+              val (sub, num) = nestedSubscription.map((_, localDemand)).getOrElse((subscription, 1L))
+              sub.request(num)
             }
 
             override def unsubscribe(): Unit = subscription.unsubscribe()
@@ -94,7 +81,7 @@ private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: 
                   case true => observer.onComplete()
                   case false if demand > 0 =>
                     addDemand(-1) // reduce demand by 1 as it will be incremented by the outerSubscription
-                    outerSubscription.get.request(1)
+                    outerSubscription.foreach(_.request(1))
                   case false => // No more demand
                 }
               }

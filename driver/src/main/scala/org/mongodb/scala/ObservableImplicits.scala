@@ -359,13 +359,12 @@ trait ObservableImplicits {
           sub.request(1)
         }
 
-        override def onComplete(): Unit = promise.complete(Success(null).asInstanceOf[Try[T]]) // scalastyle:ignore
+        override def onComplete(): Unit = promise.complete(Success(null).asInstanceOf[Try[T]]) // scalastyle:ignore null
 
         override def onNext(tResult: T): Unit = {
-          if (subscription.isEmpty) {
+          subscription.getOrElse {
             throw new IllegalStateException("The Observable has not been subscribed to.")
-          }
-          subscription.get.unsubscribe()
+          }.unsubscribe()
           promise.success(tResult)
         }
       })
@@ -422,7 +421,9 @@ trait ObservableImplicits {
           override def onComplete(): Unit = observer.onComplete()
 
           override def onNext(tResult: T): Unit = {
-            subscription.get.unsubscribe()
+            subscription.getOrElse {
+              throw new IllegalStateException("The Observable has not been subscribed to.")
+            }.unsubscribe()
             observer.onNext(tResult)
             onComplete()
           }

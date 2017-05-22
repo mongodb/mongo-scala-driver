@@ -38,11 +38,7 @@ object ImmutableDocumentCodec {
 case class ImmutableDocumentCodec(registry: Option[CodecRegistry]) extends CollectibleCodec[Document] {
 
   lazy val underlying: BsonDocumentCodec = {
-    if (registry.isDefined) {
-      new BsonDocumentCodec(registry.get)
-    } else {
-      new BsonDocumentCodec()
-    }
+    registry.map(new BsonDocumentCodec(_)).getOrElse(new BsonDocumentCodec)
   }
 
   override def generateIdIfAbsentFromDocument(document: Document): Document = {

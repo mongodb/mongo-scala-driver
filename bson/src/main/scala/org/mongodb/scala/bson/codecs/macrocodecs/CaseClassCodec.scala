@@ -114,15 +114,14 @@ private[codecs] object CaseClassCodec {
      */
     def flattenTypeArgs(at: Type): List[c.universe.Type] = {
       val t = at.dealias
-      val typeArgs = if (isMap(t)) {
-        if (t.typeArgs.head != stringType) c.abort(c.enclosingPosition, "Maps must contain string types for keys")
-        t.typeArgs.tail
-      } else {
-        t.typeArgs
+      val typeArgs = t.typeArgs match {
+        case head :: _ if isMap(t) && head != stringType => c.abort(c.enclosingPosition, "Maps must contain string types for keys")
+        case _ :: tail if isMap(t) /* head == stringType */ => tail
+        case args => args
       }
       val types = t +: typeArgs.flatMap(x => flattenTypeArgs(x))
       if (types.exists(isTuple)) c.abort(c.enclosingPosition, "Tuples currently aren't supported in case classes")
-      types.filter(x => !isOption(x)).map(x => primitiveTypesMap.getOrElse(x, x))
+      types.filterNot(isOption).map(x => primitiveTypesMap.getOrElse(x, x))
     }
 
     /**
@@ -191,14 +190,14 @@ private[codecs] object CaseClassCodec {
      */
     def classToCaseClassMap = {
       val flattenedFieldTypes = fields.flatMap({ case (t, types) => types.map(f => f._2) :+ t })
-      val setclassToCaseClassMap = flattenedFieldTypes.map(t => q"""classToCaseClassMap ++= ${
+      val setClassToCaseClassMap = flattenedFieldTypes.map(t => q"""classToCaseClassMap ++= ${
         flattenTypeArgs(t).map(t =>
           q"(classOf[${t.finalResultType}], ${isCaseClassOrSealed(t)})")
       }""")
 
       q"""
         val classToCaseClassMap = mutable.Map[Class[_], Boolean]()
-        ..$setclassToCaseClassMap
+        ..$setClassToCaseClassMap
         classToCaseClassMap.toMap
       """
     }

@@ -213,8 +213,8 @@ class CrudSpec extends RequiresMongoDBISpec {
 
   private def doUpdateMany(arguments: BsonDocument): BsonValue = {
     val options: UpdateOptions = new UpdateOptions
-      if (arguments.containsKey("upsert")) options.upsert(arguments.getBoolean("upsert").getValue)
-      if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
+    if (arguments.containsKey("upsert")) options.upsert(arguments.getBoolean("upsert").getValue)
+    if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
     val result = collection.get.updateMany(arguments.getDocument("filter"),
       arguments.getDocument("update"), options).futureValue
     convertUpdateResult(result)
@@ -248,9 +248,12 @@ class CrudSpec extends RequiresMongoDBISpec {
       resultDoc.append("modifiedCount", new BsonInt32(result.getModifiedCount.toInt))
     }
 
-    if (Option(result.getUpsertedId).isDefined && !result.getUpsertedId.isObjectId) resultDoc.append("upsertedId", result.getUpsertedId)
-    resultDoc.append("upsertedCount", if (Option(result.getUpsertedId).isEmpty) new BsonInt32(0) else new BsonInt32(1))
-    resultDoc
+    val upsertedCount = result.getUpsertedId match {
+      case id: BsonValue if !id.isObjectId => resultDoc.append("upsertedId", id); new BsonInt32(1)
+      case _: BsonValue  => new BsonInt32(1)
+      case _ /* empty */ => new BsonInt32(0)
+    }
+    resultDoc.append("upsertedCount", upsertedCount)
   }
 
 

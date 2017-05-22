@@ -167,15 +167,14 @@ class MacrosSpec extends FlatSpec with Matchers {
   }
 
   it should "roundtrip all the supported bson types" in {
-    val value =
-      roundTrip(
-        AllTheBsonTypes(Map("a" -> "b"), Seq("a", "b", "c"), new Date(123), boolean = true, 1.0, 10, 100L, "string",
-          Binary(Array[Byte](123)), None),
-        """{"documentMap" : { "a" : "b" }, "array" : ["a", "b", "c"], "date" : { "$date" : 123 }, "boolean" : true,
-        | "double" : 1.0, "int32" : 10, "int64" : { "$numberLong" : "100" }, "string" : "string",
-        | "binary" : { "binary": { "$binary" : "ew==", "$type" : "00" } }, "none" : null }""".stripMargin,
-        classOf[Binary], classOf[AllTheBsonTypes]
-      )
+    roundTrip(
+      AllTheBsonTypes(Map("a" -> "b"), Seq("a", "b", "c"), new Date(123), boolean = true, 1.0, 10, 100L, "string",
+        Binary(Array[Byte](123)), None),
+      """{"documentMap" : { "a" : "b" }, "array" : ["a", "b", "c"], "date" : { "$date" : 123 }, "boolean" : true,
+      | "double" : 1.0, "int32" : 10, "int64" : { "$numberLong" : "100" }, "string" : "string",
+      | "binary" : { "binary": { "$binary" : "ew==", "$type" : "00" } }, "none" : null }""".stripMargin,
+      classOf[Binary], classOf[AllTheBsonTypes]
+    )
   }
 
   it should "support ADT sealed case classes" in {
@@ -209,7 +208,7 @@ class MacrosSpec extends FlatSpec with Matchers {
   it should "support type aliases in case classes" in {
     roundTrip(ContainsSimpleTypeAlias("c", Map("d" -> "c")), """{a: "c", b: {d: "c"}}""", classOf[ContainsSimpleTypeAlias])
     roundTrip(ContainsCaseClassTypeAlias("c", Person("Tom", "Jones")), """{a: "c", b: {firstName: "Tom", lastName: "Jones"}}""",
-      classOf[ContainsCaseClassTypeAlias],  classOf[CaseClassTypeAlias])
+      classOf[ContainsCaseClassTypeAlias], classOf[CaseClassTypeAlias])
 
     val branch = Branch(Branch(Leaf(1), Leaf(2), 3), Branch(Leaf(4), Leaf(5), 6), 3) // scalastyle:ignore
     val branchJson = createTreeJson(branch)
