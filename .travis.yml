@@ -1,8 +1,8 @@
 # See http://about.travis-ci.org/docs/user/build-configuration/
 language: scala
 scala:
-  - 2.11.8
-  - 2.12.0
+  - 2.11.11
+  - 2.12.2
 
 jdk:
   - oraclejdk7
@@ -23,7 +23,7 @@ notifications:
 matrix:
     fast_finish: true
     exclude:
-      - scala: 2.12.0
+      - scala: 2.12.2
         jdk: oraclejdk7
 
 env:
