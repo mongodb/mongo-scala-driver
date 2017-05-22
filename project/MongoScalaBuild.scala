@@ -42,8 +42,12 @@ object MongoScalaBuild extends Build {
     libraryDependencies ++= coreDependencies,
     libraryDependencies <+= scalaReflect,
     resolvers := mongoScalaResolvers,
-    scalacOptions := scalacOptionsVersion(scalaVersion.value)
+    scalacOptions in Compile := scalacOptionsVersion(scalaVersion.value),
+    scalacOptions in Test := scalacOptionsTest,
+    scalacOptions in IntegrationTest := scalacOptionsTest
   )
+
+  val scalacOptionsTest: Seq[String] = Seq( "-unchecked", "-deprecation", "-feature", "-Xlint:-unused,-missing-interpolator,_", "-Ywarn-dead-code")
 
   def scalacOptionsVersion(scalaVersion: String): Seq[String] = {
     Seq( "-unchecked", "-deprecation", "-feature", "-Xfatal-warnings", "-Ywarn-dead-code"
