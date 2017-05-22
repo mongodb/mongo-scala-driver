@@ -42,9 +42,16 @@ object MongoScalaBuild extends Build {
     libraryDependencies ++= coreDependencies,
     libraryDependencies <+= scalaReflect,
     resolvers := mongoScalaResolvers,
-    scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xlint", "-Xlint:-missing-interpolator"
-      /*,"-Ymacro-debug-verbose", "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer"*/)
+    scalacOptions := scalacOptionsVersion(scalaVersion.value)
   )
+
+  def scalacOptionsVersion(scalaVersion: String): Seq[String] = {
+    Seq( "-unchecked", "-deprecation", "-feature", "-Xfatal-warnings", "-Ywarn-dead-code"
+      /*,"-Ymacro-debug-verbose", "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer"*/) ++ (scalaVersion match {
+      case "2.12.2" => Seq("-Xlint:-unused,-missing-interpolator,_", "-Ywarn-unused:imports,privates,locals,-implicits,-params")
+      case _ => Seq("-language:existentials", "-Xlint:-missing-interpolator,_")
+    })
+  }
 
   val versionSettings = Versioning.settings(baseVersion)
   val buildInfoSettings = Seq(

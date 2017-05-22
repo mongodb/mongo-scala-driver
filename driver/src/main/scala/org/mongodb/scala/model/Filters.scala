@@ -283,8 +283,6 @@ object Filters {
    */
   def regex(fieldName: String, pattern: String, options: String): Bson = JFilters.regex(fieldName: String, pattern: String, options: String)
 
-  private val date: Regex = """(\d\d\d\d)-(\d\d)-(\d\d)""".r
-
   /**
    * Creates a filter that matches all documents where the value of the field matches the given regular expression pattern with the given
    * options applied.

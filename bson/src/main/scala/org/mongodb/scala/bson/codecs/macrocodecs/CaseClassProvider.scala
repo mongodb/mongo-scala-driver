@@ -47,7 +47,6 @@ private[codecs] object CaseClassProvider {
 
     // Declared type
     val mainType = weakTypeOf[T]
-    def isSealed(t: Type): Boolean = t.typeSymbol.isClass && t.typeSymbol.asClass.isSealed
 
     // Names
     def exprCodecRegistry = c.Expr[CodecRegistry](q"codecRegistry")

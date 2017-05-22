@@ -18,8 +18,6 @@ package org.mongodb.scala.internal
 
 import java.util.concurrent.ConcurrentLinkedQueue
 
-import scala.language.existentials
-
 import org.mongodb.scala.{Observable, Observer, Subscription}
 
 private[scala] case class ZipObservable[T, U](
