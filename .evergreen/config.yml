@@ -396,14 +396,14 @@ axes:
   - id: "scalaVersion"
     display_name: "Scala Version"
     values:
-      - id: "2.11.8"
-        display_name: "2.11.8"
+      - id: "2.11"
+        display_name: "2.11"
         variables:
-           SCALA_VERSION: "2.11.8"
-      - id: "2.12.1"
-        display_name: "2.12.1"
+           SCALA_VERSION: "2.11.11"
+      - id: "2.12"
+        display_name: "2.12"
         variables:
-           SCALA_VERSION: "2.12.1"
+           SCALA_VERSION: "2.12.2"
 
 buildvariants:
 
