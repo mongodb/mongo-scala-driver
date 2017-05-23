@@ -30,7 +30,7 @@ import org.mongodb.scala.bson.codecs.macrocodecs.{ CaseClassCodec, CaseClassProv
  *
  * Allows the compile time creation of Codecs for case classes.
  *
- * The recommended approach is to use the implicit [[Macros.createCodecProvider]] method to help build a codecRegistry:
+ * The recommended approach is to use the implicit [[Macros.createCodecProvider[T](clazz:Class[T])*]] method to help build a codecRegistry:
  * ```
  * import org.mongodb.scala.bson.codecs.Macros.createCodecProvider
  * import org.bson.codecs.configuration.CodecRegistries.{fromRegistries, fromProviders}

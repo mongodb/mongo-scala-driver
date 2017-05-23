@@ -102,7 +102,7 @@ private[codecs] object CaseClassCodec {
       typeOf[Short] -> typeOf[java.lang.Short]
     )
 
-    /**
+    /*
      * Flattens the type args for any given type.
      *
      * Removes the key field from Maps as they have to be strings.
@@ -124,7 +124,7 @@ private[codecs] object CaseClassCodec {
       types.filterNot(isOption).map(x => primitiveTypesMap.getOrElse(x, x))
     }
 
-    /**
+    /*
      * Maps the given field names to type args for the values in the field
      *
      * ```
@@ -153,7 +153,7 @@ private[codecs] object CaseClassCodec {
       """
     }
 
-    /**
+    /*
      * For each case class sets the Map of the given field names and their field types.
      */
     def createClassFieldTypeArgsMap = {
@@ -169,7 +169,7 @@ private[codecs] object CaseClassCodec {
       """
     }
 
-    /**
+    /*
      * Creates a `Map[String, Class[_]]` mapping the case class name and the type.
      *
      * @return the case classes map
@@ -183,7 +183,7 @@ private[codecs] object CaseClassCodec {
       """
     }
 
-    /**
+    /*
      * Creates a `Map[Class[_], Boolean]` mapping field types to a boolean representing if they are a case class.
      *
      * @return the class to case classes map
@@ -202,7 +202,7 @@ private[codecs] object CaseClassCodec {
       """
     }
 
-    /**
+    /*
      * Handles the writing of case class fields.
      *
      * @param fields the list of fields
@@ -231,7 +231,7 @@ private[codecs] object CaseClassCodec {
       })
     }
 
-    /**
+    /*
      * Writes the Case Class fields and values to the BsonWriter
      */
     def writeValue: Tree = {

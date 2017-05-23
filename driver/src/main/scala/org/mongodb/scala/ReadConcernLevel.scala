@@ -39,7 +39,7 @@ object ReadConcernLevel {
   /**
    * The linearizable read concern.
    *
-   * This read concern is only compatible with [[ReadPreference.primary()]]
+   * This read concern is only compatible with [[org.mongodb.scala.ReadPreference$.primary]]
    *
    * @note Requires MongoDB 3.4 or greater
    * @since 3.4

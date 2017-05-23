@@ -36,18 +36,21 @@ object ReadConcern {
    * Use the servers default read concern.
    */
   val DEFAULT: ReadConcern = JReadConcern.DEFAULT
+
   /**
    * Return the node's most recent copy of data. Provides no guarantee that the data has been written to a majority of the nodes.
    */
   val LOCAL: ReadConcern = JReadConcern.LOCAL
+
   /**
    * Return the node's most recent copy of the data confirmed as having been written to a majority of the nodes.
    */
   val MAJORITY: ReadConcern = JReadConcern.MAJORITY
+
   /**
    * The linearizable read concern.
    *
-   * This read concern is only compatible with [[ReadPreference.primary()]]
+   * This read concern is only compatible with [[org.mongodb.scala.ReadPreference$.primary]]
    *
    * @note Requires MongoDB 3.4 or greater
    * @since 3.4
