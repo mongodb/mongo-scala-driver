@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>References on MongoDB Scala Driver</title>
+    <link>/mongo-scala-driver/1.1/reference/</link>
+    <description>Recent content in References on MongoDB Scala Driver</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 14 May 2015 08:01:00 +0000</lastBuildDate>
+    <atom:link href="/mongo-scala-driver/1.1/reference/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Observables</title>
+      <link>/mongo-scala-driver/1.1/reference/observables/</link>
+      <pubDate>Thu, 14 May 2015 08:01:00 +0000</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/reference/observables/</guid>
+      <description>
+
+&lt;h2 id=&#34;observables&#34;&gt;Observables&lt;/h2&gt;
+
+&lt;p&gt;The MongoDB Scala Driver is an asynchronous and non blocking driver. Using the &lt;code&gt;Observable&lt;/code&gt; model asynchronous events become simple, composable operations, freed from the complexity of nested callbacks.&lt;/p&gt;
+
+&lt;p&gt;For asynchronous operations there are three interfaces &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.Observable
+&#34;&gt;&lt;code&gt;Observable&lt;/code&gt;&lt;/a&gt;, &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.Subscription
+&#34;&gt;&lt;code&gt;Subscription&lt;/code&gt;&lt;/a&gt; and &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.Observer
+&#34;&gt;&lt;code&gt;Observer&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;The interfaces are similar to &lt;code&gt;Publisher&lt;/code&gt;, &lt;code&gt;Subscription&lt;/code&gt; and &lt;code&gt;Subscriber&lt;/code&gt; interfaces from the &lt;a href=&#34;http://www.reactive-streams.org/&#34;&gt;reactive streams&lt;/a&gt; JVM implementation.  However, we prefer the name &lt;code&gt;Observerable&lt;/code&gt; to &lt;code&gt;Publisher&lt;/code&gt; and &lt;code&gt;Observer&lt;/code&gt; to &lt;code&gt;Subscriber&lt;/code&gt; for readability purposes.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;observable&#34;&gt;Observable&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.Observable
+&#34;&gt;&lt;code&gt;Observable&lt;/code&gt;&lt;/a&gt; represents a MongoDB operation which emits its results to the &lt;code&gt;Observer&lt;/code&gt; based on demand requested by the &lt;code&gt;Subscription&lt;/code&gt; to the &lt;code&gt;Observable&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition important&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
+&lt;p&gt;Observables can be thought of as partial functions and like partial functions nothing happens until they are called.
+An &lt;code&gt;Observable&lt;/code&gt; can be subscribed to multiple times, with each subscription potentially causing new side effects eg: querying MongoDB or inserting data.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;subscription&#34;&gt;Subscription&lt;/h2&gt;
+
+&lt;p&gt;A &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.Subscription
+&#34;&gt;&lt;code&gt;Subscription&lt;/code&gt;&lt;/a&gt; represents a one-to-one lifecycle of an &lt;code&gt;Observer&lt;/code&gt; subscribing to an &lt;code&gt;Observable&lt;/code&gt;.  A &lt;code&gt;Subscription&lt;/code&gt; to an &lt;code&gt;Observable&lt;/code&gt; can only be used by a single &lt;code&gt;Observer&lt;/code&gt;.  The purpose of a &lt;code&gt;Subscription&lt;/code&gt; is to control demand and to allow unsubscribing from the &lt;code&gt;Observable&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;observer&#34;&gt;Observer&lt;/h2&gt;
+
+&lt;p&gt;An &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.Observer
+&#34;&gt;&lt;code&gt;Observer&lt;/code&gt;&lt;/a&gt; provides the mechanism for receiving push-based notifications from the
+&lt;code&gt;Observable&lt;/code&gt;.  Demand for these events is signalled by its &lt;code&gt;Subscription&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;On subscription to an &lt;code&gt;Observable[TResult]&lt;/code&gt; the &lt;code&gt;Observer&lt;/code&gt; will be passed the &lt;code&gt;Subscription&lt;/code&gt; via the
+&lt;code&gt;onSubscribe(subscription: Subscription)&lt;/code&gt;. Demand for results is signaled via the &lt;code&gt;Subscription&lt;/code&gt; and any results are passed to the
+&lt;code&gt;onNext(result: TResult)&lt;/code&gt; method.  If there is an error for any reason the &lt;code&gt;onError(e: Throwable)&lt;/code&gt; will be
+called and no more events passed to the &lt;code&gt;Observer&lt;/code&gt;. Alternatively, when the &lt;code&gt;Observer&lt;/code&gt; has consumed all the results from the &lt;code&gt;Observable&lt;/code&gt;
+the &lt;code&gt;onComplete()&lt;/code&gt; method will be called.&lt;/p&gt;
+
+&lt;h2 id=&#34;back-pressure&#34;&gt;Back Pressure&lt;/h2&gt;
+
+&lt;p&gt;In the following example, the &lt;code&gt;Subscription&lt;/code&gt; is used to control demand when iterating an &lt;code&gt;Observable&lt;/code&gt;. The default &lt;code&gt;Observer&lt;/code&gt; implementation
+automatically requests all the data. Below we override the &lt;code&gt;onSubscribe&lt;/code&gt; method custom so we can manage the demand driven iteration of the
+&lt;code&gt;Observable&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.find().subscribe(new Observer[Document](){
+
+  var batchSize: Long = 10
+  var seen: Long = 0
+  var subscription: Option[Subscription] = None
+  
+  override def onSubscribe(subscription: Subscription): Unit = {
+    this.subscription = Some(subscription)
+    subscription.request(batchSize)
+  }
+  
+  override def onNext(result: Document): Unit = {
+    println(document.toJson())
+    seen += 1
+    if (seen == batchSize) {
+      seen = 0
+      subscription.get.request(batchSize)
+    }
+  }
+
+  override def onError(e: Throwable): Unit = println(s&amp;quot;Error: $e&amp;quot;)
+
+  override def onComplete(): Unit = println(&amp;quot;Completed&amp;quot;)
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;observable-helpers&#34;&gt;Observable Helpers&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;org.mongodb.scala&lt;/code&gt; package provides improved interaction with the
+&lt;a href=&#34;http://api.mongodb.org/java/3.2/?com/mongodb/async/client/Observable.html
+&#34;&gt;Java &lt;code&gt;Observable&lt;/code&gt;&lt;/a&gt; class via the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ScalaObservable
+&#34;&gt;&lt;code&gt;ScalaObservable&lt;/code&gt;&lt;/a&gt; implicit class. The extended functionality includes simple
+subscription via anonymous functions:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;// Subscribe with custom onNext:
+collection.find().subscribe((doc: Document) =&amp;gt; println(doc.toJson()))
+
+// Subscribe with custom onNext and onError
+collection.find().subscribe((doc: Document) =&amp;gt; println(doc.toJson()),
+                            (e: Throwable) =&amp;gt; println(s&amp;quot;There was an error: $e&amp;quot;))
+
+// Subscribe with custom onNext, onError and onComplete
+collection.find().subscribe((doc: Document) =&amp;gt; println(doc.toJson()),
+                            (e: Throwable) =&amp;gt; println(s&amp;quot;There was an error: $e&amp;quot;),
+                            () =&amp;gt; println(&amp;quot;Completed!&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;ScalaObservable&lt;/code&gt; implicit class also provides the following Monadic operators to make chaining and working with &lt;code&gt;Observable&lt;/code&gt; instances
+simpler:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;GenerateHtmlObservable().andThen({
+  case Success(html: String) =&amp;gt; renderHtml(html)
+  case Failure(t) =&amp;gt; renderHttp500
+})
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The full list of Monadic operators available are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@andThen[U](pf:PartialFunction[scala.util.Try[T],U]):org.mongodb.scala.Observable[T]
+&#34;&gt;&lt;code&gt;andThen&lt;/code&gt;&lt;/a&gt;&lt;/em&gt;:
+Allows the chaining of Observables.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@collect[S]():org.mongodb.scala.Observable[Seq[T]]
+&#34;&gt;&lt;code&gt;collect&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Collects all the results into a sequence.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@fallbackTo[U&amp;gt;:T](that:org.mongodb.scala.Observable[U]):org.mongodb.scala.Observable[U]
+&#34;&gt;&lt;code&gt;fallbackTo&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Allows falling back to an alternative &lt;code&gt;Observable&lt;/code&gt; if there is a failure&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@filter(predicate:T=&amp;gt;Boolean):org.mongodb.scala.Observable[T]
+&#34;&gt;&lt;code&gt;filter&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Filters results of the &lt;code&gt;Observable&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@flatMap[S](mapFunction:T=&amp;gt;org.mongodb.scala.Observable[S]):org.mongodb.scala.Observable[S]
+&#34;&gt;&lt;code&gt;flatMap&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Create a new &lt;code&gt;Observable&lt;/code&gt; by applying a function to each result of the &lt;code&gt;Observable&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@foldLeft[S](initialValue:S)(accumulator:(S,T)=&amp;gt;S):org.mongodb.scala.Observable[S]
+&#34;&gt;&lt;code&gt;foldLeft&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Creates a new Observable that contains the single result of the applied accumulator function.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@foreach[U](doOnEach:T=&amp;gt;U):Unit
+&#34;&gt;&lt;code&gt;foreach&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Applies a function applied to each emitted result.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@head():scala.concurrent.Future[T]
+&#34;&gt;&lt;code&gt;head&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Returns the head of the &lt;code&gt;Observable&lt;/code&gt; in a &lt;code&gt;Future&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@map[S](mapFunction:T=&amp;gt;S):org.mongodb.scala.Observable[S]
+&#34;&gt;&lt;code&gt;map&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Creates a new Observable by applying a function to each emitted result of the Observable.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@recover[U&amp;gt;:T](pf:PartialFunction[Throwable,U]):org.mongodb.scala.Observable[U]
+&#34;&gt;&lt;code&gt;recover&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Creates a new &lt;code&gt;Observable&lt;/code&gt; that will handle any matching throwable that this &lt;code&gt;Observable&lt;/code&gt; might contain by assigning it a value of
+another &lt;code&gt;Observable&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@recoverWith[U&amp;gt;:T](pf:PartialFunction[Throwable,org.mongodb.scala.Observable[U]]):org.mongodb.scala.Observable[U]
+&#34;&gt;&lt;code&gt;recoverWith&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Creates a new Observable that will handle any matching throwable that this Observable might contain.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@toFuture():scala.concurrent.Future[Seq[T]]
+&#34;&gt;&lt;code&gt;toFuture&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Collects the &lt;code&gt;Observable&lt;/code&gt; results and converts to a &lt;code&gt;Future&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@transform[S](mapFunction:T=&amp;gt;S,errorMapFunction:Throwable=&amp;gt;Throwable):org.mongodb.scala.Observable[S]
+&#34;&gt;&lt;code&gt;transform&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Creates a new &lt;code&gt;Observable&lt;/code&gt; by applying the resultFunction function to each emitted result.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@withFilter(p:T=&amp;gt;Boolean):org.mongodb.scala.Observable[T]
+&#34;&gt;&lt;code&gt;withFilter&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Provides for-comprehensions support to Observables.&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ObservableImplicits$ScalaObservable@zip[U](that:org.mongodb.scala.Observable[U]):org.mongodb.scala.Observable[(T,U)]
+&#34;&gt;&lt;code&gt;zip&lt;/code&gt;&lt;/a&gt;&lt;/em&gt; :
+Zips the values of this and that &lt;code&gt;Observable&lt;/code&gt;, and creates a new &lt;code&gt;Observable&lt;/code&gt; holding the tuple of their results.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Authenticating</title>
+      <link>/mongo-scala-driver/1.1/reference/connecting/authenticating/</link>
+      <pubDate>Thu, 19 Mar 2015 14:27:51 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/reference/connecting/authenticating/</guid>
+      <description>
+
+&lt;h1 id=&#34;authentication&#34;&gt;Authentication&lt;/h1&gt;
+
+&lt;p&gt;The Scala driver supports all MongoDB &lt;a href=&#34;http://docs.mongodb.org/manual/core/authentication/&#34;&gt;authentication mechanisms&lt;/a&gt;, including those
+only available in the MongoDB &lt;a href=&#34;http://docs.mongodb.org/manual/administration/install-enterprise/&#34;&gt;Enterprise Edition&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;An authentication credential is represented as an instance of the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoCredential$
+&#34;&gt;&lt;code&gt;MongoCredential&lt;/code&gt;&lt;/a&gt; class, which includes static factory methods for
+each of the supported authentication mechanisms.  A list of these instances must be passed to the driver via a
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoClient$
+&#34;&gt;&lt;code&gt;MongoClient&lt;/code&gt;&lt;/a&gt; static factory method that takes a
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoClientSettings$
+&#34;&gt;&lt;code&gt;MongoClientSettings&lt;/code&gt;&lt;/a&gt; parameter.  Alternatively, a single
+&lt;code&gt;MongoCredential&lt;/code&gt; can be created implicity via a
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.ConnectionString$
+&#34;&gt;&lt;code&gt;ConnectionString&lt;/code&gt;&lt;/a&gt; and passed to a &lt;code&gt;MongoClient&lt;/code&gt; static factory method that
+takes a &lt;code&gt;ConnectionString&lt;/code&gt; parameter.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;Given the flexibility of role-based access control in MongoDB, it is usually sufficient to authenticate with a single user, but, for
+completeness, the driver accepts a list of credentials.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;default-authentication-mechanism&#34;&gt;Default authentication mechanism&lt;/h2&gt;
+
+&lt;p&gt;MongoDB 3.0 changed the default authentication mechanism from
+&lt;a href=&#34;http://docs.mongodb.org/manual/core/authentication/#mongodb-cr-authentication&#34;&gt;MONGODB-CR&lt;/a&gt; to
+&lt;a href=&#34;http://docs.mongodb.org/manual/core/authentication/#scram-sha-1-authentication&#34;&gt;SCRAM-SHA-1&lt;/a&gt;.  To create a credential that will
+authenticate properly regardless of server version, create a credential using the following static factory method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import com.mongodb.MongoCredential._
+
+// ...
+
+val user: String = &amp;quot;userName&amp;quot;                       // the user name
+val database: String = &amp;quot;databaseName&amp;quot;               // the name of the database in which the user is defined
+val password: Array[Char] = &amp;quot;password&amp;quot;.toCharArray  // the password as a character array
+// ...
+val credential: MongoCredential = createCredential(user, database, password)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or with a connection string:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val uri: String = &amp;quot;mongodb://user1:pwd1@host1/?authSource=db1&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is the recommended approach as it will make upgrading from MongoDB 2.6 to MongoDB 3.0 seamless, even after &lt;a href=&#34;http://docs.mongodb.org/manual/release-notes/3.0-scram/#upgrade-mongodb-cr-to-scram&#34;&gt;upgrading the
+authentication schema&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;scram-sha-1&#34;&gt;SCRAM-SHA-1&lt;/h2&gt;
+
+&lt;p&gt;To explicitly create a credential of type &lt;a href=&#34;http://docs.mongodb .org/manual/core/authentication/#scram-sha-1-authentication&#34;&gt;SCRAM-SHA-1&lt;/a&gt;
+use the following static factory method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val credential: MongoCredential = createScramSha1Credential(user, database, password)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or with a connection string:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val uri: String = &amp;quot;mongodb://user1:pwd1@host1/?authSource=db1&amp;amp;authMechanism=SCRAM-SHA-1&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;mongodb-cr&#34;&gt;MONGODB-CR&lt;/h2&gt;
+
+&lt;p&gt;To explicitly create a credential of type &lt;a href=&#34;http://docs.mongodb.org/manual/core/authentication/#mongodb-cr-authentication&#34;&gt;MONGODB-CR&lt;/a&gt;
+use the following static factory method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val credential: MongoCredential = createMongoCRCredential(user, database, password)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or with a connection string:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val uri: String = &amp;quot;mongodb://user1:pwd1@host1/?authSource=db1&amp;amp;authMechanism=MONGODB-CR&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note that this is not recommended as a credential created in this way will fail to authenticate after an authentication schema upgrade
+from MONGODB-CR to SCRAM-SHA-1.&lt;/p&gt;
+
+&lt;h2 id=&#34;x-509&#34;&gt;x.509&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&#34;http://docs.mongodb.org/manual/core/authentication/#x-509-certificate-authentication&#34;&gt;x.509&lt;/a&gt; mechanism authenticates a user
+whose name is derived from the distinguished subject name of the X.509 certificate presented by the driver during SSL negotiation. This
+authentication method requires the use of SSL connections with certificate validation and is available in MongoDB 2.6 and newer. To
+create a credential of this type use the following static factory method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val user: String = &amp;quot;...&amp;quot;     // The x.509 certificate derived user name, e.g. &amp;quot;CN=user,OU=OrgUnit,O=myOrg,...&amp;quot;
+val credential: MongoCredential = createMongoX509Credential(user)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or with a connection string:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val uri: String = &amp;quot;mongodb://subjectName@host1/?authMechanism=MONGODB-X509&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;See the MongoDB server
+&lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/configure-x509-client-authentication/#add-x-509-certificate-subject-as-a-user&#34;&gt;x.509 tutorial&lt;/a&gt; for
+more information about determining the subject name from the certificate.&lt;/p&gt;
+
+&lt;h2 id=&#34;kerberos-gssapi&#34;&gt;Kerberos (GSSAPI)&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.mongodb.com/products/mongodb-enterprise&#34;&gt;MongoDB Enterprise&lt;/a&gt; supports proxy authentication through a Kerberos service.  To
+create a credential of type &lt;a href=&#34;http://docs.mongodb.org/manual/core/authentication/#kerberos-authentication&#34;&gt;Kerberos (GSSAPI)&lt;/a&gt; use the
+following static factory method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val user: String = &amp;quot;...&amp;quot;   // The Kerberos user name, including the realm, e.g. &amp;quot;user1@MYREALM.ME&amp;quot;
+// ...
+val credential: MongoCredential = createGSSAPICredential(user)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or with a connection string:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val uri: String = &amp;quot;mongodb://username%40REALM.com@host1/?authMechanism=GSSAPI&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;The method refers to the &lt;code&gt;GSSAPI&lt;/code&gt; authentication mechanism instead of &lt;code&gt;Kerberos&lt;/code&gt; because technically the driver is authenticating via the
+&lt;a href=&#34;https://tools.ietf.org/html/rfc4752&#34;&gt;GSSAPI&lt;/a&gt; SASL mechanism.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;To successfully authenticate via Kerberos, the application typically must specify several system properties so that the underlying GSSAPI
+Java libraries can acquire a Kerberos ticket:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;java.security.krb5.realm=MYREALM.ME
+java.security.krb5.kdc=mykdc.myrealm.me
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;The &lt;code&gt;GSSAPI&lt;/code&gt; authentication mechanism is supported only in the following environments:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Linux: Java 6 and above&lt;/li&gt;
+&lt;li&gt;Windows: Java 7 and above with &lt;a href=&#34;https://msdn.microsoft.com/en-us/library/windows/desktop/aa380493&#34;&gt;SSPI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;OS X: Java 7 and above&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;ldap-plain&#34;&gt;LDAP (PLAIN)&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.mongodb.com/products/mongodb-enterprise&#34;&gt;MongoDB Enterprise&lt;/a&gt; supports proxy authentication through a Lightweight Directory
+Access Protocol (LDAP) service.  To create a credential of type &lt;a href=&#34;http://docs.mongodb
+.org/manual/core/authentication/#ldap-proxy-authority-authentication&#34;&gt;LDAP&lt;/a&gt; use the following static factory method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val user: String = &amp;quot;...&amp;quot;                        // The LDAP user name
+val password: Array[Char] = &amp;quot;...&amp;quot;.toCharArray   // The LDAP password
+
+// ...
+val credential: MongoCredential = createPlainCredential(user, &amp;quot;$external&amp;quot;, password)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or with a connection string:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val uri: String = &amp;quot;mongodb://user1@host1/?authSource=$external&amp;amp;authMechanism=PLAIN&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;The method refers to the &lt;code&gt;plain&lt;/code&gt; authentication mechanism instead of &lt;code&gt;LDAP&lt;/code&gt; because technically the driver is authenticating via the
+&lt;a href=&#34;https://www.ietf.org/rfc/rfc4616.txt&#34;&gt;PLAIN&lt;/a&gt; SASL mechanism.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Management</title>
+      <link>/mongo-scala-driver/1.1/reference/management/</link>
+      <pubDate>Thu, 19 Mar 2015 14:27:51 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/reference/management/</guid>
+      <description>
+
+&lt;h2 id=&#34;management&#34;&gt;Management&lt;/h2&gt;
+
+&lt;p&gt;The driver provides two mechanisms for examining its state:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/management/logging/&#34;&gt;Logging&lt;/a&gt;: Comprehensive logging of all operations using &lt;a href=&#34;http://www.slf4j.org/&#34;&gt;SLF4J&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/management/monitoring/&#34;&gt;Monitoring&lt;/a&gt;: Built on &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/technotes/guides/jmx/&#34;&gt;JMX&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CRUD Operations</title>
+      <link>/mongo-scala-driver/1.1/reference/crud/</link>
+      <pubDate>Thu, 19 Mar 2015 12:53:30 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/reference/crud/</guid>
+      <description>
+
+&lt;h2 id=&#34;crud&#34;&gt;CRUD&lt;/h2&gt;
+
+&lt;p&gt;For a walkthrough of the main CRUD operations please refer to the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;All CRUD-related methods in the Scala driver are accessed through the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoCollection
+&#34;&gt;&lt;code&gt;MongoCollection&lt;/code&gt;&lt;/a&gt; case class.  Instances of
+&lt;code&gt;MongoCollection&lt;/code&gt; can be obtained from a &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoClient
+&#34;&gt;&lt;code&gt;MongoClient&lt;/code&gt;&lt;/a&gt; instance by way of a
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoDatabase
+&#34;&gt;&lt;code&gt;MongoDatabase&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val client: MongoClient = MongoClient()
+val database: MongoDatabase = client.getDatabase(&amp;quot;mydb&amp;quot;)
+val collection: MongoCollection[Document] = database.getCollection(&amp;quot;mycoll&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoCollection
+&#34;&gt;&lt;code&gt;MongoCollection&lt;/code&gt;&lt;/a&gt; takes the type of &lt;code&gt;TDocument&lt;/code&gt; which defines the&lt;br /&gt;
+class that clients use to insert or replace documents in a collection, and the default type returned from &lt;code&gt;find&lt;/code&gt; and &lt;code&gt;aggregate&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The single-argument &lt;code&gt;getCollection&lt;/code&gt; method returns an instance of &lt;code&gt;MongoCollection[Document]&lt;/code&gt;, and so with this type of collection
+an application uses instances of the immutable &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/bson/documents/#immutable-documents&#34;&gt;&lt;code&gt;Document&lt;/code&gt;&lt;/a&gt; class:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val collection: MongoCollection[Document] = database.getCollection(&amp;quot;mycoll&amp;quot;)
+
+// insert a document
+val document: Document = Document(&amp;quot;_id&amp;quot; -&amp;gt; 1, &amp;quot;x&amp;quot; -&amp;gt; 1)
+val insertObservable: Observable[Completed] = collection.insertOne(document)
+
+insertObservable.subscribe(new Observer[Completed] {
+  override def onNext(result: Completed): Unit = println(s&amp;quot;onNext: $result&amp;quot;)
+  override def onError(e: Throwable): Unit = println(s&amp;quot;onError: $e&amp;quot;)
+  override def onComplete(): Unit = println(&amp;quot;onComplete&amp;quot;)
+})
+
+...
+
+val replacementDoc: Document = Document(&amp;quot;_id&amp;quot; -&amp;gt; 1, &amp;quot;x&amp;quot; -&amp;gt; 2, &amp;quot;y&amp;quot; -&amp;gt; 3)
+
+// replace a document
+collection.replaceOne(Filters.eq(&amp;quot;_id&amp;quot;, 1), replacementDoc
+    ).subscribe((updateResult: UpdateResult) =&amp;gt; println(updateResult))
+
+...
+
+// find documents
+collection.find().collect().subscribe((results: Seq[Document]) =&amp;gt; println(s&amp;quot;Found: #${results.size}&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;See the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/observables/&#34;&gt;&lt;code&gt;Observables&lt;/code&gt;&lt;/a&gt; documentation for more information about &lt;code&gt;Observables&lt;/code&gt; and implicit helpers.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h3 id=&#34;codecregistry&#34;&gt;CodecRegistry&lt;/h3&gt;
+
+&lt;p&gt;An overload of the &lt;code&gt;getCollection&lt;/code&gt; method allows clients to specify a different class for representing BSON documents.  For example,
+users my wish their own class with the CRUD API directly. Below we use the &lt;code&gt;BsonDocument&lt;/code&gt; class from the Scala driver directly:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;// Pass BsonDocument.class as the second argument
+val collection: MongoCollection[BsonDocument] = database.getCollection(&amp;quot;mycoll&amp;quot;, BsonDocument.class)
+
+// insert a document
+val document: BsonDocument = new BsonDocument(&amp;quot;_id&amp;quot;, new BsonInt32(2)).append(&amp;quot;x&amp;quot;, new BsonInt32(1))
+collection.insertOne(document).subscribe((x: Completed) =&amp;gt; println(&amp;quot;Inserted&amp;quot;))
+
+...
+
+val replacementDoc: BsonDocument = new BsonDocument(&amp;quot;_id&amp;quot;, new BsonInt32(2)).append(&amp;quot;x&amp;quot;, new BsonInt32(2)).append(&amp;quot;y&amp;quot;, new BsonInt32(3))
+
+// replace a document
+collection.replaceOne(Filters.eq(&amp;quot;_id&amp;quot;, document.getInt32(&amp;quot;1&amp;quot;)), replacementDoc).subscribe((updateResult: UpdateResult) =&amp;gt; println(updateResult))
+
+...
+
+// find documents
+collection.find().collect().subscribe((results: Seq[BsonDocument]) =&amp;gt; println(s&amp;quot;Found BsonDocuments: #${results.size}&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There are two requirements that must be met for any class used in this way:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;a &lt;code&gt;Codec&lt;/code&gt; for it must be registered in the &lt;code&gt;MongoCollection&lt;/code&gt;&amp;rsquo;s &lt;code&gt;CodecRegistry&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;the &lt;code&gt;Codec&lt;/code&gt; must be one that encodes and decodes a full BSON document (and not just, for example, a single BSON value like an Int32)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;By default, a &lt;code&gt;MongoCollection&lt;/code&gt; is configured with &lt;code&gt;Codec&lt;/code&gt;s for two classes:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Document&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;BsonDocument&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Applications, however, are free to register &lt;code&gt;Codec&lt;/code&gt; implementations for other classes by customizing the &lt;code&gt;CodecRegistry&lt;/code&gt;.  New
+&lt;code&gt;CodecRegistry&lt;/code&gt; instances are configurable at three levels:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;In a &lt;code&gt;MongoClient&lt;/code&gt; via &lt;code&gt;MongoClientOptions&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;In a &lt;code&gt;MongoDatabase&lt;/code&gt; via its &lt;code&gt;withCodecRegistry&lt;/code&gt; method&lt;/li&gt;
+&lt;li&gt;In a &lt;code&gt;MongoCollection&lt;/code&gt; via its &lt;code&gt;withCodecRegistry&lt;/code&gt; method&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Consider the case of encoding and decoding instances of the &lt;code&gt;UUID&lt;/code&gt; class.  The Scala driver by default encodes instances of &lt;code&gt;UUID&lt;/code&gt; using a
+byte ordering that is not compatible with other MongoDB drivers, and changing the default would be quite dangerous.  But it is
+possible for new applications that require interoperability across multiple drivers to be able to change that default, and they can do
+that with a &lt;code&gt;CodecRegistry&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;// Replaces the default UuidCodec with one that uses the new standard UUID representation
+val codecRegistry: CodecRegistry = 
+CodecRegistries.fromRegistries(CodecRegistries.fromCodecs(new UuidCodec(UuidRepresentation.STANDARD)),
+                               MongoClient.getDefaultCodecRegistry())
+
+// globally
+val clientSettings: MongoClientSettings = MongoClients.create(&amp;quot;mongodb://localhost&amp;quot;).getSettings()
+newClientSettings = MongoClientSettings.builder(clientSettings).codecRegistry(codecRegistry).build()
+val client: MongoClient = MongoClient(newClientSettings)
+ 
+
+// or per database
+val database: MongoDatabase = client.getDatabase(&amp;quot;mydb&amp;quot;)
+                                    .withCodecRegistry(codecRegistry)
+
+// or per collection
+val collection: MongoCollection[Document] = database.getCollection(&amp;quot;mycoll&amp;quot;)
+                                                    .withCodecRegistry(codecRegistry)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;write-concern&#34;&gt;Write Concern&lt;/h3&gt;
+
+&lt;p&gt;Applications can configure the &lt;code&gt;WriteConcern&lt;/code&gt; that a &lt;code&gt;MongoCollection&lt;/code&gt; uses for write operations.  Like &lt;code&gt;CodecRegistry&lt;/code&gt;, the
+&lt;code&gt;WriteConcern&lt;/code&gt; can be configured at three levels:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;In a &lt;code&gt;MongoClient&lt;/code&gt; via &lt;code&gt;MongoClientOptions&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;In a &lt;code&gt;MongoDatabase&lt;/code&gt; via its &lt;code&gt;withWriteConcern&lt;/code&gt; method&lt;/li&gt;
+&lt;li&gt;In a &lt;code&gt;MongoCollection&lt;/code&gt; via its &lt;code&gt;withWriteConcern&lt;/code&gt; method&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;read-preference&#34;&gt;Read Preference&lt;/h3&gt;
+
+&lt;p&gt;Applications can configure the &lt;code&gt;ReadPreference&lt;/code&gt; that a &lt;code&gt;MongoCollection&lt;/code&gt; uses for read operations.  Like &lt;code&gt;WriteConcern&lt;/code&gt;, the
+&lt;code&gt;ReadPreference&lt;/code&gt; can be configured at three levels:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;In a &lt;code&gt;MongoClient&lt;/code&gt; via &lt;code&gt;MongoClientOptions&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;In a &lt;code&gt;MongoDatabase&lt;/code&gt; via its &lt;code&gt;withReadPreference&lt;/code&gt; method&lt;/li&gt;
+&lt;li&gt;In a &lt;code&gt;MongoCollection&lt;/code&gt; via its &lt;code&gt;withReadPreference&lt;/code&gt; method&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;immutability-of-mongodatabase-and-mongocollection&#34;&gt;Immutability of MongoDatabase and MongoCollection&lt;/h3&gt;
+
+&lt;p&gt;Instance of &lt;code&gt;MongoDatabase&lt;/code&gt; and &lt;code&gt;MongoCollection&lt;/code&gt; are immutable, so rather than mutate the state of the &lt;code&gt;MongoCollection&lt;/code&gt; on which they
+are invoked, the three methods discussed above return new instances.  Applications should therefore be sure to store the result of the
+method call.  For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;// CORRECT: The results of the method calls are chained and the final one is referenced 
+// by collection 
+val collection: MongoCollection[Document] = database.getCollection(&amp;quot;mycoll&amp;quot;)
+                                                .withWriteConcern(WriteConcern.JOURNALED)
+                                                .withReadPreference(ReadPreference.primary())
+                                                .withCodecRegistry(newRegistry)
+
+// INCORRECT: withReadPreference returns a new instance of MongoCollection
+// It does not modify the collection it&#39;s called on.  So this will
+// have no effect
+collection.withReadPreference(ReadPreference.secondary())
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Connecting</title>
+      <link>/mongo-scala-driver/1.1/reference/connecting/</link>
+      <pubDate>Thu, 19 Mar 2015 12:53:30 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/reference/connecting/</guid>
+      <description>
+
+&lt;h2 id=&#34;connecting&#34;&gt;Connecting&lt;/h2&gt;
+
+&lt;p&gt;The reference documentation for connecting to a MongoDB server deployment is divided into three sections:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/connecting/connection-settings/&#34;&gt;Connection Settings&lt;/a&gt;: documentation of the various ways to specify the properties of a connection&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/connecting/authenticating/&#34;&gt;Authenticating&lt;/a&gt;: detailed documentation of the various ways to specify authentication credentials&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/connecting/ssl/&#34;&gt;SSL&lt;/a&gt;: Detailed documentation of the various ways to specify the properties of an SSL connection&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Connection Settings</title>
+      <link>/mongo-scala-driver/1.1/reference/connecting/connection-settings/</link>
+      <pubDate>Thu, 19 Mar 2015 12:53:30 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/reference/connecting/connection-settings/</guid>
+      <description>
+
+&lt;h2 id=&#34;connection-settings&#34;&gt;Connection Settings&lt;/h2&gt;
+
+&lt;p&gt;The Scala driver has two ways of specifying the settings of a connection to a MongoDB server deployment.&lt;/p&gt;
+
+&lt;h3 id=&#34;connection-string&#34;&gt;Connection String&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&#34;http://docs.mongodb.org/manual/reference/connection-string/&#34;&gt;connection string&lt;/a&gt; is the simplest way to specify the properties of a
+connection. . A connection string mostly follows &lt;a href=&#34;http://tools.ietf.org/html/rfc3986&#34;&gt;RFC 3986&lt;/a&gt;, with the exception of the domain name.
+ For MongoDB, it is possible to list multiple domain names separated by a comma. Below are some example connection strings.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For a standalone mongod, mongos, or a direct connection to a member of a replica set:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ini&#34;&gt;mongodb://host:27017
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;To connect to multiple mongos or a replica set:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ini&#34;&gt;mongodb://host1:27017,host2:27017
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/connecting/authenticating/&#34;&gt;authentication guide&lt;/a&gt; contains information on how to provide credentials in
+the connection string.&lt;/p&gt;
+
+&lt;h4 id=&#34;the-database-component&#34;&gt;The Database Component&lt;/h4&gt;
+
+&lt;p&gt;The database component is optional and is used to indicate which database to authenticate against. When the database component is not
+provided, the &amp;ldquo;admin&amp;rdquo; database is used.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ini&#34;&gt;mongodb://host:27017/mydb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Above, the database by the name of &amp;ldquo;mydb&amp;rdquo; is where the credentials are stored for the application.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;Some drivers utilize the database component to indicate which database to work with by default. The Scala driver, while it parses the
+database component, does not use the database component for anything other than authentication.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h4 id=&#34;options&#34;&gt;Options&lt;/h4&gt;
+
+&lt;p&gt;Many options can be provided via the connection string. The ones that cannot may be provided in a
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoClientSettings$
+&#34;&gt;&lt;code&gt;MongoClientSettings&lt;/code&gt;&lt;/a&gt; instance. To
+provide an option, append a &lt;code&gt;?&lt;/code&gt; to the connection string and separate options by an &lt;code&gt;&amp;amp;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ini&#34;&gt;mongodb://host:27017/?replicaSet=rs0&amp;amp;maxPoolSize=200
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The above connection string sets the &amp;ldquo;replicaSet&amp;rdquo; value to &amp;ldquo;rs0&amp;rdquo; and the &amp;ldquo;maxPoolSize&amp;rdquo; to &amp;ldquo;200&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;For a comprehensive list of the available options, see the &lt;a href=&#34;http://api.mongodb.org/java/3.2/?com/mongodb/ConnectionString.html
+&#34;&gt;&lt;code&gt;ConnectionString&lt;/code&gt;&lt;/a&gt; documentation.&lt;/p&gt;
+
+&lt;h3 id=&#34;mongoclient&#34;&gt;MongoClient&lt;/h3&gt;
+
+&lt;p&gt;A &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoClient$
+&#34;&gt;&lt;code&gt;MongoClient&lt;/code&gt;&lt;/a&gt; instance will be the root object for all interaction with MongoDB. It is all
+that is needed to handle connecting to servers, monitoring servers, and performing operations against those servers.&lt;/p&gt;
+
+&lt;p&gt;To create a &lt;code&gt;MongoClient&lt;/code&gt; use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoClient$@apply(uri:String):org.mongodb.scala.MongoClient
+&#34;&gt;&lt;code&gt;MongoClient()&lt;/code&gt;&lt;/a&gt;
+static helper.  Without any arguments &lt;code&gt;MongoClient()&lt;/code&gt; will return a &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoClient$
+&#34;&gt;&lt;code&gt;MongoClient&lt;/code&gt;&lt;/a&gt;
+instance will connect to &amp;ldquo;localhost&amp;rdquo; port 27017.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val client: MongoClient = MongoClient()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alternatively, a connection string may be provided:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val client: MongoClient = MongoClient(&amp;quot;mongodb://host:27017,host2:27017/?replicaSet=rs0&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoClientSettings$
+&#34;&gt;&lt;code&gt;MongoClientSettings&lt;/code&gt;&lt;/a&gt; class provides an in-code way to set the
+same options from a connection string.  This is sometimes necessary, as the connection string does not allow an application to configure as
+many properties of the connection as  &lt;code&gt;MongoClientSettings&lt;/code&gt;.&lt;br /&gt;
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoClientSettings$
+&#34;&gt;&lt;code&gt;MongoClientSettings&lt;/code&gt;&lt;/a&gt; instances are immutable, so to create one an
+application uses a builder:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import scala.collection.JavaConverters._
+import org.mongodb.scala.connection.ClusterSettings
+
+val clusterSettings: ClusterSettings = ClusterSettings.builder().hosts(List(new ServerAddress(&amp;quot;localhost&amp;quot;)).asJava).description(&amp;quot;Local Server&amp;quot;).build()
+val settings: MongoClientSettings = MongoClientSettings.builder().clusterSettings(clusterSettings).build()
+val client: MongoClient = MongoClient(settings)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;netty-configuration&#34;&gt;Netty Configuration&lt;/h3&gt;
+
+&lt;p&gt;By default, the async driver relies on the
+&lt;a href=&#34;http://docs.oracle.com/javase/7/docs/api/java/nio/channels/AsynchronousSocketChannel.html&#34;&gt;&lt;code&gt;AsynchronousSocketChannel&lt;/code&gt;&lt;/a&gt; class, introduced
+in Java 7.  If configured properly, the driver will use &lt;a href=&#34;http://netty.io/&#34;&gt;Netty&lt;/a&gt; instead.  An application must use Netty for the
+following reasons:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The application is configured to use SSL to communicate with the MongoDB server.&lt;/li&gt;
+&lt;li&gt;The application runs on a Java 6 JVM.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;To configure the driver to use Netty, the application must configure the MongoClientSettings appropriately:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;MongoClientSettings.builder().streamFactoryFactory(NettyStreamFactoryFactory()).build()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;By default the Netty-based streams will use the &lt;a href=&#34;http://netty.io/4.0/api/io/netty/channel/nio/NioEventLoopGroup.html&#34;&gt;NioEventLoopGroup&lt;/a&gt;
+and Netty&amp;rsquo;s &lt;a href=&#34;http://netty.io/4.0/api/io/netty/buffer/ByteBufAllocator.html#DEFAULT&#34;&gt;default &lt;code&gt;ByteBufAllocator&lt;/code&gt;&lt;/a&gt;, but these are
+configurable via the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.connection.NettyStreamFactoryFactory$
+&#34;&gt;&lt;code&gt;NettyStreamFactoryFactory&lt;/code&gt;&lt;/a&gt; constructor.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Monitoring</title>
+      <link>/mongo-scala-driver/1.1/reference/management/monitoring/</link>
+      <pubDate>Thu, 19 Mar 2015 12:53:26 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/reference/management/monitoring/</guid>
+      <description>
+
+&lt;h1 id=&#34;monitoring&#34;&gt;Monitoring&lt;/h1&gt;
+
+&lt;p&gt;The driver uses &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/technotes/guides/jmx/&#34;&gt;JMX&lt;/a&gt; to create
+&lt;a href=&#34;http://docs.oracle.com/javase/tutorial/jmx/mbeans/mxbeans.html&#34;&gt;MXBeans&lt;/a&gt; that allow an
+application or end user to monitor various aspects of the driver.&lt;/p&gt;
+
+&lt;p&gt;The driver creates MXBean instances of a single type:
+&lt;a href=&#34;http://api.mongodb.org/java/3.0/com/mongodb/management/ConnectionPoolStatisticsMBean.html&#34;&gt;ConnectionPoolStatisticsMBean&lt;/a&gt;.
+ The driver registers one &lt;code&gt;ConnectionPoolStatisticsMBean&lt;/code&gt; instance per each server it connects to. For example, in the case of a replica
+ set, the driver creates an instance per each non-hidden member of the replica set.&lt;/p&gt;
+
+&lt;p&gt;Each MXBean instance is required to be registered with a unique object name, which consists of a domain and a set of named properties. All
+MXBean instances created by the driver are under the domain &lt;code&gt;&amp;quot;org.mongodb.driver&amp;quot;&lt;/code&gt;.  Instances of &lt;code&gt;ConnectionPoolStatisticsMBean&lt;/code&gt; will have
+the following properties:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;clusterId&lt;/code&gt;: a client-generated unique identifier, required to ensure object name uniqueness in situations where an
+application has multiple &lt;code&gt;MongoClient&lt;/code&gt; instances connected to the same MongoDB server deployment&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;host&lt;/code&gt;: the host name of the server&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;port&lt;/code&gt;: the port on which the server is listening&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;minSize&lt;/code&gt;: the minimum allowed size of the pool, including idle and in-use members&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;maxSize&lt;/code&gt;: the maximum allowed size of the pool, including idle and in-use members&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;size&lt;/code&gt;: the current size of the pool, including idle and and in-use members&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;waitQueueSize&lt;/code&gt;: the current size of the wait queue for a connection from this pool&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;checkedOutCount&lt;/code&gt;: the current count of connections that are currently in use&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>SSL</title>
+      <link>/mongo-scala-driver/1.1/reference/connecting/ssl/</link>
+      <pubDate>Thu, 19 Mar 2015 12:53:26 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/reference/connecting/ssl/</guid>
+      <description>
+
+&lt;h2 id=&#34;ssl&#34;&gt;SSL&lt;/h2&gt;
+
+&lt;p&gt;The Scala driver supports SSL connections to MongoDB servers using the underlying support for SSL provided by
+&lt;a href=&#34;http://netty .io/&#34;&gt;Netty&lt;/a&gt;. You can configure the driver to use SSL with &lt;code&gt;MongoClientSettings&lt;/code&gt; by setting the sslEnabled property to true
+and the stream factory to &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.connection.NettyStreamFactoryFactory
+&#34;&gt;&lt;code&gt;NettyStreamFactoryFactory&lt;/code&gt;&lt;/a&gt;, as in:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import org.mongodb.scala.connection.{NettyStreamFactoryFactory, SslSettings}
+
+MongoClientSettings.builder()
+                   .sslSettings(SslSettings.builder()
+                                           .enabled(true)
+                                           .build())   
+                   .streamFactoryFactory(NettyStreamFactoryFactory())
+                   .build()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;See &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/connecting/connection-settings/#netty-configuration&#34;&gt;Netty Configuration&lt;/a&gt; for details on
+configuring Netty.&lt;/p&gt;
+
+&lt;h3 id=&#34;host-name-verification&#34;&gt;Host name verification&lt;/h3&gt;
+
+&lt;p&gt;By default, the driver ensures that the host name included in the server&amp;rsquo;s SSL certificate(s) matches the host name(s) provided when
+constructing a &lt;code&gt;MongoClient&lt;/code&gt;.  However, this host name verification requires a Java 7 JVM, as it relies on additions to the
+&lt;code&gt;javax.net.SSLParameters&lt;/code&gt; class that were introduced in Java 7.  If your application must run on Java 6, or for some other reason you need
+ to disable host name verification, you must expicitly indicate this in &lt;code&gt;SslSettings&lt;/code&gt; using the &lt;code&gt;invalidHostNameAllowed&lt;/code&gt; property:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;MongoClientSettings.builder()
+                   .sslSettings(SslSettings.builder()
+                                           .enabled(true)                 
+                                           .invalidHostNameAllowed(true)  
+                                           .build())                      
+                   .streamFactoryFactory(NettyStreamFactoryFactory())
+                   .build()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;jvm-system-properties&#34;&gt;JVM system properties&lt;/h3&gt;
+
+&lt;p&gt;A typical application will need to set several JVM system properties to ensure that the client is able to validate the SSL certificate
+presented by the server:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;javax.net.ssl.trustStore&lt;/code&gt;: the path to a trust store containing the certificate of the signing authority&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;javax.net.ssl.trustStorePassword&lt;/code&gt;: the password to access this trust store&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The trust store is typically created with the &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html&#34;&gt;keytool&lt;/a&gt;
+command line program provided as part of the JDK.  For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;    keytool -importcert -trustcacerts -file &amp;lt;path to certificate authority file&amp;gt; 
+        -keystore &amp;lt;path to trust store&amp;gt; -storepass &amp;lt;password&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A typical application will also need to set several JVM system properties to ensure that the client presents an SSL certificate to the
+MongoDB server:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;javax.net.ssl.keyStore&lt;/code&gt;: the path to a key store containing the client&amp;rsquo;s SSL certificates&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;javax.net.ssl.keyStorePassword&lt;/code&gt;: the password to access this key store&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The key store is typically created with the &lt;a href=&#34;http://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html&#34;&gt;keytool&lt;/a&gt; or the
+&lt;a href=&#34;https://www.openssl.org/docs/apps/openssl.html&#34;&gt;openssl&lt;/a&gt; command line program.&lt;/p&gt;
+
+&lt;p&gt;For more information on configuring a Java application for SSL, please refer to the&lt;br /&gt;
+&lt;a href=&#34;http://docs.oracle.com/javase/8/docs/technotes/guides/security/jsse/JSSERefGuide.html&#34;&gt;JSSE Reference Guide&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Logging</title>
+      <link>/mongo-scala-driver/1.1/reference/management/logging/</link>
+      <pubDate>Wed, 18 Mar 2015 21:14:20 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/reference/management/logging/</guid>
+      <description>
+
+&lt;h1 id=&#34;logging&#34;&gt;Logging&lt;/h1&gt;
+
+&lt;p&gt;By default, logging is enabled via the popular &lt;a href=&#34;http://www.slf4j.org/&#34;&gt;SLF4J&lt;/a&gt; API. The use of &lt;a href=&#34;http://www.slf4j.org/&#34;&gt;SLF4J&lt;/a&gt; is optional;
+the driver will use SLF4J if the driver detects the presence of SLF4J in the classpath. Otherwise, the driver will fall back to
+JUL (&lt;code&gt;java.util.logging&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;The driver uses the following logger names:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;org.mongodb.driver&lt;/code&gt;: the root logger
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;cluster&lt;/code&gt;: for logs related to monitoring of the MongoDB servers to which the driver connects&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;connection&lt;/code&gt;: for logs related to connections and connection pools&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;protocol&lt;/code&gt;: for logs related to protocol message sent to and received from a MongoDB server
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;insert&lt;/code&gt;: for logs related to insert messages and responses&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;update&lt;/code&gt;: for logs related to update messages and responses&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;delete&lt;/code&gt;: for logs related to delete messages and responses&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;query&lt;/code&gt;: for logs related to query messages and responses&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;getmore&lt;/code&gt;: for logs related to getmore messages and responses&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;killcursor&lt;/code&gt;: for logs related to killcursor messages and responses&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;command&lt;/code&gt;: for logs related to command messages and responses&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;uri&lt;/code&gt;: for logs related to connection string parsing&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;management&lt;/code&gt;: for logs related to JMX&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Reference</title>
+      <link>/mongo-scala-driver/1.1/reference/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/reference/</guid>
+      <description>
+
+&lt;h2 id=&#34;reference&#34;&gt;Reference&lt;/h2&gt;
+
+&lt;p&gt;The reference documentation for the Scala driver focuses on high-level documentation and use-cases. The Scaladoc-generated API reference is
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#
+&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/connecting/&#34;&gt;Connecting&lt;/a&gt;: Documentation of the driver&amp;rsquo;s support for connecting to MongoDB servers&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/crud/&#34;&gt;CRUD&lt;/a&gt;: Documentation of the driver&amp;rsquo;s support for CRUD operations&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/observables/&#34;&gt;Observables&lt;/a&gt;: Documentation of the driver&amp;rsquo;s support and implicit helpers for Observables.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/reference/management/&#34;&gt;Management&lt;/a&gt;: Documentation of the driver&amp;rsquo;s support for logging and monitoring of its
+internal state.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Getting-Starteds on MongoDB Scala Driver</title>
+    <link>/mongo-scala-driver/1.1/getting-started/</link>
+    <description>Recent content in Getting-Starteds on MongoDB Scala Driver</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 17 Mar 2015 15:36:56 +0000</lastBuildDate>
+    <atom:link href="/mongo-scala-driver/1.1/getting-started/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Admin Quick Tour</title>
+      <link>/mongo-scala-driver/1.1/getting-started/quick-tour-admin/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/getting-started/quick-tour-admin/</guid>
+      <description>
+
+&lt;h1 id=&#34;admin-quick-tour&#34;&gt;Admin Quick Tour&lt;/h1&gt;
+
+&lt;p&gt;This is the second part of the MongoDB driver quick tour. In the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/getting-started/quick-tour/&#34;&gt;quick tour&lt;/a&gt; we looked at how to
+use the MongoDB Scala driver to execute basic CRUD operations.  In this section we&amp;rsquo;ll look at some of the
+administrative features available in the driver.&lt;/p&gt;
+
+&lt;p&gt;The following code snippets come from the &lt;code&gt;QuickTourAdmin.scala&lt;/code&gt; example code
+that can be found with the &lt;a href=&#34;https://github.com/mongodb/mongo-scala-driver/blob/master/examples/src/test/scala/tour/QuickTourAdmin.scala
+&#34;&gt;driver source&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;See the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/getting-started/installation-guide/&#34;&gt;installation guide&lt;/a&gt; for instructions on how to install the MongoDB Driver.&lt;/p&gt;
+
+&lt;p&gt;This guide uses the &lt;code&gt;Helper&lt;/code&gt; implicits as covered in the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/getting-started/quick-tour-primer/&#34;&gt;Quick Tour Primer&lt;/a&gt;.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;setup&#34;&gt;Setup&lt;/h2&gt;
+
+&lt;p&gt;To get started we&amp;rsquo;ll quickly connect and create a &lt;code&gt;mongoClient&lt;/code&gt;, &lt;code&gt;database&lt;/code&gt; and &lt;code&gt;collection&lt;/code&gt;
+variable for use in the examples below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val mongoClient: MongoClient = MongoClient()
+val database: MongoDatabase = mongoClient.getDatabase(&amp;quot;mydb&amp;quot;)
+val collection: MongoCollection[Document] = database.getCollection(&amp;quot;test&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;Calling the &lt;code&gt;getDatabase()&lt;/code&gt; on &lt;code&gt;MongoClient&lt;/code&gt; does not create a database.
+Only when a database is written to will a database be created.  Examples include the creation of an index or the insertion of a document
+into a previously non-existent collection.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;get-a-list-of-databases&#34;&gt;Get A List of Databases&lt;/h2&gt;
+
+&lt;p&gt;You can get a list of the available databases by calling the &lt;code&gt;listDatabaseNames&lt;/code&gt; method.  Here we use the implicit
+&lt;code&gt;printResults&lt;/code&gt; helper so that we can print the list of database names:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;mongoClient.listDatabaseNames().printResults()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;drop-a-database&#34;&gt;Drop A Database&lt;/h2&gt;
+
+&lt;p&gt;You can drop a database by name using a &lt;code&gt;MongoClient&lt;/code&gt; instance. Here we block for the &lt;code&gt;Observable&lt;/code&gt; to complete before continuing.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;mongoClient.getDatabase(&amp;quot;databaseToBeDropped&amp;quot;).drop().headResult()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;create-a-collection&#34;&gt;Create A Collection&lt;/h2&gt;
+
+&lt;p&gt;Collections in MongoDB are created automatically simply by inserted a document into it. Using the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoDatabase@createCollection(collectionName:String):org.mongodb.scala.Observable[org.mongodb.scala.Completed]
+&#34;&gt;&lt;code&gt;createCollection&lt;/code&gt;&lt;/a&gt; method,
+you can also create a collection explicitly in order to customize its configuration. For example, to create a capped collection sized to 1 megabyte:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;database.createCollection(&amp;quot;cappedCollection&amp;quot;,
+  CreateCollectionOptions().capped(true).sizeInBytes(0x100000)
+).printHeadResult(&amp;quot;Collection Created! &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;get-a-list-of-collections&#34;&gt;Get A List of Collections&lt;/h2&gt;
+
+&lt;p&gt;You can get a list of the available collections in a database:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;database.listCollectionNames().printResults(&amp;quot;Collection Names: &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;drop-a-collection&#34;&gt;Drop A Collection&lt;/h2&gt;
+
+&lt;p&gt;You can drop a collection by using the drop() method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.drop().headResult()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;create-an-index&#34;&gt;Create An Index&lt;/h2&gt;
+
+&lt;p&gt;MongoDB supports secondary indexes. To create an index, you just
+specify the field or combination of fields, and for each field specify the direction of the index for that field.
+For &lt;code&gt;1&lt;/code&gt; ascending  or &lt;code&gt;-1&lt;/code&gt; for descending.
+We can use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/indexes/&#34;&gt;&lt;code&gt;Indexes&lt;/code&gt;&lt;/a&gt; helpers to create index keys:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.createIndex(ascending(&amp;quot;i&amp;quot;)).printResults(&amp;quot;Created an index named: &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;get-a-list-of-indexes-on-a-collection&#34;&gt;Get a List of Indexes on a Collection&lt;/h2&gt;
+
+&lt;p&gt;Use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoCollection@listIndexes[C]()(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.ListIndexesObservable[C]
+&#34;&gt;&lt;code&gt;listIndexes()&lt;/code&gt;&lt;/a&gt; method to get a list of indexes.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.listIndexes().printResults()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The example should print the following indexes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{ &amp;quot;v&amp;quot; : 1, &amp;quot;key&amp;quot; : { &amp;quot;_id&amp;quot; : 1 }, &amp;quot;name&amp;quot; : &amp;quot;_id_&amp;quot;, &amp;quot;ns&amp;quot; : &amp;quot;mydb.test&amp;quot; }
+{ &amp;quot;v&amp;quot; : 1, &amp;quot;key&amp;quot; : { &amp;quot;i&amp;quot; : 1 }, &amp;quot;name&amp;quot; : &amp;quot;i_1&amp;quot;, &amp;quot;ns&amp;quot; : &amp;quot;mydb.test&amp;quot; }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;text-indexes&#34;&gt;Text indexes&lt;/h2&gt;
+
+&lt;p&gt;MongoDB also provides text indexes to support text search of string
+content. Text indexes can include any field whose value is a string or
+an array of string elements. To create a text index use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/indexes/#text-index&#34;&gt;&lt;code&gt;Indexes.text&lt;/code&gt;&lt;/a&gt;
+static helper:&lt;/p&gt;
+
+&lt;p&gt;The following example creates a text index by specifying the string literal &amp;ldquo;text&amp;rdquo; in the index document, then insert some sample documents.
+Using a for comprehension we can combine the two operations:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val indexAndInsert = for {
+  indexResults &amp;lt;- collection.createIndex(Document(&amp;quot;content&amp;quot; -&amp;gt; &amp;quot;text&amp;quot;))
+  insertResults &amp;lt;- collection.insertMany(List(
+    Document(&amp;quot;_id&amp;quot; -&amp;gt; 0, &amp;quot;content&amp;quot; -&amp;gt; &amp;quot;textual content&amp;quot;),
+    Document(&amp;quot;_id&amp;quot; -&amp;gt; 1, &amp;quot;content&amp;quot; -&amp;gt; &amp;quot;additional content&amp;quot;),
+    Document(&amp;quot;_id&amp;quot; -&amp;gt; 2, &amp;quot;content&amp;quot; -&amp;gt; &amp;quot;irrelevant content&amp;quot;))
+  )
+} yield insertResults
+
+indexAndInsert.results()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As of MongoDB 2.6, text indexes are now integrated into the main query
+language and enabled by default (here we use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/filters/#evaluation&#34;&gt;&lt;code&gt;Filters.text&lt;/code&gt;&lt;/a&gt; helper):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;// Find using the text index
+collection.count(text(&amp;quot;textual content -irrelevant&amp;quot;)).printResults(&amp;quot;Text search matches: &amp;quot;)
+
+// Find using the $language operator
+val textSearch: Bson = text(&amp;quot;textual content -irrelevant&amp;quot;, TextSearchOptions().language(&amp;quot;english&amp;quot;))
+collection.count(textSearch).printResults(&amp;quot;Text search matches (english): &amp;quot;)
+
+// Find the highest scoring match
+collection.find(textSearch)
+  .projection(metaTextScore(&amp;quot;score&amp;quot;))
+  .first()
+  .printHeadResult(&amp;quot;Highest scoring document: &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and it should print:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;Text search matches: 2
+Text search matches (english): 2
+Highest scoring document: { &amp;quot;_id&amp;quot; : 1, &amp;quot;content&amp;quot; : &amp;quot;additional content&amp;quot;, &amp;quot;score&amp;quot; : 0.75 }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For more information about text search see the &lt;a href=&#34;http://docs.mongodb.org/manual//core/index-text
+&#34;&gt;text index&lt;/a&gt; and
+&lt;a href=&#34;http://docs.mongodb.org/manual//reference/operator/query/text
+&#34;&gt;$text query operator&lt;/a&gt; documentation.&lt;/p&gt;
+
+&lt;h2 id=&#34;running-a-command&#34;&gt;Running a command&lt;/h2&gt;
+
+&lt;p&gt;While not all commands have a specific helper, however you can run any &lt;a href=&#34;http://docs.mongodb.org/manual//reference/command
+&#34;&gt;command&lt;/a&gt;
+by using the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoDatabase@runCommand[TResult](command:org.bson.conversions.Bson)(implicite:org.mongodb.scala.Helpers.DefaultsTo[TResult,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[TResult]):org.mongodb.scala.Observable[TResult]
+&#34;&gt;&lt;code&gt;runCommand()&lt;/code&gt;&lt;/a&gt;
+method.  Here we call the &lt;a href=&#34;{{ docsref &amp;quot;reference/command/buildInfo&amp;quot; }}&#34;&gt;buildInfo&lt;/a&gt; command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;database.runCommand(Document(&amp;quot;buildInfo&amp;quot; -&amp;gt; 1)).printHeadResult()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition important&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
+&lt;p&gt;If no &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.package@ReadPreference=com.mongodb.ReadPreference&#34;&gt;&lt;code&gt;readPreference&lt;/code&gt;&lt;/a&gt; is passed
+to &lt;code&gt;runCommand&lt;/code&gt; then the command will be run on the primary node.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Getting Started</title>
+      <link>/mongo-scala-driver/1.1/getting-started/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/getting-started/</guid>
+      <description>
+
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;
+
+&lt;p&gt;To help you get started quickly on the new driver, follow:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/getting-started/installation-guide/&#34;&gt;Installation&lt;/a&gt;, how to install the Scala driver.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/getting-started/quick-tour-primer/&#34;&gt;Quick Tour Primer&lt;/a&gt;,  background information on the driver and its asynchronous API.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/getting-started/quick-tour/&#34;&gt;Quick Tour&lt;/a&gt;, an introduction to using the driver for CRUD operations.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/getting-started/quick-tour-admin/&#34;&gt;Admin Quick Tour&lt;/a&gt;, an introduction to using the driver for administrative operations.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Installation Guide</title>
+      <link>/mongo-scala-driver/1.1/getting-started/installation-guide/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/getting-started/installation-guide/</guid>
+      <description>
+
+&lt;h1 id=&#34;installation&#34;&gt;Installation&lt;/h1&gt;
+
+&lt;p&gt;The recommended way to get started using the driver in your project is with a dependency management system.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;pull-right&#34;&gt;
+  &lt;input type=&#34;checkbox&#34; checked=&#34;&#34; class=&#34;distroPicker&#34; data-toggle=&#34;toggle&#34; data-on=&#34;sbt&#34; data-off=&#34;maven&#34; data-offstyle=&#34;success&#34;&gt;
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;mongodb-scala-driver&#34;&gt;MongoDB Scala Driver&lt;/h2&gt;
+
+&lt;p&gt;The MongoDB Scala Driver&lt;/p&gt;
+
+&lt;p&gt;
+
+
+&lt;section class=&#34;maven hidden&#34;&gt;
+&lt;pre&gt;&lt;code class=&#34;ini&#34;&gt;
+&amp;lt;dependencies&amp;gt;
+    &amp;lt;dependency&amp;gt;
+        &amp;lt;groupId&amp;gt;org.mongodb.scala&amp;lt;/groupId&amp;gt;
+        &amp;lt;artifactId&amp;gt;mongo-scala-driver_2.11&amp;lt;/artifactId&amp;gt;
+        &amp;lt;version&amp;gt;1.1.1&amp;lt;/version&amp;gt;
+    &amp;lt;/dependency&amp;gt;
+&amp;lt;/dependencies&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/section&gt;
+&lt;section class=&#34;sbt&#34;&gt;
+&lt;pre&gt;&lt;code class=&#34;ini&#34;&gt;
+libraryDependencies += &#34;org.mongodb.scala&#34; %% &#34;mongo-scala-driver&#34; % &#34;1.1.1&#34;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/section&gt;
+&lt;section class=&#34;downloadInfo small&#34;&gt;
+    &lt;p&gt;You can also download the jars
+        &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/scala/mongo-scala-driver_2.11/1.1.1&#34; target=&#34;_blank&#34;&gt;directly&lt;/a&gt;
+        from sonatype.&lt;/a&gt;&lt;/p&gt;
+    &lt;p&gt;
+        &lt;strong&gt;Note:&lt;/strong&gt; &lt;code&gt;mongo-scala-driver&lt;/code&gt; requires the following dependencies:
+        &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/scala/mongo-scala-bson_2.11/1.1.1&#34; target=&#34;_blank&#34;&gt;&lt;code&gt;mongo-scala-bson&lt;/code&gt;&lt;/a&gt;,
+        &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/bson/3.2.0&#34; target=&#34;_blank&#34;&gt;&lt;code&gt;bson&lt;/code&gt;&lt;/a&gt;,
+        &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongodb-driver-core/3.2.0&#34; target=&#34;_blank&#34;&gt;&lt;code&gt;mongodb-driver-core&lt;/code&gt;&lt;/a&gt;,
+        and
+        &lt;a href=&#34;https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongodb-driver-async/3.2.0&#34; target=&#34;_blank&#34;&gt;&lt;code&gt;mongodb-driver-async&lt;/code&gt;&lt;/a&gt;.
+    &lt;/p&gt;
+&lt;/section&gt;
+
+&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Quick Tour</title>
+      <link>/mongo-scala-driver/1.1/getting-started/quick-tour/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/getting-started/quick-tour/</guid>
+      <description>
+
+&lt;h1 id=&#34;quick-tour&#34;&gt;Quick Tour&lt;/h1&gt;
+
+&lt;p&gt;The following code snippets come from the &lt;code&gt;QuickTour.scala&lt;/code&gt; example code that can be found with the
+&lt;a href=&#34;https://github.com/mongodb/mongo-scala-driver/blob/master/examples/src/test/scala/tour/QuickTour.scala
+&#34;&gt;driver source&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;See the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/getting-started/installation-guide/&#34;&gt;installation guide&lt;/a&gt;
+for instructions on how to install the MongoDB Scala Driver.&lt;/p&gt;
+
+&lt;p&gt;This guide uses the &lt;code&gt;Helper&lt;/code&gt; implicits as covered in the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/getting-started/quick-tour-primer/&#34;&gt;Quick Tour Primer&lt;/a&gt;.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;make-a-connection&#34;&gt;Make a Connection&lt;/h2&gt;
+
+&lt;p&gt;The following example shows multiple ways to connect to the database &lt;code&gt;mydb&lt;/code&gt; on the local machine, using the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoClient$
+&#34;&gt;&lt;code&gt;MongoClient&lt;/code&gt;&lt;/a&gt; companion object.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;// To directly connect to the default server localhost on port 27017
+val mongoClient: MongoClient = MongoClient()
+
+// Use a Connection String
+val mongoClient: MongoClient = MongoClient(&amp;quot;mongodb://localhost&amp;quot;)
+
+// or provide custom MongoClientSettings
+val clusterSettings: ClusterSettings = ClusterSettings.builder().hosts(List(new ServerAddress(&amp;quot;localhost&amp;quot;)).asJava).build()
+val settings: MongoClientSettings = MongoClientSettings.builder().clusterSettings(clusterSettings).build()
+val mongoClient: MongoClient = MongoClient(settings)
+
+val database: MongoDatabase = mongoClient.getDatabase(&amp;quot;mydb&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;At this point, the &lt;code&gt;database&lt;/code&gt; object will be a connection to a MongoDB server for the specified database.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;The API only returns implementations of &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.Observable&#34;&gt;&lt;code&gt;Observable[T]&lt;/code&gt;&lt;/a&gt; when network IO required for the
+operation. For &lt;code&gt;getDatabase(&amp;quot;mydb&amp;quot;)&lt;/code&gt; there is no network IO required. A &lt;code&gt;MongoDatabase&lt;/code&gt; instance provides methods to interact with a database
+but the database might not actually exist and will only be created on the insertion of data via some means; e.g. the creation of a
+collection or the insertion of documents.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h3 id=&#34;mongoclient&#34;&gt;MongoClient&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoClient
+&#34;&gt;&lt;code&gt;MongoClient&lt;/code&gt;&lt;/a&gt; instance actually represents a pool of connections
+for a given MongoDB server deployment; you will only need one instance of class
+&lt;code&gt;MongoClient&lt;/code&gt; even with multiple concurrently executing asynchronous operations.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition important&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
+&lt;p&gt;Typically you only create one &lt;code&gt;MongoClient&lt;/code&gt; instance for a given database
+cluster and use it across your application. When creating multiple instances:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;All resource usage limits (max connections, etc) apply per &lt;code&gt;MongoClient&lt;/code&gt; instance&lt;/li&gt;
+&lt;li&gt;To dispose of an instance, make sure you call &lt;code&gt;MongoClient.close()&lt;/code&gt; to clean up resources&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;get-a-collection&#34;&gt;Get a Collection&lt;/h2&gt;
+
+&lt;p&gt;To get a collection to operate upon, specify the name of the collection to
+the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoDatabase@getCollection[TResult](collectionName:String)(implicite:org.mongodb.scala.Helpers.DefaultsTo[TResult,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[TResult]):org.mongodb.scala.MongoCollection[TResult]
+&#34;&gt;&lt;code&gt;getCollection(String collectionName)&lt;/code&gt;&lt;/a&gt;
+method:&lt;/p&gt;
+
+&lt;p&gt;The following example gets the collection &lt;code&gt;test&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val collection: MongoCollection[Document] = database.getCollection(&amp;quot;test&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;insert-a-document&#34;&gt;Insert a Document&lt;/h2&gt;
+
+&lt;p&gt;Once you have the collection object, you can insert documents into the
+collection. For example, consider the following JSON document; the document
+contains a field &lt;code&gt;info&lt;/code&gt; which is an embedded document:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;{
+   &amp;quot;name&amp;quot; : &amp;quot;MongoDB&amp;quot;,
+   &amp;quot;type&amp;quot; : &amp;quot;database&amp;quot;,
+   &amp;quot;count&amp;quot; : 1,
+   &amp;quot;info&amp;quot; : {
+               x : 203,
+               y : 102
+             }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To create the document using the Scala driver, use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.collection.immutable.Document
+&#34;&gt;&lt;code&gt;Document&lt;/code&gt;&lt;/a&gt; class. You
+can use this class to create the embedded document as well.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition warning&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;warning&lt;/h5&gt;
+&lt;p&gt;The Scala driver provides two document types - an immutable &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.collection.immutable.Document&#34;&gt;&lt;code&gt;Document&lt;/code&gt;&lt;/a&gt;
+and a mutable &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.collection.mutable.Document&#34;&gt;&lt;code&gt;Document&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;When using an immutable document then you should explicitly add an &lt;code&gt;_id&lt;/code&gt; value, if you need to know that &lt;code&gt;_id&lt;/code&gt; value in the future.&lt;/p&gt;
+
+&lt;p&gt;If an &lt;code&gt;_id&lt;/code&gt; is not present on insertion then driver will add one automatically create one and pass it to the server, but that &lt;code&gt;_id&lt;/code&gt; will not be
+passed back to the user.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val doc: Document = Document(&amp;quot;_id&amp;quot; -&amp;gt; 0, &amp;quot;name&amp;quot; -&amp;gt; &amp;quot;MongoDB&amp;quot;, &amp;quot;type&amp;quot; -&amp;gt; &amp;quot;database&amp;quot;,
+                             &amp;quot;count&amp;quot; -&amp;gt; 1, &amp;quot;info&amp;quot; -&amp;gt; Document(&amp;quot;x&amp;quot; -&amp;gt; 203, &amp;quot;y&amp;quot; -&amp;gt; 102))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To insert the document into the collection, use the &lt;code&gt;insertOne()&lt;/code&gt; method.
+Using the &lt;code&gt;results()&lt;/code&gt; implicit we block until the observer is completed:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.insertOne(doc).results();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition important&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
+&lt;p&gt;In the API all methods returning a &lt;code&gt;Observables&lt;/code&gt; are &amp;ldquo;cold&amp;rdquo; streams meaning that nothing happens until they are Subscribed to.&lt;/p&gt;
+
+&lt;p&gt;The example below does nothing:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val observable: Observable&amp;lt;Completed&amp;gt; = collection.insertOne(doc)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Only when an &lt;code&gt;Observable&lt;/code&gt; is subscribed to and data requested will the operation happen:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;// Explictly subscribe:
+observable.insertOne(doc).subscribe(new Observer[Completed] {
+
+  override def onNext(result: Completed): Unit = println(&amp;quot;Inserted&amp;quot;)
+
+  override def onError(e: Throwable): Unit = println(&amp;quot;Failed&amp;quot;)
+
+  override def onComplete(): Unit = println(&amp;quot;Completed&amp;quot;)
+})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once the document has been inserted the &lt;code&gt;onNext&lt;/code&gt; method will be called and it will
+print &amp;ldquo;Inserted!&amp;rdquo; followed by the &lt;code&gt;onCompleted&lt;/code&gt; method which will print &amp;ldquo;Completed&amp;rdquo;. If there was an error for any reason the &lt;code&gt;onError&lt;/code&gt;
+method would print &amp;ldquo;Failed&amp;rdquo;.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;add-multiple-documents&#34;&gt;Add Multiple Documents&lt;/h2&gt;
+
+&lt;p&gt;To add multiple documents, you can use the &lt;code&gt;insertMany()&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;p&gt;The following example will add multiple documents of the form:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;{ &amp;quot;i&amp;quot; : value }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Create the documents in a loop.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val documents = (1 to 100) map { i: Int =&amp;gt; Document(&amp;quot;i&amp;quot; -&amp;gt; i) }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To insert these documents to the collection, pass the list of documents to the
+&lt;code&gt;insertMany()&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val insertObservable = collection.insertMany(documents)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As we haven&amp;rsquo;t subscribed yet no documents have been inserted, lets chain together two operations, inserting and counting.&lt;/p&gt;
+
+&lt;h2 id=&#34;count-documents-in-a-collection&#34;&gt;Count Documents in A Collection&lt;/h2&gt;
+
+&lt;p&gt;Once we&amp;rsquo;ve inserted the &lt;code&gt;documents&lt;/code&gt; list we should, have a total of 101 documents in the collection (the 100 we did in the loop, plus
+the first one). We can check to see if we have them all using the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoCollection@count():org.mongodb.scala.Observable[Long]
+&#34;&gt;count()&lt;/a&gt; method.&lt;/p&gt;
+
+&lt;p&gt;Lets chain the two operations together using a &lt;a href=&#34;http://docs.scala-lang.org/tutorials/tour/sequence-comprehensions.html&#34;&gt;&lt;code&gt;for&lt;/code&gt;&lt;/a&gt; comprehension. The
+following code should insert the documents then count the number of documents and print the results:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val insertAndCount = for {
+  insertResult &amp;lt;- insertObservable
+  countResult &amp;lt;- collection.count()
+} yield countResult
+
+println(s&amp;quot;total # of documents after inserting 100 small ones (should be 101):  ${insertAndCount.headResult()}&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;query-the-collection&#34;&gt;Query the Collection&lt;/h2&gt;
+
+&lt;p&gt;Use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoCollection@find[C](filter:org.bson.conversions.Bson)(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.FindObservable[C]
+&#34;&gt;find()&lt;/a&gt;
+method to query the collection.&lt;/p&gt;
+
+&lt;h3 id=&#34;find-the-first-document-in-a-collection&#34;&gt;Find the First Document in a Collection&lt;/h3&gt;
+
+&lt;p&gt;To get the first document in the collection, call the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.FindObservable@first():org.mongodb.scala.Observable[TResult]
+&#34;&gt;first()&lt;/a&gt;
+method on the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.FindObservable
+&#34;&gt;FindObservable&lt;/a&gt;
+operation. &lt;code&gt;collection.find().first()&lt;/code&gt; returns the first document or if no document is found the &lt;code&gt;Observable&lt;/code&gt; just completes.
+This is useful for queries that should only match a single document, or if you are interested in the first document only.&lt;/p&gt;
+
+&lt;p&gt;Using the &lt;code&gt;printHeadResult()&lt;/code&gt; implicit we block until the observer is completed and then print the first result:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.find().first().printHeadResult()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The example will print the following document:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{ &amp;quot;_id&amp;quot; : 0, &amp;quot;name&amp;quot; : &amp;quot;MongoDB&amp;quot;, &amp;quot;type&amp;quot; : &amp;quot;database&amp;quot;, &amp;quot;count&amp;quot; : 1, &amp;quot;info&amp;quot; : { &amp;quot;x&amp;quot; : 203, &amp;quot;y&amp;quot; : 102 } }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;The &lt;code&gt;_id&lt;/code&gt; of the document is &amp;ldquo;0&amp;rdquo; as we explicitly set one before we inserted this document.
+MongoDB reserves field names that start with &amp;ldquo;_&amp;rdquo; and &amp;ldquo;$&amp;rdquo; for internal use.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h3 id=&#34;find-all-documents-in-a-collection&#34;&gt;Find All Documents in a Collection&lt;/h3&gt;
+
+&lt;p&gt;To retrieve all the documents in the collection, we will use the
+&lt;code&gt;find()&lt;/code&gt; method. The &lt;code&gt;find()&lt;/code&gt; method returns a &lt;code&gt;FindObservable&lt;/code&gt; instance that
+provides a fluent interface for chaining or controlling find operations.
+The following code retrieves all documents in the collection and prints them out
+(101 documents). Using the &lt;code&gt;printResults()&lt;/code&gt; implicit we block until the observer is completed and then print each result:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.find().printResults()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;get-a-single-document-with-a-query-filter&#34;&gt;Get A Single Document with a Query Filter&lt;/h2&gt;
+
+&lt;p&gt;We can create a filter to pass to the find() method to get a subset of
+the documents in our collection. For example, if we wanted to find the
+document for which the value of the &amp;ldquo;i&amp;rdquo; field is 71, we would do the
+following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import org.mongodb.scala.model.Filters._
+
+collection.find(equal(&amp;quot;i&amp;quot;, 71)).first().printHeadResult()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;will eventually print just one document:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{ &amp;quot;_id&amp;quot; : { &amp;quot;$oid&amp;quot; : &amp;quot;5515836e58c7b4fbc756320b&amp;quot; }, &amp;quot;i&amp;quot; : 71 }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;Use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/filters/&#34;&gt;&lt;code&gt;Filters&lt;/code&gt;&lt;/a&gt;, &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/sorts/&#34;&gt;&lt;code&gt;Sorts&lt;/code&gt;&lt;/a&gt;,
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/projections/&#34;&gt;&lt;code&gt;Projections&lt;/code&gt;&lt;/a&gt; and &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/updates/&#34;&gt;&lt;code&gt;Updates&lt;/code&gt;&lt;/a&gt;
+helpers for simple and concise ways of building up queries.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;get-a-set-of-documents-with-a-query&#34;&gt;Get a Set of Documents with a Query&lt;/h2&gt;
+
+&lt;p&gt;We can use the query to get a set of documents from our collection. For
+example, if we wanted to get all documents where &lt;code&gt;&amp;quot;i&amp;quot; &amp;gt; 50&lt;/code&gt;, we could
+write:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.find(gt(&amp;quot;i&amp;quot;, 50)).printResults()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;which should print the documents where &lt;code&gt;i &amp;gt; 50&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We could also get a range, say &lt;code&gt;50 &amp;lt; i &amp;lt;= 100&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.find(and(gt(&amp;quot;i&amp;quot;, 50), lte(&amp;quot;i&amp;quot;, 100))).printResults()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;sorting-documents&#34;&gt;Sorting documents&lt;/h2&gt;
+
+&lt;p&gt;We can also use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.model.Sorts$
+&#34;&gt;Sorts&lt;/a&gt; helpers to sort documents.
+We add a sort to a find query by calling the &lt;code&gt;sort()&lt;/code&gt; method on a &lt;code&gt;FindObservable&lt;/code&gt;.  Below we use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.model.Filters$@exists(fieldName:String,exists:Boolean):org.bson.conversions.Bson
+&#34;&gt;&lt;code&gt;exists()&lt;/code&gt;&lt;/a&gt; helper and use the sort
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.model.Sorts$@descending(fieldNames:String*):org.bson.conversions.Bson
+&#34;&gt;&lt;code&gt;descending(&amp;quot;i&amp;quot;)&lt;/code&gt;&lt;/a&gt; helper to sort our documents:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.find(exists(&amp;quot;i&amp;quot;)).sort(descending(&amp;quot;i&amp;quot;)).first().printHeadResult()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;projecting-fields&#34;&gt;Projecting fields&lt;/h2&gt;
+
+&lt;p&gt;Sometimes we don&amp;rsquo;t need all the data contained in a document. The &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.model.Projections$
+&#34;&gt;Projections&lt;/a&gt;
+helpers can be used to build the projection parameter for the find operation and limit the fields returned.&lt;br /&gt;
+Below we&amp;rsquo;ll sort the collection, exclude the &lt;code&gt;_id&lt;/code&gt; field and output the first matching document:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.find().projection(excludeId()).first().printHeadResult()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;aggregations&#34;&gt;Aggregations&lt;/h2&gt;
+
+&lt;p&gt;Sometimes we need to aggregate the data stored in MongoDB. The &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/aggregation/&#34;&gt;&lt;code&gt;Aggregates&lt;/code&gt;&lt;/a&gt; helper provides
+builders for each of type of aggregation stage.&lt;/p&gt;
+
+&lt;p&gt;Below we&amp;rsquo;ll do a simple two step transformation that will calculate the value of &lt;code&gt;i * 10&lt;/code&gt;. First we find all Documents
+where &lt;code&gt;i &amp;gt; 0&lt;/code&gt; by using the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/aggregation/#filter&#34;&gt;&lt;code&gt;Aggregates.filter&lt;/code&gt;&lt;/a&gt;
+helper. Then we reshape the document by using &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/aggregation/#project&#34;&gt;&lt;code&gt;Aggregates.project&lt;/code&gt;&lt;/a&gt;
+in conjunction with the &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/multiply/
+&#34;&gt;&lt;code&gt;$multiply&lt;/code&gt;&lt;/a&gt; operator to calculate the &amp;ldquo;&lt;code&gt;ITimes10&lt;/code&gt;&amp;rdquo;
+value:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.aggregate(Seq(filter(gt(&amp;quot;i&amp;quot;, 0)),
+  project(Document(&amp;quot;&amp;quot;&amp;quot;{ITimes10: {$multiply: [&amp;quot;$i&amp;quot;, 10]}}&amp;quot;&amp;quot;&amp;quot;)))
+).printResults()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/aggregation/#group&#34;&gt;&lt;code&gt;$group&lt;/code&gt;&lt;/a&gt; operations use the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#com/mongodb/client/model/Accumulators
+&#34;&gt;&lt;code&gt;Accumulators&lt;/code&gt;&lt;/a&gt; helper for any
+&lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/aggregation/group/#accumulator-operator
+&#34;&gt;accumulator operations&lt;/a&gt;. Below we sum up all the values of
+&lt;code&gt;i&lt;/code&gt; by using the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/builders/aggregation/#group&#34;&gt;&lt;code&gt;Aggregates.group&lt;/code&gt;&lt;/a&gt; helper in conjunction with the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#com/mongodb/client/model/Accumulators#sum-java.lang.String-TExpression-
+&#34;&gt;&lt;code&gt;Accumulators.sum&lt;/code&gt;&lt;/a&gt; helper:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;collection.aggregate(singletonList(group(null, sum(&amp;quot;total&amp;quot;, &amp;quot;$i&amp;quot;)))).first(printDocument);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;Currently, there are no helpers for &lt;a href=&#34;http://docs.mongodb.org/manual/meta/aggregation-quick-reference/#aggregation-expressions&#34;&gt;aggregation expressions&lt;/a&gt;.
+Use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/bson/extended-json/&#34;&gt;&lt;code&gt;Document.parse()&lt;/code&gt;&lt;/a&gt; helper to quickly build aggregation expressions from extended JSON.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;updating-documents&#34;&gt;Updating documents&lt;/h2&gt;
+
+&lt;p&gt;There are numerous &lt;a href=&#34;http://docs.mongodb.org/manual/reference/operator/update-field/&#34;&gt;update operators&lt;/a&gt;
+supported by MongoDB.  We can use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.model.Updates$
+&#34;&gt;Updates&lt;/a&gt; helpers to help update documents in the database.&lt;/p&gt;
+
+&lt;p&gt;To update at most a single document (may be 0 if none match the filter), use the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoCollection@updateOne(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]
+&#34;&gt;&lt;code&gt;updateOne&lt;/code&gt;&lt;/a&gt;
+method to specify the filter and the update document.  Here we update the first document that meets the filter &lt;code&gt;i&lt;/code&gt; equals &lt;code&gt;10&lt;/code&gt; and set the value of &lt;code&gt;i&lt;/code&gt; to &lt;code&gt;110&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.updateOne(equal(&amp;quot;i&amp;quot;, 10), set(&amp;quot;i&amp;quot;, 110)).printHeadResult(&amp;quot;Update Result: &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To update all documents matching the filter use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoCollection@updateMany(filter:org.bson.conversions.Bson,update:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.UpdateResult]
+&#34;&gt;&lt;code&gt;updateMany&lt;/code&gt;&lt;/a&gt;
+method.  Here we increment the value of &lt;code&gt;i&lt;/code&gt; by &lt;code&gt;100&lt;/code&gt; where &lt;code&gt;i&lt;/code&gt; is less than &lt;code&gt;100&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.updateMany(lt(&amp;quot;i&amp;quot;, 100), inc(&amp;quot;i&amp;quot;, 100)).printHeadResult(&amp;quot;Update Result: &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The update methods return an &lt;a href=&#34;http://api.mongodb.org/java/3.2/?com/mongodb/client/result/UpdateResult.html
+&#34;&gt;&lt;code&gt;UpdateResult&lt;/code&gt;&lt;/a&gt;,
+which provides information about the operation including the number of documents modified by the update.&lt;/p&gt;
+
+&lt;h2 id=&#34;deleting-documents&#34;&gt;Deleting documents&lt;/h2&gt;
+
+&lt;p&gt;To delete at most a single document (may be 0 if none match the filter) use the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoCollection@deleteOne(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]
+&#34;&gt;&lt;code&gt;deleteOne&lt;/code&gt;&lt;/a&gt;
+method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.deleteOne(equal(&amp;quot;i&amp;quot;, 110)).printHeadResult(&amp;quot;Delete Result: &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To delete all documents matching the filter use the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.MongoCollection@deleteMany(filter:org.bson.conversions.Bson):org.mongodb.scala.Observable[org.mongodb.scala.result.DeleteResult]
+&#34;&gt;&lt;code&gt;deleteMany&lt;/code&gt;&lt;/a&gt;
+method. Here we delete all documents where &lt;code&gt;i&lt;/code&gt; is greater or equal to &lt;code&gt;100&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;collection.deleteMany(gte(&amp;quot;i&amp;quot;, 100)).printHeadResult(&amp;quot;Delete Result: &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The delete methods return a &lt;a href=&#34;http://api.mongodb.org/java/3.2/?com/mongodb/client/result/DeleteResult.html
+&#34;&gt;&lt;code&gt;DeleteResult&lt;/code&gt;&lt;/a&gt;,
+which provides information about the operation including the number of documents deleted.&lt;/p&gt;
+
+&lt;h2 id=&#34;bulk-operations&#34;&gt;Bulk operations&lt;/h2&gt;
+
+&lt;p&gt;These commands allow for the execution of bulk
+insert/update/delete operations. There are two types of bulk operations:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Ordered bulk operations.&lt;/p&gt;
+
+&lt;p&gt;Executes all the operation in order and error out on the first write error.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Unordered bulk operations.&lt;/p&gt;
+
+&lt;p&gt;Executes all the operations and reports any the errors.&lt;/p&gt;
+
+&lt;p&gt;Unordered bulk operations do not guarantee order of execution.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Let&amp;rsquo;s look at two simple examples using ordered and unordered
+operations:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val writes: List[WriteModel[_ &amp;lt;: Document]] = List(
+      InsertOneModel(Document(&amp;quot;_id&amp;quot; -&amp;gt; 4)),
+      InsertOneModel(Document(&amp;quot;_id&amp;quot;-&amp;gt; 5)),
+      InsertOneModel(Document(&amp;quot;_id&amp;quot; -&amp;gt; 6)),
+      UpdateOneModel(Document(&amp;quot;_id&amp;quot; -&amp;gt; 1), set(&amp;quot;x&amp;quot;, 2)),
+      DeleteOneModel(Document(&amp;quot;_id&amp;quot; -&amp;gt; 2)),
+      ReplaceOneModel(Document(&amp;quot;_id&amp;quot; -&amp;gt; 3), Document(&amp;quot;_id&amp;quot; -&amp;gt; 3, &amp;quot;x&amp;quot; -&amp;gt; 4))
+    )
+
+// 1. Ordered bulk operation - order is guaranteed
+collection.bulkWrite(writes).printHeadResult(&amp;quot;Bulk write results: &amp;quot;)
+
+// 2. Unordered bulk operation - no guarantee of order of operation
+collection.bulkWrite(writes, BulkWriteOptions().ordered(false)).printHeadResult(&amp;quot;Bulk write results (unordered): &amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition important&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;important&lt;/h5&gt;
+&lt;p&gt;Use of the bulkWrite methods is not recommended when connected to pre-2.6 MongoDB servers, as this was the first server version to support
+bulk write commands for insert, update, and delete in a way that allows the driver to implement the correct semantics for BulkWriteResult
+and BulkWriteException. The methods will still work for pre-2.6 servers, but performance will suffer, as each write operation has to be
+executed one at a time.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Quick Tour Primer</title>
+      <link>/mongo-scala-driver/1.1/getting-started/quick-tour-primer/</link>
+      <pubDate>Tue, 17 Mar 2015 15:36:56 +0000</pubDate>
+      
+      <guid>/mongo-scala-driver/1.1/getting-started/quick-tour-primer/</guid>
+      <description>
+
+&lt;h1 id=&#34;quick-tour-primer&#34;&gt;Quick Tour Primer&lt;/h1&gt;
+
+&lt;p&gt;The aim of this guide is to provide background about the Scala driver and its asynchronous API before going onto
+looking at how to use the driver and MongoDB.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;See the &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/getting-started/installation-guide/&#34;&gt;installation guide&lt;/a&gt;
+for instructions on how to install the MongoDB Scala Driver.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;the-observable-api&#34;&gt;The Observable API&lt;/h2&gt;
+
+&lt;p&gt;The Scala driver is free of dependencies on any third-party frameworks for asynchronous programming. To achieve this the Scala API makes
+use of an custom implementation of the Observer pattern which comprises three traits:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Observable&lt;/li&gt;
+&lt;li&gt;Observer&lt;/li&gt;
+&lt;li&gt;Subscription&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;An &lt;code&gt;Observable&lt;/code&gt; is a provider of a potentially unbounded number of sequenced elements, published according to the demand received from it&amp;rsquo;s
+&lt;code&gt;Subscription&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In response to a call to &lt;code&gt;Observable.subscribe(Subscriber)&lt;/code&gt; the possible invocation sequences for methods on the &lt;code&gt;Observer&lt;/code&gt; are given by
+the following protocol:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;onSubscribe onNext* (onError | onComplete)?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This means that &lt;code&gt;onSubscribe&lt;/code&gt; is always signalled, followed by a possibly unbounded number of &lt;code&gt;onNext&lt;/code&gt; signals (as requested by the
+&lt;code&gt;Subscription&lt;/code&gt;) followed by an &lt;code&gt;onError&lt;/code&gt; signal if there is a failure, or an &lt;code&gt;onComplete&lt;/code&gt; signal when no more elements are available -
+as long as the &lt;code&gt;Subscription&lt;/code&gt; is not cancelled.&lt;/p&gt;
+
+&lt;p&gt;The implementation draws inspiration from the &lt;a href=&#34;http://reactivex.io/&#34;&gt;ReactiveX&lt;/a&gt; and &lt;a href=&#34;http://www.reactive-streams.org&#34;&gt;reactive streams&lt;/a&gt;
+libraries and provides easy interoperability with them.  For more information see the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/integrations/&#34;&gt;integrations guide&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;from-async-callbacks-to-observables&#34;&gt;From Async Callbacks to Observables&lt;/h2&gt;
+
+&lt;p&gt;The MongoDB Scala Driver is built upon the callback-driven MongoDB async driver. The API mirrors the
+async driver API and any methods that cause network IO return an instance of the
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.Observable
+&#34;&gt;&lt;code&gt;Observable[T]&lt;/code&gt;&lt;/a&gt; where &lt;code&gt;T&lt;/code&gt; is the type of response for the operation. The
+exception to that rule is for methods in the async driver that return a &lt;code&gt;Void&lt;/code&gt; value in the callback.
+As an &lt;code&gt;Observable[Void]&lt;/code&gt; never calls &lt;code&gt;onNext&lt;/code&gt; it stops it from being composable with other &lt;code&gt;Observables&lt;/code&gt;, so  in these
+circumstances we return a &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org/mongodb/scala/Completed.html
+&#34;&gt;&lt;code&gt;Observable[Completed]&lt;/code&gt;&lt;/a&gt; for the operation instead.&lt;/p&gt;
+
+&lt;h3 id=&#34;observable&#34;&gt;Observable&lt;/h3&gt;
+
+&lt;p&gt;The &lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.Observable
+&#34;&gt;&lt;code&gt;Observable&lt;/code&gt;&lt;/a&gt; is a trait wrapping the Java interface and where appropriate
+implementations of the trait extend it to make a fluent API. One such example is
+&lt;a href=&#34;/mongo-scala-driver/1.1/mongo-scala-driver/1.1/scaladoc/index.html#org.mongodb.scala.FindObservable
+&#34;&gt;&lt;code&gt;FindObservable&lt;/code&gt;&lt;/a&gt;, accessible through &lt;code&gt;collection.find()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;All &lt;code&gt;Observables&lt;/code&gt; returned from the API are cold, meaning that no I/O happens until they are subscribed to. As such an observer is
+ guaranteed to see the whole sequence from the beginning. So just creating an &lt;code&gt;Observable&lt;/code&gt; won&amp;rsquo;t cause any network IO, and it&amp;rsquo;s not until
+&lt;code&gt;Subscriber.request()&lt;/code&gt; is called that the driver executes the operation.&lt;/p&gt;
+
+&lt;p&gt;Each &lt;code&gt;Subscription&lt;/code&gt; to an &lt;code&gt;Observable&lt;/code&gt; relates to a single MongoDB operation and its &amp;ldquo;Subscriber&amp;rdquo; will receive it&amp;rsquo;s own specific set of
+results.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;h3 id=&#34;back-pressure&#34;&gt;Back Pressure&lt;/h3&gt;
+
+&lt;p&gt;By default the &lt;code&gt;Observer&lt;/code&gt; trait will request all the results from the &lt;code&gt;Observer&lt;/code&gt; as soon as the &lt;code&gt;Observable&lt;/code&gt; is subscribed to. Care should
+be taken to ensure that the &lt;code&gt;Observer&lt;/code&gt; has the capacity to handle all the results from the &lt;code&gt;Observable&lt;/code&gt;. Custom implementations of the
+&lt;code&gt;Observer.onSubscribe&lt;/code&gt; can save the &lt;code&gt;Subscription&lt;/code&gt; so that data is only requested when the &lt;code&gt;Observer&lt;/code&gt; has the capacity.&lt;/p&gt;
+
+&lt;h2 id=&#34;helpers-used-in-the-quick-tour&#34;&gt;Helpers used in the Quick Tour&lt;/h2&gt;
+
+&lt;p&gt;For the Quick Tour we use custom implicit helpers defined in &lt;a href=&#34;https://github.com/mongodb/mongo-scala-driver/blob/master/examples/src/test/scala/tour/Helpers.scala
+&#34;&gt;&lt;code&gt;Helpers.scala&lt;/code&gt;&lt;/a&gt;.
+These helpers get and print results and although this is an artificial scenario for asynchronous code we block on  the results of one
+example before starting the next, so as to ensure the state of the database. The &lt;code&gt;Helpers&lt;/code&gt; object
+provides the following methods:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;results()&lt;/p&gt;
+
+&lt;p&gt;Blocks until the &lt;code&gt;Observable&lt;/code&gt; is completed and returns the collected results&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;headResult()&lt;/p&gt;
+
+&lt;p&gt;Blocks until the first result of the &lt;code&gt;Observable&lt;/code&gt; can be returned&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;printResults()&lt;/p&gt;
+
+&lt;p&gt;Blocks until the &lt;code&gt;Observable&lt;/code&gt; is completed, and prints out each result.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;printHeadResult()&lt;/p&gt;
+
+&lt;p&gt;Blocks until the first result of the &lt;code&gt;Observable&lt;/code&gt; is available and then prints it.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

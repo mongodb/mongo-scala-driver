@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Integrations on MongoDB Scala Driver</title>
+    <link>/mongo-scala-driver/2.2/integrations/</link>
+    <description>Recent content in Integrations on MongoDB Scala Driver</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 19 Jul 2015 14:27:51 -0400</lastBuildDate>
+    <atom:link href="/mongo-scala-driver/2.2/integrations/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Integrations</title>
+      <link>/mongo-scala-driver/2.2/integrations/</link>
+      <pubDate>Sun, 19 Jul 2015 14:27:51 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/2.2/integrations/</guid>
+      <description>
+
+&lt;h1 id=&#34;integrations&#34;&gt;Integrations&lt;/h1&gt;
+
+&lt;p&gt;The &lt;code&gt;Observable&lt;/code&gt;, &lt;code&gt;Observer&lt;/code&gt; and &lt;code&gt;Subscription&lt;/code&gt; implementation draws inspiration from the &lt;a href=&#34;http://reactivex.io/&#34;&gt;ReactiveX&lt;/a&gt; and &lt;a href=&#34;http://www.reactive-streams.org&#34;&gt;reactive streams&lt;/a&gt; libraries and provides easy interoperability with them.  For more information about these classes please see the &lt;a href=&#34;/mongo-scala-driver/2.2/mongo-scala-driver/2.2/getting-started/quick-tour-primer/&#34;&gt;quick tour primer&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;rxscala&#34;&gt;RxScala&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;/mongo-scala-driver/2.2/mongo-scala-driver/2.2/img/mongoRxLogo.png&#34; title=&#34;RxScala&#34; class=&#34;align-left&#34;/&gt;
+&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href=&#34;http://reactivex.io/&#34;&gt;ReactiveX&lt;/a&gt; scala driver (RxScala) provides extra composability of &lt;code&gt;Observables&lt;/code&gt; compared to the MongoDB &lt;code&gt;Observable&lt;/code&gt; implementation.&lt;/p&gt;
+
+&lt;p&gt;An example implicit based implementation can be found in the &lt;a href=&#34;https://github.com/mongodb/mongo-scala-driver/blob/master/examples/src/test/scala/rxScala
+&#34;&gt;examples folder&lt;/a&gt;.  This includes an implicit based conversion from &lt;code&gt;Observable&lt;/code&gt; to &lt;code&gt;rx.Observable&lt;/code&gt; and an example of it being used.&lt;/p&gt;
+
+&lt;p&gt;The example uses the &lt;a href=&#34;http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Observable$@apply[T](f:rx.lang.scala.Subscriber[T]=&amp;gt;Unit):rx.lang.scala.Observable[T]&#34;&gt;&lt;code&gt;Observable.apply(f: (Subscriber[T]) =&amp;gt; Unit)&lt;/code&gt;&lt;/a&gt; method to return a cold observable.  It also implements the &lt;a href=&#34;http://reactivex.io/rxscala/scaladoc/index.html#rx.lang.scala.Producer&#34;&gt;&lt;code&gt;Producer&lt;/code&gt;&lt;/a&gt; trait, so the &lt;code&gt;Observable&lt;/code&gt; can honor &amp;ldquo;Backpressure&amp;rdquo; when when using any of the &lt;a href=&#34;http://reactivex.io/documentation/operators/backpressure.html&#34;&gt;backpressure operators&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;reactive-streams&#34;&gt;Reactive Streams&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;/mongo-scala-driver/2.2/mongo-scala-driver/2.2/img/mongoReactiveLogo.png&#34; title=&#34;RxScala&#34; class=&#34;align-right&#34;/&gt;
+&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href=&#34;http://www.reactive-streams.org&#34;&gt;Reactive streams&lt;/a&gt; initiative provides interfaces that allow reactive stream based systems to interact. The API is similar to the MongoDB &lt;code&gt;Observable&lt;/code&gt; API but without the composability of the MongoDB implementation.&lt;/p&gt;
+
+&lt;p&gt;Converting from an &lt;code&gt;Observable&lt;/code&gt; to a &lt;code&gt;Publisher&lt;/code&gt; is a simple process and can be done in a few short lines of code. An implicit based conversion can be found in the &lt;a href=&#34;https://github.com/mongodb/mongo-scala-driver/blob/master/examples/src/test/scala/rxStreams
+&#34;&gt;examples folder&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

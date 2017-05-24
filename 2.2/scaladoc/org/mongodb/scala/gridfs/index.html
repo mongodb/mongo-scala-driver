@@ -1,0 +1,631 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+          <title>Mongo Scala Driver  - org.mongodb.scala.gridfs</title>
+          <meta name="description" content="Mongo Scala Driver - org.mongodb.scala.gridfs" />
+          <meta name="keywords" content="Mongo Scala Driver org.mongodb.scala.gridfs" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery.panzoom.min.js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery.mousewheel.min.js"></script>
+      <script type="text/javascript" src="../../../../lib/index.js"></script>
+      <script type="text/javascript" src="../../../../index.js"></script>
+      <script type="text/javascript" src="../../../../lib/scheduler.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      <script type="text/javascript" src="../../../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../../../lib/diagrams.js" id="diagrams-js"></script>
+      <script type="text/javascript">
+        /* this variable can be used by the JS to determine the path to the root document */
+        var toRoot = '../../../../';
+      </script>
+    
+        </head>
+        <body>
+      <div id="search">
+        <span id="doc-title">Mongo Scala Driver<span id="doc-version"></span></span>
+        <span class="close-results"><span class="left">&lt;</span> Back</span>
+        <div id="textfilter">
+          <span class="input">
+            <input autocapitalize="none" placeholder="Search" id="index-input" type="text" accesskey="/" />
+            <i class="clear material-icons"></i>
+            <i id="search-icon" class="material-icons"></i>
+          </span>
+        </div>
+    </div>
+      <div id="search-results">
+        <div id="search-progress">
+          <div id="progress-fill"></div>
+        </div>
+        <div id="results-content">
+          <div id="entity-results"></div>
+          <div id="member-results"></div>
+        </div>
+      </div>
+      <div id="content-scroll-container" style="-webkit-overflow-scrolling: touch;">
+        <div id="content-container" style="-webkit-overflow-scrolling: touch;">
+          <div id="subpackage-spacer">
+            <div id="packages">
+              <h1>Packages</h1>
+              <ul>
+                <li name="_root_.root" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="_root_"></a><a id="root:_root_"></a>
+      <span class="permalink">
+      <a href="index.html#_root_" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="This is the documentation for the MongoDB Scala driver." href="../../../../index.html"><span class="name">root</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">This is the documentation for the MongoDB Scala driver.</p><div class="fullcomment"><div class="comment cmt"><p>This is the documentation for the MongoDB Scala driver.</p><h4> Driver structure </h4><p>The <a href="http://mongodb.org" target="_blank">mongodb</a> scala driver.</p><p>To get started you need a <a href="../MongoClient.html" class="extype" name="org.mongodb.scala.MongoClient">MongoClient</a> instance, either from a
+<a href="http://docs.mongodb.org/manual/reference/connection-string/" target="_blank">connection string</a> or via a <a href="../index.html#MongoClientSettings=com.mongodb.async.client.MongoClientSettings" class="extmbr" name="org.mongodb.scala.MongoClientSettings">org.mongodb.scala.MongoClientSettings</a>.</p><p>Notable packages include:</p><ul><li><a href="../MongoClient.html" class="extype" name="org.mongodb.scala.MongoClient">MongoClient</a> The MongoClient used to connect and access MongoDB</li><li><a href="../MongoDatabase.html" class="extype" name="org.mongodb.scala.MongoDatabase">MongoDatabase</a> Providing access to a specific database</li><li><a href="../MongoCollection.html" class="extype" name="org.mongodb.scala.MongoCollection">MongoCollection</a> Providing access to a specific collection in a database.</li></ul></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
+    </li><li name="_root_.org" visbl="pub" class="indented1 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="org"></a><a id="org:org"></a>
+      <span class="permalink">
+      <a href="index.html#org" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../../../index.html"><span class="name">org</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
+    </li><li name="org.mongodb" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="mongodb"></a><a id="mongodb:mongodb"></a>
+      <span class="permalink">
+      <a href="../org/index.html#mongodb" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../../index.html"><span class="name">mongodb</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../index.html" class="extype" name="org">org</a></dd></dl></div>
+    </li><li name="org.mongodb.scala" visbl="pub" class="indented3 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="scala"></a><a id="scala:scala"></a>
+      <span class="permalink">
+      <a href="../../org/mongodb/index.html#scala" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="The MongoDB Scala Driver package" href="../index.html"><span class="name">scala</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">The MongoDB Scala Driver package</p><div class="fullcomment"><div class="comment cmt"><p>The MongoDB Scala Driver package</p><p>Contains type aliases and companion objects to help when using the Scala API
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="org.mongodb">mongodb</a></dd><dt>Since</dt><dd><p>1.0</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.bson" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="bson"></a><a id="bson:bson"></a>
+      <span class="permalink">
+      <a href="../../../org/mongodb/scala/index.html#bson" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="The bson package, contains mirrors and companion objects for Bson values." href="../bson/index.html"><span class="name">bson</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">The bson package, contains mirrors and companion objects for <code>Bson</code> values.</p><div class="fullcomment"><div class="comment cmt"><p>The bson package, contains mirrors and companion objects for <code>Bson</code> values.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="org.mongodb.scala">scala</a></dd></dl></div>
+    </li><li name="org.mongodb.scala.connection" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="connection"></a><a id="connection:connection"></a>
+      <span class="permalink">
+      <a href="../../../org/mongodb/scala/index.html#connection" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="The connection package contains classes that manage connecting to MongoDB servers." href="../connection/index.html"><span class="name">connection</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">The connection package contains classes that manage connecting to MongoDB servers.</p><div class="fullcomment"><div class="comment cmt"><p>The connection package contains classes that manage connecting to MongoDB servers.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="org.mongodb.scala">scala</a></dd></dl></div>
+    </li><li name="org.mongodb.scala.gridfs" visbl="pub" class="indented4 current" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="gridfs"></a><a id="gridfs:gridfs"></a>
+      <span class="permalink">
+      <a href="../../../org/mongodb/scala/index.html#gridfs" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">gridfs</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="org.mongodb.scala">scala</a></dd></dl></div>
+    </li><li name="org.mongodb.scala.gridfs.helpers" visbl="pub" class="indented5 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="helpers"></a><a id="helpers:helpers"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#helpers" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="Contains helper classes to create org.mongodb.scala.gridfs.AsyncInputStream or org.mongodb.scala.gridfs.AsyncOutputStream instances from external sources." href="helpers/index.html"><span class="name">helpers</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">Contains helper classes to create <a href="AsyncInputStream.html" class="extype" name="org.mongodb.scala.gridfs.AsyncInputStream">org.mongodb.scala.gridfs.AsyncInputStream</a> or <a href="AsyncOutputStream.html" class="extype" name="org.mongodb.scala.gridfs.AsyncOutputStream">org.mongodb.scala.gridfs.AsyncOutputStream</a>
+instances from external sources.</p>
+    </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="trait" href="AsyncInputStream.html" title="The Async Input Stream interface represents some asynchronous input stream of bytes."></a>
+                        <a href="AsyncInputStream.html" title="The Async Input Stream interface represents some asynchronous input stream of bytes.">AsyncInputStream</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="trait" href="AsyncOutputStream.html" title="The Async Output Stream interface represents some asynchronous output stream of bytes."></a>
+                        <a href="AsyncOutputStream.html" title="The Async Output Stream interface represents some asynchronous output stream of bytes.">AsyncOutputStream</a>
+                      </li><li class="current-entities indented4">
+                        <a class="object" href="GridFSBucket$.html" title="A factory for GridFSBucket instances."></a>
+                        <a class="class" href="GridFSBucket.html" title="Represents a GridFS Bucket"></a>
+                        <a href="GridFSBucket.html" title="Represents a GridFS Bucket">GridFSBucket</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="GridFSDownloadStream.html" title="A GridFS InputStream for downloading data from GridFS"></a>
+                        <a href="GridFSDownloadStream.html" title="A GridFS InputStream for downloading data from GridFS">GridFSDownloadStream</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="GridFSFindObservable.html" title="Observable representing the GridFS Files Collection."></a>
+                        <a href="GridFSFindObservable.html" title="Observable representing the GridFS Files Collection.">GridFSFindObservable</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="GridFSUploadStream.html" title="A GridFS OutputStream for uploading data into GridFS"></a>
+                        <a href="GridFSUploadStream.html" title="A GridFS OutputStream for uploading data into GridFS">GridFSUploadStream</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="package$$JavaAsyncInputStreamToScala.html" title=""></a>
+                        <a href="package$$JavaAsyncInputStreamToScala.html" title="">JavaAsyncInputStreamToScala</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="package$$JavaAsyncOutputStreamToScala.html" title=""></a>
+                        <a href="package$$JavaAsyncOutputStreamToScala.html" title="">JavaAsyncOutputStreamToScala</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="package$$ScalaAsyncInputStreamToJava.html" title=""></a>
+                        <a href="package$$ScalaAsyncInputStreamToJava.html" title="">ScalaAsyncInputStreamToJava</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="package$$ScalaAsyncOutputStreamToJava.html" title=""></a>
+                        <a href="package$$ScalaAsyncOutputStreamToJava.html" title="">ScalaAsyncOutputStreamToJava</a>
+                      </li><li name="org.mongodb.scala.model" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="model"></a><a id="model:model"></a>
+      <span class="permalink">
+      <a href="../../../org/mongodb/scala/index.html#model" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="The model package containing models and options that help describe MongoCollection operations" href="../model/index.html"><span class="name">model</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">The model package containing models and options that help describe <code>MongoCollection</code> operations
+</p><div class="fullcomment"><div class="comment cmt"><p>The model package containing models and options that help describe <code>MongoCollection</code> operations
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="org.mongodb.scala">scala</a></dd></dl></div>
+    </li>
+              </ul>
+            </div>
+          </div>
+          <div id="content">
+            <body class="package value">
+      <div id="definition">
+        <div class="big-circle package">p</div>
+        <p id="owner"><a href="../../../index.html" class="extype" name="org">org</a>.<a href="../../index.html" class="extype" name="org.mongodb">mongodb</a>.<a href="../index.html" class="extype" name="org.mongodb.scala">scala</a></p>
+        <h1>gridfs<span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span></h1>
+        
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">gridfs</span>
+      </span>
+      </h4>
+
+      
+          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <span class="toggle">
+            Linear Supertypes
+          </span>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></div>
+        </div><div class="toggleContainer block diagram-container" id="content-diagram-container">
+                <span class="toggle diagram-link">
+                  Content Hierarchy
+                </span>
+                <div class="diagram" id="content-diagram"><svg class="package-diagram" id="graph1" viewBox="0.00 0.00 689.50 94.00" height="94pt" width="690pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 90)" class="graph" id="graph0"><polygon points="-4,4 -4,-90 685.5,-90 685.5,4 -4,4" stroke="none" fill="white"></polygon><!-- node0 --><g class="node class" id="graph1_0"><g id="a_class|graph1_0"><a xlink:title="org.mongodb.scala.gridfs.JavaAsyncOutputStreamToScala" xlink:href="package$$JavaAsyncOutputStreamToScala.html#inheritance-diagram"><path d="M170.667,-25C170.667,-25 8.33333,-25 8.33333,-25 4.16667,-25 0,-20.8333 0,-16.6667 0,-16.6667 0,-8.33333 0,-8.33333 0,-4.16667 4.16667,-0 8.33333,-0 8.33333,-0 170.667,-0 170.667,-0 174.833,-0 179,-4.16667 179,-8.33333 179,-8.33333 179,-16.6667 179,-16.6667 179,-20.8333 174.833,-25 170.667,-25" stroke="#418565" fill="#418565"></path><image xlink:href="../../../../lib/class_diagram.png" y="-19.5" x="10.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="31.5" text-anchor="start">JavaAsyncOutputStreamToScala</text></a></g></g><!-- node1 --><g class="node class" id="graph1_1"><g id="a_class|graph1_1"><a xlink:title="org.mongodb.scala.gridfs.JavaAsyncInputStreamToScala" xlink:href="package$$JavaAsyncInputStreamToScala.html#inheritance-diagram"><path d="M510.667,-25C510.667,-25 356.333,-25 356.333,-25 352.167,-25 348,-20.8333 348,-16.6667 348,-16.6667 348,-8.33333 348,-8.33333 348,-4.16667 352.167,-0 356.333,-0 356.333,-0 510.667,-0 510.667,-0 514.833,-0 519,-4.16667 519,-8.33333 519,-8.33333 519,-16.6667 519,-16.6667 519,-20.8333 514.833,-25 510.667,-25" stroke="#418565" fill="#418565"></path><image xlink:href="../../../../lib/class_diagram.png" y="-19.5" x="358.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="379.5" text-anchor="start">JavaAsyncInputStreamToScala</text></a></g></g><!-- node2 --><g class="node class" id="graph1_2"><g id="a_class|graph1_2"><a xlink:title="org.mongodb.scala.gridfs.GridFSUploadStream" xlink:href="GridFSUploadStream.html#inheritance-diagram"><path d="M321.167,-25C321.167,-25 205.833,-25 205.833,-25 201.667,-25 197.5,-20.8333 197.5,-16.6667 197.5,-16.6667 197.5,-8.33333 197.5,-8.33333 197.5,-4.16667 201.667,-0 205.833,-0 205.833,-0 321.167,-0 321.167,-0 325.333,-0 329.5,-4.16667 329.5,-8.33333 329.5,-8.33333 329.5,-16.6667 329.5,-16.6667 329.5,-20.8333 325.333,-25 321.167,-25" stroke="#418565" fill="#418565"></path><image xlink:href="../../../../lib/class_diagram.png" y="-19.5" x="207.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="228.5" text-anchor="start">GridFSUploadStream</text></a></g></g><!-- node3 --><g class="node class" id="graph1_3"><g id="a_class|graph1_3"><a xlink:title="org.mongodb.scala.gridfs.GridFSDownloadStream" xlink:href="GridFSDownloadStream.html#inheritance-diagram"><path d="M673.167,-25C673.167,-25 545.833,-25 545.833,-25 541.667,-25 537.5,-20.8333 537.5,-16.6667 537.5,-16.6667 537.5,-8.33333 537.5,-8.33333 537.5,-4.16667 541.667,-0 545.833,-0 545.833,-0 673.167,-0 673.167,-0 677.333,-0 681.5,-4.16667 681.5,-8.33333 681.5,-8.33333 681.5,-16.6667 681.5,-16.6667 681.5,-20.8333 677.333,-25 673.167,-25" stroke="#418565" fill="#418565"></path><image xlink:href="../../../../lib/class_diagram.png" y="-19.5" x="547.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="568.5" text-anchor="start">GridFSDownloadStream</text></a></g></g><!-- node4 --><g class="node trait" id="graph1_4"><g id="a_trait|graph1_4"><a xlink:title="org.mongodb.scala.gridfs.AsyncOutputStream" xlink:href="AsyncOutputStream.html#inheritance-diagram"><path d="M232.667,-86C232.667,-86 120.333,-86 120.333,-86 116.167,-86 112,-81.8333 112,-77.6667 112,-77.6667 112,-69.3333 112,-69.3333 112,-65.1667 116.167,-61 120.333,-61 120.333,-61 232.667,-61 232.667,-61 236.833,-61 241,-65.1667 241,-69.3333 241,-69.3333 241,-77.6667 241,-77.6667 241,-81.8333 236.833,-86 232.667,-86" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../../../../lib/trait_diagram.png" y="-80.5" x="122.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-71.1" x="143.5" text-anchor="start">AsyncOutputStream</text></a></g></g><!-- node4&#45;&gt;node0 --><g class="edge inheritance" id="graph1_4_0"><g id="a_inheritance|graph1_4_0"><a xlink:title="JavaAsyncOutputStreamToScala is a subtype of AsyncOutputStream"><path d="M153.295,-56.7633C138.626,-46.8155 119.989,-34.1764 106.653,-25.1323" stroke="#d4d4d4" fill="none"></path><polygon points="152.143,-58.9423 159.312,-60.8435 154.893,-54.8869 152.143,-58.9423" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node4&#45;&gt;node2 --><g class="edge inheritance" id="graph1_4_2"><g id="a_inheritance|graph1_4_2"><a xlink:title="GridFSUploadStream is a subtype of AsyncOutputStream"><path d="M199.705,-56.7633C214.374,-46.8155 233.011,-34.1764 246.347,-25.1323" stroke="#d4d4d4" fill="none"></path><polygon points="198.107,-54.8869 193.688,-60.8435 200.857,-58.9423 198.107,-54.8869" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node5 --><g class="node trait" id="graph1_5"><g id="a_trait|graph1_5"><a xlink:title="org.mongodb.scala.gridfs.AsyncInputStream" xlink:href="AsyncInputStream.html#inheritance-diagram"><path d="M574.167,-86C574.167,-86 468.833,-86 468.833,-86 464.667,-86 460.5,-81.8333 460.5,-77.6667 460.5,-77.6667 460.5,-69.3333 460.5,-69.3333 460.5,-65.1667 464.667,-61 468.833,-61 468.833,-61 574.167,-61 574.167,-61 578.333,-61 582.5,-65.1667 582.5,-69.3333 582.5,-69.3333 582.5,-77.6667 582.5,-77.6667 582.5,-81.8333 578.333,-86 574.167,-86" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../../../../lib/trait_diagram.png" y="-80.5" x="470.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-71.1" x="491.5" text-anchor="start">AsyncInputStream</text></a></g></g><!-- node5&#45;&gt;node1 --><g class="edge inheritance" id="graph1_5_1"><g id="a_inheritance|graph1_5_1"><a xlink:title="JavaAsyncInputStreamToScala is a subtype of AsyncInputStream"><path d="M498.028,-56.7633C483.191,-46.8155 464.339,-34.1764 450.85,-25.1323" stroke="#d4d4d4" fill="none"></path><polygon points="496.935,-58.9803 504.114,-60.8435 499.664,-54.9104 496.935,-58.9803" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node5&#45;&gt;node3 --><g class="edge inheritance" id="graph1_5_3"><g id="a_inheritance|graph1_5_3"><a xlink:title="GridFSDownloadStream is a subtype of AsyncInputStream"><path d="M544.972,-56.7633C559.809,-46.8155 578.661,-34.1764 592.15,-25.1323" stroke="#d4d4d4" fill="none"></path><polygon points="543.336,-54.9104 538.886,-60.8435 546.065,-58.9803 543.336,-54.9104" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+                <div id="diagram-controls" class="hiddenContent">
+                  <button id="diagram-zoom-out" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button id="diagram-zoom-in" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button title="Toggle full-screen" id="diagram-fs" class="diagram-btn to-full"><i class="material-icons"></i></button>
+                </div>
+              </div></div>
+        
+
+      <div id="mbrsel">
+        <div class="toggle"></div>
+        <div id="memberfilter">
+          <i class="material-icons arrow"></i>
+          <span class="input">
+            <input id="mbrsel-input" placeholder="Filter all members" type="text" accesskey="/" />
+          </span>
+          <i class="clear material-icons"></i>
+        </div>
+        <div id="filterby">
+          <div id="order">
+            <span class="filtertype">Ordering</span>
+            <ol>
+              
+              <li class="alpha in"><span>Alphabetic</span></li>
+              <li class="inherit out"><span>By Inheritance</span></li>
+            </ol>
+          </div>
+          <div class="ancestors">
+                  <span class="filtertype">Inherited<br />
+                  </span>
+                  <ol id="linearization">
+                    <li class="in" name="org.mongodb.scala.gridfs"><span>gridfs</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  </ol>
+                </div><div class="ancestors">
+              <span class="filtertype"></span>
+              <ol>
+                <li class="hideall out"><span>Hide All</span></li>
+                <li class="showall in"><span>Show All</span></li>
+              </ol>
+            </div>
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+            </div>
+        </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="org.mongodb.scala.gridfs.AsyncInputStream" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="AsyncInputStreamextendsAnyRef"></a><a id="AsyncInputStream:AsyncInputStream"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#AsyncInputStreamextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="The Async Input Stream interface represents some asynchronous input stream of bytes." href="AsyncInputStream.html"><span class="name">AsyncInputStream</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">The Async Input Stream interface represents some asynchronous input stream of bytes.</p><div class="fullcomment"><div class="comment cmt"><p>The Async Input Stream interface represents some asynchronous input stream of bytes.</p><p>See the <a href="helpers/index.html" class="extype" name="org.mongodb.scala.gridfs.helpers">org.mongodb.scala.gridfs.helpers</a> package for adapters that create an <code>AsyncInputStream</code>
+</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.2</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.gridfs.AsyncOutputStream" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="AsyncOutputStreamextendsAnyRef"></a><a id="AsyncOutputStream:AsyncOutputStream"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#AsyncOutputStreamextendsAnyRef" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a title="The Async Output Stream interface represents some asynchronous output stream of bytes." href="AsyncOutputStream.html"><span class="name">AsyncOutputStream</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">The Async Output Stream interface represents some asynchronous output stream of bytes.</p><div class="fullcomment"><div class="comment cmt"><p>The Async Output Stream interface represents some asynchronous output stream of bytes.</p><p>See the <a href="helpers/index.html" class="extype" name="org.mongodb.scala.gridfs.helpers">org.mongodb.scala.gridfs.helpers</a> package for adapters that create an <code>AsyncOutputStream</code>
+</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.2</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.gridfs.GridFSBucket" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="GridFSBucketextendsProductwithSerializable"></a><a id="GridFSBucket:GridFSBucket"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#GridFSBucketextendsProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="Represents a GridFS Bucket" href="GridFSBucket.html"><span class="name">GridFSBucket</span></a><span class="params">(<span name="wrapped">wrapped: <a href="http://api.mongodb.org/java/current/com/mongodb/async/client/gridfs/GridFSBucket.html#com.mongodb.async.client.gridfs.GridFSBucket" class="extype" name="com.mongodb.async.client.gridfs.GridFSBucket">com.mongodb.async.client.gridfs.GridFSBucket</a></span>)</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.4/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Represents a GridFS Bucket
+</p><div class="fullcomment"><div class="comment cmt"><p>Represents a GridFS Bucket
+</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.2</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.gridfs.GridFSDownloadOptions" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="GridFSDownloadOptions=com.mongodb.client.gridfs.model.GridFSDownloadOptions"></a><a id="GridFSDownloadOptions:GridFSDownloadOptions"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#GridFSDownloadOptions=com.mongodb.client.gridfs.model.GridFSDownloadOptions" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">GridFSDownloadOptions</span><span class="result alias"> = <a href="http://api.mongodb.org/java/current/com/mongodb/client/gridfs/model/GridFSDownloadOptions.html#com.mongodb.client.gridfs.model.GridFSDownloadOptions" class="extype" name="com.mongodb.client.gridfs.model.GridFSDownloadOptions">com.mongodb.client.gridfs.model.GridFSDownloadOptions</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">The GridFS download by name options</p><div class="fullcomment"><div class="comment cmt"><p>The GridFS download by name options</p><p>Controls the selection of the revision to download
+</p></div></div>
+    </li><li name="org.mongodb.scala.gridfs.GridFSDownloadStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="GridFSDownloadStreamextendsAsyncInputStreamwithProductwithSerializable"></a><a id="GridFSDownloadStream:GridFSDownloadStream"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#GridFSDownloadStreamextendsAsyncInputStreamwithProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="A GridFS InputStream for downloading data from GridFS" href="GridFSDownloadStream.html"><span class="name">GridFSDownloadStream</span></a><span class="params">(<span name="wrapped">wrapped: <a href="http://api.mongodb.org/java/current/com/mongodb/async/client/gridfs/GridFSDownloadStream.html#com.mongodb.async.client.gridfs.GridFSDownloadStream" class="extype" name="com.mongodb.async.client.gridfs.GridFSDownloadStream">com.mongodb.async.client.gridfs.GridFSDownloadStream</a></span>)</span><span class="result"> extends <a href="AsyncInputStream.html" class="extype" name="org.mongodb.scala.gridfs.AsyncInputStream">AsyncInputStream</a> with <a href="http://www.scala-lang.org/api/2.12.4/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.4/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A GridFS InputStream for downloading data from GridFS</p><div class="fullcomment"><div class="comment cmt"><p>A GridFS InputStream for downloading data from GridFS</p><p>Provides the <code>GridFSFile</code> for the file to being downloaded as well as the <code>read</code> methods of a <code>AsyncInputStream</code>
+</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.2</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.gridfs.GridFSFile" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GridFSFile=com.mongodb.client.gridfs.model.GridFSFile"></a><a id="GridFSFile:GridFSFile"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#GridFSFile=com.mongodb.client.gridfs.model.GridFSFile" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">GridFSFile</span><span class="result alias"> = <a href="http://api.mongodb.org/java/current/com/mongodb/client/gridfs/model/GridFSFile.html#com.mongodb.client.gridfs.model.GridFSFile" class="extype" name="com.mongodb.client.gridfs.model.GridFSFile">com.mongodb.client.gridfs.model.GridFSFile</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">The GridFSFile
+</p>
+    </li><li name="org.mongodb.scala.gridfs.GridFSFindObservable" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="GridFSFindObservableextendsObservable[org.mongodb.scala.gridfs.GridFSFile]withProductwithSerializable"></a><a id="GridFSFindObservable:GridFSFindObservable"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#GridFSFindObservableextendsObservable[org.mongodb.scala.gridfs.GridFSFile]withProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="Observable representing the GridFS Files Collection." href="GridFSFindObservable.html"><span class="name">GridFSFindObservable</span></a><span class="params">(<span name="wrapped">wrapped: <a href="http://api.mongodb.org/java/current/com/mongodb/async/client/gridfs/GridFSFindIterable.html#com.mongodb.async.client.gridfs.GridFSFindIterable" class="extype" name="com.mongodb.async.client.gridfs.GridFSFindIterable">GridFSFindIterable</a></span>)</span><span class="result"> extends <a href="../Observable.html" class="extype" name="org.mongodb.scala.Observable">Observable</a>[<a href="#GridFSFile=com.mongodb.client.gridfs.model.GridFSFile" class="extmbr" name="org.mongodb.scala.gridfs.GridFSFile">GridFSFile</a>] with <a href="http://www.scala-lang.org/api/2.12.4/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.4/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Observable representing the GridFS Files Collection.</p><div class="fullcomment"><div class="comment cmt"><p>Observable representing the GridFS Files Collection.
+</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.2</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.gridfs.GridFSUploadOptions" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="GridFSUploadOptions=com.mongodb.client.gridfs.model.GridFSUploadOptions"></a><a id="GridFSUploadOptions:GridFSUploadOptions"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#GridFSUploadOptions=com.mongodb.client.gridfs.model.GridFSUploadOptions" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">GridFSUploadOptions</span><span class="result alias"> = <a href="http://api.mongodb.org/java/current/com/mongodb/client/gridfs/model/GridFSUploadOptions.html#com.mongodb.client.gridfs.model.GridFSUploadOptions" class="extype" name="com.mongodb.client.gridfs.model.GridFSUploadOptions">com.mongodb.client.gridfs.model.GridFSUploadOptions</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">GridFS upload options</p><div class="fullcomment"><div class="comment cmt"><p>GridFS upload options</p><p>Customizable options used when uploading files into GridFS
+</p></div></div>
+    </li><li name="org.mongodb.scala.gridfs.GridFSUploadStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="GridFSUploadStreamextendsAsyncOutputStreamwithProductwithSerializable"></a><a id="GridFSUploadStream:GridFSUploadStream"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#GridFSUploadStreamextendsAsyncOutputStreamwithProductwithSerializable" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a title="A GridFS OutputStream for uploading data into GridFS" href="GridFSUploadStream.html"><span class="name">GridFSUploadStream</span></a><span class="params">(<span name="wrapped">wrapped: <a href="http://api.mongodb.org/java/current/com/mongodb/async/client/gridfs/GridFSUploadStream.html#com.mongodb.async.client.gridfs.GridFSUploadStream" class="extype" name="com.mongodb.async.client.gridfs.GridFSUploadStream">com.mongodb.async.client.gridfs.GridFSUploadStream</a></span>)</span><span class="result"> extends <a href="AsyncOutputStream.html" class="extype" name="org.mongodb.scala.gridfs.AsyncOutputStream">AsyncOutputStream</a> with <a href="http://www.scala-lang.org/api/2.12.4/scala/Product.html#scala.Product" class="extype" name="scala.Product">Product</a> with <a href="http://www.scala-lang.org/api/2.12.4/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A GridFS OutputStream for uploading data into GridFS</p><div class="fullcomment"><div class="comment cmt"><p>A GridFS OutputStream for uploading data into GridFS</p><p>Provides the id for the file to be uploaded as well as the write methods of a AsyncOutputStream
+</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.2</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.gridfs.JavaAsyncInputStreamToScala" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JavaAsyncInputStreamToScalaextendsAsyncInputStream"></a><a id="JavaAsyncInputStreamToScala:JavaAsyncInputStreamToScala"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#JavaAsyncInputStreamToScalaextendsAsyncInputStream" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="package$$JavaAsyncInputStreamToScala.html"><span class="name">JavaAsyncInputStreamToScala</span></a><span class="result"> extends <a href="AsyncInputStream.html" class="extype" name="org.mongodb.scala.gridfs.AsyncInputStream">AsyncInputStream</a></span>
+      </span>
+      
+      
+    </li><li name="org.mongodb.scala.gridfs.JavaAsyncOutputStreamToScala" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JavaAsyncOutputStreamToScalaextendsAsyncOutputStream"></a><a id="JavaAsyncOutputStreamToScala:JavaAsyncOutputStreamToScala"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#JavaAsyncOutputStreamToScalaextendsAsyncOutputStream" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="package$$JavaAsyncOutputStreamToScala.html"><span class="name">JavaAsyncOutputStreamToScala</span></a><span class="result"> extends <a href="AsyncOutputStream.html" class="extype" name="org.mongodb.scala.gridfs.AsyncOutputStream">AsyncOutputStream</a></span>
+      </span>
+      
+      
+    </li><li name="org.mongodb.scala.gridfs.MongoGridFSException" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MongoGridFSException=com.mongodb.MongoGridFSException"></a><a id="MongoGridFSException:MongoGridFSException"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#MongoGridFSException=com.mongodb.MongoGridFSException" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">MongoGridFSException</span><span class="result alias"> = <a href="http://api.mongodb.org/java/current/com/mongodb/MongoGridFSException.html#com.mongodb.MongoGridFSException" class="extype" name="com.mongodb.MongoGridFSException">com.mongodb.MongoGridFSException</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">An exception indicating that a failure occurred in GridFS.</p>
+    </li><li name="org.mongodb.scala.gridfs.ScalaAsyncInputStreamToJava" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ScalaAsyncInputStreamToJavaextendsAsyncInputStream"></a><a id="ScalaAsyncInputStreamToJava:ScalaAsyncInputStreamToJava"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#ScalaAsyncInputStreamToJavaextendsAsyncInputStream" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="package$$ScalaAsyncInputStreamToJava.html"><span class="name">ScalaAsyncInputStreamToJava</span></a><span class="result"> extends <a href="http://api.mongodb.org/java/current/com/mongodb/async/client/gridfs/AsyncInputStream.html#com.mongodb.async.client.gridfs.AsyncInputStream" class="extype" name="com.mongodb.async.client.gridfs.AsyncInputStream">com.mongodb.async.client.gridfs.AsyncInputStream</a></span>
+      </span>
+      
+      
+    </li><li name="org.mongodb.scala.gridfs.ScalaAsyncOutputStreamToJava" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ScalaAsyncOutputStreamToJavaextendsAsyncOutputStream"></a><a id="ScalaAsyncOutputStreamToJava:ScalaAsyncOutputStreamToJava"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#ScalaAsyncOutputStreamToJavaextendsAsyncOutputStream" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="package$$ScalaAsyncOutputStreamToJava.html"><span class="name">ScalaAsyncOutputStreamToJava</span></a><span class="result"> extends <a href="http://api.mongodb.org/java/current/com/mongodb/async/client/gridfs/AsyncOutputStream.html#com.mongodb.async.client.gridfs.AsyncOutputStream" class="extype" name="com.mongodb.async.client.gridfs.AsyncOutputStream">com.mongodb.async.client.gridfs.AsyncOutputStream</a></span>
+      </span>
+      
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div class="values members">
+              <h3>Value Members</h3>
+              <ol>
+                <li name="org.mongodb.scala.gridfs.GridFSBucket" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="GridFSBucket"></a><a id="GridFSBucket:GridFSBucket"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/gridfs/index.html#GridFSBucket" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a title="A factory for GridFSBucket instances." href="GridFSBucket$.html"><span class="name">GridFSBucket</span></a><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/Serializable.html#scala.Serializable" class="extype" name="scala.Serializable">Serializable</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">A factory for GridFSBucket instances.</p><div class="fullcomment"><div class="comment cmt"><p>A factory for GridFSBucket instances.
+</p></div><dl class="attributes block"> <dt>Since</dt><dd><p>1.2</p></dd></dl></div>
+    </li>
+              </ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+    </body>
+          </div>
+        </div>
+      </div>
+    </body>
+      </html>

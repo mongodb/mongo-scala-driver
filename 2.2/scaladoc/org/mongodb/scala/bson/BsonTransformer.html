@@ -1,0 +1,810 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+          <title>Mongo Scala Driver  - org.mongodb.scala.bson.BsonTransformer</title>
+          <meta name="description" content="Mongo Scala Driver - org.mongodb.scala.bson.BsonTransformer" />
+          <meta name="keywords" content="Mongo Scala Driver org.mongodb.scala.bson.BsonTransformer" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/index.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery.panzoom.min.js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery.mousewheel.min.js"></script>
+      <script type="text/javascript" src="../../../../lib/index.js"></script>
+      <script type="text/javascript" src="../../../../index.js"></script>
+      <script type="text/javascript" src="../../../../lib/scheduler.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      <script type="text/javascript" src="../../../../lib/modernizr.custom.js"></script><script type="text/javascript" src="../../../../lib/diagrams.js" id="diagrams-js"></script>
+      <script type="text/javascript">
+        /* this variable can be used by the JS to determine the path to the root document */
+        var toRoot = '../../../../';
+      </script>
+    
+        </head>
+        <body>
+      <div id="search">
+        <span id="doc-title">Mongo Scala Driver<span id="doc-version"></span></span>
+        <span class="close-results"><span class="left">&lt;</span> Back</span>
+        <div id="textfilter">
+          <span class="input">
+            <input autocapitalize="none" placeholder="Search" id="index-input" type="text" accesskey="/" />
+            <i class="clear material-icons"></i>
+            <i id="search-icon" class="material-icons"></i>
+          </span>
+        </div>
+    </div>
+      <div id="search-results">
+        <div id="search-progress">
+          <div id="progress-fill"></div>
+        </div>
+        <div id="results-content">
+          <div id="entity-results"></div>
+          <div id="member-results"></div>
+        </div>
+      </div>
+      <div id="content-scroll-container" style="-webkit-overflow-scrolling: touch;">
+        <div id="content-container" style="-webkit-overflow-scrolling: touch;">
+          <div id="subpackage-spacer">
+            <div id="packages">
+              <h1>Packages</h1>
+              <ul>
+                <li name="_root_.root" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="_root_"></a><a id="root:_root_"></a>
+      <span class="permalink">
+      <a href="index.html#_root_" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="This is the documentation for the MongoDB Scala driver." href="../../../../index.html"><span class="name">root</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">This is the documentation for the MongoDB Scala driver.</p><div class="fullcomment"><div class="comment cmt"><p>This is the documentation for the MongoDB Scala driver.</p><h4> Driver structure </h4><p>The <a href="http://mongodb.org" target="_blank">mongodb</a> scala driver.</p><p>To get started you need a <a href="../MongoClient.html" class="extype" name="org.mongodb.scala.MongoClient">MongoClient</a> instance, either from a
+<a href="http://docs.mongodb.org/manual/reference/connection-string/" target="_blank">connection string</a> or via a <a href="../index.html#MongoClientSettings=com.mongodb.async.client.MongoClientSettings" class="extmbr" name="org.mongodb.scala.MongoClientSettings">org.mongodb.scala.MongoClientSettings</a>.</p><p>Notable packages include:</p><ul><li><a href="../MongoClient.html" class="extype" name="org.mongodb.scala.MongoClient">MongoClient</a> The MongoClient used to connect and access MongoDB</li><li><a href="../MongoDatabase.html" class="extype" name="org.mongodb.scala.MongoDatabase">MongoDatabase</a> Providing access to a specific database</li><li><a href="../MongoCollection.html" class="extype" name="org.mongodb.scala.MongoCollection">MongoCollection</a> Providing access to a specific collection in a database.</li></ul></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
+    </li><li name="_root_.org" visbl="pub" class="indented1 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="org"></a><a id="org:org"></a>
+      <span class="permalink">
+      <a href="index.html#org" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../../../index.html"><span class="name">org</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../../index.html" class="extype" name="_root_">root</a></dd></dl></div>
+    </li><li name="org.mongodb" visbl="pub" class="indented2 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="mongodb"></a><a id="mongodb:mongodb"></a>
+      <span class="permalink">
+      <a href="../org/index.html#mongodb" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="../../index.html"><span class="name">mongodb</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../../index.html" class="extype" name="org">org</a></dd></dl></div>
+    </li><li name="org.mongodb.scala" visbl="pub" class="indented3 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="scala"></a><a id="scala:scala"></a>
+      <span class="permalink">
+      <a href="../../org/mongodb/index.html#scala" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="The MongoDB Scala Driver package" href="../index.html"><span class="name">scala</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">The MongoDB Scala Driver package</p><div class="fullcomment"><div class="comment cmt"><p>The MongoDB Scala Driver package</p><p>Contains type aliases and companion objects to help when using the Scala API
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../../index.html" class="extype" name="org.mongodb">mongodb</a></dd><dt>Since</dt><dd><p>1.0</p></dd></dl></div>
+    </li><li name="org.mongodb.scala.bson" visbl="pub" class="indented4 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="bson"></a><a id="bson:bson"></a>
+      <span class="permalink">
+      <a href="../../../org/mongodb/scala/index.html#bson" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="The bson package, contains mirrors and companion objects for Bson values." href="index.html"><span class="name">bson</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">The bson package, contains mirrors and companion objects for <code>Bson</code> values.</p><div class="fullcomment"><div class="comment cmt"><p>The bson package, contains mirrors and companion objects for <code>Bson</code> values.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../index.html" class="extype" name="org.mongodb.scala">scala</a></dd></dl></div>
+    </li><li name="org.mongodb.scala.bson.annotations" visbl="pub" class="indented5 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="annotations"></a><a id="annotations:annotations"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/index.html#annotations" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="annotations/index.html"><span class="name">annotations</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="org.mongodb.scala.bson">bson</a></dd></dl></div>
+    </li><li name="org.mongodb.scala.bson.codecs" visbl="pub" class="indented5 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="codecs"></a><a id="codecs:codecs"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/index.html#codecs" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="" href="codecs/index.html"><span class="name">codecs</span></a>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="org.mongodb.scala.bson">bson</a></dd></dl></div>
+    </li><li name="org.mongodb.scala.bson.collection" visbl="pub" class="indented5 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="collection"></a><a id="collection:collection"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/index.html#collection" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a title="The collection package." href="collection/index.html"><span class="name">collection</span></a>
+      </span>
+      
+      <p class="shortcomment cmt">The collection package.</p><div class="fullcomment"><div class="comment cmt"><p>The collection package.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="index.html" class="extype" name="org.mongodb.scala.bson">bson</a></dd></dl></div>
+    </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonArray$.html" title="Companion helper for a BsonArray"></a>
+                        <a href="BsonArray$.html" title="Companion helper for a BsonArray">BsonArray</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonBinary$.html" title="Companion helper for a BsonBinary"></a>
+                        <a href="BsonBinary$.html" title="Companion helper for a BsonBinary">BsonBinary</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonBoolean$.html" title="Companion helper for a BsonBoolean"></a>
+                        <a href="BsonBoolean$.html" title="Companion helper for a BsonBoolean">BsonBoolean</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonDateTime$.html" title="Companion helper for a BsonDateTime"></a>
+                        <a href="BsonDateTime$.html" title="Companion helper for a BsonDateTime">BsonDateTime</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonDecimal128$.html" title="Companion helper for a BsonDecimal128"></a>
+                        <a href="BsonDecimal128$.html" title="Companion helper for a BsonDecimal128">BsonDecimal128</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonDocument$.html" title="Companion helper for a BsonDocument"></a>
+                        <a href="BsonDocument$.html" title="Companion helper for a BsonDocument">BsonDocument</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonDouble$.html" title="Companion helper for a BsonDouble"></a>
+                        <a href="BsonDouble$.html" title="Companion helper for a BsonDouble">BsonDouble</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonElement$.html" title="A companion helper for a BsonElement - the mapping from a name to a BsonValue."></a>
+                        <a href="BsonElement$.html" title="A companion helper for a BsonElement - the mapping from a name to a BsonValue.">BsonElement</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonInt32$.html" title="Companion helper for a BsonInt32"></a>
+                        <a href="BsonInt32$.html" title="Companion helper for a BsonInt32">BsonInt32</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonInt64$.html" title="Companion helper for a BsonInt64"></a>
+                        <a href="BsonInt64$.html" title="Companion helper for a BsonInt64">BsonInt64</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonJavaScript$.html" title="Companion helper for a BsonJavaScript"></a>
+                        <a href="BsonJavaScript$.html" title="Companion helper for a BsonJavaScript">BsonJavaScript</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonJavaScriptWithScope$.html" title="Companion helper for a BsonJavaScriptWithScope"></a>
+                        <a href="BsonJavaScriptWithScope$.html" title="Companion helper for a BsonJavaScriptWithScope">BsonJavaScriptWithScope</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonMagnets$.html" title="A magnet pattern implementation enforcing the validity of user provided native values being able to be converted into BsonValues."></a>
+                        <a href="BsonMagnets$.html" title="A magnet pattern implementation enforcing the validity of user provided native values being able to be converted into BsonValues.">BsonMagnets</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonMaxKey$.html" title="Companion helper for a BsonMaxKey"></a>
+                        <a href="BsonMaxKey$.html" title="Companion helper for a BsonMaxKey">BsonMaxKey</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonMinKey$.html" title="Companion helper for a BsonMinKey"></a>
+                        <a href="BsonMinKey$.html" title="Companion helper for a BsonMinKey">BsonMinKey</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonNull$.html" title="Companion helper for a BsonNull"></a>
+                        <a href="BsonNull$.html" title="Companion helper for a BsonNull">BsonNull</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonNumber$.html" title="Companion helper for a BsonNumber"></a>
+                        <a href="BsonNumber$.html" title="Companion helper for a BsonNumber">BsonNumber</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonObjectId$.html" title="Companion helper for a BsonObjectId"></a>
+                        <a href="BsonObjectId$.html" title="Companion helper for a BsonObjectId">BsonObjectId</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonRegularExpression$.html" title="Companion helper for a BsonRegularExpression"></a>
+                        <a href="BsonRegularExpression$.html" title="Companion helper for a BsonRegularExpression">BsonRegularExpression</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonString$.html" title="Companion helper for a BsonString"></a>
+                        <a href="BsonString$.html" title="Companion helper for a BsonString">BsonString</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonSymbol$.html" title="Companion helper for a BsonSymbol"></a>
+                        <a href="BsonSymbol$.html" title="Companion helper for a BsonSymbol">BsonSymbol</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonTimestamp$.html" title="Companion helper for a BsonTimestamp"></a>
+                        <a href="BsonTimestamp$.html" title="Companion helper for a BsonTimestamp">BsonTimestamp</a>
+                      </li><li class="current-entities indented4">
+                        <a class="object" href="BsonTransformer$.html" title="Maps the following native scala types to BsonValues:"></a>
+                        <a class="trait" href="" title="BsonTransformers allow the transformation of type T to their corresponding BsonValue."></a>
+                        <a href="" title="BsonTransformers allow the transformation of type T to their corresponding BsonValue.">BsonTransformer</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="BsonUndefined$.html" title="Companion helper for a BsonUndefined"></a>
+                        <a href="BsonUndefined$.html" title="Companion helper for a BsonUndefined">BsonUndefined</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="trait" href="DefaultBsonTransformers.html" title="Default BsonTransformers for native types."></a>
+                        <a href="DefaultBsonTransformers.html" title="Default BsonTransformers for native types.">DefaultBsonTransformers</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="object" href="DefaultHelper$.html" title="A helper containing the sealed DefaultsTo trait which is used to determine the default type for a given method."></a>
+                        <a href="DefaultHelper$.html" title="A helper containing the sealed DefaultsTo trait which is used to determine the default type for a given method.">DefaultHelper</a>
+                      </li><li class="current-entities indented4">
+                        <span class="separator"></span>
+                        <a class="class" href="package$$RichBsonElement.html" title="Implicit value class for a BsonElement allowing easy access to the key/value pair"></a>
+                        <a href="package$$RichBsonElement.html" title="Implicit value class for a BsonElement allowing easy access to the key/value pair">RichBsonElement</a>
+                      </li>
+              </ul>
+            </div>
+          </div>
+          <div id="content">
+            <body class="trait type">
+      <div id="definition">
+        <a href="BsonTransformer$.html" title="See companion object"><div class="big-circle trait-companion-object">t</div></a>
+        <p id="owner"><a href="../../../index.html" class="extype" name="org">org</a>.<a href="../../index.html" class="extype" name="org.mongodb">mongodb</a>.<a href="../index.html" class="extype" name="org.mongodb.scala">scala</a>.<a href="index.html" class="extype" name="org.mongodb.scala.bson">bson</a></p>
+        <h1><a href="BsonTransformer$.html" title="See companion object">BsonTransformer</a><span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span></h1>
+        <h3><span class="morelinks"><div>
+            Companion <a href="BsonTransformer$.html" title="See companion object">object BsonTransformer</a>
+          </div></span></h3>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <span class="name">BsonTransformer</span><span class="tparams">[<span name="T">-T</span>]</span><span class="result"> extends <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+      </span>
+      </h4>
+
+      
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>BsonTransformers allow the transformation of type <code>T</code> to their corresponding <a href="index.html#BsonValue=org.bson.BsonValue" class="extmbr" name="org.mongodb.scala.bson.BsonValue">BsonValue</a>.</p><p>Custom implementations can be written to implicitly to convert a <code>T</code> into a <a href="index.html#BsonValue=org.bson.BsonValue" class="extmbr" name="org.mongodb.scala.bson.BsonValue">BsonValue</a> so it can be stored in a <code>Document</code>.
+</p></div><dl class="paramcmts block"><dt class="tparam">T</dt><dd class="cmt"><p>the type of value to be transformed into a <a href="index.html#BsonValue=org.bson.BsonValue" class="extmbr" name="org.mongodb.scala.bson.BsonValue">BsonValue</a>.</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@implicitNotFound</span><span class="args">(<span>
+      
+      <span class="defval" name="&quot;No bson implicit transformer found for type ${T}. Implement or import an implicit BsonTransformer for this type.&quot;">...</span>
+    </span>)</span>
+              
+        </dd><dt>Since</dt><dd><p>1.0</p></dd></dl><div class="toggleContainer block">
+          <span class="toggle">
+            Linear Supertypes
+          </span>
+          <div class="superTypes hiddenContent"><a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a>, <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></div>
+        </div><div class="toggleContainer block">
+            <span class="toggle">
+              Known Subclasses
+            </span>
+            <div class="subClasses hiddenContent"><a href="DefaultBsonTransformers$TransformBigDecimal$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformBigDecimal">TransformBigDecimal</a>, <a href="DefaultBsonTransformers$TransformBinary$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformBinary">TransformBinary</a>, <a href="DefaultBsonTransformers$TransformBoolean$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformBoolean">TransformBoolean</a>, <a href="DefaultBsonTransformers$TransformBsonValue$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformBsonValue">TransformBsonValue</a>, <a href="DefaultBsonTransformers$TransformDateTime$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformDateTime">TransformDateTime</a>, <a href="DefaultBsonTransformers$TransformDecimal128$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformDecimal128">TransformDecimal128</a>, <a href="DefaultBsonTransformers$TransformDouble$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformDouble">TransformDouble</a>, <a href="DefaultBsonTransformers$TransformImmutableDocument$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformImmutableDocument">TransformImmutableDocument</a>, <a href="DefaultBsonTransformers$TransformInt$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformInt">TransformInt</a>, <a href="DefaultBsonTransformers$TransformLong$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformLong">TransformLong</a>, <a href="DefaultBsonTransformers$TransformMutableDocument$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformMutableDocument">TransformMutableDocument</a>, <a href="DefaultBsonTransformers$TransformNone$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformNone">TransformNone</a>, <a href="DefaultBsonTransformers$TransformObjectId$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformObjectId">TransformObjectId</a>, <a href="DefaultBsonTransformers$TransformRegex$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformRegex">TransformRegex</a>, <a href="DefaultBsonTransformers$TransformString$.html" class="extype" name="org.mongodb.scala.bson.DefaultBsonTransformers.TransformString">TransformString</a></div>
+          </div><div class="toggleContainer block diagram-container" id="inheritance-diagram-container">
+                <span class="toggle diagram-link">
+                  Type Hierarchy
+                </span>
+                <div class="diagram" id="inheritance-diagram"><svg class="class-diagram" id="graph1" viewBox="0.00 0.00 2149.50 155.00" height="155pt" width="2150pt" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"><g transform="scale(1 1) rotate(0) translate(4 151)" class="graph" id="graph0"><polygon points="-4,4 -4,-151 2145.5,-151 2145.5,4 -4,4" stroke="none" fill="white"></polygon><g class="cluster" id="clust1"></g><g class="cluster" id="clust2"></g><!-- node0 --><g class="node this trait" id="graph1_0"><g id="a_this trait|graph1_0"><a xlink:title="org.mongodb.scala.bson.BsonTransformer (this trait)" xlink:href="#inheritance-diagram"><path d="M1156.67,-86C1156.67,-86 1044.33,-86 1044.33,-86 1040.17,-86 1036,-81.8333 1036,-77.6667 1036,-77.6667 1036,-69.3333 1036,-69.3333 1036,-65.1667 1040.17,-61 1044.33,-61 1044.33,-61 1156.67,-61 1156.67,-61 1160.83,-61 1165,-65.1667 1165,-69.3333 1165,-69.3333 1165,-77.6667 1165,-77.6667 1165,-81.8333 1160.83,-86 1156.67,-86" stroke="#2e6d82" fill="#2e6d82"></path><image xlink:href="../../../../lib/trait_diagram.png" y="-80.5" x="1046.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-71.1" x="1067.5" text-anchor="start">BsonTransformer[T]</text></a></g></g><!-- node1 --><g class="node object" id="graph1_1"><g id="a_object|graph1_1"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformBigDecimal" xlink:href="DefaultBsonTransformers$TransformBigDecimal$.html#inheritance-diagram"><path d="M126.667,-25C126.667,-25 8.33333,-25 8.33333,-25 4.16667,-25 0,-20.8333 0,-16.6667 0,-16.6667 0,-8.33333 0,-8.33333 0,-4.16667 4.16667,-0 8.33333,-0 8.33333,-0 126.667,-0 126.667,-0 130.833,-0 135,-4.16667 135,-8.33333 135,-8.33333 135,-16.6667 135,-16.6667 135,-20.8333 130.833,-25 126.667,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="10.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="31.5" text-anchor="start">TransformBigDecimal</text></a></g></g><!-- node0&#45;&gt;node1 --><g class="edge inheritance" id="graph1_0_1"><g id="a_inheritance|graph1_0_1"><a xlink:title="TransformBigDecimal is a subtype of BsonTransformer[T]"><path d="M1028.5,-71.3977C868.817,-68.412 473.036,-58.0256 143.5,-25 140.712,-24.7205 137.869,-24.4096 135.001,-24.0741" stroke="#d4d4d4" fill="none"></path><polygon points="1028.88,-73.8551 1035.92,-71.5344 1028.97,-68.9559 1028.88,-73.8551" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node2 --><g class="node object" id="graph1_2"><g id="a_object|graph1_2"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformBinary" xlink:href="DefaultBsonTransformers$TransformBinary$.html#inheritance-diagram"><path d="M259.667,-25C259.667,-25 161.333,-25 161.333,-25 157.167,-25 153,-20.8333 153,-16.6667 153,-16.6667 153,-8.33333 153,-8.33333 153,-4.16667 157.167,-0 161.333,-0 161.333,-0 259.667,-0 259.667,-0 263.833,-0 268,-4.16667 268,-8.33333 268,-8.33333 268,-16.6667 268,-16.6667 268,-20.8333 263.833,-25 259.667,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="163.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="184.5" text-anchor="start">TransformBinary</text></a></g></g><!-- node0&#45;&gt;node2 --><g class="edge inheritance" id="graph1_0_2"><g id="a_inheritance|graph1_0_2"><a xlink:title="TransformBinary is a subtype of BsonTransformer[T]"><path d="M1028.91,-71.0716C885.76,-67.6193 554.195,-56.6297 277.5,-25 274.451,-24.6515 271.331,-24.2552 268.184,-23.8243" stroke="#d4d4d4" fill="none"></path><polygon points="1028.94,-73.523 1036,-71.2401 1029.06,-68.6244 1028.94,-73.523" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node3 --><g class="node object" id="graph1_3"><g id="a_object|graph1_3"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformBoolean" xlink:href="DefaultBsonTransformers$TransformBoolean$.html#inheritance-diagram"><path d="M400.167,-25C400.167,-25 294.833,-25 294.833,-25 290.667,-25 286.5,-20.8333 286.5,-16.6667 286.5,-16.6667 286.5,-8.33333 286.5,-8.33333 286.5,-4.16667 290.667,-0 294.833,-0 294.833,-0 400.167,-0 400.167,-0 404.333,-0 408.5,-4.16667 408.5,-8.33333 408.5,-8.33333 408.5,-16.6667 408.5,-16.6667 408.5,-20.8333 404.333,-25 400.167,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="296.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="317.5" text-anchor="start">TransformBoolean</text></a></g></g><!-- node0&#45;&gt;node3 --><g class="edge inheritance" id="graph1_0_3"><g id="a_inheritance|graph1_0_3"><a xlink:title="TransformBoolean is a subtype of BsonTransformer[T]"><path d="M1028.52,-69.7073C903.775,-64.3734 639.463,-50.8936 417.5,-25 414.564,-24.6575 411.564,-24.2782 408.536,-23.8719" stroke="#d4d4d4" fill="none"></path><polygon points="1028.71,-72.1675 1035.81,-70.0164 1028.92,-67.2719 1028.71,-72.1675" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node4 --><g class="node object" id="graph1_4"><g id="a_object|graph1_4"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformBsonValue" xlink:href="DefaultBsonTransformers$TransformBsonValue$.html#inheritance-diagram"><path d="M550.167,-25C550.167,-25 434.833,-25 434.833,-25 430.667,-25 426.5,-20.8333 426.5,-16.6667 426.5,-16.6667 426.5,-8.33333 426.5,-8.33333 426.5,-4.16667 430.667,-0 434.833,-0 434.833,-0 550.167,-0 550.167,-0 554.333,-0 558.5,-4.16667 558.5,-8.33333 558.5,-8.33333 558.5,-16.6667 558.5,-16.6667 558.5,-20.8333 554.333,-25 550.167,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="436.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="457.5" text-anchor="start">TransformBsonValue</text></a></g></g><!-- node0&#45;&gt;node4 --><g class="edge inheritance" id="graph1_0_4"><g id="a_inheritance|graph1_0_4"><a xlink:title="TransformBsonValue is a subtype of BsonTransformer[T]"><path d="M1028.74,-67.5533C926.237,-60.1589 732.096,-44.933 567.5,-25 564.623,-24.6516 561.687,-24.2781 558.722,-23.8865" stroke="#d4d4d4" fill="none"></path><polygon points="1028.8,-70.014 1035.96,-68.0721 1029.15,-65.1266 1028.8,-70.014" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node5 --><g class="node object" id="graph1_5"><g id="a_object|graph1_5"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformDateTime" xlink:href="DefaultBsonTransformers$TransformDateTime$.html#inheritance-diagram"><path d="M696.167,-25C696.167,-25 584.833,-25 584.833,-25 580.667,-25 576.5,-20.8333 576.5,-16.6667 576.5,-16.6667 576.5,-8.33333 576.5,-8.33333 576.5,-4.16667 580.667,-0 584.833,-0 584.833,-0 696.167,-0 696.167,-0 700.333,-0 704.5,-4.16667 704.5,-8.33333 704.5,-8.33333 704.5,-16.6667 704.5,-16.6667 704.5,-20.8333 700.333,-25 696.167,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="586.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="607.5" text-anchor="start">TransformDateTime</text></a></g></g><!-- node0&#45;&gt;node5 --><g class="edge inheritance" id="graph1_0_5"><g id="a_inheritance|graph1_0_5"><a xlink:title="TransformDateTime is a subtype of BsonTransformer[T]"><path d="M1028.33,-64.3874C950.529,-55.4675 823.09,-40.353 713.5,-25 710.578,-24.5906 707.591,-24.1619 704.576,-23.7208" stroke="#d4d4d4" fill="none"></path><polygon points="1028.47,-66.8692 1035.7,-65.2311 1029.03,-62.001 1028.47,-66.8692" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node6 --><g class="node object" id="graph1_6"><g id="a_object|graph1_6"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformDecimal128" xlink:href="DefaultBsonTransformers$TransformDecimal128$.html#inheritance-diagram"><path d="M851.667,-25C851.667,-25 731.333,-25 731.333,-25 727.167,-25 723,-20.8333 723,-16.6667 723,-16.6667 723,-8.33333 723,-8.33333 723,-4.16667 727.167,-0 731.333,-0 731.333,-0 851.667,-0 851.667,-0 855.833,-0 860,-4.16667 860,-8.33333 860,-8.33333 860,-16.6667 860,-16.6667 860,-20.8333 855.833,-25 851.667,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="733.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="754.5" text-anchor="start">TransformDecimal128</text></a></g></g><!-- node0&#45;&gt;node6 --><g class="edge inheritance" id="graph1_0_6"><g id="a_inheritance|graph1_0_6"><a xlink:title="TransformDecimal128 is a subtype of BsonTransformer[T]"><path d="M1033.05,-59.6204C979.043,-49.3091 903.979,-34.9766 851.923,-25.0371" stroke="#d4d4d4" fill="none"></path><polygon points="1032.85,-62.0777 1040.19,-60.9841 1033.77,-57.2647 1032.85,-62.0777" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node7 --><g class="node object" id="graph1_7"><g id="a_object|graph1_7"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformDouble" xlink:href="DefaultBsonTransformers$TransformDouble$.html#inheritance-diagram"><path d="M986.667,-25C986.667,-25 886.333,-25 886.333,-25 882.167,-25 878,-20.8333 878,-16.6667 878,-16.6667 878,-8.33333 878,-8.33333 878,-4.16667 882.167,-0 886.333,-0 886.333,-0 986.667,-0 986.667,-0 990.833,-0 995,-4.16667 995,-8.33333 995,-8.33333 995,-16.6667 995,-16.6667 995,-20.8333 990.833,-25 986.667,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="888.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="909.5" text-anchor="start">TransformDouble</text></a></g></g><!-- node0&#45;&gt;node7 --><g class="edge inheritance" id="graph1_0_7"><g id="a_inheritance|graph1_0_7"><a xlink:title="TransformDouble is a subtype of BsonTransformer[T]"><path d="M1061.87,-58.6017C1033.51,-48.3992 995.432,-34.7012 968.709,-25.0875" stroke="#d4d4d4" fill="none"></path><polygon points="1061.07,-60.9198 1068.49,-60.9841 1062.73,-56.3091 1061.07,-60.9198" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node8 --><g class="node object" id="graph1_8"><g id="a_object|graph1_8"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformImmutableDocument" xlink:href="DefaultBsonTransformers$TransformImmutableDocument$.html#inheritance-diagram"><path d="M1179.67,-25C1179.67,-25 1021.33,-25 1021.33,-25 1017.17,-25 1013,-20.8333 1013,-16.6667 1013,-16.6667 1013,-8.33333 1013,-8.33333 1013,-4.16667 1017.17,-0 1021.33,-0 1021.33,-0 1179.67,-0 1179.67,-0 1183.83,-0 1188,-4.16667 1188,-8.33333 1188,-8.33333 1188,-16.6667 1188,-16.6667 1188,-20.8333 1183.83,-25 1179.67,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="1023.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="1044.5" text-anchor="start">TransformImmutableDocument</text></a></g></g><!-- node0&#45;&gt;node8 --><g class="edge inheritance" id="graph1_0_8"><g id="a_inheritance|graph1_0_8"><a xlink:title="TransformImmutableDocument is a subtype of BsonTransformer[T]"><path d="M1100.5,-53.7603C1100.5,-44.3675 1100.5,-33.2882 1100.5,-25.1323" stroke="#d4d4d4" fill="none"></path><polygon points="1098.05,-53.8435 1100.5,-60.8435 1102.95,-53.8435 1098.05,-53.8435" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node9 --><g class="node object" id="graph1_9"><g id="a_object|graph1_9"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformInt" xlink:href="DefaultBsonTransformers$TransformInt$.html#inheritance-diagram"><path d="M1296.17,-25C1296.17,-25 1214.83,-25 1214.83,-25 1210.67,-25 1206.5,-20.8333 1206.5,-16.6667 1206.5,-16.6667 1206.5,-8.33333 1206.5,-8.33333 1206.5,-4.16667 1210.67,-0 1214.83,-0 1214.83,-0 1296.17,-0 1296.17,-0 1300.33,-0 1304.5,-4.16667 1304.5,-8.33333 1304.5,-8.33333 1304.5,-16.6667 1304.5,-16.6667 1304.5,-20.8333 1300.33,-25 1296.17,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="1216.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="1237.5" text-anchor="start">TransformInt</text></a></g></g><!-- node0&#45;&gt;node9 --><g class="edge inheritance" id="graph1_0_9"><g id="a_inheritance|graph1_0_9"><a xlink:title="TransformInt is a subtype of BsonTransformer[T]"><path d="M1137.35,-58.4723C1164.12,-48.2837 1199.91,-34.6606 1225.06,-25.0875" stroke="#d4d4d4" fill="none"></path><polygon points="1136.42,-56.2041 1130.75,-60.9841 1138.17,-60.7836 1136.42,-56.2041" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node10 --><g class="node object" id="graph1_10"><g id="a_object|graph1_10"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformLong" xlink:href="DefaultBsonTransformers$TransformLong$.html#inheritance-diagram"><path d="M1422.17,-25C1422.17,-25 1330.83,-25 1330.83,-25 1326.67,-25 1322.5,-20.8333 1322.5,-16.6667 1322.5,-16.6667 1322.5,-8.33333 1322.5,-8.33333 1322.5,-4.16667 1326.67,-0 1330.83,-0 1330.83,-0 1422.17,-0 1422.17,-0 1426.33,-0 1430.5,-4.16667 1430.5,-8.33333 1430.5,-8.33333 1430.5,-16.6667 1430.5,-16.6667 1430.5,-20.8333 1426.33,-25 1422.17,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="1332.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="1353.5" text-anchor="start">TransformLong</text></a></g></g><!-- node0&#45;&gt;node10 --><g class="edge inheritance" id="graph1_0_10"><g id="a_inheritance|graph1_0_10"><a xlink:title="TransformLong is a subtype of BsonTransformer[T]"><path d="M1161.33,-59.4964C1209.44,-49.2119 1275.99,-34.9851 1322.29,-25.0875" stroke="#d4d4d4" fill="none"></path><polygon points="1160.7,-57.1249 1154.37,-60.9841 1161.73,-61.9166 1160.7,-57.1249" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node11 --><g class="node object" id="graph1_11"><g id="a_object|graph1_11"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformMutableDocument" xlink:href="DefaultBsonTransformers$TransformMutableDocument$.html#inheritance-diagram"><path d="M1603.67,-25C1603.67,-25 1457.33,-25 1457.33,-25 1453.17,-25 1449,-20.8333 1449,-16.6667 1449,-16.6667 1449,-8.33333 1449,-8.33333 1449,-4.16667 1453.17,-0 1457.33,-0 1457.33,-0 1603.67,-0 1603.67,-0 1607.83,-0 1612,-4.16667 1612,-8.33333 1612,-8.33333 1612,-16.6667 1612,-16.6667 1612,-20.8333 1607.83,-25 1603.67,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="1459.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="1480.5" text-anchor="start">TransformMutableDocument</text></a></g></g><!-- node0&#45;&gt;node11 --><g class="edge inheritance" id="graph1_0_11"><g id="a_inheritance|graph1_0_11"><a xlink:title="TransformMutableDocument is a subtype of BsonTransformer[T]"><path d="M1172.59,-62.6088C1248.92,-52.1349 1369.19,-35.6334 1448.94,-24.6908" stroke="#d4d4d4" fill="none"></path><polygon points="1171.94,-60.2243 1165.34,-63.6032 1172.61,-65.0788 1171.94,-60.2243" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node12 --><g class="node object" id="graph1_12"><g id="a_object|graph1_12"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformNone" xlink:href="DefaultBsonTransformers$TransformNone$.html#inheritance-diagram"><path d="M1730.67,-25C1730.67,-25 1638.33,-25 1638.33,-25 1634.17,-25 1630,-20.8333 1630,-16.6667 1630,-16.6667 1630,-8.33333 1630,-8.33333 1630,-4.16667 1634.17,-0 1638.33,-0 1638.33,-0 1730.67,-0 1730.67,-0 1734.83,-0 1739,-4.16667 1739,-8.33333 1739,-8.33333 1739,-16.6667 1739,-16.6667 1739,-20.8333 1734.83,-25 1730.67,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="1640.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="1661.5" text-anchor="start">TransformNone</text></a></g></g><!-- node0&#45;&gt;node12 --><g class="edge inheritance" id="graph1_0_12"><g id="a_inheritance|graph1_0_12"><a xlink:title="TransformNone is a subtype of BsonTransformer[T]"><path d="M1172.38,-67.9929C1273.09,-61.2131 1461.77,-46.8146 1621.5,-25 1624.25,-24.6239 1627.07,-24.2115 1629.91,-23.7736" stroke="#d4d4d4" fill="none"></path><polygon points="1172.1,-65.5558 1165.28,-68.4678 1172.43,-70.4449 1172.1,-65.5558" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node13 --><g class="node object" id="graph1_13"><g id="a_object|graph1_13"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformObjectId" xlink:href="DefaultBsonTransformers$TransformObjectId$.html#inheritance-diagram"><path d="M1871.17,-25C1871.17,-25 1765.83,-25 1765.83,-25 1761.67,-25 1757.5,-20.8333 1757.5,-16.6667 1757.5,-16.6667 1757.5,-8.33333 1757.5,-8.33333 1757.5,-4.16667 1761.67,-0 1765.83,-0 1765.83,-0 1871.17,-0 1871.17,-0 1875.33,-0 1879.5,-4.16667 1879.5,-8.33333 1879.5,-8.33333 1879.5,-16.6667 1879.5,-16.6667 1879.5,-20.8333 1875.33,-25 1871.17,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="1767.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="1788.5" text-anchor="start">TransformObjectId</text></a></g></g><!-- node0&#45;&gt;node13 --><g class="edge inheritance" id="graph1_0_13"><g id="a_inheritance|graph1_0_13"><a xlink:title="TransformObjectId is a subtype of BsonTransformer[T]"><path d="M1172.06,-69.3549C1291.71,-63.6262 1539.82,-49.739 1748.5,-25 1751.44,-24.652 1754.44,-24.2682 1757.46,-23.8584" stroke="#d4d4d4" fill="none"></path><polygon points="1171.94,-66.9078 1165.06,-69.6876 1172.17,-71.8023 1171.94,-66.9078" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node14 --><g class="node object" id="graph1_14"><g id="a_object|graph1_14"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformRegex" xlink:href="DefaultBsonTransformers$TransformRegex$.html#inheritance-diagram"><path d="M2003.17,-25C2003.17,-25 1905.83,-25 1905.83,-25 1901.67,-25 1897.5,-20.8333 1897.5,-16.6667 1897.5,-16.6667 1897.5,-8.33333 1897.5,-8.33333 1897.5,-4.16667 1901.67,-0 1905.83,-0 1905.83,-0 2003.17,-0 2003.17,-0 2007.33,-0 2011.5,-4.16667 2011.5,-8.33333 2011.5,-8.33333 2011.5,-16.6667 2011.5,-16.6667 2011.5,-20.8333 2007.33,-25 2003.17,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="1907.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="1928.5" text-anchor="start">TransformRegex</text></a></g></g><!-- node0&#45;&gt;node14 --><g class="edge inheritance" id="graph1_0_14"><g id="a_inheritance|graph1_0_14"><a xlink:title="TransformRegex is a subtype of BsonTransformer[T]"><path d="M1172.35,-70.8679C1311.16,-67.1178 1625.71,-55.7163 1888.5,-25 1891.39,-24.6624 1894.34,-24.2811 1897.32,-23.8678" stroke="#d4d4d4" fill="none"></path><polygon points="1172,-68.4262 1165.07,-71.0619 1172.13,-73.3245 1172,-68.4262" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node15 --><g class="node object" id="graph1_15"><g id="a_object|graph1_15"><a xlink:title="org.mongodb.scala.bson.DefaultBsonTransformers.TransformString" xlink:href="DefaultBsonTransformers$TransformString$.html#inheritance-diagram"><path d="M2133.17,-25C2133.17,-25 2037.83,-25 2037.83,-25 2033.67,-25 2029.5,-20.8333 2029.5,-16.6667 2029.5,-16.6667 2029.5,-8.33333 2029.5,-8.33333 2029.5,-4.16667 2033.67,-0 2037.83,-0 2037.83,-0 2133.17,-0 2133.17,-0 2137.33,-0 2141.5,-4.16667 2141.5,-8.33333 2141.5,-8.33333 2141.5,-16.6667 2141.5,-16.6667 2141.5,-20.8333 2137.33,-25 2133.17,-25" stroke="#103a51" fill="#103a51"></path><image xlink:href="../../../../lib/object_diagram.png" y="-19.5" x="2039.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-10.1" x="2060.5" text-anchor="start">TransformString</text></a></g></g><!-- node0&#45;&gt;node15 --><g class="edge inheritance" id="graph1_0_15"><g id="a_inheritance|graph1_0_15"><a xlink:title="TransformString is a subtype of BsonTransformer[T]"><path d="M1172.36,-71.8052C1327.65,-69.6429 1705.89,-60.814 2020.5,-25 2023.35,-24.676 2026.26,-24.3055 2029.19,-23.9009" stroke="#d4d4d4" fill="none"></path><polygon points="1172.1,-69.3584 1165.14,-71.9032 1172.17,-74.2579 1172.1,-69.3584" stroke="#d4d4d4" fill="none"></polygon></a></g></g><!-- node16 --><g class="node class" id="graph1_16"><g id="a_class|graph1_16"><a xlink:title="scala.AnyRef"><path d="M1129.67,-147C1129.67,-147 1071.33,-147 1071.33,-147 1067.17,-147 1063,-142.833 1063,-138.667 1063,-138.667 1063,-130.333 1063,-130.333 1063,-126.167 1067.17,-122 1071.33,-122 1071.33,-122 1129.67,-122 1129.67,-122 1133.83,-122 1138,-126.167 1138,-130.333 1138,-130.333 1138,-138.667 1138,-138.667 1138,-142.833 1133.83,-147 1129.67,-147" stroke="#418565" fill="#418565"></path><image xlink:href="../../../../lib/class_diagram.png" y="-141.5" x="1073.5" preserveAspectRatio="xMinYMin meet" height="15px" width="15px"></image><text fill="#ffffff" font-size="8.00" font-family="Source Code Pro" y="-132.1" x="1094.5" text-anchor="start">AnyRef</text></a></g></g><!-- node16&#45;&gt;node0 --><g class="edge inheritance" id="graph1_16_0"><g id="a_inheritance|graph1_16_0"><a xlink:title="BsonTransformer[T] is a subtype of AnyRef"><path d="M1100.5,-114.76C1100.5,-105.367 1100.5,-94.2882 1100.5,-86.1323" stroke="#d4d4d4" fill="none"></path><polygon points="1098.05,-114.843 1100.5,-121.843 1102.95,-114.844 1098.05,-114.843" stroke="#d4d4d4" fill="none"></polygon></a></g></g></g></svg></div>
+                <div id="diagram-controls" class="hiddenContent">
+                  <button id="diagram-zoom-out" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button id="diagram-zoom-in" class="diagram-btn"><i class="material-icons"></i></button>
+                  <button title="Toggle full-screen" id="diagram-fs" class="diagram-btn to-full"><i class="material-icons"></i></button>
+                </div>
+              </div></div>
+        
+
+      <div id="mbrsel">
+        <div class="toggle"></div>
+        <div id="memberfilter">
+          <i class="material-icons arrow"></i>
+          <span class="input">
+            <input id="mbrsel-input" placeholder="Filter all members" type="text" accesskey="/" />
+          </span>
+          <i class="clear material-icons"></i>
+        </div>
+        <div id="filterby">
+          <div id="order">
+            <span class="filtertype">Ordering</span>
+            <ol>
+              
+              <li class="alpha in"><span>Alphabetic</span></li>
+              <li class="inherit out"><span>By Inheritance</span></li>
+            </ol>
+          </div>
+          <div class="ancestors">
+                  <span class="filtertype">Inherited<br />
+                  </span>
+                  <ol id="linearization">
+                    <li class="in" name="org.mongodb.scala.bson.BsonTransformer"><span>BsonTransformer</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  </ol>
+                </div><div class="ancestors">
+              <span class="filtertype"></span>
+              <ol>
+                <li class="hideall out"><span>Hide All</span></li>
+                <li class="showall in"><span>Show All</span></li>
+              </ol>
+            </div>
+          <div id="visbl">
+              <span class="filtertype">Visibility</span>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+            </div>
+        </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        
+
+        <div class="values members">
+              <h3>Abstract Value Members</h3>
+              <ol><li name="org.mongodb.scala.bson.BsonTransformer#apply" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="apply(value:T):org.mongodb.scala.bson.BsonValue"></a><a id="apply(T):BsonValue"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#apply(value:T):org.mongodb.scala.bson.BsonValue" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="value">value: <span class="extype" name="org.mongodb.scala.bson.BsonTransformer.T">T</span></span>)</span><span class="result">: <a href="index.html#BsonValue=org.bson.BsonValue" class="extmbr" name="org.mongodb.scala.bson.BsonValue">BsonValue</a></span>
+      </span>
+      
+      <p class="shortcomment cmt">Convert the object into a <a href="index.html#BsonValue=org.bson.BsonValue" class="extmbr" name="org.mongodb.scala.bson.BsonValue">BsonValue</a>
+</p>
+    </li></ol>
+            </div>
+
+        <div class="values members">
+              <h3>Concrete Value Members</h3>
+              <ol>
+                <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#!=(x$1:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html###():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a><a id="==(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#==(x$1:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#asInstanceOf[T0]:T0" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a><a id="clone():AnyRef"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#clone():Object" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#eq(x$1:AnyRef):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a><a id="equals(Any):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#equals(x$1:Any):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#finalize():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java/lang/index.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#getClass():Class[_]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#hashCode():Int" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#isInstanceOf[T0]:Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#ne(x$1:AnyRef):Boolean" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Boolean.html#scala.Boolean" class="extype" name="scala.Boolean">Boolean</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#notify():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#notifyAll():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#synchronized[T0](x$1:=&gt;T0):T0" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#toString" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#toString():String" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#wait():Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a><a id="wait(Long,Int):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#wait(x$1:Long,x$2:Int):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>, <span name="arg1">arg1: <a href="http://www.scala-lang.org/api/2.12.4/scala/Int.html#scala.Int" class="extype" name="scala.Int">Int</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a><a id="wait(Long):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../org/mongodb/scala/bson/BsonTransformer.html#wait(x$1:Long):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <a href="http://www.scala-lang.org/api/2.12.4/scala/Long.html#scala.Long" class="extype" name="scala.Long">Long</a></span>)</span><span class="result">: <a href="http://www.scala-lang.org/api/2.12.4/scala/Unit.html#scala.Unit" class="extype" name="scala.Unit">Unit</a></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@native</span><span class="args">()</span>
+              
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li>
+              </ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.AnyRef" class="extype" name="scala.collection.immutable.List">AnyRef</a></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <a href="http://www.scala-lang.org/api/2.12.4/scala/collection/immutable/List.html#scala.Any" class="extype" name="scala.collection.immutable.List">Any</a></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+    </body>
+          </div>
+        </div>
+      </div>
+    </body>
+      </html>
