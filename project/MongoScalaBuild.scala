@@ -50,8 +50,8 @@ object MongoScalaBuild extends Build {
   val scalacOptionsTest: Seq[String] = Seq( "-unchecked", "-deprecation", "-feature", "-Xlint:-missing-interpolator,_")
 
   def scalacOptionsVersion(scalaVersion: String): Seq[String] = {
-    Seq( "-unchecked", "-deprecation", "-feature", "-Xfatal-warnings", "-Ywarn-dead-code"
-      /*,"-Ymacro-debug-verbose", "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer"*/) ++ (scalaVersion match {
+    Seq( "-unchecked", "-deprecation", "-feature", "-Ywarn-dead-code"
+      /*,"-Xfatal-warnings", "-Ymacro-debug-verbose", "-Xlog-implicits", "-Yinfer-debug", "-Xprint:typer"*/) ++ (scalaVersion match {
       case "2.12.2" => Seq("-Xlint:-unused,-missing-interpolator,_", "-Ywarn-unused:imports,privates,locals,-implicits,-params")
       case _ => Seq("-language:existentials", "-Xlint:-missing-interpolator,_")
     })
