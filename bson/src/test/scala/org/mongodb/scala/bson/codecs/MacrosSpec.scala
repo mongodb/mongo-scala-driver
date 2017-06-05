@@ -95,6 +95,8 @@ class MacrosSpec extends FlatSpec with Matchers {
   type ADTCaseClassTypeAlias = ContainsADT
   case class ContainsADTCaseClassTypeAlias(a: String, b: ADTCaseClassTypeAlias)
 
+  case class ContainsTypeLessMap(a: BsonDocument)
+
   "Macros" should "be able to round trip simple case classes" in {
     roundTrip(Empty(), "{}", classOf[Empty])
     roundTrip(Person("Bob", "Jones"), """{firstName: "Bob", lastName: "Jones"}""", classOf[Person])
@@ -140,6 +142,10 @@ class MacrosSpec extends FlatSpec with Matchers {
       OptionalRecursive("Bob", Some(OptionalRecursive("Charlie", None))),
       """{name: "Bob", value: {name: "Charlie", value: null}}""", classOf[OptionalRecursive]
     )
+  }
+
+  it should "be able to round trip Map values where the top level implementations don't include type information" in {
+    roundTrip(ContainsTypeLessMap(BsonDocument.parse("""{b: "c"}""")), """{a: {b: "c"}}""", classOf[ContainsTypeLessMap])
   }
 
   it should "be able to decode case classes missing optional values" in {

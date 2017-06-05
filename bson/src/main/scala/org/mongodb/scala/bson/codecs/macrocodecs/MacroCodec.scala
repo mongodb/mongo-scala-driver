@@ -20,8 +20,8 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 import org.bson.codecs.configuration.{ CodecConfigurationException, CodecRegistries, CodecRegistry }
-import org.bson.{ BsonReader, BsonType, BsonValue, BsonWriter }
 import org.bson.codecs.{ Codec, DecoderContext, Encoder, EncoderContext }
+import org.bson.{ BsonReader, BsonType, BsonValue, BsonWriter }
 
 import org.mongodb.scala.bson.BsonNull
 
@@ -192,8 +192,7 @@ trait MacroCodec[T] extends Codec[T] {
 
   protected def readDocument[V](reader: BsonReader, decoderContext: DecoderContext, clazz: Class[V], typeArgs: List[Class[_]],
     fieldTypeArgsMap: Map[String, List[Class[_]]]): V = {
-    val isCaseClass = classToCaseClassMap.getOrElse(clazz, false)
-    if (isCaseClass) {
+    if (classToCaseClassMap.getOrElse(clazz, false) || typeArgs.isEmpty) {
       registry.get(clazz).decode(reader, decoderContext)
     } else {
       val map = mutable.Map[String, Any]()
