@@ -201,7 +201,11 @@ trait MacroCodec[T] extends Codec[T] {
       while (reader.readBsonType ne BsonType.END_OF_DOCUMENT) {
         val name = reader.readName
         val fieldClazzTypeArgs = fieldTypeArgsMap.getOrElse(name, typeArgs)
-        map += (name -> readValue(reader, decoderContext, fieldClazzTypeArgs.head, fieldClazzTypeArgs.tail, fieldTypeArgsMap))
+        if (fieldClazzTypeArgs.isEmpty) {
+          reader.skipValue()
+        } else {
+          map += (name -> readValue(reader, decoderContext, fieldClazzTypeArgs.head, fieldClazzTypeArgs.tail, fieldTypeArgsMap))
+        }
       }
       reader.readEndDocument()
       map.toMap.asInstanceOf[V]

@@ -216,6 +216,11 @@ class MacrosSpec extends FlatSpec with Matchers {
       classOf[ContainsADTCaseClassTypeAlias], classOf[ADTCaseClassTypeAlias], classOf[Tree])
   }
 
+  it should "support extra fields in the document" in {
+    val json = """{firstName: "Bob", lastName: "Jones", address: {number: 1, street: "Acacia Avenue"}}"""
+    decode(Person("Bob", "Jones"), json, Macros.createCodec[Person]())
+  }
+
   it should "support throw a CodecConfigurationException missing _t field" in {
     val missing_t = """{name: "nodeA", value: null}"""
     val registry = CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[Graph]), DEFAULT_CODEC_REGISTRY)
@@ -283,6 +288,11 @@ class MacrosSpec extends FlatSpec with Matchers {
   def decode[T](codec: Codec[T], buffer: OutputBuffer): T = {
     val reader = new BsonBinaryReader(new ByteBufferBsonInput(new ByteBufNIO(ByteBuffer.wrap(buffer.toByteArray))))
     codec.decode(reader, DecoderContext.builder().build())
+  }
+
+  def decode[T](value: T, json: String, codec: Codec[T]): Unit = {
+    val roundTripped = decode(codec, encode(documentCodec, Document(json)))
+    assert(roundTripped == value, s"Round Tripped case class: ($roundTripped) did not equal the original: ($value)")
   }
 
   val documentCodec: Codec[Document] = DEFAULT_CODEC_REGISTRY.get(classOf[Document])
