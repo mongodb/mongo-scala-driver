@@ -12,7 +12,8 @@ Changes between released versions
 
 ### 2.2.0
 
-  * Added CaseClassCodec handling of extra values in the document. [SCALA-307](https://jira.mongodb.org/browse/SCALA-307)
+  * CaseClassCodec - Added support for default values. [SCALA-313](https://jira.mongodb.org/browse/SCALA-313)
+  * CaseClassCodec - Added handling of extra values in the document. [SCALA-307](https://jira.mongodb.org/browse/SCALA-307)
   * Added support for custom Map implementations that don't include type information. [SCALA-311](https://jira.mongodb.org/browse/SCALA-311)
 
 ### 2.1.0
