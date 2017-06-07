@@ -68,6 +68,7 @@ class MacrosSpec extends FlatSpec with Matchers {
   case class ContainsNestedSeqCaseClass(name: String, friends: Seq[Seq[Person]])
   case class ContainsMapOfCaseClasses(name: String, friends: Map[String, Person])
   case class ContainsMapOfMapOfCaseClasses(name: String, friends: Map[String, Map[String, Person]])
+  case class ContainsCaseClassWithDefault(name: String, friend: Person = Person("Frank", "Sinatra"))
 
   case class OptionalValue(name: String, value: Option[String])
   case class OptionalCaseClass(name: String, value: Option[Person])
@@ -142,6 +143,11 @@ class MacrosSpec extends FlatSpec with Matchers {
       OptionalRecursive("Bob", Some(OptionalRecursive("Charlie", None))),
       """{name: "Bob", value: {name: "Charlie", value: null}}""", classOf[OptionalRecursive]
     )
+    roundTrip(
+      ContainsCaseClassWithDefault("Charlie"),
+      """{name: "Charlie", friend: { firstName: "Frank", lastName: "Sinatra"}}""",
+      classOf[ContainsCaseClassWithDefault], classOf[Person]
+    )
   }
 
   it should "be able to round trip Map values where the top level implementations don't include type information" in {
@@ -153,6 +159,28 @@ class MacrosSpec extends FlatSpec with Matchers {
     val buffer = encode(registry.get(classOf[Document]), Document("name" -> "Bob"))
 
     decode(registry.get(classOf[OptionalValue]), buffer) should equal(OptionalValue("Bob", None))
+  }
+
+  it should "be able to decode case class with default values" in {
+    val registry = CodecRegistries.fromRegistries(
+      CodecRegistries.fromProviders(classOf[DefaultValue]),
+      DEFAULT_CODEC_REGISTRY
+    )
+    val buffer = encode(registry.get(classOf[Document]), Document("name" -> "Bob"))
+
+    decode(registry.get(classOf[DefaultValue]), buffer) should equal(DefaultValue("Bob"))
+  }
+
+  it should "be able to decode case class with default, when it case class" in {
+    val registry = CodecRegistries.fromRegistries(
+      CodecRegistries.fromProviders(classOf[ContainsCaseClassWithDefault], classOf[Person]),
+      DEFAULT_CODEC_REGISTRY
+    )
+    val buffer = encode(registry.get(classOf[Document]), Document("name" -> "Bob"))
+
+    decode(
+      registry.get(classOf[ContainsCaseClassWithDefault]), buffer
+    ) should equal(ContainsCaseClassWithDefault("Bob", Person("Frank", "Sinatra")))
   }
 
   it should "be able to round trip optional values, when None is ignored" in {
