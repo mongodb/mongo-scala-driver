@@ -23,12 +23,11 @@ import java.util.Date
 import scala.collection.JavaConverters._
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
-
 import org.bson._
 import org.bson.codecs.configuration.{ CodecConfigurationException, CodecProvider, CodecRegistries }
 import org.bson.codecs.{ Codec, DecoderContext, EncoderContext }
 import org.bson.io.{ BasicOutputBuffer, ByteBufferBsonInput, OutputBuffer }
-
+import org.bson.types.ObjectId
 import org.mongodb.scala.bson.codecs.Macros.{ createCodecProvider, createCodecProviderIgnoreNone }
 import org.mongodb.scala.bson.collection.immutable.Document
 import org.scalatest.{ FlatSpec, Matchers }
@@ -68,6 +67,10 @@ class MacrosSpec extends FlatSpec with Matchers {
   case class ContainsNestedSeqCaseClass(name: String, friends: Seq[Seq[Person]])
   case class ContainsMapOfCaseClasses(name: String, friends: Map[String, Person])
   case class ContainsMapOfMapOfCaseClasses(name: String, friends: Map[String, Map[String, Person]])
+
+  case class CaseClassWithVal(_id: ObjectId, name: String) {
+    val id = _id.toString
+  }
 
   case class OptionalValue(name: String, value: Option[String])
   case class OptionalCaseClass(name: String, value: Option[Person])
@@ -153,6 +156,24 @@ class MacrosSpec extends FlatSpec with Matchers {
     val buffer = encode(registry.get(classOf[Document]), Document("name" -> "Bob"))
 
     decode(registry.get(classOf[OptionalValue]), buffer) should equal(OptionalValue("Bob", None))
+  }
+
+  it should "be able to decode case class with vals" in {
+    val registry = CodecRegistries.fromRegistries(
+      CodecRegistries.fromProviders(classOf[CaseClassWithVal]),
+      DEFAULT_CODEC_REGISTRY
+    )
+
+    val id = new ObjectId
+    val buffer = encode(
+      registry.get(classOf[Document]),
+      Document("_id" -> id, "name" -> "Bob")
+    )
+
+    decode(
+      registry.get(classOf[CaseClassWithVal]), buffer
+    ) should equal(CaseClassWithVal(id, "Bob"))
+
   }
 
   it should "be able to round trip optional values, when None is ignored" in {
