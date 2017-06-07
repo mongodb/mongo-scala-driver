@@ -87,8 +87,17 @@ private[codecs] object CaseClassCodec {
     val subClasses: List[Type] = allSubclasses(mainType.typeSymbol).map(_.asClass.toType).filter(isCaseClass).toList
     if (isSealed(mainType) && subClasses.isEmpty) c.abort(c.enclosingPosition, "No known subclasses of the sealed class")
     val knownTypes = (mainType +: subClasses).reverse
-    def fields: Map[Type, List[(TermName, Type)]] = knownTypes.map(t => (t, t.members.sorted.filter(_.isMethod).map(_.asMethod).filter(_.isGetter)
-      .map(m => (m.name, m.returnType.asSeenFrom(t, t.typeSymbol))))).toMap
+
+    val fields: Map[Type, List[(TermName, Type)]] = {
+      knownTypes.map(
+        t => (
+          t,
+          t.members.sorted.filter(_.isMethod).map(_.asMethod).filter(m => m.isGetter && m.isParamAccessor).map(
+            m => (m.name, m.returnType.asSeenFrom(t, t.typeSymbol))
+          )
+        )
+      ).toMap
+    }
 
     // Primitives type map
     val primitiveTypesMap: Map[Type, Type] = Map(
