@@ -28,6 +28,7 @@ import org.bson.codecs.configuration.{ CodecConfigurationException, CodecProvide
 import org.bson.codecs.{ Codec, DecoderContext, EncoderContext }
 import org.bson.io.{ BasicOutputBuffer, ByteBufferBsonInput, OutputBuffer }
 import org.bson.types.ObjectId
+import org.mongodb.scala.bson.annotations.Key
 import org.mongodb.scala.bson.codecs.Macros.{ createCodecProvider, createCodecProviderIgnoreNone }
 import org.mongodb.scala.bson.collection.immutable.Document
 import org.scalatest.{ FlatSpec, Matchers }
@@ -40,6 +41,7 @@ class MacrosSpec extends FlatSpec with Matchers {
   case class DefaultValue(name: String, active: Boolean = false)
   case class SeqOfStrings(name: String, value: Seq[String])
   case class RecursiveSeq(name: String, value: Seq[RecursiveSeq])
+  case class AnnotatedClass(@Key("annotated_name") name: String)
 
   case class Binary(binary: Array[Byte]) {
     /**
@@ -107,6 +109,7 @@ class MacrosSpec extends FlatSpec with Matchers {
     roundTrip(DefaultValue(name = "Bob"), """{name: "Bob", active: false}""", classOf[DefaultValue])
     roundTrip(SeqOfStrings("Bob", Seq("scala", "jvm")), """{name: "Bob", value: ["scala", "jvm"]}""", classOf[SeqOfStrings])
     roundTrip(RecursiveSeq("Bob", Seq(RecursiveSeq("Charlie", Seq.empty[RecursiveSeq]))), """{name: "Bob", value: [{name: "Charlie", value: []}]}""", classOf[RecursiveSeq])
+    roundTrip(AnnotatedClass("Bob"), """{annotated_name: "Bob"}""", classOf[AnnotatedClass])
     roundTrip(MapOfStrings("Bob", Map("brother" -> "Tom Jones")), """{name: "Bob", value: {brother: "Tom Jones"}}""", classOf[MapOfStrings])
     roundTrip(SeqOfMapOfStrings("Bob", Seq(Map("brother" -> "Tom Jones"))), """{name: "Bob", value: [{brother: "Tom Jones"}]}""", classOf[SeqOfMapOfStrings])
   }
