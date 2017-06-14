@@ -21,6 +21,7 @@ import scala.reflect.macros.whitebox
 
 import org.bson.codecs.Codec
 import org.bson.codecs.configuration.CodecRegistry
+import org.mongodb.scala.bson.annotations.Key
 
 private[codecs] object CaseClassCodec {
 
@@ -76,10 +77,6 @@ private[codecs] object CaseClassCodec {
     def isSealed(t: Type): Boolean = t.typeSymbol.isClass && t.typeSymbol.asClass.isSealed
     def isCaseClassOrSealed(t: Type): Boolean = isCaseClass(t) || isSealed(t)
 
-    // Data converters
-    def keyName(t: Type): Literal = Literal(Constant(t.typeSymbol.name.decodedName.toString))
-    def keyNameTerm(t: TermName): Literal = Literal(Constant(t.toString))
-
     def allSubclasses(s: Symbol): Set[Symbol] = {
       val directSubClasses = s.asClass.knownDirectSubclasses
       directSubClasses ++ directSubClasses.flatMap({ s: Symbol => allSubclasses(s) })
@@ -87,6 +84,11 @@ private[codecs] object CaseClassCodec {
     val subClasses: List[Type] = allSubclasses(mainType.typeSymbol).map(_.asClass.toType).filter(isCaseClass).toList
     if (isSealed(mainType) && subClasses.isEmpty) c.abort(c.enclosingPosition, "No known subclasses of the sealed class")
     val knownTypes = (mainType +: subClasses).reverse
+
+    val terms = mainType.decl(termNames.CONSTRUCTOR).asMethod.paramLists match {
+      case h :: _ => h.map(_.asTerm)
+      case _ => List.empty
+    }
 
     val fields: Map[Type, List[(TermName, Type)]] = {
       knownTypes.map(
@@ -98,6 +100,20 @@ private[codecs] object CaseClassCodec {
         )
       ).toMap
     }
+
+    val classAnnotatedFieldsMap: Map[TermName, Constant] = {
+      terms.flatMap(t => {
+        t.annotations.find(a => a.tree.tpe eq typeOf[Key])
+          .flatMap(_.tree.children.lastOption)
+          .map(tree => {
+            t.name -> tree.productElement(0).asInstanceOf[Constant]
+          })
+      }).toMap
+    }
+
+    // Data converters
+    def keyName(t: Type): Literal = Literal(Constant(t.typeSymbol.name.decodedName.toString))
+    def keyNameTerm(t: TermName): Literal = Literal(classAnnotatedFieldsMap.getOrElse(t, Constant(t.toString)))
 
     // Primitives type map
     val primitiveTypesMap: Map[Type, Type] = Map(
@@ -114,12 +130,8 @@ private[codecs] object CaseClassCodec {
     /*
      * For each case class sets the Map of the given field names and their field default value.
      */
-    def defaultClassArgs = {
-      val terms = mainType.decl(termNames.CONSTRUCTOR).asMethod.paramLists match {
-        case h :: _ => h.map(_.asTerm)
-        case _ => List.empty
-      }
 
+    def defaultClassArgs = {
       val params = terms.zipWithIndex.collect {
         case (s, i) if s.isParamWithDefault => {
           val getterName = TermName("apply$default$" + (i + 1))
