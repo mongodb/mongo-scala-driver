@@ -41,6 +41,23 @@ class ObservableImplementationSpec extends FlatSpec with Matchers with TableDriv
     }
   }
 
+  it should "Consuming observables should handl over requesting observables as expected" in {
+    forAll(overRequestingObservables) {
+      (observable: Observable[Int], observer: TestObserver[Int], expected: Int) =>
+        {
+          observable.subscribe(observer)
+
+          val subscription = observer.subscription.get
+          subscription.request(1000)
+
+          subscription.isUnsubscribed should equal(false)
+          observer.error should equal(None)
+          observer.completed should equal(true)
+          observer.results.size should equal(expected)
+        }
+    }
+  }
+
   it should "be well behaved when and call onError if the Observable errors" in {
     forAll(failingObservables) {
       (observable: Observable[Int]) =>
@@ -209,7 +226,7 @@ class ObservableImplementationSpec extends FlatSpec with Matchers with TableDriv
       ZipObservable[Int, Int](TestObservable[Int](failOn = failOn), TestObservable[Int]()).map[Int](a => a._1)
     )
 
-  def happyObservables =
+  private def happyObservables =
     Table(
       ("observable", "observer"),
       (TestObservable[Int](), TestObserver[Int]()),
@@ -229,11 +246,64 @@ class ObservableImplementationSpec extends FlatSpec with Matchers with TableDriv
       (ZipObservable[Int, Int](TestObservable[Int](), TestObservable[Int]()).map[Int](a => a._1), TestObserver[Int]())
     )
 
-  def zippedObservables =
+  private def zippedObservables =
     Table[Observable[(Int, Int)]](
       "observable",
       ZipObservable[Int, Int](TestObservable[Int](1 to 50), TestObservable[Int]()),
       ZipObservable[Int, Int](TestObservable[Int](), TestObservable[Int](1 to 50))
     )
+
+  private def overRequestingObservables =
+    Table(
+      ("observable", "observer", "expected"),
+      (
+        FlatMapObservable[Int, Int](OverRequestedObservable(TestObservable[Int](1 to 10)), (i: Int) => TestObservable[Int](1 to 10)),
+        TestObserver[Int](), 100
+      ),
+      (RecoverWithObservable[Int, Int](
+        TestObservable[Int](1 to 10, failOn = 1),
+        { case t => OverRequestedObservable(TestObservable[Int](1 to 10)) }
+      ), TestObserver[Int](), 10)
+    )
+
+  case class OverRequestedObservable(delegate: TestObservable[Int] = TestObservable[Int]()) extends Observable[Int] {
+
+    var totalRequested = 0L
+    override def subscribe(observer: Observer[_ >: Int]): Unit = {
+      delegate.subscribe(SubscriptionCheckingObserver(
+        new Observer[Int] {
+
+          var completed = false
+          override def onError(throwable: Throwable): Unit = observer.onError(throwable)
+
+          override def onSubscribe(subscription: Subscription): Unit = {
+            val masterSub = new Subscription() {
+              override def isUnsubscribed: Boolean = subscription.isUnsubscribed
+
+              override def request(n: Long): Unit = {
+                if (!completed) {
+                  var demand = n + 1
+                  if (demand < 0) demand = Long.MaxValue
+                  totalRequested += demand
+                  subscription.request(demand)
+                }
+              }
+              override def unsubscribe(): Unit = subscription.unsubscribe()
+            }
+            observer.onSubscribe(masterSub)
+          }
+
+          override def onComplete(): Unit = {
+            completed = true
+            observer.onComplete()
+          }
+
+          override def onNext(tResult: Int): Unit = {
+            observer.onNext(tResult)
+          }
+        }
+      ))
+    }
+  }
 
 }
