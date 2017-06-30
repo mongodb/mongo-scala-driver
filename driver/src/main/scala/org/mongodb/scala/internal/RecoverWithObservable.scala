@@ -104,7 +104,13 @@ private[scala] case class RecoverWithObservable[T, U >: T](
         private def addDemand(extraDemand: Long): Long = {
           this.synchronized {
             demand += extraDemand
-            if (demand < 0) demand = Long.MaxValue
+
+            if (demand < 0) {
+              if (extraDemand < 0) {
+                throw new IllegalStateException("Demand cannot be reduced to below zero")
+              }
+              demand = Long.MaxValue
+            }
           }
           demand
         }

@@ -72,7 +72,7 @@ private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: 
 
               override def onSubscribe(subscription: Subscription): Unit = {
                 nestedSubscription = Some(subscription)
-                subscription.request(demand)
+                if (demand > 0) subscription.request(demand)
               }
 
               override def onComplete(): Unit = {
@@ -103,7 +103,12 @@ private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: 
         private def addDemand(extraDemand: Long): Long = {
           this.synchronized {
             demand += extraDemand
-            if (demand < 0) demand = Long.MaxValue
+            if (demand < 0) {
+              if (extraDemand < 0) {
+                throw new IllegalStateException("Demand cannot be reduced to below zero")
+              }
+              demand = Long.MaxValue
+            }
           }
           demand
         }
