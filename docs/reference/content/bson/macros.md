@@ -70,6 +70,14 @@ case class ClubMember(person: Person, address: Address, paid: Boolean)
 val codecRegistry = fromRegistries( fromProviders(classOf[ClubMember], classOf[Person], classOf[Address]), DEFAULT_CODEC_REGISTRY )
 ```
 
+{{% note %}}
+The 2.2.0 version of the driver introduces automatic default value support in case classes.
+
+There is one limitation when using default values with Macros; the Scala compiler cannot create the Codec for the case class in it's 
+companion object. It results in an error message similar to: `value apply$default$1 is not a member of object MyObject`. To fix simply 
+create the Codec in an alternative Object.
+{{% /note %}}
+
 ## Sealed classes and ADTs
 
 Hierarchical class structures are supported via sealed classes. Each subclass is handled specifically by the generated codec, so you only 
