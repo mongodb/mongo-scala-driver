@@ -210,5 +210,17 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
     this
   }
 
+  /**
+   * Sets the batch size.
+   * @param batchSize the batch size.
+   * @since 2.1.0
+   * @return this
+   * @note Specifying 1 or a negative number is analogous to using the limit() method.
+   */
+  def batchSize(batchSize: Int): FindObservable[TResult] = {
+    wrapped.batchSize(batchSize)
+    this
+  }
+
   override def subscribe(observer: Observer[_ >: TResult]): Unit = observe(wrapped).subscribe(observer)
 }
