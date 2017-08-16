@@ -389,7 +389,7 @@ trait ObservableImplicits {
           sub.request(1)
         }
 
-        override def onComplete(): Unit = if(!promise.isCompleted) promise.trySuccess(None)
+        override def onComplete(): Unit = promise.trySuccess(None)
 
         override def onNext(tResult: T): Unit = {
           subscription.getOrElse {
