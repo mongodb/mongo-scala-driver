@@ -34,7 +34,8 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
   "The scala package" should "mirror the com.mongodb package and com.mongodb.async.client" in {
     val packageName = "com.mongodb"
     val javaExclusions = Set("AsyncBatchCursor", "Block", "ConnectionString", "Function", "ServerCursor", "Majority", "MongoClients",
-      "MongoIterable", "Observables", "SingleResultCallback", "GridFSBuckets")
+      "MongoIterable", "Observables", "SingleResultCallback", "GridFSBuckets", "DBRefCodec", "DBRefCodecProvider", "DBRef",
+      "DocumentToDBRefTransformer")
     val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "ScalaObservable",
       "ScalaWriteConcern", "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription",
       "classTagToClassOf", "ReadConcernLevel", "bsonDocumentToDocument", "bsonDocumentToUntypedDocument", "documentToUntypedDocument",

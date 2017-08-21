@@ -121,7 +121,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
   def serverVersionAtLeast(minServerVersion: List[Int]): Boolean = {
     buildInfo.get[BsonString]("version") match {
       case Some(version) =>
-        val serverVersion = version.getValue.split("\\.").map(_.toInt).padTo(3, 0).take(3).toList.asJava
+        val serverVersion = version.getValue.split("\\D+").map(_.toInt).padTo(3, 0).take(3).toList.asJava
         new ServerVersion(serverVersion.asInstanceOf[java.util.List[Integer]]).compareTo(
           new ServerVersion(minServerVersion.asJava.asInstanceOf[java.util.List[Integer]])) > 0
       case None => false
@@ -131,7 +131,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
   def serverVersionLessThan(maxServerVersion: List[Int]): Boolean = {
     buildInfo.get[BsonString]("version") match {
       case Some(version) =>
-        val serverVersion = version.getValue.split("\\.").map(_.toInt).padTo(3, 0).take(3).toList.asJava
+        val serverVersion = version.getValue.split("\\D+").map(_.toInt).padTo(3, 0).take(3).toList.asJava
         new ServerVersion(serverVersion.asInstanceOf[java.util.List[Integer]]).compareTo(
           new ServerVersion(maxServerVersion.asJava.asInstanceOf[java.util.List[Integer]])) < 0
       case None => false

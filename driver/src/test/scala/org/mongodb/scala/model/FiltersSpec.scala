@@ -189,9 +189,9 @@ class FiltersSpec extends FlatSpec with Matchers {
   }
 
   it should "render $regex" in {
-    toBson(model.Filters.regex("name", "acme.*corp")) should equal(Document("""{name : {$regex : "acme.*corp"}}"""))
+    toBson(model.Filters.regex("name", "acme.*corp")) should equal(Document("""{name : {$regex : "acme.*corp", $options : ""}}"""))
     toBson(model.Filters.regex("name", "acme.*corp", "si")) should equal(Document("""{name : {$regex : "acme.*corp", $options : "si"}}"""))
-    toBson(model.Filters.regex("name", "acme.*corp".r)) should equal(Document("""{name : {$regex : "acme.*corp"}}"""))
+    toBson(model.Filters.regex("name", "acme.*corp".r)) should equal(Document("""{name : {$regex : "acme.*corp", $options : ""}}"""))
   }
 
   it should "render $where" in {

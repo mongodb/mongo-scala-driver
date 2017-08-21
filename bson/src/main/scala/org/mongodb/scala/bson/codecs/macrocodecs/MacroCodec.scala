@@ -21,7 +21,7 @@ import scala.collection.mutable
 
 import org.bson.codecs.configuration.{ CodecConfigurationException, CodecRegistries, CodecRegistry }
 import org.bson.codecs.{ Codec, DecoderContext, Encoder, EncoderContext }
-import org.bson.{ BsonReader, BsonType, BsonValue, BsonWriter }
+import org.bson._
 
 import org.mongodb.scala.bson.BsonNull
 
@@ -124,10 +124,10 @@ trait MacroCodec[T] extends Codec[T] {
         }
       }
 
-      reader.mark()
+      val mark: BsonReaderMark = reader.getMark()
       reader.readStartDocument()
       val optionalClassName: Option[String] = readOptionalClassName()
-      reader.reset()
+      mark.reset()
 
       val className = optionalClassName.getOrElse {
         throw new CodecConfigurationException(s"Could not decode sealed case class. Missing '$classFieldName' field.")

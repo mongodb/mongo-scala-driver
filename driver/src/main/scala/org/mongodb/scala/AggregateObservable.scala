@@ -64,9 +64,14 @@ case class AggregateObservable[TResult](private val wrapped: AggregateIterable[T
    * Sets whether the server should use a cursor to return results.
    *
    * [[http://docs.mongodb.org/manual/reference/command/aggregate/ Aggregation]]
+   *
    * @param useCursor whether the server should use a cursor to return results
    * @return this
+   * @deprecated There is no replacement for this.  Applications can assume that the driver will use a cursor for server versions
+   *             that support it (&gt;= 2.6). The driver will ignore this as of MongoDB 3.6, which does not support inline results for
+   *             the aggregate command.
    */
+  @Deprecated
   def useCursor(useCursor: Boolean): AggregateObservable[TResult] = {
     wrapped.useCursor(useCursor)
     this

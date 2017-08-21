@@ -119,9 +119,12 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
    * Sets the query modifiers to apply to this operation.
    *
    * [[http://docs.mongodb.org/manual/reference/operator/query-modifier/ Query Modifiers]]
+   *
    * @param modifiers the query modifiers to apply, which may be null.
    * @return this
+   * @deprecated use the individual setters instead
    */
+  @Deprecated
   def modifiers(modifiers: Bson): FindObservable[TResult] = {
     wrapped.modifiers(modifiers)
     this
@@ -207,6 +210,106 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
    */
   def collation(collation: Collation): FindObservable[TResult] = {
     wrapped.collation(collation)
+    this
+  }
+
+  /**
+   * Sets the comment to the query. A null value means no comment is set.
+   *
+   * @param comment the comment
+   * @return this
+   * @since 2.2
+   */
+  def comment(comment: String): FindObservable[TResult] = {
+    wrapped.comment(comment)
+    this
+  }
+
+  /**
+   * Sets the hint for which index to use. A null value means no hint is set.
+   *
+   * @param hint the hint
+   * @return this
+   * @since 2.2
+   */
+  def hint(hint: Bson): FindObservable[TResult] = {
+    wrapped.hint(hint)
+    this
+  }
+
+  /**
+   * Sets the exclusive upper bound for a specific index. A null value means no max is set.
+   *
+   * @param max the max
+   * @return this
+   * @since 2.2
+   */
+  def max(max: Bson): FindObservable[TResult] = {
+    wrapped.max(max)
+    this
+  }
+
+  /**
+   * Sets the minimum inclusive lower bound for a specific index. A null value means no max is set.
+   *
+   * @param min the min
+   * @return this
+   * @since 2.2
+   */
+  def min(min: Bson): FindObservable[TResult] = {
+    wrapped.min(min)
+    this
+  }
+
+  /**
+   * Sets the maximum number of documents or index keys to scan when executing the query.
+   *
+   * A zero value or less will be ignored, and indicates that the driver should respect the server's default value.
+   *
+   * @param maxScan the maxScan
+   * @return this
+   * @since 2.2
+   */
+  def maxScan(maxScan: Long): FindObservable[TResult] = {
+    wrapped.maxScan(maxScan)
+    this
+  }
+
+  /**
+   * Sets the returnKey. If true the find operation will return only the index keys in the resulting documents.
+   *
+   * @param returnKey the returnKey
+   * @return this
+   * @since 2.2
+   */
+  def returnKey(returnKey: Boolean): FindObservable[TResult] = {
+    wrapped.returnKey(returnKey)
+    this
+  }
+
+  /**
+   * Sets the showRecordId. Set to true to add a field `$recordId` to the returned documents.
+   *
+   * @param showRecordId the showRecordId
+   * @return this
+   * @since 2.2
+   */
+  def showRecordId(showRecordId: Boolean): FindObservable[TResult] = {
+    wrapped.showRecordId(showRecordId)
+    this
+  }
+
+  /**
+   * Sets the snapshot.
+   *
+   * If true it prevents the cursor from returning a document more than once because of an intervening write operation.
+   *
+   * @param snapshot the snapshot
+   * @return this
+   * @since 2.2
+   */
+  def snapshot(snapshot: Boolean): FindObservable[TResult] = {
+    wrapped.snapshot(snapshot)
     this
   }
 
