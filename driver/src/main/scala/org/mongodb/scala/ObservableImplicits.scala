@@ -347,6 +347,7 @@ trait ObservableImplicits {
      * @return the head result of the [[Observable]].
      */
     def head(): Future[T] = {
+      import scala.concurrent.ExecutionContext.Implicits.global
       headOption().map {
         case Some(result) => result
         case None => null.asInstanceOf[T]  // scalastyle:ignore null

@@ -384,6 +384,17 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
     errorSeen.getOrElse(None) shouldBe a[Throwable]
   }
 
+  it should "provide a headOption method" in {
+    Await.result(observable[Int]().headOption(), Duration(10, TimeUnit.SECONDS)) should equal(Some(1))
+    Await.result(observable[Int](fail = true).headOption(), Duration(10, TimeUnit.SECONDS)) should equal(Some(1))
+
+    intercept[MongoException] {
+      Await.result(TestObservable[Int](Observable[Int](1 to 10), failOn = 1).headOption(), Duration(10, TimeUnit.SECONDS))
+    }
+
+    Await.result(TestObservable[Int](Observable(List[Int]())).headOption(), Duration(10, TimeUnit.SECONDS)) should equal(None)
+  }
+
   it should "provide a head method" in {
     Await.result(observable[Int]().head(), Duration(10, TimeUnit.SECONDS)) should equal(1)
     Await.result(observable[Int](fail = true).head(), Duration(10, TimeUnit.SECONDS)) should equal(1)
