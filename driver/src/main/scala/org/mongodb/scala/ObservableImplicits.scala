@@ -347,7 +347,20 @@ trait ObservableImplicits {
      * @return the head result of the [[Observable]].
      */
     def head(): Future[T] = {
-      val promise = Promise[T]()
+      headOption().map {
+        case Some(result) => result
+        case None => null.asInstanceOf[T]  // scalastyle:ignore null
+      }
+    }
+
+    /**
+     * Returns the head option of the [[Observable]] in a [[scala.concurrent.Future]].
+     *
+     * @return the head option result of the [[Observable]].
+     * @since 2.2
+     */
+    def headOption(): Future[Option[T]] = {
+      val promise = Promise[Option[T]]()
       observable.subscribe(new Observer[T]() {
         @volatile
         var subscription: Option[Subscription] = None
@@ -359,13 +372,13 @@ trait ObservableImplicits {
           sub.request(1)
         }
 
-        override def onComplete(): Unit = promise.complete(Success(null).asInstanceOf[Try[T]]) // scalastyle:ignore null
+        override def onComplete(): Unit = promise.complete(Success(None))
 
         override def onNext(tResult: T): Unit = {
           subscription.getOrElse {
             throw new IllegalStateException("The Observable has not been subscribed to.")
           }.unsubscribe()
-          promise.success(tResult)
+          promise.success(Some(tResult))
         }
       })
       promise.future
@@ -394,6 +407,14 @@ trait ObservableImplicits {
      * @return a future representation of the Observable
      */
     def toFuture(): Future[T] = observable.head()
+
+    /**
+     * Collects the [[Observable]] result and converts to a [[scala.concurrent.Future]].
+     * @return a future representation of the Observable
+     *
+     * @since 2.2
+     */
+    def toFutureOption(): Future[Option[T]] = observable.headOption()
   }
 
   /**
