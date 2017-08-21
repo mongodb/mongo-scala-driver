@@ -21,7 +21,8 @@ import scala.reflect.macros.whitebox
 
 import org.bson.codecs.Codec
 import org.bson.codecs.configuration.CodecRegistry
-import org.mongodb.scala.bson.annotations.Key
+
+import org.mongodb.scala.bson.annotations.BsonProperty
 
 private[codecs] object CaseClassCodec {
 
@@ -103,7 +104,7 @@ private[codecs] object CaseClassCodec {
 
     val classAnnotatedFieldsMap: Map[TermName, Constant] = {
       terms.flatMap(t => {
-        t.annotations.find(a => a.tree.tpe eq typeOf[Key])
+        t.annotations.find(a => a.tree.tpe eq typeOf[BsonProperty])
           .flatMap(_.tree.children.lastOption)
           .map(tree => {
             t.name -> tree.productElement(0).asInstanceOf[Constant]

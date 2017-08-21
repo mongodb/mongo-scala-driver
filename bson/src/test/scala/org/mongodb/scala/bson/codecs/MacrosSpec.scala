@@ -23,12 +23,14 @@ import java.util.Date
 import scala.collection.JavaConverters._
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
+
 import org.bson._
 import org.bson.codecs.configuration.{ CodecConfigurationException, CodecProvider, CodecRegistries }
 import org.bson.codecs.{ Codec, DecoderContext, EncoderContext }
 import org.bson.io.{ BasicOutputBuffer, ByteBufferBsonInput, OutputBuffer }
 import org.bson.types.ObjectId
-import org.mongodb.scala.bson.annotations.Key
+
+import org.mongodb.scala.bson.annotations.BsonProperty
 import org.mongodb.scala.bson.codecs.Macros.{ createCodecProvider, createCodecProviderIgnoreNone }
 import org.mongodb.scala.bson.collection.immutable.Document
 import org.scalatest.{ FlatSpec, Matchers }
@@ -41,7 +43,7 @@ class MacrosSpec extends FlatSpec with Matchers {
   case class DefaultValue(name: String, active: Boolean = false)
   case class SeqOfStrings(name: String, value: Seq[String])
   case class RecursiveSeq(name: String, value: Seq[RecursiveSeq])
-  case class AnnotatedClass(@Key("annotated_name") name: String)
+  case class AnnotatedClass(@BsonProperty("annotated_name") name: String)
 
   case class Binary(binary: Array[Byte]) {
     /**
