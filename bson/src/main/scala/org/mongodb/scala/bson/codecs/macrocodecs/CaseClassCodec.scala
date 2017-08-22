@@ -129,20 +129,6 @@ private[codecs] object CaseClassCodec {
     )
 
     /*
-     * For each case class sets the Map of the given field names and their field default value.
-     */
-
-    def defaultClassArgs = {
-      val params = terms.zipWithIndex.collect {
-        case (s, i) if s.isParamWithDefault => {
-          val getterName = TermName("apply$default$" + (i + 1))
-          q"${s.name.toString} -> ${mainType.typeSymbol.companion}.$getterName"
-        }
-      }
-      c.Expr[Map[String, Any]](q"Map[String, Any](..$params)")
-    }
-
-    /*
      * Flattens the type args for any given type.
      *
      * Removes the key field from Maps as they have to be strings.
@@ -297,8 +283,7 @@ private[codecs] object CaseClassCodec {
           f match {
             case optional if isOption(optional) => q"$name = (if (fieldData.contains($key)) Option(fieldData($key)) else None).asInstanceOf[$f]"
             case _ =>
-              q"""$name = fieldData.getOrElse($key, classFieldDefaultArgsMap.getOrElse($key,
-                 throw new BsonInvalidOperationException($missingField))).asInstanceOf[$f]"""
+              q"""$name = fieldData.getOrElse($key, throw new BsonInvalidOperationException($missingField)).asInstanceOf[$f]"""
           }
       })
     }
@@ -319,7 +304,6 @@ private[codecs] object CaseClassCodec {
         import org.mongodb.scala.bson.codecs.macrocodecs.MacroCodec
 
         case class $codecName(codecRegistry: CodecRegistry) extends MacroCodec[$classTypeName] {
-          val classFieldDefaultArgsMap = $defaultClassArgs
           val caseClassesMap = $caseClassesMap
           val classToCaseClassMap = $classToCaseClassMap
           val classFieldTypeArgsMap = $createClassFieldTypeArgsMap

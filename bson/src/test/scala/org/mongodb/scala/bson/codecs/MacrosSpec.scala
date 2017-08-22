@@ -172,28 +172,6 @@ class MacrosSpec extends FlatSpec with Matchers {
     )
   }
 
-  it should "be able to decode case class with default values" in {
-    val registry = CodecRegistries.fromRegistries(
-      CodecRegistries.fromProviders(classOf[DefaultValue]),
-      DEFAULT_CODEC_REGISTRY
-    )
-    val buffer = encode(registry.get(classOf[Document]), Document("name" -> "Bob"))
-
-    decode(registry.get(classOf[DefaultValue]), buffer) should equal(DefaultValue("Bob"))
-  }
-
-  it should "be able to decode case class with default, when it case class" in {
-    val registry = CodecRegistries.fromRegistries(
-      CodecRegistries.fromProviders(classOf[ContainsCaseClassWithDefault], classOf[Person]),
-      DEFAULT_CODEC_REGISTRY
-    )
-    val buffer = encode(registry.get(classOf[Document]), Document("name" -> "Bob"))
-
-    decode(
-      registry.get(classOf[ContainsCaseClassWithDefault]), buffer
-    ) should equal(ContainsCaseClassWithDefault("Bob", Person("Frank", "Sinatra")))
-  }
-
   it should "rountrip case classes containing vals" in {
     val id = new ObjectId
     roundTrip(CaseClassWithVal(id, "Bob"), s"""{"_id": {"$$oid": "${id.toHexString}" }, "name" : "Bob"}""", classOf[CaseClassWithVal])
