@@ -101,7 +101,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       .map(_.getSimpleName).toSet -- javaExclusions
 
     val scalaPackageName = "org.mongodb.scala.connection"
-    val local = currentMirror.staticPackage("org.mongodb.scala.connection").info.decls.map(_.name.toString).toSet - "package"
+    val local = currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet - "package"
 
     diff(local, wrapped) shouldBe empty
   }

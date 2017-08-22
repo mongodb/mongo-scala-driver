@@ -14,3 +14,5 @@ addSbtPlugin("com.eed3si9n" % "sbt-unidoc" % "0.3.2")
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.8.5")
 
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.6.1")
+
+libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value

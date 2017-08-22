@@ -16,8 +16,6 @@
 
 package org.mongodb.scala.bson.collections
 
-import scala.language.implicitConversions
-
 import org.mongodb.scala.bson._
 import org.mongodb.scala.bson.collection.immutable.Document
 import org.mongodb.scala.bson.collection.mutable

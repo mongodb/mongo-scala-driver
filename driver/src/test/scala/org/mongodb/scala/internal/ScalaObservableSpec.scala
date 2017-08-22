@@ -34,7 +34,7 @@ import org.scalatest.{FlatSpec, Matchers}
 class ScalaObservableSpec extends FlatSpec with Matchers {
 
   "ScalaObservable" should "allow for inline subscription" in {
-    var results = ArrayBuffer[Int]()
+    val results = ArrayBuffer[Int]()
     observable().subscribe((res: Int) => results += res)
     results should equal(1 to 100)
 
@@ -48,14 +48,14 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
   }
 
   it should "have a foreach method" in {
-    var results = ArrayBuffer[Int]()
+    val results = ArrayBuffer[Int]()
     observable().foreach((res: Int) => results += res)
     results should equal(1 to 100)
   }
 
   it should "have a transform method" in {
     var completed = false
-    var results = ArrayBuffer[String]()
+    val results = ArrayBuffer[String]()
     observable[Int]()
       .transform((res: Int) => res.toString, (ex: Throwable) => ex)
       .subscribe((s: String) => results += s, (t: Throwable) => (), () => completed = true)
@@ -74,7 +74,7 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
   }
 
   it should "have a map method" in {
-    var results = ArrayBuffer[String]()
+    val results = ArrayBuffer[String]()
     var completed = false
     observable[Int]()
       .map((res: Int) => res.toString)
@@ -87,7 +87,7 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
     def myObservable(fail: Boolean = false): Observable[String] =
       observable[Int](fail = fail).flatMap((res: Int) => observable(List(res.toString)))
 
-    var results = ArrayBuffer[String]()
+    val results = ArrayBuffer[String]()
     myObservable().subscribe((s: String) => results += s)
     results should equal((1 to 100).map(_.toString))
 
@@ -105,7 +105,7 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
   it should "have a filter method" in {
     def myObservable(fail: Boolean = false): Observable[Int] = observable[Int](fail = fail).filter((i: Int) => i % 2 != 0)
 
-    var results = ArrayBuffer[Int]()
+    val results = ArrayBuffer[Int]()
     myObservable().subscribe((i: Int) => results += i)
     results should equal((1 to 100).filter(i => i % 2 != 0))
 
@@ -121,7 +121,7 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
   it should "have a withFilter method" in {
     def myObservable(fail: Boolean = false): Observable[Int] = observable[Int](fail = fail).withFilter((i: Int) => i % 2 != 0)
 
-    var results = ArrayBuffer[Int]()
+    val results = ArrayBuffer[Int]()
     myObservable().subscribe((i: Int) => results += i)
     results should equal((1 to 100).filter(i => i % 2 != 0))
 
@@ -139,7 +139,7 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
       observable[Int](fail = fail).collect()
     }
 
-    var results = ArrayBuffer[Int]()
+    val results = ArrayBuffer[Int]()
     myObservable().subscribe((i: Seq[Int]) => results ++= i)
     results should equal(1 to 100)
 
@@ -253,7 +253,7 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
   }
 
   it should "have a zip method" in {
-    var results = ArrayBuffer[(Int, String)]()
+    val results = ArrayBuffer[(Int, String)]()
     observable[Int]().zip(observable().map(i => i.toString)).subscribe((res: (Int, String)) => results += res)
     results should equal((1 to 100).zip((1 to 100).map(_.toString)))
   }

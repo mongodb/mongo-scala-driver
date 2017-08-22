@@ -19,7 +19,6 @@ package org.mongodb.scala.model
 import java.lang.reflect.Modifier._
 
 import scala.collection.JavaConverters._
-import scala.reflect.runtime.{universe => u}
 
 import org.mongodb.scala.model.geojson.NamedCoordinateReferenceSystem._
 import org.mongodb.scala.model.geojson._

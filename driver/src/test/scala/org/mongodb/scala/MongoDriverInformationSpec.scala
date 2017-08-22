@@ -18,8 +18,6 @@ package org.mongodb.scala
 
 import java.lang.reflect.Modifier.isStatic
 
-import com.mongodb.client.{MongoDriverInformation => JMongoDriverInformation}
-
 import org.scalatest.{FlatSpec, Matchers}
 
 class MongoDriverInformationSpec extends FlatSpec with Matchers {

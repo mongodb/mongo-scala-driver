@@ -16,8 +16,6 @@
 
 package org.mongodb.scala
 
-import scala.language.implicitConversions
-
 import org.bson.BsonString
 
 
@@ -29,7 +27,7 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       val document = Document("_id" -> 1)
       val updatedDocument = Document("_id" -> 1, "a" -> 1)
 
-      val names = client.listDatabaseNames().futureValue
+      client.listDatabaseNames().futureValue
 
       info("Creating a collection")
       val created = database.createCollection(collectionName).futureValue

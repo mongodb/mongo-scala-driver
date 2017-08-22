@@ -16,8 +16,6 @@
 
 package org.mongodb.scala.bson.collections
 
-import scala.language.postfixOps
-
 import scala.collection.mutable
 
 import org.bson.json.JsonParseException

@@ -16,18 +16,19 @@
 
 package org.mongodb.scala
 
+import scala.collection.JavaConverters._
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
-import scala.collection.JavaConverters._
-import scala.language.implicitConversions
+
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.bson.{BsonArray, BsonDocument, BsonNull, BsonString, BsonValue}
 
 // imports required for filters, projections and updates
 import org.bson.BsonType
-import org.mongodb.scala.model.Filters.{all, and, bsonType, elemMatch, equal, exists, gt, in, lt, lte, or, regex, size}
+
+import org.mongodb.scala.model.Filters.{and, bsonType, elemMatch, exists, gt, in, lt, lte, or}
+import org.mongodb.scala.model.Projections.{exclude, excludeId, fields, slice}
 import org.mongodb.scala.model.Updates.{combine, currentDate, set}
-import org.mongodb.scala.model.Projections.{include, exclude, excludeId, fields, slice}
 // end required filters, projections and updates imports
 
 

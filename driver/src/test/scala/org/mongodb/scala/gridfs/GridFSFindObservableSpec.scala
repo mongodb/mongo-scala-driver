@@ -23,7 +23,7 @@ import scala.concurrent.duration.Duration
 import com.mongodb.async.client.MongoIterable
 import com.mongodb.async.client.gridfs.GridFSFindIterable
 
-import org.mongodb.scala.{Document, Observer, Subscription}
+import org.mongodb.scala.Document
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -49,12 +49,6 @@ class GridFSFindObservableSpec extends FlatSpec with Matchers with MockFactory {
     val maxTime = Duration(10, "second") //scalatyle:ignore
     val skip = 5
     val sort = Document("{_id: 1}")
-    val observer = new Observer[GridFSFile]() {
-      override def onError(throwable: Throwable): Unit = {}
-      override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
-      override def onComplete(): Unit = {}
-      override def onNext(doc: GridFSFile): Unit = {}
-    }
 
     wrapper.expects('batchSize)(batchSize).once()
     wrapper.expects('filter)(filter).once()

@@ -27,33 +27,22 @@ matrix:
         jdk: oraclejdk7
 
 env:
-  global:
-    - MONGO_REPO="http://repo.mongodb.com/apt/ubuntu"
-    - REPO_TYPE="precise/mongodb-enterprise/3.0 multiverse"
-    - SOURCES_LOC="/etc/apt/sources.list.d/mongodb-enterprise.list"
-    - KEY_SERVER="hkp://keyserver.ubuntu.com:80"
-    - MONGOD_PARAMS="--setParameter=enableTestCommands=1"
-    - MONGOD_OPTS="--dbpath ./data --fork --logpath mongod.log ${MONGOD_PARAMS}"
-    - TERM=dumb
+  matrix:
+    - MONGODB=3.4.3
 
-before_install:
-    # MongoDB Enterprise Edition 3.0
-    - sudo apt-key adv --keyserver ${KEY_SERVER} --recv 7F0CEB10
-    - echo "deb ${MONGO_REPO} ${REPO_TYPE}" | sudo tee ${SOURCES_LOC}
-
-    # Update all the repositories
-    - sudo apt-get update -qq
 
 install:
-    # Install MongoDB Enterprise
-    - sudo apt-get install mongodb-enterprise-server
-    - sudo stop mongod
-    - mkdir data
+  - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+  - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+  - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --version
 
 before_script:
-    - mongod ${MONGOD_OPTS}
-
+  - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+  - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+  - echo $TRAVIS_SCALA_VERSION
 
 script:
   - ./sbt ++$TRAVIS_SCALA_VERSION check
 
+after_script:
+  - pkill mongod
