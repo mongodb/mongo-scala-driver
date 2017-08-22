@@ -12,6 +12,7 @@ Changes between released versions
 
 ### 2.2.0
 
+  * Fixed exception handling in Macro Codecs [SCALA-319](https://jira.mongodb.org/browse/SCALA-319)
   * Added implicit headOption method [SCALA-334](https://jira.mongodb.org/browse/SCALA-334)
   * Added BsonProperty annotation [SCALA-321](https://jira.mongodb.org/browse/SCALA-321)
   * Updated Mongodb Driver Async dependency to [3.5.0](https://jira.mongodb.org/browse/SCALA-335)

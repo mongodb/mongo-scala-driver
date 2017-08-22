@@ -25,7 +25,7 @@ import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
 import org.bson._
-import org.bson.codecs.configuration.{ CodecConfigurationException, CodecProvider, CodecRegistries }
+import org.bson.codecs.configuration.{ CodecProvider, CodecRegistries }
 import org.bson.codecs.{ Codec, DecoderContext, EncoderContext }
 import org.bson.io.{ BasicOutputBuffer, ByteBufferBsonInput, OutputBuffer }
 import org.bson.types.ObjectId
@@ -294,7 +294,7 @@ class MacrosSpec extends FlatSpec with Matchers {
 
     val buffer = encode(registry.get(classOf[Document]), Document(missing_t))
 
-    an[CodecConfigurationException] should be thrownBy {
+    an[BsonInvalidOperationException] should be thrownBy {
       decode(registry.get(classOf[Graph]), buffer)
     }
   }
@@ -304,18 +304,18 @@ class MacrosSpec extends FlatSpec with Matchers {
     val registry = CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[Graph]), DEFAULT_CODEC_REGISTRY)
     val buffer = encode(registry.get(classOf[Document]), Document(missing_t))
 
-    an[CodecConfigurationException] should be thrownBy {
+    an[BsonInvalidOperationException] should be thrownBy {
       decode(registry.get(classOf[Graph]), buffer)
     }
   }
 
   it should "throw a CodecConfigurationException when encountering null values in case classes" in {
     val registry = CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[Person]), DEFAULT_CODEC_REGISTRY)
-    an[CodecConfigurationException] should be thrownBy {
+    an[BsonInvalidOperationException] should be thrownBy {
       encode(registry.get(classOf[Person]), null)
     }
 
-    an[CodecConfigurationException] should be thrownBy {
+    an[BsonInvalidOperationException] should be thrownBy {
       encode(registry.get(classOf[Person]), Person(null, null))
     }
   }
@@ -327,6 +327,22 @@ class MacrosSpec extends FlatSpec with Matchers {
 
   it should "not compile if there are no concrete implementations of a sealed class" in {
     "Macros.createCodecProvider(classOf[NotImplemented])" shouldNot compile
+  }
+
+  it should "error when reading unexpected lists" in {
+    val registry = CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[ContainsCaseClass], classOf[Person]), DEFAULT_CODEC_REGISTRY)
+    an[BsonInvalidOperationException] should be thrownBy {
+      val json = """{name: "Bob", friend: [{firstName: "Jane", lastName: "Ada"}]}"""
+      decode(ContainsCaseClass("Bob", Person("Jane", "Ada")), json, registry.get(classOf[ContainsCaseClass]))
+    }
+  }
+
+  it should "error when reading unexpected documents" in {
+    val registry = CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[ContainsCaseClass], classOf[Person]), DEFAULT_CODEC_REGISTRY)
+    an[BsonInvalidOperationException] should be thrownBy {
+      val json = """{name: "Bob", friend: {first: {firstName: "Jane", lastName: "Ada"}}}"""
+      decode(ContainsCaseClass("Bob", Person("Jane", "Ada")), json, registry.get(classOf[ContainsCaseClass]))
+    }
   }
 
   def roundTrip[T](value: T, expected: String, provider: CodecProvider, providers: CodecProvider*)(implicit ct: ClassTag[T]): Unit = {

@@ -19,9 +19,9 @@ package org.mongodb.scala.bson.codecs.macrocodecs
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
-import org.bson.codecs.configuration.{ CodecConfigurationException, CodecRegistries, CodecRegistry }
-import org.bson.codecs.{ Codec, DecoderContext, Encoder, EncoderContext }
 import org.bson._
+import org.bson.codecs.configuration.{ CodecRegistries, CodecRegistry }
+import org.bson.codecs.{ Codec, DecoderContext, Encoder, EncoderContext }
 
 import org.mongodb.scala.bson.BsonNull
 
@@ -88,7 +88,7 @@ trait MacroCodec[T] extends Codec[T] {
 
   override def encode(writer: BsonWriter, value: T, encoderContext: EncoderContext): Unit = {
     if (value == null) { // scalastyle:ignore
-      throw new CodecConfigurationException(s"Invalid value for $encoderClass found a `null` value.")
+      throw new BsonInvalidOperationException(s"Invalid value for $encoderClass found a `null` value.")
     }
     writeValue(writer, value, encoderContext)
   }
@@ -130,11 +130,11 @@ trait MacroCodec[T] extends Codec[T] {
       mark.reset()
 
       val className = optionalClassName.getOrElse {
-        throw new CodecConfigurationException(s"Could not decode sealed case class. Missing '$classFieldName' field.")
+        throw new BsonInvalidOperationException(s"Could not decode sealed case class. Missing '$classFieldName' field.")
       }
 
       if (!caseClassesMap.contains(className)) {
-        throw new CodecConfigurationException(s"Could not decode sealed case class, unknown class $className.")
+        throw new BsonInvalidOperationException(s"Could not decode sealed case class, unknown class $className.")
       }
       className
     } else {
@@ -151,7 +151,7 @@ trait MacroCodec[T] extends Codec[T] {
 
   protected def writeFieldValue[V](fieldName: String, writer: BsonWriter, value: V, encoderContext: EncoderContext): Unit = {
     if (value == null) { // scalastyle:ignore
-      throw new CodecConfigurationException(s"Invalid value for $fieldName found a `null` value.")
+      throw new BsonInvalidOperationException(s"Invalid value for $fieldName found a `null` value.")
     }
     writeValue(writer, value, encoderContext)
   }
@@ -181,6 +181,10 @@ trait MacroCodec[T] extends Codec[T] {
 
   protected def readArray[V](reader: BsonReader, decoderContext: DecoderContext, clazz: Class[V], typeArgs: List[Class[_]],
     fieldTypeArgsMap: Map[String, List[Class[_]]]): V = {
+
+    if (typeArgs.isEmpty) {
+      throw new BsonInvalidOperationException(s"Invalid Bson format for '${clazz.getSimpleName}'. Found a list but there is no type data.")
+    }
     reader.readStartArray()
     val list = mutable.ListBuffer[Any]()
     while (reader.readBsonType ne BsonType.END_OF_DOCUMENT) {

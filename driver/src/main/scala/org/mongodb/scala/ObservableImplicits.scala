@@ -350,7 +350,7 @@ trait ObservableImplicits {
       import scala.concurrent.ExecutionContext.Implicits.global
       headOption().map {
         case Some(result) => result
-        case None => null.asInstanceOf[T]  // scalastyle:ignore null
+        case None         => null.asInstanceOf[T] // scalastyle:ignore null
       }
     }
 

@@ -293,9 +293,12 @@ private[codecs] object CaseClassCodec {
       fields.map({
         case (name, f) =>
           val key = keyNameTerm(name)
+          val missingField = Literal(Constant(s"Missing field: $key"))
           f match {
             case optional if isOption(optional) => q"$name = (if (fieldData.contains($key)) Option(fieldData($key)) else None).asInstanceOf[$f]"
-            case _ => q"$name = fieldData.getOrElse($key, classFieldDefaultArgsMap($key)).asInstanceOf[$f]"
+            case _ =>
+              q"""$name = fieldData.getOrElse($key, classFieldDefaultArgsMap.getOrElse($key,
+                 throw new BsonInvalidOperationException($missingField))).asInstanceOf[$f]"""
           }
       })
     }
@@ -303,16 +306,16 @@ private[codecs] object CaseClassCodec {
     def getInstance = {
       val cases = knownTypes.map { st =>
         cq"${keyName(st)} => new $st(..${fieldSetters(fields(st))})"
-      } :+ cq"""_ => throw new CodecConfigurationException("Unexpected class type: " + className)"""
+      } :+ cq"""_ => throw new BsonInvalidOperationException("Unexpected class type: " + className)"""
       q"className match { case ..$cases }"
     }
 
     c.Expr[Codec[T]](
       q"""
         import scala.collection.mutable
-        import org.bson.BsonWriter
+        import org.bson.{ BsonInvalidOperationException, BsonWriter }
         import org.bson.codecs.EncoderContext
-        import org.bson.codecs.configuration.{CodecRegistry, CodecConfigurationException}
+        import org.bson.codecs.configuration.CodecRegistry
         import org.mongodb.scala.bson.codecs.macrocodecs.MacroCodec
 
         case class $codecName(codecRegistry: CodecRegistry) extends MacroCodec[$classTypeName] {
