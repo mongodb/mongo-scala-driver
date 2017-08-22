@@ -9,7 +9,7 @@ title = "Filters"
 
 ## Filters
 
-The [`Filters`]({{< apiref "org.mongodb.scala.model.Filters$" >}}) class provides static factory methods for all the MongoDB query 
+The [`Filters`]({{< apiref "org/mongodb/scala/model/Filters$" >}}) class provides static factory methods for all the MongoDB query 
 operators.  Each method returns an instance of the [`Bson`]({{< relref "bson/documents.md#bson" >}}) type, which can in turn be passed to
 any method that expects a query filter.
 
@@ -204,13 +204,13 @@ indexes support $nearSphere.
 
 To make it easier to construct GeoJSON-based filters, the driver also include a full GeoJSON class hierarchy:
 
-- [`Point`]({{< apiref "org.mongodb.scala..model.geojson.package$$Point$" >}}): A representation of a GeoJSON Point.
-- [`MultiPoint`]({{< apiref "org.mongodb.scala..model.geojson.package$$MultiPoint$" >}}): A representation of a GeoJSON MultiPoint.
-- [`LineString`]({{< apiref "org.mongodb.scala..model.geojson.package$$LineString$" >}}): A representation of a GeoJSON LineString.
-- [`MultiLineString`]({{< apiref "org.mongodb.scala..model.geojson.package$$MultiLineString$" >}}): A representation of a GeoJSON MultiLineString.
-- [`Polygon`]({{< apiref "org.mongodb.scala..model.geojson.package$$Polygon$" >}}): A representation of a GeoJSON Polygon.
-- [`MultiPolygon`]({{< apiref "org.mongodb.scala..model.geojson.package$$MultiPolygon$" >}}): A representation of a GeoJSON MultiPolygon.
-- [`GeometryCollection`]({{< apiref "org.mongodb.scala..model.geojson.package$$GeometryCollection$" >}}): A representation of a GeoJSON 
+- [`Point`]({{< apiref "org/mongodb/scala/model/geojson/package$$Point$" >}}): A representation of a GeoJSON Point.
+- [`MultiPoint`]({{< apiref "org/mongodb/scala/model/geojson/package$$MultiPoint$" >}}): A representation of a GeoJSON MultiPoint.
+- [`LineString`]({{< apiref "org/mongodb/scala/model/geojson/package$$LineString$" >}}): A representation of a GeoJSON LineString.
+- [`MultiLineString`]({{< apiref "org/mongodb/scala/model/geojson/package$$MultiLineString$" >}}): A representation of a GeoJSON MultiLineString.
+- [`Polygon`]({{< apiref "org/mongodb/scala/model/geojson/package$$Polygon$" >}}): A representation of a GeoJSON Polygon.
+- [`MultiPolygon`]({{< apiref "org/mongodb/scala/model/geojson/package$$MultiPolygon$" >}}): A representation of a GeoJSON MultiPolygon.
+- [`GeometryCollection`]({{< apiref "org/mongodb/scala/model/geojson/package$$GeometryCollection$" >}}): A representation of a GeoJSON 
 GeometryCollection.
 
 

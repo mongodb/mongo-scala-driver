@@ -53,7 +53,7 @@ database component, does not use the database component for anything other than 
 #### Options
 
 Many options can be provided via the connection string. The ones that cannot may be provided in a 
-[`MongoClientSettings`]({{< apiref "org.mongodb.scala.MongoClientSettings$" >}}) instance. To
+[`MongoClientSettings`]({{< apiref "org/mongodb/scala/MongoClientSettings$" >}}) instance. To
 provide an option, append a `?` to the connection string and separate options by an `&`.
 
 ```ini
@@ -67,11 +67,11 @@ For a comprehensive list of the available options, see the [`ConnectionString`](
 
 ### MongoClient
 
-A [`MongoClient`]({{< apiref "org.mongodb.scala.MongoClient$" >}}) instance will be the root object for all interaction with MongoDB. It is all 
+A [`MongoClient`]({{< apiref "org/mongodb/scala/MongoClient$" >}}) instance will be the root object for all interaction with MongoDB. It is all 
 that is needed to handle connecting to servers, monitoring servers, and performing operations against those servers. 
 
-To create a `MongoClient` use the [`MongoClient()`]({{< apiref "org.mongodb.scala.MongoClient$@apply(uri:String):org.mongodb.scala.MongoClient" >}}) 
-static helper.  Without any arguments `MongoClient()` will return a [`MongoClient`]({{< apiref "org.mongodb.scala.MongoClient$" >}}) 
+To create a `MongoClient` use the [`MongoClient()`]({{< apiref "org/mongodb/scala/MongoClient$.html#apply(uri:String):org.mongodb.scala.MongoClient" >}}) 
+static helper.  Without any arguments `MongoClient()` will return a [`MongoClient`]({{< apiref "org/mongodb/scala/MongoClient$" >}}) 
 instance will connect to "localhost" port 27017.  
 
 ```scala
@@ -84,10 +84,10 @@ Alternatively, a connection string may be provided:
 val client: MongoClient = MongoClient("mongodb://host:27017,host2:27017/?replicaSet=rs0")
 ```
 
-Finally, the [`MongoClientSettings`]({{< apiref "org.mongodb.scala.MongoClientSettings$" >}}) class provides an in-code way to set the 
+Finally, the [`MongoClientSettings`]({{< apiref "org/mongodb/scala/MongoClientSettings$" >}}) class provides an in-code way to set the 
 same options from a connection string.  This is sometimes necessary, as the connection string does not allow an application to configure as 
 many properties of the connection as  `MongoClientSettings`.  
-[`MongoClientSettings`]({{< apiref "org.mongodb.scala.MongoClientSettings$" >}}) instances are immutable, so to create one an 
+[`MongoClientSettings`]({{< apiref "org/mongodb/scala/MongoClientSettings$" >}}) instances are immutable, so to create one an 
 application uses a builder: 
 
 ```scala
@@ -117,5 +117,5 @@ MongoClientSettings.builder().streamFactoryFactory(NettyStreamFactoryFactory()).
 
 By default the Netty-based streams will use the [NioEventLoopGroup](http://netty.io/4.0/api/io/netty/channel/nio/NioEventLoopGroup.html) 
 and Netty's [default `ByteBufAllocator`](http://netty.io/4.0/api/io/netty/buffer/ByteBufAllocator.html#DEFAULT), but these are 
-configurable via the [`NettyStreamFactoryFactory`]({{< apiref "org.mongodb.scala.connection.NettyStreamFactoryFactory$" >}}) constructor.   
+configurable via the [`NettyStreamFactoryFactory`]({{< apiref "org/mongodb/scala/connection/NettyStreamFactoryFactory$" >}}) constructor.   
 

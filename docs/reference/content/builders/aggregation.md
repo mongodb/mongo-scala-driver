@@ -9,7 +9,7 @@ title = "Aggregation"
 
 ## Aggregation
 
-The [`Aggregates`]({{< apiref "org.mongodb.scala.model.Aggregates$" >}}) class provides static factory methods that build [aggregation 
+The [`Aggregates`]({{< apiref "org/mongodb/scala/model/Aggregates$" >}}) class provides static factory methods that build [aggregation 
 pipeline operators]({{< docsref "reference/operator/aggregation/" >}}).  Each method returns an instance of the 
 [`Bson`]({{< relref "bson/documents.md#bson" >}}) type, which can in turn be passed to the `aggregate` method of `MongoCollection`.
 
@@ -25,7 +25,7 @@ All the examples below assume this static import.
   
 The [`$match`]({{< docsref "reference/operator/aggregation/match/" >}}) pipeline stage passes all documents matching the 
 specified filter to the next stage.  Though the filter can be an instance of any class that implements `Bson`, it's convenient to 
-combine with use of the [`Filters`]({{< apiref "org.mongodb.scala.model.Filters$" >}}) class.  In the example below, it's assumed that the 
+combine with use of the [`Filters`]({{< apiref "org/mongodb/scala/model/Filters$" >}}) class.  In the example below, it's assumed that the 
 `equal` method of the `Filters` class has been statically imported.
   
 This example creates a pipeline stage that matches all documents where the `author` field is equal to `"Dave"`:
@@ -46,7 +46,7 @@ filter(equal("author", "Dave"))
   
 The [`$project`]({{< docsref "reference/operator/aggregation/project/" >}}) pipeline stage passes the projected fields of all 
 documents to the next stage.  Though the projection can be an instance of any class that implements `Bson`, it's convenient to combine 
-with use of the [`Projections`]({{< apiref "org.mongodb.scala.model.Projections$" >}}) class.  In the example below, it's assumed that the 
+with use of the [`Projections`]({{< apiref "org/mongodb/scala/model/Projections$" >}}) class.  In the example below, it's assumed that the 
 `include`, `excludeId`, and `fields` methods of the `Projections` class have been statically imported. 
   
 This example creates a pipeline stage that excludes the `_id` field but includes the `title` and `author` fields:
@@ -77,7 +77,7 @@ sample(5)
   
 The [`$sort`]({{< docsref "reference/operator/aggregation/sort/" >}}) pipeline stage passes all documents to the next stage, 
 sorted by the specified sort criteria. Though the sort criteria can be an instance of any class that implements `Bson`, it's convenient to 
-combine with use of the [`Sorts`]({{< apiref "org.mongodb.scala.model.Sorts$" >}}) class.  In the example below, it's assumed that the 
+combine with use of the [`Sorts`]({{< apiref "org/mongodb/scala/model/Sorts$" >}}) class.  In the example below, it's assumed that the 
 `descending`, `ascending`, and `orderBy` methods of the `Sorts` class have been statically imported.
   
 This example creates a pipeline stage that sorts in descending order according to the value of the `age` field and then in ascending order 
@@ -128,7 +128,7 @@ expression and outputs to the next stage a document for each distinct grouping. 
 expression on which to group, and zero or more 
 [accumulators]({{< docsref "reference/operator/aggregation/group/#accumulator-operator" >}}) which are evaluated for each 
 grouping.  To simplify the expression of accumulators, the driver includes an 
-[`Accumulators`]({{< apiref "org.mongodb.scala.model.Aggregates$" >}}) class with static factory methods for each of the supported 
+[`Accumulators`]({{< apiref "org/mongodb/scala/model/Aggregates$" >}}) class with static factory methods for each of the supported 
 accumulators. In the example below, it's assumed that the `sum` and `avg` methods of the `Accumulators` class have been statically 
 imported. 
  

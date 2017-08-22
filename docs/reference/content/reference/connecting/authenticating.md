@@ -14,12 +14,12 @@ The Scala driver supports all MongoDB [authentication mechanisms](http://docs.mo
 only available in the MongoDB [Enterprise Edition](http://docs.mongodb.org/manual/administration/install-enterprise/).
 
 An authentication credential is represented as an instance of the
-[`MongoCredential`]({{< apiref "org.mongodb.scala.MongoCredential$" >}}) class, which includes static factory methods for
+[`MongoCredential`]({{< apiref "org/mongodb/scala/MongoCredential$" >}}) class, which includes static factory methods for
 each of the supported authentication mechanisms.  A list of these instances must be passed to the driver via a
-[`MongoClient`]({{< apiref "org.mongodb.scala.MongoClient$" >}}) static factory method that takes a 
-[`MongoClientSettings`]({{< apiref "org.mongodb.scala.MongoClientSettings$" >}}) parameter.  Alternatively, a single 
+[`MongoClient`]({{< apiref "org/mongodb/scala/MongoClient$" >}}) static factory method that takes a 
+[`MongoClientSettings`]({{< apiref "org/mongodb/scala/MongoClientSettings$" >}}) parameter.  Alternatively, a single 
 `MongoCredential` can be created implicity via a 
-[`ConnectionString`]({{< apiref "org.mongodb.scala.ConnectionString$" >}}) and passed to a `MongoClient` static factory method that 
+[`ConnectionString`]({{< apiref "org/mongodb/scala/ConnectionString$" >}}) and passed to a `MongoClient` static factory method that 
 takes a `ConnectionString` parameter. 
 
 {{% note %}}

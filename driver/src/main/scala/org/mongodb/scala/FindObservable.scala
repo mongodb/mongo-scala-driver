@@ -288,7 +288,7 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
   }
 
   /**
-   * Sets the showRecordId. Set to true to add a field `$recordId` to the returned documents.
+   * Sets the showRecordId. Set to true to add a field `\$recordId` to the returned documents.
    *
    * @param showRecordId the showRecordId
    * @return this

@@ -10,11 +10,11 @@ title = "Macros"
 ## Macros
 
 New in 2.0, the Scala driver allows you to use case classes to represent documents in a collection via the 
-[`Macros`]({{< apiref "org.mongodb.scala.bson.codecs.Macros" >}}) helper.  Simple case classes and nested case classes are supported. 
+[`Macros`]({{< apiref "org/mongodb/scala/bson/codecs/Macros$" >}}) helper.  Simple case classes and nested case classes are supported. 
 Hierarchical modelling can be achieve by using a sealed trait and having case classes implement the parent trait.
 
 Many simple Scala types are supported and they will be marshaled into their corresponding 
-[`BsonValue`]({{< apiref "org.mongodb.scala.bson.BsonValue" >}}) type. Below is a list of Scala types and their type-safe BSON representation:
+`BsonValue` type. Below is a list of Scala types and their type-safe BSON representation:
    
 | Scala type                        | BSON type         |
 |-----------------------------------|-------------------|

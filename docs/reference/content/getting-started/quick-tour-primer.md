@@ -50,16 +50,16 @@ libraries and provides easy interoperability with them.  For more information se
 
 The MongoDB Scala Driver is built upon the callback-driven MongoDB async driver. The API mirrors the 
 async driver API and any methods that cause network IO return an instance of the 
-[`Observable[T]`]({{< apiref "org.mongodb.scala.Observable">}}) where `T` is the type of response for the operation. The 
+[`Observable[T]`]({{< apiref "org/mongodb/scala/Observable">}}) where `T` is the type of response for the operation. The 
 exception to that rule is for methods in the async driver that return a `Void` value in the callback. 
 As an `Observable[Void]` never calls `onNext` it stops it from being composable with other `Observables`, so  in these 
-circumstances we return a [`Observable[Completed]`]({{< apiref "org/mongodb/scala/Completed.html">}}) for the operation instead.
+circumstances we return a [`Observable[Completed]`]({{< apiref "org/mongodb/scala/Completed">}}) for the operation instead.
 
 ### Observable
 
-The [`Observable`]({{< apiref "org.mongodb.scala.Observable">}}) is a trait wrapping the Java interface and where appropriate 
+The [`Observable`]({{< apiref "org/mongodb/scala/Observable">}}) is a trait wrapping the Java interface and where appropriate 
 implementations of the trait extend it to make a fluent API. One such example is 
-[`FindObservable`]({{< apiref "org.mongodb.scala.FindObservable">}}), accessible through `collection.find()`.
+[`FindObservable`]({{< apiref "org/mongodb/scala/FindObservable">}}), accessible through `collection.find()`.
 
 {{% note %}}
 All `Observables` returned from the API are cold, meaning that no I/O happens until they are subscribed to. As such an observer is

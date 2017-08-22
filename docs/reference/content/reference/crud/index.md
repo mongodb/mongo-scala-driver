@@ -14,9 +14,9 @@ title = "CRUD Operations"
 For a walkthrough of the main CRUD operations please refer to the [Quick Tour]({{< ref "getting-started/quick-tour.md" >}}).
 
 All CRUD-related methods in the Scala driver are accessed through the 
-[`MongoCollection`]({{< apiref "org.mongodb.scala.MongoCollection" >}}) case class.  Instances of 
-`MongoCollection` can be obtained from a [`MongoClient`]({{< apiref "org.mongodb.scala.MongoClient" >}}) instance by way of a
-[`MongoDatabase`]({{< apiref "org.mongodb.scala.MongoDatabase" >}}):
+[`MongoCollection`]({{< apiref "org/mongodb/scala/MongoCollection" >}}) case class.  Instances of 
+`MongoCollection` can be obtained from a [`MongoClient`]({{< apiref "org/mongodb/scala/MongoClient" >}}) instance by way of a
+[`MongoDatabase`]({{< apiref "org/mongodb/scala/MongoDatabase" >}}):
 
 ```scala
 val client: MongoClient = MongoClient()
@@ -24,7 +24,7 @@ val database: MongoDatabase = client.getDatabase("mydb")
 val collection: MongoCollection[Document] = database.getCollection("mycoll")
 ```
 
-[`MongoCollection`]({{< apiref "org.mongodb.scala.MongoCollection" >}}) takes the type of `TDocument` which defines the  
+[`MongoCollection`]({{< apiref "org/mongodb/scala/MongoCollection" >}}) takes the type of `TDocument` which defines the  
 class that clients use to insert or replace documents in a collection, and the default type returned from `find` and `aggregate`.
  
 The single-argument `getCollection` method returns an instance of `MongoCollection[Document]`, and so with this type of collection 

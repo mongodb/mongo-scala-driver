@@ -61,7 +61,7 @@ mongoClient.getDatabase("databaseToBeDropped").drop().headResult()
 ## Create A Collection
 
 Collections in MongoDB are created automatically simply by inserted a document into it. Using the 
-[`createCollection`]({{< apiref "org.mongodb.scala.MongoDatabase@createCollection(collectionName:String):org.mongodb.scala.Observable[org.mongodb.scala.Completed]">}}) method, 
+[`createCollection`]({{< apiref "org/mongodb/scala/MongoDatabase.html#createCollection(collectionName:String):org.mongodb.scala.Observable[org.mongodb.scala.Completed]">}}) method, 
 you can also create a collection explicitly in order to customize its configuration. For example, to create a capped collection sized to 1 megabyte:
 
 ```scala
@@ -99,7 +99,7 @@ collection.createIndex(ascending("i")).printResults("Created an index named: ")
 
 ## Get a List of Indexes on a Collection
 
-Use the [`listIndexes()`]({{< apiref "org.mongodb.scala.MongoCollection@listIndexes[C]()(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.ListIndexesObservable[C]">}}) method to get a list of indexes.
+Use the [`listIndexes()`]({{< apiref "org/mongodb/scala/MongoCollection.html#listIndexes[C]()(implicite:org.mongodb.scala.Helpers.DefaultsTo[C,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[C]):org.mongodb.scala.ListIndexesObservable[C]">}}) method to get a list of indexes.
 
 ```scala
 collection.listIndexes().printResults()
@@ -167,13 +167,13 @@ For more information about text search see the [text index]({{< docsref "/core/i
 ## Running a command
 
 While not all commands have a specific helper, however you can run any [command]({{< docsref "/reference/command">}})
-by using the [`runCommand()`]({{< apiref "org.mongodb.scala.MongoDatabase@runCommand[TResult](command:org.bson.conversions.Bson)(implicite:org.mongodb.scala.Helpers.DefaultsTo[TResult,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[TResult]):org.mongodb.scala.Observable[TResult]">}}) 
+by using the [`runCommand()`]({{< apiref "org/mongodb/scala/MongoDatabase.html#runCommand[TResult](command:org.bson.conversions.Bson)(implicite:org.mongodb.scala.Helpers.DefaultsTo[TResult,org.mongodb.scala.collection.immutable.Document],implicitct:scala.reflect.ClassTag[TResult]):org.mongodb.scala.Observable[TResult]">}}) 
 method.  Here we call the [buildInfo]({{ docsref "reference/command/buildInfo" }}) command:
 
 ```scala
 database.runCommand(Document("buildInfo" -> 1)).printHeadResult()
 ```
 {{% note class="important" %}}
-If no [`readPreference`]({{< apiref "org.mongodb.scala.package@ReadPreference=com.mongodb.ReadPreference">}}) is passed 
+If no [`readPreference`]({{< apiref "org/mongodb/scala/package.html#ReadPreference=com.mongodb.ReadPreference">}}) is passed 
 to `runCommand` then the command will be run on the primary node.
 {{% /note %}}
