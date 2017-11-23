@@ -83,7 +83,7 @@ The following example uploads an `AsyncInputStream` into `GridFSBucket`:
 ```scala
 // Get the input stream
 val inputPath: Path = Paths.get("/tmp/mongodb-tutorial.pdf")
-val streamToDownloadTo: AsynchronousFileChannel = AsynchronousFileChannel.open(outputPath, StandardOpenOptionRead)
+val streamToDownloadTo: AsynchronousFileChannel = AsynchronousFileChannel.open(inputPath, StandardOpenOptionRead)
 val streamToUploadFrom: AsyncInputStream = channelToInputStream(streamToDownloadTo) // Using the AsynchronousChannelHelper
 
 // Create some custom options
@@ -134,7 +134,7 @@ gridFSBucket.find(Filters.equal("metadata.contentType", "image/png")).results().
 
 There are four main ways to download data from GridFS.
 
-### DownloadFromStream
+### DownloadToStream
 
 The [`downloadToStream`]({{< apiref "org/mongodb/scala/gridfs/GridFSBucket.html#downloadToStream(id:org.bson.types.ObjectId,destination:org.mongodb.scala.gridfs.AsyncOutputStream):org.mongodb.scala.Observable[Long]" >}}) 
 method reads the contents from MongoDB and writes the data directly to the provided [`AsyncOutputStream`]({{< apiref "org/mongodb/scala/gridfs/AsyncOutputStream" >}}).
