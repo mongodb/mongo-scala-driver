@@ -2,7 +2,7 @@
 language: scala
 scala:
   - 2.11.11
-  - 2.12.2
+  - 2.12.4
 
 jdk:
   - oraclejdk7
@@ -23,7 +23,7 @@ notifications:
 matrix:
     fast_finish: true
     exclude:
-      - scala: 2.12.2
+      - scala: 2.12.4
         jdk: oraclejdk7
 
 env:
