@@ -262,7 +262,7 @@ class MacrosSpec extends FlatSpec with Matchers {
   }
 
   it should "support extra fields in the document" in {
-    val json = """{firstName: "Bob", lastName: "Jones", address: {number: 1, street: "Acacia Avenue"}}"""
+    val json = """{firstName: "Bob", lastName: "Jones", address: {number: 1, street: "Acacia Avenue"}, aliases: ["Robert", "Rob"]}"""
     decode(Person("Bob", "Jones"), json, Macros.createCodec[Person]())
   }
 

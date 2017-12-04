@@ -83,7 +83,6 @@ trait MacroCodec[T] extends Codec[T] {
   lazy val hasClassFieldName: Boolean = caseClassesMap.size > 1
   lazy val caseClassesMapInv: Map[Class[_], String] = caseClassesMap.map(_.swap)
   protected val registry: CodecRegistry = CodecRegistries.fromRegistries(List(codecRegistry, CodecRegistries.fromCodecs(this)).asJava)
-  protected val unknownTypeArgs: List[Class[BsonValue]] = List[Class[BsonValue]](classOf[BsonValue])
   protected val bsonNull = BsonNull()
 
   override def encode(writer: BsonWriter, value: T, encoderContext: EncoderContext): Unit = {
@@ -100,8 +99,12 @@ trait MacroCodec[T] extends Codec[T] {
     reader.readStartDocument()
     while (reader.readBsonType ne BsonType.END_OF_DOCUMENT) {
       val name = reader.readName
-      val typeArgs = if (name == classFieldName) List(classOf[String]) else fieldTypeArgsMap.getOrElse(name, unknownTypeArgs)
-      map += (name -> readValue(reader, decoderContext, typeArgs.head, typeArgs.tail, fieldTypeArgsMap))
+      val typeArgs = if (name == classFieldName) List(classOf[String]) else fieldTypeArgsMap.getOrElse(name, List.empty)
+      if (typeArgs.isEmpty) {
+        reader.skipValue()
+      } else {
+        map += (name -> readValue(reader, decoderContext, typeArgs.head, typeArgs.tail, fieldTypeArgsMap))
+      }
     }
     reader.readEndDocument()
     getInstance(className, map.toMap)

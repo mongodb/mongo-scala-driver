@@ -17,7 +17,7 @@ Changes between released versions
   * Added BsonProperty annotation [SCALA-321](https://jira.mongodb.org/browse/SCALA-321)
   * Updated Mongodb Driver Async dependency to [3.5.0](https://jira.mongodb.org/browse/SCALA-335)
   * CaseClassCodec - Added support for internal vals. [SCALA-314](https://jira.mongodb.org/browse/SCALA-314)
-  * CaseClassCodec - Added handling of extra values in the document. [SCALA-307](https://jira.mongodb.org/browse/SCALA-307)
+  * CaseClassCodec - Added handling of extra values in the document. [SCALA-307](https://jira.mongodb.org/browse/SCALA-307) [SCALA-323](https://jira.mongodb.org/browse/SCALA-323)
   * Added support for custom Map implementations that don't include type information. [SCALA-311](https://jira.mongodb.org/browse/SCALA-311)
 
 ### 2.1.0
