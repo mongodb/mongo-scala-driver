@@ -28,7 +28,7 @@ object Dependencies {
   val logbackVersion          = "1.1.3"
   val reflectionsVersion      = "0.9.10"
   val javaxServeletApiVersion = "2.5"
-  val nettyVersion            = "4.0.26.Final"
+  val nettyVersion            = "4.1.5.Final"
 
   val rxScalaVersion          = "0.26.4"
   val rxStreamsVersion        = "1.0.0"
@@ -52,5 +52,5 @@ object Dependencies {
   // Projects
   val coreDependencies     = Seq(mongodbDriver)
   val testDependencies     = Seq(scalaTest, scalaMock, logback, reflections, javaxServeletApi, netty)
-  val examplesDependencies = Seq(rxScala, rxStreams)
+  val examplesDependencies = Seq(rxScala, rxStreams, netty)
 }
