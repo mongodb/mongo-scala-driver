@@ -313,8 +313,8 @@ functions:
           PROJECT_DIRECTORY=${PROJECT_DIRECTORY} NEXUS_USERNAME=${nexus_username} NEXUS_PASSWORD=${nexus_password} SIGNING_PASSWORD=${signing_password} SIGNING_KEY_ID=${signing_key_id} RING_FILE_GPG_BASE64=${ring_file_gpg_base64} .evergreen/publish-snapshots.sh
 
 hosts: &hosts
- - rhel62-small
- - rhel70-small
+ - "rhel62-small"
+ - "rhel70-small"
 
 pre:
   - func: "fetch source"
@@ -408,17 +408,17 @@ axes:
         variables:
            SCALA_VERSION: "2.12.2"
 
-    - id: "streamType"
-      display_name: "streamType"
-      values:
-        - id: "nio2"
-          display_name: "NIO2"
-          variables:
-             STREAM_TYPE: "nio2"
-        - id: "netty"
-          display_name: "Netty"
-          variables:
-             STREAM_TYPE: "netty"
+  - id: "streamType"
+    display_name: "streamType"
+    values:
+      - id: "nio2"
+        display_name: "NIO2"
+        variables:
+           STREAM_TYPE: "nio2"
+      - id: "netty"
+        display_name: "Netty"
+        variables:
+           STREAM_TYPE: "netty"
 
 buildvariants:
 
@@ -452,7 +452,6 @@ buildvariants:
 
 - name: "publish-snapshots"
   display_name: "Publish Snapshots"
-  run_on:
-    - *hosts
+  run_on: *hosts
   tasks:
     - name: "publish-snapshots-task"
