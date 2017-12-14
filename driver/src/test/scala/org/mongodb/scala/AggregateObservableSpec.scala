@@ -48,26 +48,33 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
 
   it should "call the underlying methods" in {
     val wrapper = mock[AggregateIterable[Document]]
-    val Observable = AggregateObservable(wrapper)
+    val observable = AggregateObservable(wrapper)
 
     val duration = Duration(1, TimeUnit.SECONDS)
     val collation = Collation.builder().locale("en").build()
+    val hint = Document("{hint: 1}")
 
     wrapper.expects('allowDiskUse)(true).once()
     wrapper.expects('useCursor)(true).once()
     wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
+    wrapper.expects('maxAwaitTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
     wrapper.expects('bypassDocumentValidation)(true).once()
     wrapper.expects('toCollection)(*).once()
     wrapper.expects('collation)(collation).once()
+    wrapper.expects('comment)("comment").once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
+    wrapper.expects('hint)(hint).once()
 
-    Observable.allowDiskUse(true)
-    Observable.useCursor(true)
-    Observable.maxTime(duration)
-    Observable.bypassDocumentValidation(true)
-    Observable.collation(collation)
-    Observable.toCollection().subscribe(observer[Completed])
-    Observable.subscribe(observer[Document])
+    observable.allowDiskUse(true)
+    observable.useCursor(true)
+    observable.maxTime(duration)
+    observable.maxAwaitTime(duration)
+    observable.bypassDocumentValidation(true)
+    observable.collation(collation)
+    observable.comment("comment")
+    observable.hint(hint)
+    observable.toCollection().subscribe(observer[Completed])
+    observable.subscribe(observer[Document])
   }
 }

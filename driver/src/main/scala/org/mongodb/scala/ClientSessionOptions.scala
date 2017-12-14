@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 MongoDB, Inc.
+ * Copyright 2017 MongoDB, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package org.mongodb.scala.connection
+package org.mongodb.scala
 
-import com.mongodb.connection.netty.{NettyStreamFactoryFactory => JNettyStreamFactoryFactory}
+import com.mongodb.{ClientSessionOptions => JClientSessionOptions}
 
 /**
- * A `StreamFactoryFactory` implementation for <a href='http://netty.io/'>Netty</a>-based streams.
+ * The options to apply to a `ClientSession`.
  *
- * @since 1.0
+ * @see ClientSession
+ * @since 2.2
  */
-object NettyStreamFactoryFactory {
-  def apply(): StreamFactoryFactory = JNettyStreamFactoryFactory.builder().build()
+object ClientSessionOptions {
 
   /**
-   * Create a builder for Netty-based streams
+   * Gets an instance of a builder
    *
-   * @return the builder
-   * @since 2.2
+   * @return a builder instance
    */
-  def builder(): NettyStreamFactoryFactoryBuilder = JNettyStreamFactoryFactory.builder()
+  def builder: JClientSessionOptions.Builder = JClientSessionOptions.builder
+
 }

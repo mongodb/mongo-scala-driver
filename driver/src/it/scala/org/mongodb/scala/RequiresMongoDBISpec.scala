@@ -25,6 +25,8 @@
 
 package org.mongodb.scala
 
+import com.mongodb.ConnectionString
+
 import scala.collection.JavaConverters._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.Duration
@@ -32,9 +34,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 import scala.language.implicitConversions
 import scala.util.{Failure, Properties, Success, Try}
-
 import com.mongodb.connection.ServerVersion
-
 import org.mongodb.scala.bson.BsonString
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
@@ -74,6 +74,10 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
 
   def isMongoDBOnline(): Boolean = {
     Try(Await.result(MongoClient(mongoClientURI).listDatabaseNames(), WAIT_DURATION)).isSuccess
+  }
+
+  def hasSingleHost(): Boolean = {
+    new ConnectionString(mongoClientURI).getHosts.size() == 1
   }
 
   def checkMongoDB() {
@@ -123,7 +127,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
       case Some(version) =>
         val serverVersion = version.getValue.split("\\D+").map(_.toInt).padTo(3, 0).take(3).toList.asJava
         new ServerVersion(serverVersion.asInstanceOf[java.util.List[Integer]]).compareTo(
-          new ServerVersion(minServerVersion.asJava.asInstanceOf[java.util.List[Integer]])) > 0
+          new ServerVersion(minServerVersion.asJava.asInstanceOf[java.util.List[Integer]])) >= 0
       case None => false
     }
   }

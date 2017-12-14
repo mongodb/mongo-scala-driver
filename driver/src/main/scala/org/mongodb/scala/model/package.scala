@@ -368,6 +368,20 @@ package object model {
   type IndexOptions = com.mongodb.client.model.IndexOptions
 
   /**
+   * The options to apply to the command when creating indexes.
+   *
+   * @since 2.2
+   */
+  type CreateIndexOptions = com.mongodb.client.model.CreateIndexOptions
+
+  /**
+   * The options to apply to the command when creating indexes.
+   *
+   * @since 2.2
+   */
+  type DropIndexOptions = com.mongodb.client.model.DropIndexOptions
+
+  /**
    * The options to apply to the creation of an index.
    */
   object IndexOptions {

@@ -137,14 +137,43 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    * @tparam TResult       the type of the class to use instead of [[Document]].
    * @return a Observable containing the command result
    */
-  def runCommand[TResult](
-    command:        Bson,
-    readPreference: ReadPreference
-  )(
+  def runCommand[TResult](command: Bson, readPreference: ReadPreference)(
     implicit
     e: TResult DefaultsTo Document, ct: ClassTag[TResult]
   ): SingleObservable[TResult] =
     observe(wrapped.runCommand(command, readPreference, ct, _: SingleResultCallback[TResult]))
+
+  /**
+   * Executes command in the context of the current database using the primary server.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param command  the command to be run
+   * @tparam TResult the type of the class to use instead of [[Document]].
+   * @return a Observable containing the command result
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def runCommand[TResult](clientSession: ClientSession, command: Bson)(
+    implicit
+    e: TResult DefaultsTo Document, ct: ClassTag[TResult]
+  ): SingleObservable[TResult] =
+    observe(wrapped.runCommand[TResult](clientSession, command, ct, _: SingleResultCallback[TResult]))
+
+  /**
+   * Executes command in the context of the current database.
+   *
+   * @param command        the command to be run
+   * @param readPreference the [[ReadPreference]] to be used when executing the command
+   * @tparam TResult       the type of the class to use instead of [[Document]].
+   * @return a Observable containing the command result
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def runCommand[TResult](clientSession: ClientSession, command: Bson, readPreference: ReadPreference)(
+    implicit
+    e: TResult DefaultsTo Document, ct: ClassTag[TResult]
+  ): SingleObservable[TResult] =
+    observe(wrapped.runCommand(clientSession, command, readPreference, ct, _: SingleResultCallback[TResult]))
 
   /**
    * Drops this database.
@@ -153,6 +182,18 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    * @return a Observable identifying when the database has been dropped
    */
   def drop(): SingleObservable[Completed] = observeCompleted(wrapped.drop(_: SingleResultCallback[Void]))
+
+  /**
+   * Drops this database.
+   *
+   * [[http://docs.mongodb.org/manual/reference/commands/dropDatabase/#dbcmd.dropDatabase Drop database]]
+   * @param clientSession the client session with which to associate this operation
+   * @return a Observable identifying when the database has been dropped
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def drop(clientSession: ClientSession): SingleObservable[Completed] =
+    observeCompleted(wrapped.drop(clientSession, _: SingleResultCallback[Void]))
 
   /**
    * Gets the names of all the collections in this database.
@@ -170,6 +211,32 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    */
   def listCollections[TResult]()(implicit e: TResult DefaultsTo Document, ct: ClassTag[TResult]): ListCollectionsObservable[TResult] =
     ListCollectionsObservable(wrapped.listCollections(ct))
+
+  /**
+   * Gets the names of all the collections in this database.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @return a Observable with all the names of all the collections in this database
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def listCollectionNames(clientSession: ClientSession): Observable[String] = observe(wrapped.listCollectionNames(clientSession))
+
+  /**
+   * Finds all the collections in this database.
+   *
+   * [[http://docs.mongodb.org/manual/reference/command/listCollections listCollections]]
+   * @param clientSession the client session with which to associate this operation
+   * @tparam TResult the target document type of the iterable.
+   * @return the fluent list collections interface
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def listCollections[TResult](clientSession: ClientSession)(
+    implicit
+    e: TResult DefaultsTo Document, ct: ClassTag[TResult]
+  ): ListCollectionsObservable[TResult] =
+    ListCollectionsObservable(wrapped.listCollections(clientSession, ct))
 
   /**
    * Create a new collection with the given name.
@@ -191,6 +258,33 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    */
   def createCollection(collectionName: String, options: CreateCollectionOptions): SingleObservable[Completed] =
     observeCompleted(wrapped.createCollection(collectionName, options, _: SingleResultCallback[Void]))
+
+  /**
+   * Create a new collection with the given name.
+   *
+   * [[http://docs.mongodb.org/manual/reference/commands/create Create Command]]
+   * @param clientSession the client session with which to associate this operation
+   * @param collectionName the name for the new collection to create
+   * @return a Observable identifying when the collection has been created
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def createCollection(clientSession: ClientSession, collectionName: String): SingleObservable[Completed] =
+    observeCompleted(wrapped.createCollection(clientSession, collectionName, _: SingleResultCallback[Void]))
+
+  /**
+   * Create a new collection with the selected options
+   *
+   * [[http://docs.mongodb.org/manual/reference/commands/create Create Command]]
+   * @param clientSession the client session with which to associate this operation
+   * @param collectionName the name for the new collection to create
+   * @param options        various options for creating the collection
+   * @return a Observable identifying when the collection has been created
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def createCollection(clientSession: ClientSession, collectionName: String, options: CreateCollectionOptions): SingleObservable[Completed] =
+    observeCompleted(wrapped.createCollection(clientSession, collectionName, options, _: SingleResultCallback[Void]))
 
   /**
    * Creates a view with the given name, backing collection/view name, and aggregation pipeline that defines the view.
@@ -218,4 +312,34 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
    */
   def createView(viewName: String, viewOn: String, pipeline: Seq[Bson], createViewOptions: CreateViewOptions): SingleObservable[Completed] =
     observeCompleted(wrapped.createView(viewName, viewOn, pipeline.asJava, createViewOptions, _: SingleResultCallback[Void]))
+
+  /**
+   * Creates a view with the given name, backing collection/view name, and aggregation pipeline that defines the view.
+   *
+   * [[http://docs.mongodb.org/manual/reference/commands/create Create Command]]
+   * @param clientSession the client session with which to associate this operation
+   * @param viewName the name of the view to create
+   * @param viewOn   the backing collection/view for the view
+   * @param pipeline the pipeline that defines the view
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def createView(clientSession: ClientSession, viewName: String, viewOn: String, pipeline: Seq[Bson]): SingleObservable[Completed] =
+    observeCompleted(wrapped.createView(clientSession, viewName, viewOn, pipeline.asJava, _: SingleResultCallback[Void]))
+
+  /**
+   * Creates a view with the given name, backing collection/view name, aggregation pipeline, and options that defines the view.
+   *
+   * [[http://docs.mongodb.org/manual/reference/commands/create Create Command]]
+   * @param clientSession the client session with which to associate this operation
+   * @param viewName          the name of the view to create
+   * @param viewOn            the backing collection/view for the view
+   * @param pipeline          the pipeline that defines the view
+   * @param createViewOptions various options for creating the view
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def createView(clientSession: ClientSession, viewName: String, viewOn: String, pipeline: Seq[Bson],
+                 createViewOptions: CreateViewOptions): SingleObservable[Completed] =
+    observeCompleted(wrapped.createView(clientSession, viewName, viewOn, pipeline.asJava, createViewOptions, _: SingleResultCallback[Void]))
 }

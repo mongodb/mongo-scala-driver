@@ -58,6 +58,10 @@ class AggregatesSpec extends FlatSpec with Matchers {
     toBson(bucket("$screenSize", 0, 24, 32, 50, 100000)) should equal(
       Document("""{$bucket: { groupBy: "$screenSize", boundaries: [0, 24, 32, 50, 100000] } } """)
     )
+
+    toBson(bucket("$screenSize", new BucketOptions().defaultBucket("other"), 0, 24, 32, 50, 100000)) should equal(
+      Document("""{$bucket: { groupBy: "$screenSize", boundaries: [0, 24, 32, 50, 100000], default: "other"} } """)
+    )
   }
 
   it should "render $bucketAuto" in {

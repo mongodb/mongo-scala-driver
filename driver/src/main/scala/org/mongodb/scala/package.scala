@@ -135,6 +135,25 @@ package object scala extends ObservableImplicits with WriteConcernImplicits {
    */
   type MongoClientSettings = com.mongodb.async.client.MongoClientSettings
 
+  /**
+   * A Client Session
+   *
+   * @since 2.2
+   */
+  type ClientSession = com.mongodb.session.ClientSession
+
+  /**
+   * Options for creating ClientSessions
+   * @since 2.2
+   */
+  type ClientSessionOptions = com.mongodb.ClientSessionOptions
+
+  /**
+   * Options for creating MongoCompressor
+   * @since 2.2
+   */
+  type MongoCompressor = com.mongodb.MongoCompressor
+
   // MongoException Aliases
   /**
    * Top level Exception for all Exceptions, server-side or client-side, that come from the driver.
@@ -145,6 +164,12 @@ package object scala extends ObservableImplicits with WriteConcernImplicits {
    * An exception that represents all errors associated with a bulk write operation.
    */
   type MongoBulkWriteException = com.mongodb.MongoBulkWriteException
+
+  /**
+   * An exception indicating that a failure occurred when running a `$changeStream`.
+   * @since 2.2
+   */
+  type MongoChangeStreamException = com.mongodb.MongoChangeStreamException
 
   /**
    * A base class for exceptions indicating a failure condition with the MongoClient.

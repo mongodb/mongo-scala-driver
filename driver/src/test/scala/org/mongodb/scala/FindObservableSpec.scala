@@ -42,7 +42,7 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
 
   it should "call the underlying methods" in {
     val wrapper = mock[FindIterable[Document]]
-    val Observable = FindObservable(wrapper)
+    val observable = FindObservable(wrapper)
 
     val filter = Document("a" -> 1)
     val duration = Duration(1, TimeUnit.SECONDS)
@@ -76,20 +76,20 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
-    Observable.first().subscribe(observer)
-    Observable.filter(filter)
-    Observable.maxTime(duration)
-    Observable.maxAwaitTime(maxDuration)
-    Observable.limit(1)
-    Observable.skip(1)
-    Observable.modifiers(modifiers)
-    Observable.projection(projection)
-    Observable.sort(sort)
-    Observable.noCursorTimeout(true)
-    Observable.oplogReplay(true)
-    Observable.partial(true)
-    Observable.cursorType(CursorType.NonTailable)
-    Observable.collation(collation)
-    Observable.subscribe(observer)
+    observable.first().subscribe(observer)
+    observable.filter(filter)
+    observable.maxTime(duration)
+    observable.maxAwaitTime(maxDuration)
+    observable.limit(1)
+    observable.skip(1)
+    observable.modifiers(modifiers)
+    observable.projection(projection)
+    observable.sort(sort)
+    observable.noCursorTimeout(true)
+    observable.oplogReplay(true)
+    observable.partial(true)
+    observable.cursorType(CursorType.NonTailable)
+    observable.collation(collation)
+    observable.subscribe(observer)
   }
 }

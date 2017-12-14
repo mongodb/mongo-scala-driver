@@ -40,7 +40,7 @@ class DistinctObservableSpec extends FlatSpec with Matchers with MockFactory {
 
   it should "call the underlying methods" in {
     val wrapper = mock[DistinctIterable[Document]]
-    val Observable = DistinctObservable(wrapper)
+    val observable = DistinctObservable(wrapper)
 
     val filter = Document("a" -> 1)
     val duration = Duration(1, TimeUnit.SECONDS)
@@ -59,9 +59,9 @@ class DistinctObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
-    Observable.filter(filter)
-    Observable.maxTime(duration)
-    Observable.collation(collation)
-    Observable.subscribe(observer)
+    observable.filter(filter)
+    observable.maxTime(duration)
+    observable.collation(collation)
+    observable.subscribe(observer)
   }
 }

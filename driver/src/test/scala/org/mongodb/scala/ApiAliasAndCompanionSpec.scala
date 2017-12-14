@@ -35,7 +35,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val packageName = "com.mongodb"
     val javaExclusions = Set("AsyncBatchCursor", "Block", "ConnectionString", "Function", "ServerCursor", "Majority", "MongoClients",
       "MongoIterable", "Observables", "SingleResultCallback", "GridFSBuckets", "DBRefCodec", "DBRefCodecProvider", "DBRef",
-      "DocumentToDBRefTransformer")
+      "DocumentToDBRefTransformer", "ServerSession", "SessionContext")
     val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "ScalaObservable",
       "ScalaWriteConcern", "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription",
       "classTagToClassOf", "ReadConcernLevel", "bsonDocumentToDocument", "bsonDocumentToUntypedDocument", "documentToUntypedDocument",
@@ -89,7 +89,8 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val javaExclusions = Set("AsyncCompletionHandler", "AsyncConnection", "AsynchronousSocketChannelStreamFactory", "BufferProvider",
       "Builder", "BulkWriteBatchCombiner", "ChangeEvent", "ChangeListener", "Cluster", "ClusterDescription", "ClusterFactory",
       "ClusterId", "Connection", "ConnectionDescription", "ConnectionId", "DefaultClusterFactory", "DefaultRandomStringGenerator",
-      "QueryResult", "RandomStringGenerator", "Server", "ServerDescription", "ServerId", "ServerVersion", "SocketStreamFactory", "Stream")
+      "QueryResult", "RandomStringGenerator", "Server", "ServerDescription", "ServerId", "ServerVersion", "SocketStreamFactory", "Stream",
+      "SplittablePayload")
 
     val filters = FilterBuilder.parse("-com.mongodb.connection.netty.*")
     val wrapped = new Reflections(new ConfigurationBuilder()
@@ -101,7 +102,9 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       .map(_.getSimpleName).toSet -- javaExclusions
 
     val scalaPackageName = "org.mongodb.scala.connection"
-    val local = currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet - "package"
+    val scalaExclusions = Set("package", "NettyStreamFactoryFactory", "NettyStreamFactoryFactoryBuilder",
+      "AsynchronousSocketChannelStreamFactoryFactoryBuilder")
+    val local = currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet -- scalaExclusions
 
     diff(local, wrapped) shouldBe empty
   }

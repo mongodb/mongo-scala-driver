@@ -48,7 +48,7 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
 
   it should "call the underlying methods" in {
     val wrapper = mock[MapReduceIterable[Document]]
-    val Observable = MapReduceObservable(wrapper)
+    val observable = MapReduceObservable(wrapper)
 
     val filter = Document("a" -> 1)
     val duration = Duration(1, TimeUnit.SECONDS)
@@ -75,22 +75,22 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
-    Observable.filter(filter)
-    Observable.scope(scope)
-    Observable.sort(sort)
-    Observable.limit(1)
-    Observable.maxTime(duration)
-    Observable.collectionName("collectionName")
-    Observable.databaseName("databaseName")
-    Observable.finalizeFunction("final")
-    Observable.action(MapReduceAction.REPLACE)
-    Observable.jsMode(true)
-    Observable.verbose(true)
-    Observable.sharded(true)
-    Observable.nonAtomic(true)
-    Observable.bypassDocumentValidation(true)
-    Observable.collation(collation)
-    Observable.toCollection().subscribe(observer[Completed])
-    Observable.subscribe(observer[Document])
+    observable.filter(filter)
+    observable.scope(scope)
+    observable.sort(sort)
+    observable.limit(1)
+    observable.maxTime(duration)
+    observable.collectionName("collectionName")
+    observable.databaseName("databaseName")
+    observable.finalizeFunction("final")
+    observable.action(MapReduceAction.REPLACE)
+    observable.jsMode(true)
+    observable.verbose(true)
+    observable.sharded(true)
+    observable.nonAtomic(true)
+    observable.bypassDocumentValidation(true)
+    observable.collation(collation)
+    observable.toCollection().subscribe(observer[Completed])
+    observable.subscribe(observer[Document])
   }
 }

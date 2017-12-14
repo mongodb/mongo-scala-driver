@@ -19,10 +19,9 @@ package org.mongodb.scala
 import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
-
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.AggregateIterable
-
+import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.internal.ObservableHelper._
 import org.mongodb.scala.model.Collation
 
@@ -57,6 +56,20 @@ case class AggregateObservable[TResult](private val wrapped: AggregateIterable[T
    */
   def maxTime(duration: Duration): AggregateObservable[TResult] = {
     wrapped.maxTime(duration.toMillis, TimeUnit.MILLISECONDS)
+    this
+  }
+
+  /**
+   * Sets the maximum await execution time on the server for this operation.
+   *
+   * [[http://docs.mongodb.org/manual/reference/operator/meta/maxTimeMS/ Max Time]]
+   * @param duration the duration
+   * @return this
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def maxAwaitTime(duration: Duration): AggregateObservable[TResult] = {
+    wrapped.maxAwaitTime(duration.toMillis, TimeUnit.MILLISECONDS)
     this
   }
 
@@ -104,6 +117,32 @@ case class AggregateObservable[TResult](private val wrapped: AggregateIterable[T
    */
   def collation(collation: Collation): AggregateObservable[TResult] = {
     wrapped.collation(collation)
+    this
+  }
+
+  /**
+   * Sets the comment to the aggregation. A null value means no comment is set.
+   *
+   * @param comment the comment
+   * @return this
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def comment(comment: String): AggregateObservable[TResult] = {
+    wrapped.comment(comment)
+    this
+  }
+
+  /**
+   * Sets the hint for which index to use. A null value means no hint is set.
+   *
+   * @param hint the hint
+   * @return this
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def hint(hint: Bson): AggregateObservable[TResult] = {
+    wrapped.hint(hint)
     this
   }
 

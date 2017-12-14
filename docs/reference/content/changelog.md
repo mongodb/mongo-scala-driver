@@ -12,6 +12,9 @@ Changes between released versions
 
 ### 2.2.0
 
+  * Updated MongoDB Driver Async to 3.6.0
+  * MongoDB 3.6 support [SCALA-336](https://jira.mongodb.org/browse/SCALA-336)
+    See the [what's new in 3.6 guide](http://mongodb.github.io/mongo-java-driver/3.6/whats-new/)
   * Fixed exception handling in Macro Codecs [SCALA-319](https://jira.mongodb.org/browse/SCALA-319)
   * Added implicit headOption method [SCALA-334](https://jira.mongodb.org/browse/SCALA-334)
   * Added BsonProperty annotation [SCALA-321](https://jira.mongodb.org/browse/SCALA-321)

@@ -37,12 +37,16 @@ class FiltersSpec extends FlatSpec with Matchers {
     val aliases = Set("equal", "notEqual", "bsonType")
     val ignore = Set("$anonfun$geoWithinPolygon$1")
     val local = model.Filters.getClass.getDeclaredMethods.filter(f => isPublic(f.getModifiers)).map(_.getName).toSet -- aliases -- ignore
+
     local should equal(wrapped)
   }
 
   it should "render without $eq" in {
     toBson(model.Filters.eq("x", 1)) should equal(Document("""{x : 1}"""))
     toBson(model.Filters.eq("x", null)) should equal(Document("""{x : null}"""))
+
+    toBson(model.Filters.equal("x", 1)) should equal(Document("""{x : 1}"""))
+    toBson(model.Filters.equal("x", null)) should equal(Document("""{x : null}"""))
   }
 
   it should "render $ne" in {
@@ -646,6 +650,14 @@ class FiltersSpec extends FlatSpec with Matchers {
                                                                                            }
                                                                                         }
                                                                                       }"""))
+  }
+
+  it should "render $expr" in {
+    toBson(model.Filters.expr(Document("{$gt: ['$spent', '$budget']}"))) should equal(Document("""{$expr: {$gt: ["$spent", "$budget"]}}"""))
+  }
+
+  it should "render $jsonSchema" in {
+    toBson(model.Filters.jsonSchema(Document("{bsonType: 'object'}"))) should equal(Document("""{$jsonSchema: {bsonType:  "object"}}"""))
   }
 
 }

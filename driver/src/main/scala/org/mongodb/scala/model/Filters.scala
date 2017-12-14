@@ -49,6 +49,17 @@ object Filters {
   def eq[TItem](fieldName: String, value: TItem): Bson = JFilters.eq(fieldName, value)
 
   /**
+   * Allows the use of aggregation expressions within the query language.
+   *
+   * @param expression the aggregation expression
+   * @tparam TExpression the expression type
+   * @return the filter
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def expr[TExpression](expression: TExpression): Bson = JFilters.expr(expression)
+
+  /**
    * Creates a filter that matches all documents where the value of the field name equals the specified value. Note that this does
    * actually generate a `\$eq` operator, as the query language doesn't require it.
    *
@@ -61,6 +72,16 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/eq \$eq]]
    */
   def equal[TItem](fieldName: String, value: TItem): Bson = eq(fieldName, value)
+
+  /**
+   * Creates a filter that matches all documents that validate against the given JSON schema document.
+   *
+   * @param schema the JSON schema to validate against
+   * @return the filter
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def jsonSchema(schema: Bson): Bson = JFilters.jsonSchema(schema)
 
   /**
    * Creates a filter that matches all documents where the value of the field name does not equal the specified value.

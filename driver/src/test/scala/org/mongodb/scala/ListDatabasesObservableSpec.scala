@@ -39,7 +39,8 @@ class ListDatabasesObservableSpec extends FlatSpec with Matchers with MockFactor
 
   it should "call the underlying methods" in {
     val wrapper = mock[ListDatabasesIterable[Document]]
-    val Observable = ListDatabasesObservable(wrapper)
+    val observable = ListDatabasesObservable(wrapper)
+    val filter = Document("{a: 1}")
 
     val duration = Duration(1, TimeUnit.SECONDS)
     val observer = new Observer[Document]() {
@@ -50,10 +51,14 @@ class ListDatabasesObservableSpec extends FlatSpec with Matchers with MockFactor
     }
 
     wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
+    wrapper.expects('filter)(filter).once()
+    wrapper.expects('nameOnly)(true).once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
-    Observable.maxTime(duration)
-    Observable.subscribe(observer)
+    observable.maxTime(duration)
+    observable.filter(filter)
+    observable.nameOnly(true)
+    observable.subscribe(observer)
   }
 }

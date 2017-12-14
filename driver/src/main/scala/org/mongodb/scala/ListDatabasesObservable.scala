@@ -19,9 +19,8 @@ package org.mongodb.scala
 import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration
-
 import com.mongodb.async.client.ListDatabasesIterable
-
+import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.internal.ObservableHelper._
 
 /**
@@ -42,6 +41,33 @@ case class ListDatabasesObservable[TResult](wrapped: ListDatabasesIterable[TResu
    */
   def maxTime(duration: Duration): ListDatabasesObservable[TResult] = {
     wrapped.maxTime(duration.toMillis, TimeUnit.MILLISECONDS)
+    this
+  }
+
+  /**
+   * Sets the query filter to apply to the returned database names.
+   *
+   * @param filter the filter, which may be null.
+   * @return this
+   * @since 2.2
+   * @note Requires MongoDB 3.4.2 or greater
+   */
+  def filter(filter: Bson): ListDatabasesObservable[TResult] = {
+    wrapped.filter(filter)
+    this
+  }
+
+  /**
+   * Sets the nameOnly flag that indicates whether the command should return just the database names or return the database names and
+   * size information.
+   *
+   * @param nameOnly the nameOnly flag, which may be null
+   * @return this
+   * @since 2.2
+   * @note Requires MongoDB 3.4.3 or greater
+   */
+  def nameOnly(nameOnly: Boolean): ListDatabasesObservable[TResult] = {
+    wrapped.nameOnly(nameOnly)
     this
   }
 

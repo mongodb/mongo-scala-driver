@@ -17,22 +17,27 @@
 package org.mongodb.scala
 
 import scala.collection.JavaConverters._
-
 import org.bson.BsonDocument
 import com.mongodb.async.client.{MongoClient => JMongoClient}
 import com.mongodb.connection.ClusterSettings
-
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{FlatSpec, Matchers}
 
 class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
 
   val wrapped = mock[JMongoClient]
+  val clientSession = mock[ClientSession]
   val mongoClient = new MongoClient(wrapped)
+  def observer[T] = new Observer[T]() {
+    override def onError(throwable: Throwable): Unit = {}
+    override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
+    override def onComplete(): Unit = {}
+    override def onNext(doc: T): Unit = {}
+  }
 
   "MongoClient" should "have the same methods as the wrapped MongoClient" in {
-    val wrapped = classOf[JMongoClient].getMethods.map(_.getName).toSet
-    val local = classOf[MongoClient].getMethods.map(_.getName).toSet
+    val wrapped = classOf[JMongoClient].getMethods.map(_.getName)
+    val local = classOf[MongoClient].getMethods.map(_.getName)
 
     wrapped.foreach((name: String) => {
       val cleanedName = name.stripPrefix("get")
@@ -93,18 +98,31 @@ class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
     mongoClient.close()
   }
 
+  it should "call the underlying startSession" in {
+    val clientSessionOptions = ClientSessionOptions.builder.build()
+    wrapped.expects('startSession)(clientSessionOptions, *).once()
+
+    mongoClient.startSession(clientSessionOptions).subscribe(observer[ClientSession])
+  }
+
   it should "call the underlying listDatabases[T]" in {
     wrapped.expects('listDatabases)(classOf[Document]).once()
+    wrapped.expects('listDatabases)(clientSession, classOf[Document]).once()
     wrapped.expects('listDatabases)(classOf[BsonDocument]).once()
+    wrapped.expects('listDatabases)(clientSession, classOf[BsonDocument]).once()
 
     mongoClient.listDatabases()
+    mongoClient.listDatabases(clientSession)
     mongoClient.listDatabases[BsonDocument]()
+    mongoClient.listDatabases[BsonDocument](clientSession)
   }
 
   it should "call the underlying listDatabaseNames" in {
     wrapped.expects('listDatabaseNames)().once()
+    wrapped.expects('listDatabaseNames)(clientSession).once()
 
     mongoClient.listDatabaseNames()
+    mongoClient.listDatabaseNames(clientSession)
   }
 
 }

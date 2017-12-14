@@ -18,15 +18,15 @@ package org.mongodb.scala
 
 import java.io.Closeable
 
-import scala.reflect.ClassTag
-
-import org.bson.codecs.configuration.CodecRegistry
 import com.mongodb.ConnectionString
+import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.{MongoClients, MongoClient => JMongoClient}
-
+import org.bson.codecs.configuration.CodecRegistry
 import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
 import org.mongodb.scala.connection._
 import org.mongodb.scala.internal.ObservableHelper.observe
+
+import scala.reflect.ClassTag
 
 /**
  * Companion object for creating new [[MongoClient]] instances
@@ -64,15 +64,22 @@ object MongoClient {
       .codecRegistry(DEFAULT_CODEC_REGISTRY)
       .clusterSettings(ClusterSettings.builder().applyConnectionString(connectionString).build())
       .connectionPoolSettings(ConnectionPoolSettings.builder().applyConnectionString(connectionString).build())
-      .serverSettings(ServerSettings.builder().build()).credentialList(connectionString.getCredentialList)
+      .serverSettings(ServerSettings.builder().build())
       .sslSettings(SslSettings.builder().applyConnectionString(connectionString).build())
       .socketSettings(SocketSettings.builder().applyConnectionString(connectionString).build())
 
-    // scalastyle:off null
-    if (connectionString.getReadPreference != null) builder.readPreference(connectionString.getReadPreference)
-    if (connectionString.getReadConcern != null) builder.readConcern(connectionString.getReadConcern)
-    if (connectionString.getWriteConcern != null) builder.writeConcern(connectionString.getWriteConcern)
-    // scalastyle:on null
+    Option(connectionString.getStreamType).map(_.toLowerCase) match {
+      case Some("netty") => builder.streamFactoryFactory(NettyStreamFactoryFactory())
+      case Some("nio2")  => builder.streamFactoryFactory(AsynchronousSocketChannelStreamFactoryFactory())
+      case _             =>
+    }
+
+    Option(connectionString.getCredential).map(credential => builder.credential(credential))
+    Option(connectionString.getReadPreference).map(readPreference => builder.readPreference(readPreference))
+    Option(connectionString.getReadConcern).map(readConcern => builder.readConcern(readConcern))
+    Option(connectionString.getWriteConcern).map(writeConcern => builder.writeConcern(writeConcern))
+    Option(connectionString.getApplicationName).map(applicationName => builder.applicationName(applicationName))
+    builder.compressorList(connectionString.getCompressorList)
 
     apply(builder.build(), mongoDriverInformation)
   }
@@ -118,6 +125,18 @@ object MongoClient {
 case class MongoClient(private val wrapped: JMongoClient) extends Closeable {
 
   /**
+   * Creates a client session.
+   *
+   * '''Note:''' A ClientSession instance can not be used concurrently in multiple asynchronous operations.
+   *
+   * @param options  the options for the client session
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def startSession(options: ClientSessionOptions): Observable[ClientSession] =
+    observe(wrapped.startSession(options, _: SingleResultCallback[ClientSession]))
+
+  /**
    * Gets the database with the given name.
    *
    * @param name the name of the database
@@ -149,6 +168,18 @@ case class MongoClient(private val wrapped: JMongoClient) extends Closeable {
   def listDatabaseNames(): Observable[String] = observe(wrapped.listDatabaseNames())
 
   /**
+   * Get a list of the database names
+   *
+   * [[http://docs.mongodb.org/manual/reference/commands/listDatabases List Databases]]
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @return an iterable containing all the names of all the databases
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def listDatabaseNames(clientSession: ClientSession): Observable[String] = observe(wrapped.listDatabaseNames(clientSession))
+
+  /**
    * Gets the list of databases
    *
    * @tparam TResult   the type of the class to use instead of `Document`.
@@ -156,4 +187,17 @@ case class MongoClient(private val wrapped: JMongoClient) extends Closeable {
    */
   def listDatabases[TResult]()(implicit e: TResult DefaultsTo Document, ct: ClassTag[TResult]): ListDatabasesObservable[TResult] =
     ListDatabasesObservable(wrapped.listDatabases(ct))
+
+  /**
+   * Gets the list of databases
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @tparam TResult the type of the class to use instead of `Document`.
+   * @return the fluent list databases interface
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def listDatabases[TResult](clientSession: ClientSession)(implicit e: TResult DefaultsTo Document, ct: ClassTag[TResult]): ListDatabasesObservable[TResult] =
+    ListDatabasesObservable(wrapped.listDatabases(clientSession, ct))
+
 }

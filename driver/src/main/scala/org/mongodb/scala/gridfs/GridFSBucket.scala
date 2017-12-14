@@ -19,11 +19,10 @@ package org.mongodb.scala.gridfs
 import org.bson.types.ObjectId
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.gridfs.{GridFSBuckets, GridFSBucket => JGridFSBucket}
-
 import org.mongodb.scala.bson.BsonValue
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.internal.ObservableHelper.{observe, observeCompleted, observeLong}
-import org.mongodb.scala.{Completed, MongoDatabase, Observable, ReadConcern, ReadPreference, WriteConcern}
+import org.mongodb.scala.{ClientSession, Completed, MongoDatabase, Observable, ReadConcern, ReadPreference, WriteConcern}
 
 /**
  * A factory for GridFSBucket instances.
@@ -136,7 +135,6 @@ case class GridFSBucket(private val wrapped: JGridFSBucket) {
    * the application signals it is done writing the contents of the file by calling close on the returned Stream, a files collection
    * document is created in the files collection.
    *
-   *
    * @param filename the filename for the stream
    * @return the GridFSUploadStream that provides the ObjectId for the file to be uploaded and the Stream to which the
    *         application will write the contents.
@@ -187,6 +185,78 @@ case class GridFSBucket(private val wrapped: JGridFSBucket) {
    */
   def openUploadStream(id: BsonValue, filename: String, options: GridFSUploadOptions): GridFSUploadStream =
     GridFSUploadStream(wrapped.openUploadStream(id, filename, options))
+
+  /**
+   * Opens a AsyncOutputStream that the application can write the contents of the file to.
+   *
+   * As the application writes the contents to the returned Stream, the contents are uploaded as chunks in the chunks collection. When
+   * the application signals it is done writing the contents of the file by calling close on the returned Stream, a files collection
+   * document is created in the files collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filename the filename for the stream
+   * @return the GridFSUploadStream that provides the ObjectId for the file to be uploaded and the Stream to which the
+   *         application will write the contents.
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def openUploadStream(clientSession: ClientSession, filename: String): GridFSUploadStream =
+    GridFSUploadStream(wrapped.openUploadStream(clientSession, filename))
+
+  /**
+   * Opens a AsyncOutputStream that the application can write the contents of the file to.
+   *
+   * As the application writes the contents to the returned Stream, the contents are uploaded as chunks in the chunks collection. When
+   * the application signals it is done writing the contents of the file by calling close on the returned Stream, a files collection
+   * document is created in the files collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filename the filename for the stream
+   * @param options  the GridFSUploadOptions
+   * @return the GridFSUploadStream that provides the ObjectId for the file to be uploaded and the Stream to which the
+   *         application will write the contents.
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def openUploadStream(clientSession: ClientSession, filename: String, options: GridFSUploadOptions): GridFSUploadStream =
+    GridFSUploadStream(wrapped.openUploadStream(clientSession, filename, options))
+
+  /**
+   * Opens a AsyncOutputStream that the application can write the contents of the file to.
+   *
+   * As the application writes the contents to the returned Stream, the contents are uploaded as chunks in the chunks collection. When
+   * the application signals it is done writing the contents of the file by calling close on the returned Stream, a files collection
+   * document is created in the files collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id       the custom id value of the file
+   * @param filename the filename for the stream
+   * @return the GridFSUploadStream that provides the ObjectId for the file to be uploaded and the Stream to which the
+   *         application will write the contents.
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def openUploadStream(clientSession: ClientSession, id: BsonValue, filename: String): GridFSUploadStream =
+    GridFSUploadStream(wrapped.openUploadStream(clientSession, id, filename))
+
+  /**
+   * Opens a AsyncOutputStream that the application can write the contents of the file to.
+   *
+   * As the application writes the contents to the returned Stream, the contents are uploaded as chunks in the chunks collection. When
+   * the application signals it is done writing the contents of the file by calling close on the returned Stream, a files collection
+   * document is created in the files collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id       the custom id value of the file
+   * @param filename the filename for the stream
+   * @param options  the GridFSUploadOptions
+   * @return the GridFSUploadStream that provides the ObjectId for the file to be uploaded and the Stream to which the
+   *         application will write the contents.
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def openUploadStream(clientSession: ClientSession, id: BsonValue, filename: String, options: GridFSUploadOptions): GridFSUploadStream =
+    GridFSUploadStream(wrapped.openUploadStream(clientSession, id, filename, options))
 
   /**
    * Uploads the contents of the given [[AsyncInputStream]] to a GridFS bucket.
@@ -245,6 +315,75 @@ case class GridFSBucket(private val wrapped: JGridFSBucket) {
     observeCompleted(wrapped.uploadFromStream(id, filename, source, options, _: SingleResultCallback[Void]))
 
   /**
+   * Uploads the contents of the given `AsyncInputStream` to a GridFS bucket.
+   *
+   * Reads the contents of the user file from the `source` and uploads it as chunks in the chunks collection. After all the
+   * chunks have been uploaded, it creates a files collection document for `filename` in the files collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filename the filename for the stream
+   * @param source   the Stream providing the file data
+   * @return a Observable returning a single element containing the ObjectId of the uploaded file.
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def uploadFromStream(clientSession: ClientSession, filename: String, source: AsyncInputStream): Observable[ObjectId] =
+    observe(wrapped.uploadFromStream(clientSession, filename, source, _: SingleResultCallback[ObjectId]))
+
+  /**
+   * Uploads the contents of the given `AsyncInputStream` to a GridFS bucket.
+   *
+   * Reads the contents of the user file from the `source` and uploads it as chunks in the chunks collection. After all the
+   * chunks have been uploaded, it creates a files collection document for `filename` in the files collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filename the filename for the stream
+   * @param source   the Stream providing the file data
+   * @param options  the GridFSUploadOptions
+   * @return a Observable returning a single element containing the ObjectId of the uploaded file.
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def uploadFromStream(clientSession: ClientSession, filename: String, source: AsyncInputStream, options: GridFSUploadOptions): Observable[ObjectId] =
+    observe(wrapped.uploadFromStream(clientSession, filename, source, options, _: SingleResultCallback[ObjectId]))
+
+  /**
+   * Uploads the contents of the given `AsyncInputStream` to a GridFS bucket.
+   *
+   * Reads the contents of the user file from the `source` and uploads it as chunks in the chunks collection. After all the
+   * chunks have been uploaded, it creates a files collection document for `filename` in the files collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id       the custom id value of the file
+   * @param filename the filename for the stream
+   * @param source   the Stream providing the file data
+   * @return a Observable with a single element indicating when the operation has completed
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def uploadFromStream(clientSession: ClientSession, id: BsonValue, filename: String, source: AsyncInputStream): Observable[Completed] =
+    observeCompleted(wrapped.uploadFromStream(clientSession, id, filename, source, _: SingleResultCallback[Void]))
+
+  /**
+   * Uploads the contents of the given `AsyncInputStream` to a GridFS bucket.
+   *
+   * Reads the contents of the user file from the `source` and uploads it as chunks in the chunks collection. After all the
+   * chunks have been uploaded, it creates a files collection document for `filename` in the files collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id       the custom id value of the file
+   * @param filename the filename for the stream
+   * @param source   the Stream providing the file data
+   * @param options  the GridFSUploadOptions
+   * @return a Observable with a single element indicating when the operation has completed
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def uploadFromStream(clientSession: ClientSession, id: BsonValue, filename: String, source: AsyncInputStream,
+                       options: GridFSUploadOptions): Observable[Completed] =
+    observeCompleted(wrapped.uploadFromStream(clientSession, id, filename, source, options, _: SingleResultCallback[Void]))
+
+  /**
    * Opens a AsyncInputStream from which the application can read the contents of the stored file specified by `id`.
    *
    * @param id the ObjectId of the file to be put into a stream.
@@ -253,34 +392,12 @@ case class GridFSBucket(private val wrapped: JGridFSBucket) {
   def openDownloadStream(id: ObjectId): GridFSDownloadStream = GridFSDownloadStream(wrapped.openDownloadStream(id))
 
   /**
-   * Downloads the contents of the stored file specified by `id` and writes the contents to the `destination`
-   * AsyncOutputStream.
-   *
-   * @param id          the ObjectId of the file to be written to the destination stream
-   * @param destination the destination stream
-   * @return a Observable with a single element indicating the file has been downloaded
-   */
-  def downloadToStream(id: ObjectId, destination: AsyncOutputStream): Observable[Long] =
-    observeLong(wrapped.downloadToStream(id, destination, _: SingleResultCallback[java.lang.Long]))
-
-  /**
    * Opens a AsyncInputStream from which the application can read the contents of the stored file specified by `id`.
    *
    * @param id the custom id value of the file, to be put into a stream.
    * @return the stream
    */
   def openDownloadStream(id: BsonValue): GridFSDownloadStream = GridFSDownloadStream(wrapped.openDownloadStream(id))
-
-  /**
-   * Downloads the contents of the stored file specified by `id` and writes the contents to the `destination`
-   * AsyncOutputStream.
-   *
-   * @param id          the custom id of the file, to be written to the destination stream
-   * @param destination the destination stream
-   * @return a Observable with a single element indicating the file has been downloaded
-   */
-  def downloadToStream(id: BsonValue, destination: AsyncOutputStream): Observable[Long] =
-    observeLong(wrapped.downloadToStream(id, destination, _: SingleResultCallback[java.lang.Long]))
 
   /**
    * Opens a Stream from which the application can read the contents of the latest version of the stored file specified by the
@@ -301,6 +418,79 @@ case class GridFSBucket(private val wrapped: JGridFSBucket) {
    */
   def openDownloadStream(filename: String, options: GridFSDownloadOptions): GridFSDownloadStream =
     GridFSDownloadStream(wrapped.openDownloadStream(filename, options))
+
+  /**
+   * Opens a AsyncInputStream from which the application can read the contents of the stored file specified by `id`.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id the ObjectId of the file to be put into a stream.
+   * @return the stream
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def openDownloadStream(clientSession: ClientSession, id: ObjectId): GridFSDownloadStream =
+    GridFSDownloadStream(wrapped.openDownloadStream(clientSession, id))
+
+  /**
+   * Opens a AsyncInputStream from which the application can read the contents of the stored file specified by `id`.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id the custom id value of the file, to be put into a stream.
+   * @return the stream
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def openDownloadStream(clientSession: ClientSession, id: BsonValue): GridFSDownloadStream =
+    GridFSDownloadStream(wrapped.openDownloadStream(clientSession, id))
+
+  /**
+   * Opens a Stream from which the application can read the contents of the latest version of the stored file specified by the
+   * `filename`.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filename the name of the file to be downloaded
+   * @return the stream
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def openDownloadStream(clientSession: ClientSession, filename: String): GridFSDownloadStream =
+    GridFSDownloadStream(wrapped.openDownloadStream(clientSession, filename))
+
+  /**
+   * Opens a Stream from which the application can read the contents of the stored file specified by `filename` and the revision
+   * in `options`.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filename the name of the file to be downloaded
+   * @param options  the download options
+   * @return the stream
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def openDownloadStream(clientSession: ClientSession, filename: String, options: GridFSDownloadOptions): GridFSDownloadStream =
+    GridFSDownloadStream(wrapped.openDownloadStream(clientSession, filename, options))
+
+  /**
+   * Downloads the contents of the stored file specified by `id` and writes the contents to the `destination`
+   * AsyncOutputStream.
+   *
+   * @param id          the ObjectId of the file to be written to the destination stream
+   * @param destination the destination stream
+   * @return a Observable with a single element indicating the file has been downloaded
+   */
+  def downloadToStream(id: ObjectId, destination: AsyncOutputStream): Observable[Long] =
+    observeLong(wrapped.downloadToStream(id, destination, _: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Downloads the contents of the stored file specified by `id` and writes the contents to the `destination`
+   * AsyncOutputStream.
+   *
+   * @param id          the custom id of the file, to be written to the destination stream
+   * @param destination the destination stream
+   * @return a Observable with a single element indicating the file has been downloaded
+   */
+  def downloadToStream(id: BsonValue, destination: AsyncOutputStream): Observable[Long] =
+    observeLong(wrapped.downloadToStream(id, destination, _: SingleResultCallback[java.lang.Long]))
 
   /**
    * Downloads the contents of the latest version of the stored file specified by `filename` and writes the contents to
@@ -326,6 +516,63 @@ case class GridFSBucket(private val wrapped: JGridFSBucket) {
     observeLong(wrapped.downloadToStream(filename, destination, options, _: SingleResultCallback[java.lang.Long]))
 
   /**
+   * Downloads the contents of the stored file specified by `id` and writes the contents to the `destination`
+   * AsyncOutputStream.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id          the ObjectId of the file to be written to the destination stream
+   * @param destination the destination stream
+   * @return a Observable with a single element indicating the file has been downloaded
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def downloadToStream(clientSession: ClientSession, id: ObjectId, destination: AsyncOutputStream): Observable[Long] =
+    observeLong(wrapped.downloadToStream(clientSession, id, destination, _: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Downloads the contents of the stored file specified by `id` and writes the contents to the `destination`
+   * AsyncOutputStream.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id          the custom id of the file, to be written to the destination stream
+   * @param destination the destination stream
+   * @return a Observable with a single element indicating the file has been downloaded
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def downloadToStream(clientSession: ClientSession, id: BsonValue, destination: AsyncOutputStream): Observable[Long] =
+    observeLong(wrapped.downloadToStream(clientSession, id, destination, _: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Downloads the contents of the latest version of the stored file specified by `filename` and writes the contents to
+   * the `destination` Stream.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filename    the name of the file to be downloaded
+   * @param destination the destination stream
+   * @return a Observable with a single element indicating the file has been downloaded
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def downloadToStream(clientSession: ClientSession, filename: String, destination: AsyncOutputStream): Observable[Long] =
+    observeLong(wrapped.downloadToStream(clientSession, filename, destination, _: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Downloads the contents of the stored file specified by `filename` and by the revision in `options` and writes the
+   * contents to the `destination` Stream.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filename    the name of the file to be downloaded
+   * @param destination the destination stream
+   * @param options     the download options
+   * @return a Observable with a single element indicating the file has been downloaded
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def downloadToStream(clientSession: ClientSession, filename: String, destination: AsyncOutputStream, options: GridFSDownloadOptions): Observable[Long] =
+    observeLong(wrapped.downloadToStream(clientSession, filename, destination, options, _: SingleResultCallback[java.lang.Long]))
+
+  /**
    * Finds all documents in the files collection.
    *
    * @return the GridFS find iterable interface
@@ -349,6 +596,36 @@ case class GridFSBucket(private val wrapped: JGridFSBucket) {
   def find(filter: Bson): GridFSFindObservable = GridFSFindObservable(wrapped.find(filter))
 
   /**
+   * Finds all documents in the files collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @return the GridFS find iterable interface
+   * @see [[http://docs.mongodb.org/manual/tutorial/query-documents/ Find]]
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def find(clientSession: ClientSession): GridFSFindObservable = GridFSFindObservable(wrapped.find(clientSession))
+
+  /**
+   * Finds all documents in the collection that match the filter.
+   *
+   * Below is an example of filtering against the filename and some nested metadata that can also be stored along with the file data:
+   *
+   * `
+   * Filters.and(Filters.eq("filename", "mongodb.png"), Filters.eq("metadata.contentType", "image/png"));
+   * `
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filter the query filter
+   * @return the GridFS find iterable interface
+   * @see com.mongodb.client.model.Filters
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def find(clientSession: ClientSession, filter: Bson): GridFSFindObservable =
+    GridFSFindObservable(wrapped.find(clientSession, filter))
+
+  /**
    * Given a `id`, delete this stored file's files collection document and associated chunks from a GridFS bucket.
    *
    * @param id       the ObjectId of the file to be deleted
@@ -363,6 +640,30 @@ case class GridFSBucket(private val wrapped: JGridFSBucket) {
    * @return a Observable with a single element indicating when the operation has completed
    */
   def delete(id: BsonValue): Observable[Completed] = observeCompleted(wrapped.delete(id, _: SingleResultCallback[Void]))
+
+  /**
+   * Given a `id`, delete this stored file's files collection document and associated chunks from a GridFS bucket.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id       the ObjectId of the file to be deleted
+   * @return a Observable with a single element indicating when the operation has completed
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def delete(clientSession: ClientSession, id: ObjectId): Observable[Completed] =
+    observeCompleted(wrapped.delete(clientSession, id, _: SingleResultCallback[Void]))
+
+  /**
+   * Given a `id`, delete this stored file's files collection document and associated chunks from a GridFS bucket.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id       the ObjectId of the file to be deleted
+   * @return a Observable with a single element indicating when the operation has completed
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def delete(clientSession: ClientSession, id: BsonValue): Observable[Completed] =
+    observeCompleted(wrapped.delete(clientSession, id, _: SingleResultCallback[Void]))
 
   /**
    * Renames the stored file with the specified `id`.
@@ -385,11 +686,46 @@ case class GridFSBucket(private val wrapped: JGridFSBucket) {
     observeCompleted(wrapped.rename(id, newFilename, _: SingleResultCallback[Void]))
 
   /**
+   * Renames the stored file with the specified `id`.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id          the id of the file in the files collection to rename
+   * @param newFilename the new filename for the file
+   * @return a Observable with a single element indicating when the operation has completed
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def rename(clientSession: ClientSession, id: ObjectId, newFilename: String): Observable[Completed] =
+    observeCompleted(wrapped.rename(clientSession, id, newFilename, _: SingleResultCallback[Void]))
+
+  /**
+   * Renames the stored file with the specified `id`.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param id          the id of the file in the files collection to rename
+   * @param newFilename the new filename for the file
+   * @return a Observable with a single element indicating when the operation has completed
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def rename(clientSession: ClientSession, id: BsonValue, newFilename: String): Observable[Completed] =
+    observeCompleted(wrapped.rename(clientSession, id, newFilename, _: SingleResultCallback[Void]))
+
+  /**
    * Drops the data associated with this bucket from the database.
    *
    * @return a Observable with a single element indicating when the operation has completed
    */
   def drop(): Observable[Completed] = observeCompleted(wrapped.drop(_: SingleResultCallback[Void]))
 
+  /**
+   * Drops the data associated with this bucket from the database.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @return a Observable with a single element indicating when the operation has completed
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def drop(clientSession: ClientSession): Observable[Completed] = observeCompleted(wrapped.drop(clientSession, _: SingleResultCallback[Void]))
 }
 // scalastyle:on number.of.methods

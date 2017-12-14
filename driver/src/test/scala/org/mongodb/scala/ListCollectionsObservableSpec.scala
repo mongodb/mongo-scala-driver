@@ -39,7 +39,7 @@ class ListCollectionsObservableSpec extends FlatSpec with Matchers with MockFact
 
   it should "call the underlying methods" in {
     val wrapper = mock[ListCollectionsIterable[Document]]
-    val Observable = ListCollectionsObservable(wrapper)
+    val observable = ListCollectionsObservable(wrapper)
 
     val filter = Document("a" -> 1)
     val duration = Duration(1, TimeUnit.SECONDS)
@@ -55,8 +55,8 @@ class ListCollectionsObservableSpec extends FlatSpec with Matchers with MockFact
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
-    Observable.filter(filter)
-    Observable.maxTime(duration)
-    Observable.subscribe(observer)
+    observable.filter(filter)
+    observable.maxTime(duration)
+    observable.subscribe(observer)
   }
 }

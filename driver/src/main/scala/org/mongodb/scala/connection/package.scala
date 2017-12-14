@@ -63,4 +63,23 @@ package object connection {
    */
   type AsynchronousSocketChannelStreamFactoryFactory = com.mongodb.connection.AsynchronousSocketChannelStreamFactoryFactory
 
+  /**
+   * A `StreamFactoryFactory` builder for AsynchronousSocketChannel-based streams.
+   *
+   * @see java.nio.channels.AsynchronousSocketChannel
+   * @since 2.2
+   */
+  type AsynchronousSocketChannelStreamFactoryFactoryBuilder = com.mongodb.connection.AsynchronousSocketChannelStreamFactoryFactory.Builder
+
+  /**
+   * A `StreamFactoryFactory` implementation for Netty-based streams.
+   * @since 2.2
+   */
+  type NettyStreamFactoryFactory = com.mongodb.connection.netty.NettyStreamFactoryFactory
+
+  /**
+   * A `StreamFactoryFactory` builder for Netty-based streams.
+   * @since 2.2
+   */
+  type NettyStreamFactoryFactoryBuilder = com.mongodb.connection.netty.NettyStreamFactoryFactory.Builder
 }

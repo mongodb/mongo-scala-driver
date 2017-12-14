@@ -25,5 +25,16 @@ import com.mongodb.connection.{AsynchronousSocketChannelStreamFactoryFactory => 
  * @since 1.0
  */
 object AsynchronousSocketChannelStreamFactoryFactory {
-  def apply(): StreamFactoryFactory = new JAsynchronousSocketChannelStreamFactoryFactory()
+  /**
+   * A `StreamFactoryFactory` implementation for AsynchronousSocketChannel-based streams.
+   */
+  def apply(): StreamFactoryFactory = JAsynchronousSocketChannelStreamFactoryFactory.builder().build()
+
+  /**
+   * Create a builder for AsynchronousSocketChannel-based streams
+   *
+   * @return the builder
+   * @since 2.2
+   */
+  def builder(): AsynchronousSocketChannelStreamFactoryFactoryBuilder = JAsynchronousSocketChannelStreamFactoryFactory.builder()
 }

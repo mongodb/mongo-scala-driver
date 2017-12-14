@@ -39,7 +39,7 @@ class ListIndexesObservableSpec extends FlatSpec with Matchers with MockFactory 
 
   it should "call the underlying methods" in {
     val wrapper = mock[ListIndexesIterable[Document]]
-    val Observable = ListIndexesObservable(wrapper)
+    val observable = ListIndexesObservable(wrapper)
 
     val duration = Duration(1, TimeUnit.SECONDS)
     val observer = new Observer[Document]() {
@@ -53,7 +53,7 @@ class ListIndexesObservableSpec extends FlatSpec with Matchers with MockFactory 
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
-    Observable.maxTime(duration)
-    Observable.subscribe(observer)
+    observable.maxTime(duration)
+    observable.subscribe(observer)
   }
 }
