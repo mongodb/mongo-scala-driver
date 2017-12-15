@@ -300,7 +300,7 @@ functions:
         working_dir: "src"
         script: |
           ${PREPARE_SHELL}
-          SCALA_VERSION="${SCALA_VERSION}" MONGODB_URI="${MONGODB_URI}" TOPOLOGY=${TOPOLOGY} .evergreen/run-it-tests.sh
+          SCALA_VERSION="${SCALA_VERSION}" MONGODB_URI="${MONGODB_URI}" TOPOLOGY="${TOPOLOGY}" STREAM_TYPE="${STREAM_TYPE}" .evergreen/run-it-tests.sh
 
   "publish snapshots":
     - command: shell.exec
@@ -444,7 +444,7 @@ buildvariants:
     - name: "coverage-task"
 
 - matrix_name: "integration-tests"
-  matrix_spec: { scalaVersion: "*", version: "*", topology: "*", os: "*",  streamType: "*"}
+  matrix_spec: { scalaVersion: "*", version: "*", topology: "*", os: "*", streamType: "*"}
   display_name: "Int: ${scalaVersion} ${version} ${topology} ${os} ${streamType}"
   tags: ["integration-test"]
   tasks:

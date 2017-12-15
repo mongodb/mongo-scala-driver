@@ -158,7 +158,7 @@ class DocumentationChangeStreamExampleSpec extends RequiresMongoDBISpec {
     def results(): List[T] = resultsBuffer.toList
 
     def await(): Unit = {
-      if (!latch.await(10, SECONDS)) throw new MongoTimeoutException("observable timed out")
+      if (!latch.await(30, SECONDS)) throw new MongoTimeoutException("observable timed out")
       if (error.isDefined) throw error.get
     }
 

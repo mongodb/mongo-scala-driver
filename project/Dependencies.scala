@@ -28,7 +28,7 @@ object Dependencies {
   val logbackVersion          = "1.1.3"
   val reflectionsVersion      = "0.9.10"
   val javaxServeletApiVersion = "2.5"
-  val nettyVersion            = "4.1.5.Final"
+  val nettyVersion            = "4.1.17.Final"
 
   val rxScalaVersion          = "0.26.4"
   val rxStreamsVersion        = "1.0.0"
@@ -43,7 +43,8 @@ object Dependencies {
   val logback           = "ch.qos.logback" % "logback-classic" % logbackVersion % "it,test"
   val reflections       = "org.reflections" % "reflections" % reflectionsVersion % "test"
   val javaxServeletApi  = "javax.servlet" % "servlet-api" % javaxServeletApiVersion % "test"
-  val netty             = "io.netty" % "netty-all" % nettyVersion % "test"
+  val nettyTest         = "io.netty" % "netty-all" % nettyVersion % "test"
+  val nettyIt             = "io.netty" % "netty-all" % nettyVersion % "it"
 
   // Examples
   val rxScala           = "io.reactivex" %% "rxscala" % rxScalaVersion
@@ -51,6 +52,6 @@ object Dependencies {
 
   // Projects
   val coreDependencies     = Seq(mongodbDriver)
-  val testDependencies     = Seq(scalaTest, scalaMock, logback, reflections, javaxServeletApi, netty)
-  val examplesDependencies = Seq(rxScala, rxStreams, netty)
+  val testDependencies     = Seq(scalaTest, scalaMock, logback, reflections, javaxServeletApi, nettyTest, nettyIt)
+  val examplesDependencies = Seq(rxScala, rxStreams, nettyTest)
 }
