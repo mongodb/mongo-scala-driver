@@ -166,7 +166,7 @@ package object scala extends ObservableImplicits with WriteConcernImplicits {
   type MongoBulkWriteException = com.mongodb.MongoBulkWriteException
 
   /**
-   * An exception indicating that a failure occurred when running a `$changeStream`.
+   * An exception indicating that a failure occurred when running a `\$changeStream`.
    * @since 2.2
    */
   type MongoChangeStreamException = com.mongodb.MongoChangeStreamException
