@@ -19,7 +19,7 @@ package org.mongodb.scala.model
 package object changestream {
 
   /**
-   * Represents the `$changeStream` aggregation output document.
+   * Represents the `\$changeStream` aggregation output document.
    *
    * '''Note:''' this class will not be applicable for all change stream outputs. If using custom pipelines that radically change the
    * change stream result, then an alternative document format should be used.

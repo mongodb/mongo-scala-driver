@@ -28,7 +28,7 @@ import scala.concurrent.duration.Duration
 /**
  * Observable for change streams.
  *
- * '''Note:''' The [[org.mongodb.scala.model.changestream.ChangeStreamDocument]] class will not be applicable for all change stream outputs.
+ * '''Note:''' The `ChangeStreamDocument` class will not be applicable for all change stream outputs.
  * If using custom pipelines that radically change the result, the the [[ChangeStreamObservable#withDocumentClass]] method should be used
  * to provide an alternative document format.
  *
