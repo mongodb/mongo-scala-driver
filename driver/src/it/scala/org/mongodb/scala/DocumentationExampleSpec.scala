@@ -16,16 +16,20 @@
 
 package org.mongodb.scala
 
+import scala.language.reflectiveCalls
+import java.util.concurrent.atomic.AtomicBoolean
+import com.mongodb.client.model.changestream.{ChangeStreamDocument, FullDocument}
+
 import scala.collection.JavaConverters._
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
-
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.bson.{BsonArray, BsonDocument, BsonNull, BsonString, BsonValue}
 
 // imports required for filters, projections and updates
 import org.bson.BsonType
 
+import org.mongodb.scala.model.Aggregates.filter
 import org.mongodb.scala.model.Filters.{and, bsonType, elemMatch, exists, gt, in, lt, lte, or}
 import org.mongodb.scala.model.Projections.{exclude, excludeId, fields, slice}
 import org.mongodb.scala.model.Updates.{combine, currentDate, set}
@@ -502,6 +506,54 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec {
     //End Example 56
 
     collection.count().execute() shouldEqual 0
+  }
+
+  it should "be able to watch" in withCollection { collection =>
+    assume(serverVersionAtLeast(List(3, 6, 0)) && !hasSingleHost())
+    val inventory: MongoCollection[Document] = collection
+    val stop: AtomicBoolean = new AtomicBoolean(false)
+    new Thread(() => {
+      while (!stop.get) {
+        collection.insertOne(Document())
+        try {
+          Thread.sleep(10)
+        } catch {
+          case e: InterruptedException =>
+          // ignore
+        }
+      }
+    }).start()
+
+    val observer = new Observer[ChangeStreamDocument[Document]] {
+      def getResumeToken: BsonDocument = Document().underlying
+      override def onNext(result: ChangeStreamDocument[Document]): Unit = {}
+      override def onError(e: Throwable): Unit = {}
+      override def onComplete(): Unit = {}
+    }
+
+    // Start Changestream Example 1
+    var observable: ChangeStreamObservable[Document] = inventory.watch()
+    observable.subscribe(observer)
+    // End Changestream Example 1
+
+    // Start Changestream Example 2
+    observable = inventory.watch.fullDocument(FullDocument.UPDATE_LOOKUP)
+    observable.subscribe(observer)
+    // End Changestream Example 2
+
+    // Start Changestream Example 3
+    val resumeToken: BsonDocument = observer.getResumeToken
+    observable = inventory.watch.resumeAfter(resumeToken)
+    observable.subscribe(observer)
+    // End Changestream Example 3
+
+    // Start Changestream Example 4
+    val pipeline: List[Bson] = List(filter(or(Document("{'fullDocument.username': 'alice'}"), in("operationType", List("delete")))))
+    observable = inventory.watch(pipeline)
+    observable.subscribe(observer)
+    // End Changestream Example 4
+
+    stop.set(true)
   }
 
   // Matcher Trait overrides...
