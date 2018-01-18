@@ -512,14 +512,16 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec {
     assume(serverVersionAtLeast(List(3, 6, 0)) && !hasSingleHost())
     val inventory: MongoCollection[Document] = collection
     val stop: AtomicBoolean = new AtomicBoolean(false)
-    new Thread(() => {
-      while (!stop.get) {
-        collection.insertOne(Document())
-        try {
-          Thread.sleep(10)
-        } catch {
-          case e: InterruptedException =>
-          // ignore
+    new Thread(new Runnable {
+      override def run(): Unit = {
+        while (!stop.get) {
+          collection.insertOne(Document())
+          try {
+            Thread.sleep(10)
+          } catch {
+            case e: InterruptedException =>
+            // ignore
+          }
         }
       }
     }).start()
