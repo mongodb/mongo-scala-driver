@@ -28,7 +28,7 @@ object Dependencies {
   val logbackVersion          = "1.1.3"
   val reflectionsVersion      = "0.9.10"
   val javaxServeletApiVersion = "2.5"
-  val nettyVersion            = "4.1.17.Final"
+  val nettyVersion            = "4.1.20.Final"
 
   val rxScalaVersion          = "0.26.4"
   val rxStreamsVersion        = "1.0.0"
