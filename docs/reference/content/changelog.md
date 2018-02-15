@@ -10,6 +10,10 @@ title = "Changelog"
 
 Changes between released versions
 
+### 2.2.2
+
+  * Updated MongoDB Driver Async to 3.6.3, fixes implicit session leak. [SCALA-378](https://jira.mongodb.org/browse/SCALA-378)
+
 ### 2.2.0
 
   * Updated MongoDB Driver Async to 3.6.0
