@@ -81,6 +81,14 @@ trait ObservableImplicits {
     def subscribe(doOnError: Throwable => Any, doOnComplete: () => Any): Unit = subscribe(r => r, doOnError, doOnComplete)
 
     /**
+      * Subscribes to the [[Observable]] and requests `Long.MaxValue`.
+      *
+      * @param doOnNext anonymous function to apply to each emitted element.
+      * @param doOnComplete anonymous function to apply on completion.
+      */
+    def subscribe(doOnNext: T => Any, doOnComplete: () => Any): Unit = subscribe(doOnNext, t => t, doOnComplete)
+
+    /**
      * Subscribes to the [[Observable]] and requests `Long.MaxValue`.
      *
      * Uses the default or overridden `onNext`, `onError`, `onComplete` partial functions.
