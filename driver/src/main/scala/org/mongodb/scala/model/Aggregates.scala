@@ -279,6 +279,35 @@ object Aggregates {
     JAggregates.lookup(from, localField, foreignField, as)
 
   /**
+   * Creates a `\$lookup` pipeline stage, joining the current collection with the one specified in from using the given pipeline
+   *
+   * @param from     the name of the collection in the same database to perform the join with.
+   * @param pipeline the pipeline to run on the joined collection.
+   * @param as       the name of the new array field to add to the input documents.
+   * @return         the `\$lookup` pipeline stage:
+   * @since 2.3
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/lookup/ \$lookup]]
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def lookup(from: String, pipeline: Seq[_ <: Bson], as: String): Bson =
+    JAggregates.lookup(from, pipeline.asJava, as)
+
+  /**
+   * Creates a `\$lookup` pipeline stage, joining the current collection with the one specified in from using the given pipeline
+   *
+   * @param from     the name of the collection in the same database to perform the join with.
+   * @param let      the variables to use in the pipeline field stages.
+   * @param pipeline the pipeline to run on the joined collection.
+   * @param as       the name of the new array field to add to the input documents.
+   * @return         the `\$lookup` pipeline stage
+   * @since 2.3
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/lookup/ \$lookup]]
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def lookup(from: String, let: Seq[Variable[_]], pipeline: Seq[_ <: Bson], as: String): Bson =
+    JAggregates.lookup(from, let.asJava, pipeline.asJava, as)
+
+  /**
    * Creates a `\$group` pipeline stage for the specified filter
    *
    * @param id the id expression for the group

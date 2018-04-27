@@ -54,6 +54,7 @@ class AggregatesSpec extends FlatSpec with Matchers {
     toBson(addFields(Field("newField", "hello"))) should equal(Document("""{$addFields: { "newField": "hello"}}"""))
   }
 
+  // scalastyle:off magic.number
   it should "render $bucket" in {
     toBson(bucket("$screenSize", 0, 24, 32, 50, 100000)) should equal(
       Document("""{$bucket: { groupBy: "$screenSize", boundaries: [0, 24, 32, 50, 100000] } } """)
@@ -158,6 +159,19 @@ class AggregatesSpec extends FlatSpec with Matchers {
     toBson(lookup("from", "localField", "foreignField", "as")) should equal(
       Document("""{ $lookup : { from: "from", localField: "localField", foreignField: "foreignField", as: "as" } }""")
     )
+
+    val pipeline = Seq(filter(Filters.expr(Filters.eq("x", 1))))
+    toBson(lookup("from", pipeline, "as")) ==
+      Document("""{ $lookup : { from: "from",
+      pipeline : [{ $match : { $expr: { $eq : [ "x" , "1" ]}}}],
+      as: "as" }}""")
+
+    toBson(lookup("from", Seq(Variable("var1", "expression1")), pipeline, "as")) ==
+      Document("""{ $lookup : { from: "from",
+      let: { var1: "expression1" },
+      pipeline : [{ $match : { $expr: { $eq : [ "x" , "1" ]}}}],
+      as: "as" }}""")
+
   }
 
   it should "render $skip" in {

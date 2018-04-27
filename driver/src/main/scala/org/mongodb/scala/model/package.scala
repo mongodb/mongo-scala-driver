@@ -704,6 +704,30 @@ package object model {
    */
   type WriteModel[TResult] = com.mongodb.client.model.WriteModel[TResult]
 
+  /**
+   * Helps define new variable for the `\$lookup` pipeline stage
+   *
+   * @tparam TExpression the type of the value for the new variable
+   * @since 2.3
+   */
+  type Variable[TExpression] = com.mongodb.client.model.Variable[TExpression]
+
+  /**
+   * Helps define new variable for the `\$lookup` pipeline stage
+   * @since 2.3
+   */
+  object Variable {
+
+    /**
+     * Creates a new variable definition for use in `\$lookup` pipeline stages
+     *
+     * @param name  the name of the new variable
+     * @param value the value of the new variable
+     */
+    def apply[TExpression](name: String, value: TExpression): Variable[TExpression] =
+      new com.mongodb.client.model.Variable[TExpression](name, value)
+
+  }
 }
 
 // scalastyle:on number.of.methods number.of.types
