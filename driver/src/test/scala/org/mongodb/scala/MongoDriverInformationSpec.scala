@@ -23,7 +23,7 @@ import org.scalatest.{FlatSpec, Matchers}
 class MongoDriverInformationSpec extends FlatSpec with Matchers {
 
   "MongoDriverInformation" should "have the same static fields as the wrapped MongoDriverInformation" in {
-    val MongoDriverInformationClass: Class[MongoDriverInformation] = classOf[com.mongodb.client.MongoDriverInformation]
+    val MongoDriverInformationClass: Class[MongoDriverInformation] = classOf[com.mongodb.MongoDriverInformation]
     val wrappedFields = MongoDriverInformationClass.getDeclaredFields.filter(f => isStatic(f.getModifiers)).map(_.getName).toSet
     val wrappedMethods = MongoDriverInformationClass.getDeclaredMethods.filter(f => isStatic(f.getModifiers)).map(_.getName).toSet
     val exclusions = Set("$VALUES", "valueOf", "values")
@@ -35,9 +35,9 @@ class MongoDriverInformationSpec extends FlatSpec with Matchers {
   }
 
   it should "return the underlying builder" in {
-    MongoDriverInformation.builder().getClass should equal(classOf[com.mongodb.client.MongoDriverInformation.Builder])
+    MongoDriverInformation.builder().getClass should equal(classOf[com.mongodb.MongoDriverInformation.Builder])
     MongoDriverInformation.builder(MongoDriverInformation.builder().build()).getClass should equal(
-      classOf[com.mongodb.client.MongoDriverInformation.Builder]
+      classOf[com.mongodb.MongoDriverInformation.Builder]
     )
   }
 
