@@ -124,7 +124,7 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
    * @return this
    * @deprecated use the individual setters instead
    */
-  @Deprecated
+  @deprecated("use the individual setters instead", "2.2")
   def modifiers(modifiers: Bson): FindObservable[TResult] = {
     wrapped.modifiers(modifiers)
     this

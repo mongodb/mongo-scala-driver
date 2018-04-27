@@ -16,9 +16,7 @@
 
 package org.mongodb.scala.internal
 
-import scala.collection.mutable.ArrayBuffer
-
-import org.mongodb.scala.{Observable, Observer, SingleObservable, Subscription}
+import org.mongodb.scala.{Observer, SingleObservable, Subscription}
 import org.scalatest.{FlatSpec, Matchers}
 
 class SingleObservableSpec extends FlatSpec with Matchers {

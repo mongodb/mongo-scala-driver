@@ -21,7 +21,6 @@ import java.util
 import java.util.Date
 
 import scala.collection.JavaConverters._
-import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
 import org.bson._

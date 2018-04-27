@@ -334,7 +334,7 @@ object Filters {
    * @see [[http://docs.mongodb.org/manual/reference/operator/query/text \$text]]
    * @deprecated use {{{Filters.text(String, TextSearchOptions)}}} instead.
    */
-  @Deprecated
+  @deprecated("Use `Filters.text(String, TextSearchOptions)` insread", "1.1")
   def text(search: String, language: String): Bson = text(search, new TextSearchOptions().language(language))
 
   /**

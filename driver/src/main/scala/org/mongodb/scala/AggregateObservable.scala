@@ -84,7 +84,7 @@ case class AggregateObservable[TResult](private val wrapped: AggregateIterable[T
    *             that support it (&gt;= 2.6). The driver will ignore this as of MongoDB 3.6, which does not support inline results for
    *             the aggregate command.
    */
-  @Deprecated
+  @deprecated("No replacement for this method", "2.2")
   def useCursor(useCursor: Boolean): AggregateObservable[TResult] = {
     wrapped.useCursor(useCursor)
     this
