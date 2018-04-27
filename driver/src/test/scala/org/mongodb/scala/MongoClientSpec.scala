@@ -16,6 +16,8 @@
 
 package org.mongodb.scala
 
+import com.mongodb.Block
+
 import scala.collection.JavaConverters._
 import org.bson.BsonDocument
 import com.mongodb.async.client.{MongoClient => JMongoClient}
@@ -70,7 +72,10 @@ class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
   it should "accept MongoClientSettings" in {
     val serverAddress = new ServerAddress("localhost", 27020)
     val clusterSettings = ClusterSettings.builder().hosts(List(serverAddress).asJava).build()
-    val mongoClient = MongoClient(MongoClientSettings.builder().clusterSettings(clusterSettings).build())
+    val mongoClient = MongoClient(MongoClientSettings.builder()
+      .applyToClusterSettings(new Block[ClusterSettings.Builder] {
+        override def apply(b: ClusterSettings.Builder): Unit = b.applySettings(clusterSettings)
+      }).build())
 
     mongoClient.settings.getClusterSettings.getHosts.get(0) shouldBe serverAddress
   }

@@ -20,10 +20,9 @@ import java.io.Closeable
 
 import com.mongodb.ConnectionString
 import com.mongodb.async.SingleResultCallback
-import com.mongodb.async.client.{MongoClients, MongoClient => JMongoClient}
+import com.mongodb.async.client.{MongoClients, MongoClient => JMongoClient, MongoClientSettings => LegacyMongoClientSettings}
 import org.bson.codecs.configuration.CodecRegistry
 import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
-import org.mongodb.scala.connection._
 import org.mongodb.scala.internal.ObservableHelper.observe
 
 import scala.reflect.ClassTag
@@ -59,29 +58,37 @@ object MongoClient {
    * @note the `mongoDriverInformation` is intended for driver and library authors to associate extra driver metadata with the connections.
    */
   def apply(uri: String, mongoDriverInformation: Option[MongoDriverInformation]): MongoClient = {
-    val connectionString = new ConnectionString(uri)
-    val builder = MongoClientSettings.builder()
+    apply(MongoClientSettings.builder()
+      .applyConnectionString(new ConnectionString(uri))
       .codecRegistry(DEFAULT_CODEC_REGISTRY)
-      .clusterSettings(ClusterSettings.builder().applyConnectionString(connectionString).build())
-      .connectionPoolSettings(ConnectionPoolSettings.builder().applyConnectionString(connectionString).build())
-      .serverSettings(ServerSettings.builder().build())
-      .sslSettings(SslSettings.builder().applyConnectionString(connectionString).build())
-      .socketSettings(SocketSettings.builder().applyConnectionString(connectionString).build())
+      .build(), mongoDriverInformation)
+  }
 
-    Option(connectionString.getStreamType).map(_.toLowerCase) match {
-      case Some("netty") => builder.streamFactoryFactory(NettyStreamFactoryFactory())
-      case Some("nio2")  => builder.streamFactoryFactory(AsynchronousSocketChannelStreamFactoryFactory())
-      case _             =>
+  /**
+   * Create a MongoClient instance from the MongoClientSettings
+   *
+   * @param legacyClientSettings MongoClientSettings to use for the MongoClient
+   * @return MongoClient
+   */
+  @deprecated("Update to the supported MongoClientSettings", "2.3")
+  def apply(legacyClientSettings: LegacyMongoClientSettings): MongoClient = MongoClient(legacyClientSettings, None)
+
+  /**
+   * Create a MongoClient instance from the MongoClientSettings
+   *
+   * @param legacyClientSettings MongoClientSettings to use for the MongoClient
+   * @param mongoDriverInformation any driver information to associate with the MongoClient
+   * @return MongoClient
+   * @note the `mongoDriverInformation` is intended for driver and library authors to associate extra driver metadata with the connections.
+   */
+  @deprecated("Update to the supported MongoClientSettings", "2.3")
+  def apply(legacyClientSettings: LegacyMongoClientSettings, mongoDriverInformation: Option[MongoDriverInformation]): MongoClient = {
+    val builder = mongoDriverInformation match {
+      case Some(info) => MongoDriverInformation.builder(info)
+      case None       => MongoDriverInformation.builder()
     }
-
-    Option(connectionString.getCredential).map(credential => builder.credential(credential))
-    Option(connectionString.getReadPreference).map(readPreference => builder.readPreference(readPreference))
-    Option(connectionString.getReadConcern).map(readConcern => builder.readConcern(readConcern))
-    Option(connectionString.getWriteConcern).map(writeConcern => builder.writeConcern(writeConcern))
-    Option(connectionString.getApplicationName).map(applicationName => builder.applicationName(applicationName))
-    builder.compressorList(connectionString.getCompressorList)
-
-    apply(builder.build(), mongoDriverInformation)
+    builder.driverName(BuildInfo.name).driverVersion(BuildInfo.version).driverPlatform(s"Scala/${BuildInfo.scalaVersion}")
+    MongoClient(MongoClients.create(legacyClientSettings, builder.build()))
   }
 
   /**
@@ -89,6 +96,7 @@ object MongoClient {
    *
    * @param clientSettings MongoClientSettings to use for the MongoClient
    * @return MongoClient
+   * @since 2.3
    */
   def apply(clientSettings: MongoClientSettings): MongoClient = MongoClient(clientSettings, None)
 
@@ -99,6 +107,7 @@ object MongoClient {
    * @param mongoDriverInformation any driver information to associate with the MongoClient
    * @return MongoClient
    * @note the `mongoDriverInformation` is intended for driver and library authors to associate extra driver metadata with the connections.
+   * @since 2.3
    */
   def apply(clientSettings: MongoClientSettings, mongoDriverInformation: Option[MongoDriverInformation]): MongoClient = {
     val builder = mongoDriverInformation match {
@@ -157,7 +166,8 @@ case class MongoClient(private val wrapped: JMongoClient) extends Closeable {
    *
    * @return the settings
    */
-  lazy val settings: MongoClientSettings = wrapped.getSettings
+  @deprecated("There is no replacement for this method", "2.3")
+  lazy val settings: LegacyMongoClientSettings = wrapped.getSettings
 
   /**
    * Get a list of the database names

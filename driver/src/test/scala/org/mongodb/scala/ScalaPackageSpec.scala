@@ -61,7 +61,7 @@ class ScalaPackageSpec extends FlatSpec with Matchers {
 
   it should "be able to create MongoClientSettings" in {
     val settings = scala.MongoClientSettings.builder().readPreference(ReadPreference.primary()).build()
-    settings shouldBe a[com.mongodb.async.client.MongoClientSettings]
+    settings shouldBe a[com.mongodb.MongoClientSettings]
   }
 
   it should "be able to create Documents" in {

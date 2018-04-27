@@ -8,10 +8,21 @@ title = "Upgrading"
 
 ## Upgrade
 
+### 2.3.0
+
+#### MongoClientSettings
+
+The Mongo Java Driver 3.7.0 introduces a new `com.mongodb.MongoClientSettings` class to unify the settings across the sync and async drivers.
+The legacy `com.mongodb.async.client.MongoClientSettings` has been deprecated. As such the `MongoClientSettings` alias now points to the
+supported class and the `MongoClientSettings.builder()` helper points to the supported builder.
+
+The legacy settings are still supported and can be imported from `com.mongodb.async.client.MongoClientSettings`. It is only required if you
+need multiple credentials or custom `heartbeatSocketSettings`, both of which have been deprecated.
+
 ### 2.0.0
 
 
-#### MongoCollection mehtod default to collection type fix.
+#### MongoCollection method default to collection type fix.
     
 Previously, in the 1.x series `MongoCollection[T].find()` by default would return a `FindObservable[Document]` and not `FindObservable[T]`. 
 While this was easy to work around by explicitly setting the type eg: `MongoCollection[T].find[T]()` we've bumped the version to 2.0.0 so 

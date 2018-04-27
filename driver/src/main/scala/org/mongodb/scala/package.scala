@@ -133,7 +133,7 @@ package object scala extends ObservableImplicits with WriteConcernImplicits {
   /**
    * Various settings to control the behavior of a `MongoClient`.
    */
-  type MongoClientSettings = com.mongodb.async.client.MongoClientSettings
+  type MongoClientSettings = com.mongodb.MongoClientSettings
 
   /**
    * A Client Session

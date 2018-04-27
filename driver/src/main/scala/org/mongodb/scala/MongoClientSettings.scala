@@ -16,7 +16,10 @@
 
 package org.mongodb.scala
 
-import com.mongodb.async.client.{MongoClientSettings => JMongoClientSettings, MongoClients => JMongoClients}
+import com.mongodb.async.client.{MongoClients => JMongoClients}
+import com.mongodb.{MongoClientSettings => JMongoClientSettings}
+
+import scala.language.implicitConversions
 
 /**
  * A MongoClientSettings companion object
