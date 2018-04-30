@@ -610,6 +610,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param options     the options to apply to the replace operation
    * @return a Observable with a single element the UpdateResult
    */
+  @deprecated("Use `ReplaceOptions` instead of `UpdateOptions`", "2.3")
   def replaceOne(filter: Bson, replacement: TResult, options: UpdateOptions): SingleObservable[UpdateResult] =
     observe(wrapped.replaceOne(filter, replacement, options, _: SingleResultCallback[UpdateResult]))
 
@@ -639,7 +640,35 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @since 2.2
    * @note Requires MongoDB 3.6 or greater
    */
+  @deprecated("Use `ReplaceOptions` instead of `UpdateOptions`", "2.3")
   def replaceOne(clientSession: ClientSession, filter: Bson, replacement: TResult, options: UpdateOptions): SingleObservable[UpdateResult] =
+    observe(wrapped.replaceOne(clientSession, filter, replacement, options, _: SingleResultCallback[UpdateResult]))
+
+  /**
+   * Replace a document in the collection according to the specified arguments.
+   *
+   * [[http://docs.mongodb.org/manual/tutorial/modify-documents/#replace-the-document Replace]]
+   * @param filter      the query filter to apply the the replace operation
+   * @param replacement the replacement document
+   * @param options     the options to apply to the replace operation
+   * @return a Observable with a single element the UpdateResult
+   */
+  def replaceOne(filter: Bson, replacement: TResult, options: ReplaceOptions): SingleObservable[UpdateResult] =
+    observe(wrapped.replaceOne(filter, replacement, options, _: SingleResultCallback[UpdateResult]))
+
+  /**
+   * Replace a document in the collection according to the specified arguments.
+   *
+   * [[http://docs.mongodb.org/manual/tutorial/modify-documents/#replace-the-document Replace]]
+   * @param clientSession the client session with which to associate this operation
+   * @param filter      the query filter to apply the the replace operation
+   * @param replacement the replacement document
+   * @param options     the options to apply to the replace operation
+   * @return a Observable with a single element the UpdateResult
+   * @since 2.2
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def replaceOne(clientSession: ClientSession, filter: Bson, replacement: TResult, options: ReplaceOptions): SingleObservable[UpdateResult] =
     observe(wrapped.replaceOne(clientSession, filter, replacement, options, _: SingleResultCallback[UpdateResult]))
 
   /**

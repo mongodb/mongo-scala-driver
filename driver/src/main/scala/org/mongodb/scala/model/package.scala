@@ -505,6 +505,20 @@ package object model {
   type ReplaceOneModel[TResult] = com.mongodb.client.model.ReplaceOneModel[TResult]
 
   /**
+   * The options to apply when replacing documents.
+   * @since 2.3
+   */
+  type ReplaceOptions = com.mongodb.client.model.ReplaceOptions
+
+  /**
+   * The options to apply when replacing documents.
+   * @since 2.3
+   */
+  object ReplaceOptions {
+    def apply(): ReplaceOptions = new com.mongodb.client.model.ReplaceOptions()
+  }
+
+  /**
    * A model describing the replacement of at most one document that matches the query filter.
    */
   object ReplaceOneModel {
@@ -529,8 +543,22 @@ package object model {
      * @tparam TResult the type of document to insert. This can be of any type for which a `Codec` is registered
      * @return the new ReplaceOneModel
      */
+    @deprecated("Use `ReplaceOptions` instead of `UpdateOptions`", "2.3")
     def apply[TResult](filter: Bson, replacement: TResult, updateOptions: UpdateOptions): ReplaceOneModel[TResult] =
       new com.mongodb.client.model.ReplaceOneModel[TResult](filter, replacement, updateOptions)
+
+    /**
+     * Construct a new instance.
+     *
+     * @param filter    a document describing the query filter.
+     * @param replacement the replacement document
+     * @param replaceOptions the options to apply
+     * @tparam TResult the type of document to insert. This can be of any type for which a `Codec` is registered
+     * @return the new ReplaceOneModel
+     * @since 2.3
+     */
+    def apply[TResult](filter: Bson, replacement: TResult, replaceOptions: ReplaceOptions): ReplaceOneModel[TResult] =
+      new com.mongodb.client.model.ReplaceOneModel[TResult](filter, replacement, replaceOptions)
   }
 
   /**

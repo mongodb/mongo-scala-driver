@@ -15,6 +15,7 @@ Changes between released versions
   * Updated MongoDB Driver Async to 3.7.0. [SCALA-398](https://jira.mongodb.org/browse/SCALA-398)
   * Updated MongoClientSettings to use the new central `com.mongodb.MongoClientSettings`. [SCALA-394](https://jira.mongodb.org/browse/SCALA-394)
   * Added Aggregates.Variable $lookup helper. [SCALA-399](https://jira.mongodb.org/browse/SCALA-399)
+  * Added ReplaceOptions. [SCALA-360](https://jira.mongodb.org/browse/SCALA-360)
 
 ### 2.2.1
   * Updated MongoDB Driver Async to 3.6.3, fixes implicit session leak. [SCALA-378](https://jira.mongodb.org/browse/SCALA-378)

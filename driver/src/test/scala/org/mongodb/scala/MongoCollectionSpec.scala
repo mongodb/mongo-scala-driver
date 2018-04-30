@@ -281,16 +281,23 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
   it should "wrap the underlying replaceOne correctly" in {
     val replacement = Document("a" -> 1)
+    val replaceOptions = new ReplaceOptions().upsert(true)
     val updateOptions = new UpdateOptions().upsert(true)
 
     wrapped.expects('replaceOne)(filter, replacement, *).once()
-    wrapped.expects('replaceOne)(filter, replacement, updateOptions, *).once()
+    wrapped.expects('replaceOne)(filter, replacement, replaceOptions, *).once()
     wrapped.expects('replaceOne)(clientSession, filter, replacement, *).once()
+    wrapped.expects('replaceOne)(clientSession, filter, replacement, replaceOptions, *).once()
+
+    wrapped.expects('replaceOne)(filter, replacement, updateOptions, *).once()
     wrapped.expects('replaceOne)(clientSession, filter, replacement, updateOptions, *).once()
 
     mongoCollection.replaceOne(filter, replacement).subscribe(observer[UpdateResult])
-    mongoCollection.replaceOne(filter, replacement, updateOptions).subscribe(observer[UpdateResult])
+    mongoCollection.replaceOne(filter, replacement, replaceOptions).subscribe(observer[UpdateResult])
     mongoCollection.replaceOne(clientSession, filter, replacement).subscribe(observer[UpdateResult])
+    mongoCollection.replaceOne(clientSession, filter, replacement, replaceOptions).subscribe(observer[UpdateResult])
+
+    mongoCollection.replaceOne(filter, replacement, updateOptions).subscribe(observer[UpdateResult])
     mongoCollection.replaceOne(clientSession, filter, replacement, updateOptions).subscribe(observer[UpdateResult])
   }
 
