@@ -57,6 +57,7 @@ class GridFSFindObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('noCursorTimeout)(true).once()
     wrapper.expects('skip)(skip).once()
     wrapper.expects('sort)(sort).once()
+    wrapper.expects('getBatchSize)().once()
     wrapper.expects('batchSize)(2).once()
     wrapper.expects('batchCursor)(*).once()
 

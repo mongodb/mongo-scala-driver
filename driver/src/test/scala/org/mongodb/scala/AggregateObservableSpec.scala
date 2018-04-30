@@ -62,6 +62,7 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('toCollection)(*).once()
     wrapper.expects('collation)(collation).once()
     wrapper.expects('comment)("comment").once()
+    wrapper.expects('getBatchSize)().once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
     wrapper.expects('hint)(hint).once()

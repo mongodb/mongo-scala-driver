@@ -53,6 +53,7 @@ class ListDatabasesObservableSpec extends FlatSpec with Matchers with MockFactor
     wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
     wrapper.expects('filter)(filter).once()
     wrapper.expects('nameOnly)(true).once()
+    wrapper.expects('getBatchSize)().once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 

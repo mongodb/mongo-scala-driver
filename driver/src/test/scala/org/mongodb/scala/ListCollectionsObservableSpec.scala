@@ -52,6 +52,7 @@ class ListCollectionsObservableSpec extends FlatSpec with Matchers with MockFact
 
     wrapper.expects('filter)(filter).once()
     wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
+    wrapper.expects('getBatchSize)().once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 

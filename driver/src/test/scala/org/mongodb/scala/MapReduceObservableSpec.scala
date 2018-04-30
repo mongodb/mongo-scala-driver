@@ -72,6 +72,7 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('bypassDocumentValidation)(true).once()
     wrapper.expects('collation)(collation).once()
     wrapper.expects('toCollection)(*).once()
+    wrapper.expects('getBatchSize)().once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 

@@ -54,7 +54,9 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
 
     val observer = new Observer[Document]() {
       override def onError(throwable: Throwable): Unit = {}
-      override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
+      override def onSubscribe(subscription: Subscription): Unit = {
+        subscription.request(Long.MaxValue)
+      }
       override def onComplete(): Unit = {}
       override def onNext(doc: Document): Unit = {}
     }
@@ -73,6 +75,7 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('partial)(true).once()
     wrapper.expects('cursorType)(CursorType.NonTailable).once()
     wrapper.expects('collation)(collation).once()
+    wrapper.expects('getBatchSize)().once()
     wrapper.expects('batchSize)(Int.MaxValue).once()
     wrapper.expects('batchCursor)(*).once()
 
