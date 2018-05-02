@@ -14,8 +14,12 @@ import scala.concurrent.duration.Duration
 //scalastyle:off magic.number regex
 class DocumentationChangeStreamExampleSpec extends RequiresMongoDBISpec {
 
-  "The Scala driver" should "be able to use $changeStreams" in withCollection { collection =>
+  "The Scala driver" should "be able to use $changeStreams" in withDatabase { database: MongoDatabase =>
     assume(serverVersionAtLeast(List(3, 6, 0)) && !hasSingleHost())
+
+    database.drop().execute()
+    database.createCollection(collectionName).execute()
+    val collection = database.getCollection(collectionName)
 
     /*
      * Example 1

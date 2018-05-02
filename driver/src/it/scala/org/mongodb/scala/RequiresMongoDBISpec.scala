@@ -99,7 +99,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
     }
   }
 
-  def withDatabase(testCode: MongoDatabase => Any): Unit = withDatabase(collectionName)(testCode: MongoDatabase => Any)
+  def withDatabase(testCode: MongoDatabase => Any): Unit = withDatabase(databaseName)(testCode: MongoDatabase => Any)
 
   def withCollection(testCode: MongoCollection[Document] => Any) {
     checkMongoDB()
