@@ -10,6 +10,9 @@ title = "Changelog"
 
 Changes between released versions
 
+### 2.4.0
+  * Updated MongoDB Driver Async to 3.8.0.
+
 ### 2.3.0
 
   * Updated MongoDB Driver Async to 3.7.0. [SCALA-398](https://jira.mongodb.org/browse/SCALA-398)
