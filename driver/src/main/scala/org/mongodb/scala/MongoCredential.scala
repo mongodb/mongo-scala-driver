@@ -75,6 +75,7 @@ object MongoCredential {
    * @see [[createCredential]]
    * @see [[http://docs.mongodb.org/manual/core/authentication/#mongodb-cr-authentication MONGODB-CR]]
    */
+  @deprecated("MONGODB-CR was replaced by SCRAM-SHA-1 in MongoDB 3.0, and is now deprecated.", "2.4")
   def createMongoCRCredential(userName: String, database: String, password: Array[Char]): JMongoCredential =
     JMongoCredential.createMongoCRCredential(userName, database, password)
 
