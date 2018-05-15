@@ -270,6 +270,7 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
    * @return this
    * @since 2.2
    */
+  @deprecated("Deprecated as of MongoDB 4.0 release", "2.4")
   def maxScan(maxScan: Long): FindObservable[TResult] = {
     wrapped.maxScan(maxScan)
     this
@@ -308,6 +309,7 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
    * @return this
    * @since 2.2
    */
+  @deprecated("Deprecated in MongoDB 3.6 release and removed in MongoDB 4.0 release", "2.4")
   def snapshot(snapshot: Boolean): FindObservable[TResult] = {
     wrapped.snapshot(snapshot)
     this
