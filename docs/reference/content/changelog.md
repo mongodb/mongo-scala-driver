@@ -13,6 +13,7 @@ Changes between released versions
 ### 2.4.0
   * Updated MongoDB Driver Async to 3.8.0.
   * Added transaction support. [SCALA-388](https://jira.mongodb.org/browse/SCALA-388)
+  * Added `MongoCredential.createScramSha256Credential`. [SCALA-375](https://jira.mongodb.org/browse/SCALA-375)
   * `FindObservable.maxScan` deprecated. [SCALA-385](https://jira.mongodb.org/browse/SCALA-385)
   * `FindObservable.snapshot` deprecated. [SCALA-386](https://jira.mongodb.org/browse/SCALA-386)
   * `MongoCredential.createMongoCRCredential` deprecated. [SCALA-371](https://jira.mongodb.org/browse/SCALA-371)

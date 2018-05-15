@@ -63,6 +63,20 @@ object MongoCredential {
     JMongoCredential.createScramSha1Credential(userName, source, password)
 
   /**
+   * Creates a MongoCredential instance for the SCRAM-SHA-256 SASL mechanism.
+   *
+   *
+   * @param userName the non-null user name
+   * @param source the source where the user is defined.
+   * @param password the non-null user password
+   * @return the credential
+   * @note Requires MongoDB 4.0 or greater
+   * @see [[http://docs.mongodb.org/manual/core/authentication/#authentication-scram-sha-256 SCRAM-SHA-256]]
+   */
+  def createScramSha256Credential(userName: String, source: String, password: Array[Char]): JMongoCredential =
+    JMongoCredential.createScramSha256Credential(userName, source, password)
+
+  /**
    * Creates a MongoCredential instance for the MongoDB Challenge Response protocol. Use this method only if you want to ensure that
    * the driver uses the MONGODB_CR mechanism regardless of whether the server you are connecting to supports a more secure
    * authentication mechanism.  Otherwise use the [[createCredential]] method to allow the driver to
