@@ -36,15 +36,24 @@ object ReadConcernLevel {
    * Return the node's most recent copy of the data confirmed as having been written to a majority of the nodes.
    */
   val MAJORITY: ReadConcernLevel = JReadConcernLevel.MAJORITY
+
   /**
    * The linearizable read concern.
    *
    * This read concern is only compatible with [[org.mongodb.scala.ReadPreference$.primary]]
    *
    * @note Requires MongoDB 3.4 or greater
-   * @since 3.4
+   * @since 2.2
    */
   val LINEARIZABLE: ReadConcernLevel = JReadConcernLevel.LINEARIZABLE
+
+  /**
+   * The snapshot read concern level.
+   *
+   * @note Requires MongoDB 4.0 or greater
+   * @since 2.4
+   */
+  val SNAPSHOT = JReadConcernLevel.SNAPSHOT
 
   /**
    * Returns the ReadConcern from the string read concern level.

@@ -53,7 +53,15 @@ object ReadConcern {
    * This read concern is only compatible with [[org.mongodb.scala.ReadPreference$.primary]]
    *
    * @note Requires MongoDB 3.4 or greater
-   * @since 3.4
+   * @since 2.2
    */
   val LINEARIZABLE: ReadConcern = JReadConcern.LINEARIZABLE
+
+  /**
+   * The snapshot read concern level.
+   *
+   * @note Requires MongoDB 4.0 or greater
+   * @since 2.4
+   */
+  val SNAPSHOT: ReadConcern = JReadConcern.SNAPSHOT
 }

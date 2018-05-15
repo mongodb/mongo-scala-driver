@@ -8,6 +8,14 @@ title = "Upgrading"
 
 ## Upgrade
 
+### 2.4.0
+
+#### ClientSession support for transactions
+
+Due to the introduction of transaction support in MongoDB, the `ClientSession` type alias has been moved, so to support Async transactions.
+The type alias has been updated to `com.mongodb.async.client.ClientSession`. Code will need to be recompiled against the underlying java
+driver.
+
 ### 2.3.0
 
 #### MongoClientSettings

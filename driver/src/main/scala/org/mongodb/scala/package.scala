@@ -138,15 +138,21 @@ package object scala extends ObservableImplicits with WriteConcernImplicits {
   /**
    * A Client Session
    *
-   * @since 2.2
+   * @since 2.4
    */
-  type ClientSession = com.mongodb.session.ClientSession
+  type ClientSession = com.mongodb.async.client.ClientSession
 
   /**
    * Options for creating ClientSessions
    * @since 2.2
    */
   type ClientSessionOptions = com.mongodb.ClientSessionOptions
+
+  /**
+   * Options for transactions
+   * @since 2.4
+   */
+  type TransactionOptions = com.mongodb.TransactionOptions
 
   /**
    * Options for creating MongoCompressor

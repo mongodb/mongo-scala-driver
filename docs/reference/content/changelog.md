@@ -12,6 +12,7 @@ Changes between released versions
 
 ### 2.4.0
   * Updated MongoDB Driver Async to 3.8.0.
+  * Added transaction support. [SCALA-388](https://jira.mongodb.org/browse/SCALA-388)
 
 ### 2.3.0
 
