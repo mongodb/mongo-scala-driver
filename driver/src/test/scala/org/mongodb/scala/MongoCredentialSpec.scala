@@ -33,12 +33,12 @@ class MongoCredentialSpec extends FlatSpec with Matchers {
   }
 
   it should "create the expected credential" in {
-    MongoCredential.createCredential("user", "source", "pass".toCharArray) should 
+    MongoCredential.createCredential("user", "source", "pass".toCharArray) should
       equal(JMongoCredential.createCredential("user", "source", "pass".toCharArray))
   }
 
   it should "create the expected createScramSha1Credential" in {
-    MongoCredential.createScramSha1Credential("user", "source", "pass".toCharArray) should 
+    MongoCredential.createScramSha1Credential("user", "source", "pass".toCharArray) should
       equal(JMongoCredential.createScramSha1Credential("user", "source", "pass".toCharArray))
   }
 
