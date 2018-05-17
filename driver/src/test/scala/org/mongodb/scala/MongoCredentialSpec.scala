@@ -17,7 +17,6 @@
 package org.mongodb.scala
 
 import com.mongodb.{MongoCredential => JMongoCredential}
-import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{FlatSpec, Matchers}
 
 class MongoCredentialSpec extends FlatSpec with Matchers {
