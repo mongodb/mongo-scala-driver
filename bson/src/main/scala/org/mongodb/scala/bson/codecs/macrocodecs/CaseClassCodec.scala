@@ -71,7 +71,7 @@ private[codecs] object CaseClassCodec {
     val codecName = TypeName(s"${classTypeName}MacroCodec")
 
     // Type checkers
-    def isCaseClass(t: Type): Boolean = t.typeSymbol.isClass && t.typeSymbol.asClass.isCaseClass
+    def isCaseClass(t: Type): Boolean = t.typeSymbol.isClass && t.typeSymbol.asClass.isCaseClass && !t.typeSymbol.isModuleClass
     def isMap(t: Type): Boolean = t.baseClasses.contains(mapTypeSymbol)
     def isOption(t: Type): Boolean = t.typeSymbol == definitions.OptionClass
     def isTuple(t: Type): Boolean = definitions.TupleClass.seq.contains(t.typeSymbol)
@@ -86,9 +86,13 @@ private[codecs] object CaseClassCodec {
     if (isSealed(mainType) && subClasses.isEmpty) c.abort(c.enclosingPosition, "No known subclasses of the sealed class")
     val knownTypes = (mainType +: subClasses).reverse
 
-    val terms = mainType.decl(termNames.CONSTRUCTOR).asMethod.paramLists match {
-      case h :: _ => h.map(_.asTerm)
-      case _ => List.empty
+    val terms = {
+      val constructor = mainType.decl(termNames.CONSTRUCTOR)
+      if (!constructor.isMethod) c.abort(c.enclosingPosition, "No constructor unsupported class type")
+      constructor.asMethod.paramLists match {
+        case h :: _ => h.map(_.asTerm)
+        case _ => List.empty
+      }
     }
 
     val fields: Map[Type, List[(TermName, Type)]] = {

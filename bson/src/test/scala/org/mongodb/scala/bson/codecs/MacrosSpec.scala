@@ -22,13 +22,11 @@ import java.util.Date
 
 import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
-
 import org.bson._
-import org.bson.codecs.configuration.{ CodecProvider, CodecRegistries }
+import org.bson.codecs.configuration.{ CodecProvider, CodecRegistries, CodecRegistry }
 import org.bson.codecs.{ Codec, DecoderContext, EncoderContext }
 import org.bson.io.{ BasicOutputBuffer, ByteBufferBsonInput, OutputBuffer }
 import org.bson.types.ObjectId
-
 import org.mongodb.scala.bson.annotations.BsonProperty
 import org.mongodb.scala.bson.codecs.Macros.{ createCodecProvider, createCodecProviderIgnoreNone }
 import org.mongodb.scala.bson.collection.immutable.Document
@@ -103,6 +101,61 @@ class MacrosSpec extends FlatSpec with Matchers {
   case class ContainsADTCaseClassTypeAlias(a: String, b: ADTCaseClassTypeAlias)
 
   case class ContainsTypeLessMap(a: BsonDocument)
+
+  sealed class SealedClassCaseObject
+  object SealedClassCaseObject {
+    case object Alpha extends SealedClassCaseObject
+  }
+
+  sealed trait CaseObjectEnum
+  object CaseObjectEnum {
+    case object Alpha extends CaseObjectEnum
+    case object Bravo extends CaseObjectEnum
+    case object Charlie extends CaseObjectEnum
+  }
+
+  object CaseObjectEnumCodecProvider extends CodecProvider {
+    def isCaseObjectEnum[T](clazz: Class[T]): Boolean = {
+      clazz.isInstance(CaseObjectEnum.Alpha) || clazz.isInstance(CaseObjectEnum.Bravo) || clazz.isInstance(CaseObjectEnum.Charlie)
+    }
+
+    override def get[T](clazz: Class[T], registry: CodecRegistry): Codec[T] = {
+      if (isCaseObjectEnum(clazz)) {
+        CaseObjectEnumCodec.asInstanceOf[Codec[T]]
+      } else {
+        null
+      }
+    }
+
+    object CaseObjectEnumCodec extends Codec[CaseObjectEnum] {
+      val identifier = "_t"
+      override def decode(reader: BsonReader, decoderContext: DecoderContext): CaseObjectEnum = {
+        reader.readStartDocument()
+        val enumName = reader.readString(identifier)
+        reader.readEndDocument()
+        enumName match {
+          case "Alpha" => CaseObjectEnum.Alpha
+          case "Bravo" => CaseObjectEnum.Bravo
+          case "Charlie" => CaseObjectEnum.Charlie
+          case _ => throw new BsonInvalidOperationException(s"$enumName is an invalid value for a MyEnum object")
+        }
+      }
+
+      override def encode(writer: BsonWriter, value: CaseObjectEnum, encoderContext: EncoderContext): Unit = {
+        val name = value match {
+          case CaseObjectEnum.Alpha => "Alpha"
+          case CaseObjectEnum.Bravo => "Bravo"
+          case CaseObjectEnum.Charlie => "Charlie"
+        }
+        writer.writeStartDocument()
+        writer.writeString(identifier, name)
+        writer.writeEndDocument()
+      }
+
+      override def getEncoderClass: Class[CaseObjectEnum] = CaseObjectEnum.getClass.asInstanceOf[Class[CaseObjectEnum]]
+    }
+  }
+  case class ContainsMyEnum(myEnum: CaseObjectEnum)
 
   "Macros" should "be able to round trip simple case classes" in {
     roundTrip(Empty(), "{}", classOf[Empty])
@@ -304,6 +357,12 @@ class MacrosSpec extends FlatSpec with Matchers {
 
   it should "not compile if there are no concrete implementations of a sealed class" in {
     "Macros.createCodecProvider(classOf[NotImplemented])" shouldNot compile
+    "Macros.createCodecProvider(classOf[SealedClassCaseObject])" shouldNot compile
+  }
+
+  it should "not compile if passing a case object" in {
+    "Macros.createCodecProvider(classOf[CaseObjectEnum])" shouldNot compile
+    "Macros.createCodecProvider(CaseObjectEnum.Alpha.getClass)" shouldNot compile
   }
 
   it should "error when reading unexpected lists" in {
