@@ -51,7 +51,7 @@ which will render as:
 }
 ```
 
-This example creates a filter that selects all documents where the value of the `qty` field is either `5` or `20`:
+This example creates a filter that selects all documents where the value of the `qty` field is either `5` or `15`:
 
 ```scala
 in("qty", 5, 15)
