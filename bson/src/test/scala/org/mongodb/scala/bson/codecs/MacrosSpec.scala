@@ -100,6 +100,9 @@ class MacrosSpec extends FlatSpec with Matchers {
   type ADTCaseClassTypeAlias = ContainsADT
   case class ContainsADTCaseClassTypeAlias(a: String, b: ADTCaseClassTypeAlias)
 
+  trait Tag
+  case class ContainsTaggedTypes(a: Int with Tag, b: String with Tag, c: Map[String with Tag, Int with Tag] with Tag, d: Empty with Tag) extends Tag
+
   case class ContainsTypeLessMap(a: BsonDocument)
 
   sealed class SealedClassCaseObject
@@ -311,6 +314,14 @@ class MacrosSpec extends FlatSpec with Matchers {
     val branchJson = createTreeJson(branch)
     roundTrip(ContainsADTCaseClassTypeAlias("c", ContainsADT("Tom", branch)), s"""{a: "c", b: {name: "Tom", tree: $branchJson}}""",
       classOf[ContainsADTCaseClassTypeAlias], classOf[ADTCaseClassTypeAlias], classOf[Tree])
+  }
+
+  it should "support tagged types in case classes" in {
+    val a = 1.asInstanceOf[Int with Tag]
+    val b = "b".asInstanceOf[String with Tag]
+    val c = Map("c" -> 0).asInstanceOf[Map[String with Tag, Int with Tag] with Tag]
+    val d = Empty().asInstanceOf[Empty with Tag]
+    roundTrip(ContainsTaggedTypes(a, b, c, d), """{a: 1, b: "b", c: {c: 0}, d: {}}""", classOf[ContainsTaggedTypes], classOf[Empty])
   }
 
   it should "support extra fields in the document" in {
