@@ -151,7 +151,7 @@ private[codecs] object CaseClassCodec {
       }
       val types = t +: typeArgs.flatMap(x => flattenTypeArgs(x))
       if (types.exists(isTuple)) c.abort(c.enclosingPosition, "Tuples currently aren't supported in case classes")
-      types.filterNot(isOption).map(x => primitiveTypesMap.getOrElse(x, x))
+      types.filterNot(isOption).map(x => primitiveTypesMap.getOrElse(x.erasure, x))
     }
 
     /*
