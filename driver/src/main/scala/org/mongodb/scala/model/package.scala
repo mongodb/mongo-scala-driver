@@ -131,6 +131,20 @@ package object model {
   }
 
   /**
+   * The options to apply to an estimated count operation.
+   * @since 2.4
+   */
+  type EstimatedDocumentCountOptions = com.mongodb.client.model.EstimatedDocumentCountOptions
+
+  /**
+   * The options to apply to an estimated count operation.
+   * @since 2.4
+   */
+  object EstimatedDocumentCountOptions {
+    def apply(): EstimatedDocumentCountOptions = new com.mongodb.client.model.EstimatedDocumentCountOptions()
+  }
+
+  /**
    * Options for creating a collection
    */
   type CreateCollectionOptions = com.mongodb.client.model.CreateCollectionOptions

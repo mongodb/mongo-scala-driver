@@ -188,7 +188,7 @@ following code should insert the documents then count the number of documents an
 ```scala
 val insertAndCount = for {
   insertResult <- insertObservable
-  countResult <- collection.count()
+  countResult <- collection.countDocuments()
 } yield countResult
 
 println(s"total # of documents after inserting 100 small ones (should be 101):  ${insertAndCount.headResult()}")

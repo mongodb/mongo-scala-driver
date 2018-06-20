@@ -140,11 +140,11 @@ language and enabled by default (here we use the [`Filters.text`]({{< relref "bu
 
 ```scala
 // Find using the text index
-collection.count(text("textual content -irrelevant")).printResults("Text search matches: ")
+collection.countDocuments(text("textual content -irrelevant")).printResults("Text search matches: ")
 
 // Find using the $language operator
 val textSearch: Bson = text("textual content -irrelevant", TextSearchOptions().language("english"))
-collection.count(textSearch).printResults("Text search matches (english): ")
+collection.countDocuments(textSearch).printResults("Text search matches (english): ")
 
 // Find the highest scoring match
 collection.find(textSearch)

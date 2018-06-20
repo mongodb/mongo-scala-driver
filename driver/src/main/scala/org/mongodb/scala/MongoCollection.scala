@@ -129,6 +129,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    *
    * @return a Observable with a single element indicating the number of documents
    */
+  @deprecated("Use `countDocuments` or `estimatedDocumentCount()` instead of `count()`", "2.4")
   def count(): SingleObservable[Long] = observeLong(wrapped.count(_: SingleResultCallback[java.lang.Long]))
 
   /**
@@ -137,6 +138,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param filter the query filter
    * @return a Observable with a single element indicating the number of documents
    */
+  @deprecated("Use `countDocuments` instead of `count()`", "2.4")
   def count(filter: Bson): SingleObservable[Long] = observeLong(wrapped.count(filter, _: SingleResultCallback[java.lang.Long]))
 
   /**
@@ -146,6 +148,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param options the options describing the count
    * @return a Observable with a single element indicating the number of documents
    */
+  @deprecated("Use `countDocuments` instead of `count()`", "2.4")
   def count(filter: Bson, options: CountOptions): SingleObservable[Long] =
     observeLong(wrapped.count(filter, options, _: SingleResultCallback[java.lang.Long]))
 
@@ -157,6 +160,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @since 2.2
    * @note Requires MongoDB 3.6 or greater
    */
+  @deprecated("Use `countDocuments` instead of `count()`", "2.4")
   def count(clientSession: ClientSession): SingleObservable[Long] =
     observeLong(wrapped.count(clientSession, _: SingleResultCallback[java.lang.Long]))
 
@@ -169,6 +173,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @since 2.2
    * @note Requires MongoDB 3.6 or greater
    */
+  @deprecated("Use `countDocuments` instead of `count()`", "2.4")
   def count(clientSession: ClientSession, filter: Bson): SingleObservable[Long] =
     observeLong(wrapped.count(clientSession, filter, _: SingleResultCallback[java.lang.Long]))
 
@@ -182,8 +187,94 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @since 2.2
    * @note Requires MongoDB 3.6 or greater
    */
+  @deprecated("Use `countDocuments` instead of `count()`", "2.4")
   def count(clientSession: ClientSession, filter: Bson, options: CountOptions): SingleObservable[Long] =
     observeLong(wrapped.count(clientSession, filter, options, _: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Gets an estimate of the count of documents in a collection using collection metadata.
+   *
+   * @return a publisher with a single element indicating the estimated number of documents
+   * @since 2.4
+   */
+  def estimatedDocumentCount(): SingleObservable[Long] =
+    observeLong(wrapped.estimatedDocumentCount(_: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Gets an estimate of the count of documents in a collection using collection metadata.
+   *
+   * @param options the options describing the count
+   * @return a publisher with a single element indicating the estimated number of documents
+   * @since 2.4
+   */
+  def estimatedDocumentCount(options: EstimatedDocumentCountOptions): SingleObservable[Long] =
+    observeLong(wrapped.estimatedDocumentCount(options, _: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Counts the number of documents in the collection.
+   *
+   * @return a publisher with a single element indicating the number of documents
+   * @since 2.4
+   */
+  def countDocuments(): SingleObservable[Long] =
+    observeLong(wrapped.countDocuments(_: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Counts the number of documents in the collection according to the given options.
+   *
+   * @param filter the query filter
+   * @return a publisher with a single element indicating the number of documents
+   * @since 2.4
+   */
+  def countDocuments(filter: Bson): SingleObservable[Long] =
+    observeLong(wrapped.countDocuments(filter, _: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Counts the number of documents in the collection according to the given options.
+   *
+   * @param filter  the query filter
+   * @param options the options describing the count
+   * @return a publisher with a single element indicating the number of documents
+   * @since 2.4
+   */
+  def countDocuments(filter: Bson, options: CountOptions): SingleObservable[Long] =
+    observeLong(wrapped.countDocuments(filter, options, _: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Counts the number of documents in the collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @return a publisher with a single element indicating the number of documents
+   * @since 2.4
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def countDocuments(clientSession: ClientSession): SingleObservable[Long] =
+    observeLong(wrapped.countDocuments(clientSession, _: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Counts the number of documents in the collection according to the given options.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filter        the query filter
+   * @return a publisher with a single element indicating the number of documents
+   * @since 2.4
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def countDocuments(clientSession: ClientSession, filter: Bson): SingleObservable[Long] =
+    observeLong(wrapped.countDocuments(clientSession, filter, _: SingleResultCallback[java.lang.Long]))
+
+  /**
+   * Counts the number of documents in the collection according to the given options.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filter        the query filter
+   * @param options       the options describing the count
+   * @return a publisher with a single element indicating the number of documents
+   * @since 2.4
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def countDocuments(clientSession: ClientSession, filter: Bson, options: CountOptions): SingleObservable[Long] =
+    observeLong(wrapped.countDocuments(clientSession, filter, options, _: SingleResultCallback[java.lang.Long]))
 
   /**
    * Gets the distinct values of the specified field name.

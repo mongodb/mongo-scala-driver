@@ -16,14 +16,13 @@
 
 package org.mongodb.scala
 
-import scala.collection.JavaConverters._
+import java.util.concurrent.TimeUnit
 
+import scala.collection.JavaConverters._
 import org.bson.BsonDocument
 import org.bson.codecs.BsonValueCodecProvider
 import org.bson.codecs.configuration.CodecRegistries.fromProviders
 import com.mongodb.async.client.{MongoCollection => JMongoCollection}
-import com.mongodb.client.model.CountOptions
-
 import org.mongodb.scala.model._
 import org.mongodb.scala.result._
 import org.scalamock.scalatest.proxy.MockFactory
@@ -130,7 +129,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "return the underlying count" in {
-    val countOptions = new CountOptions().hintString("Hint")
+    val countOptions = CountOptions().hintString("Hint")
 
     wrapped.expects('count)(*).once()
     wrapped.expects('count)(filter, *).once()
@@ -145,6 +144,34 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     mongoCollection.count(clientSession).subscribe(observer[Long])
     mongoCollection.count(clientSession, filter).subscribe(observer[Long])
     mongoCollection.count(clientSession, filter, countOptions).subscribe(observer[Long])
+  }
+
+  it should "return the underlying countDocuments" in {
+    val countOptions = CountOptions().hintString("Hint")
+
+    wrapped.expects('countDocuments)(*).once()
+    wrapped.expects('countDocuments)(filter, *).once()
+    wrapped.expects('countDocuments)(filter, countOptions, *).once()
+    wrapped.expects('countDocuments)(clientSession, *).once()
+    wrapped.expects('countDocuments)(clientSession, filter, *).once()
+    wrapped.expects('countDocuments)(clientSession, filter, countOptions, *).once()
+
+    mongoCollection.countDocuments().subscribe(observer[Long])
+    mongoCollection.countDocuments(filter).subscribe(observer[Long])
+    mongoCollection.countDocuments(filter, countOptions).subscribe(observer[Long])
+    mongoCollection.countDocuments(clientSession).subscribe(observer[Long])
+    mongoCollection.countDocuments(clientSession, filter).subscribe(observer[Long])
+    mongoCollection.countDocuments(clientSession, filter, countOptions).subscribe(observer[Long])
+  }
+
+  it should "return the underlying estimatedDocumentCount" in {
+    val options = EstimatedDocumentCountOptions().maxTime(1, TimeUnit.SECONDS)
+
+    wrapped.expects('estimatedDocumentCount)(*).once()
+    wrapped.expects('estimatedDocumentCount)(options, *).once()
+
+    mongoCollection.estimatedDocumentCount().subscribe(observer[Long])
+    mongoCollection.estimatedDocumentCount(options).subscribe(observer[Long])
   }
 
   it should "wrap the underlying DistinctObservable correctly" in {

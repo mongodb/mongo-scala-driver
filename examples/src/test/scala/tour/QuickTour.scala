@@ -67,7 +67,7 @@ object QuickTour {
 
     val insertAndCount = for {
       insertResult <- insertObservable
-      countResult <- collection.count()
+      countResult <- collection.countDocuments()
     } yield countResult
 
     println(s"total # of documents after inserting 100 small ones (should be 101):  ${insertAndCount.headResult()}")

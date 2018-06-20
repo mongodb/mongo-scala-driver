@@ -44,7 +44,7 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
 
       info("The collection should be empty")
       val collection = database.getCollection(collectionName)
-      collection.count().futureValue shouldBe 0
+      collection.countDocuments().futureValue shouldBe 0
 
       info("find first should return null if no documents")
       collection.find().first().futureValue shouldBe null // scalastyle:ignore
@@ -53,7 +53,7 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       collection.insertOne(document).futureValue should equal(Completed())
 
       info("The count should be one")
-      collection.count().futureValue shouldBe 1
+      collection.countDocuments().futureValue shouldBe 1
 
       info("the find that document")
       collection.find().futureValue.head shouldBe document
@@ -71,7 +71,7 @@ class SmokeTestISpec extends RequiresMongoDBISpec {
       collection.deleteOne(Document()).futureValue.getDeletedCount() shouldBe 1
 
       info("The count is zero")
-      collection.count().futureValue shouldBe 0
+      collection.countDocuments().futureValue shouldBe 0
 
       info("create an index")
       collection.createIndex(Document("test" -> 1)).futureValue shouldBe "test_1"
