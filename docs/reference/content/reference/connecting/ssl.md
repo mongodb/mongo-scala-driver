@@ -15,13 +15,11 @@ The Scala driver supports SSL connections to MongoDB servers using the underlyin
 and the stream factory to [`NettyStreamFactoryFactory`]({{< apiref "org.mongodb.connection.NettyStreamFactoryFactory" >}}), as in:
 
 ```scala
-import org.mongodb.scala.connection.{NettyStreamFactoryFactory, SslSettings}
+import org.mongodb.scala.connection.NettyStreamFactoryFactory
 
 MongoClientSettings.builder()
-                   .sslSettings(SslSettings.builder()
-                                           .enabled(true)
-                                           .build())   
                    .streamFactoryFactory(NettyStreamFactoryFactory())
+                   .applyToSslSettings(b => b.enabled(true))
                    .build()
 ```
 
@@ -37,11 +35,8 @@ constructing a `MongoClient`.  However, this host name verification requires a J
    
 ```scala
 MongoClientSettings.builder()
-                   .sslSettings(SslSettings.builder()
-                                           .enabled(true)                 
-                                           .invalidHostNameAllowed(true)  
-                                           .build())                      
                    .streamFactoryFactory(NettyStreamFactoryFactory())
+                   .applyToSslSettings(b => b.enabled(true).invalidHostNameAllowed(true))
                    .build()
 ``` 
 

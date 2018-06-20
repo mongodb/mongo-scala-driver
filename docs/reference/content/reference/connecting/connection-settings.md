@@ -92,10 +92,10 @@ application uses a builder:
 
 ```scala
 import scala.collection.JavaConverters._
-import org.mongodb.scala.connection.ClusterSettings
 
-val clusterSettings: ClusterSettings = ClusterSettings.builder().hosts(List(new ServerAddress("localhost")).asJava).description("Local Server").build()
-val settings: MongoClientSettings = MongoClientSettings.builder().clusterSettings(clusterSettings).build()
+val settings: MongoClientSettings = MongoClientSettings.builder()
+    .applyToClusterSettings(b => b.hosts(List(new ServerAddress("localhost")).asJava).description("Local Server"))
+    .build()
 val client: MongoClient = MongoClient(settings)
 ```
 

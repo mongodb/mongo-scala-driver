@@ -36,8 +36,9 @@ val mongoClient: MongoClient = MongoClient()
 val mongoClient: MongoClient = MongoClient("mongodb://localhost")
 
 // or provide custom MongoClientSettings
-val clusterSettings: ClusterSettings = ClusterSettings.builder().hosts(List(new ServerAddress("localhost")).asJava).build()
-val settings: MongoClientSettings = MongoClientSettings.builder().clusterSettings(clusterSettings).build()
+val settings: MongoClientSettings = MongoClientSettings.builder()
+    .applyToClusterSettings(b => b.hosts(List(new ServerAddress("localhost")).asJava).
+    .build()
 val mongoClient: MongoClient = MongoClient(settings)
 
 val database: MongoDatabase = mongoClient.getDatabase("mydb")
