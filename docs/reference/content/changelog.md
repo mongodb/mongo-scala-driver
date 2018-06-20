@@ -15,6 +15,7 @@ Changes between released versions
   * Added transaction support. [SCALA-388](https://jira.mongodb.org/browse/SCALA-388)
   * Added `MongoCredential.createScramSha256Credential`. [SCALA-375](https://jira.mongodb.org/browse/SCALA-375)
   * Updated CaseClassCodec error catching for unsupported types. [SCALA-343](https://jira.mongodb.org/browse/SCALA-343)
+  * Fixed `ExecutionContextObservable` race condition regarding ordering of Observer calls. [SCALA-405](https://jira.mongodb.org/browse/SCALA-405]
   * `FindObservable.maxScan` deprecated. [SCALA-385](https://jira.mongodb.org/browse/SCALA-385)
   * `FindObservable.snapshot` deprecated. [SCALA-386](https://jira.mongodb.org/browse/SCALA-386)
   * `MongoCredential.createMongoCRCredential` deprecated. [SCALA-371](https://jira.mongodb.org/browse/SCALA-371)

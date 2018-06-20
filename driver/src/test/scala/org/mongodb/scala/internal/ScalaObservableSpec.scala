@@ -406,6 +406,11 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
     Option(Await.result(TestObservable[Int](Observable(List[Int]())).head(), Duration(10, TimeUnit.SECONDS))) should equal(None)
   }
 
+  it should "not stackoverflow when using flatMap with execution contexts" in {
+    val altContextObservable = observable(1 to 10000).observeOn(ExecutionContext.global).flatMap((res: Int) => Observable(Seq(res)))
+    Await.result(altContextObservable.toFuture(), Duration(10, TimeUnit.SECONDS)) should equal(1 to 10000)
+  }
+
   it should "let the user know the Observable hasn't been subscribed to" in {
     forAll(observableErrorScenarios) { (obs: (() => Observable[_])) =>
       val futureError = intercept[IllegalStateException] {

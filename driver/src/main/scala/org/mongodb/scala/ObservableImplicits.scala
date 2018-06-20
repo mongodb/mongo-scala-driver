@@ -391,7 +391,7 @@ trait ObservableImplicits {
      * @param context the execution context
      * @return an Observable that uses the specified execution context
      */
-    def observeOn(context: ExecutionContext): Observable[T] = ExecutionContextObservable(context, observable)
+    def observeOn(context: ExecutionContext): Observable[T] = ExecutionContextObservable(observable, context)
 
   }
 
