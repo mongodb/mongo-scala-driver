@@ -12,6 +12,7 @@ Changes between released versions
 
 ### 2.4.0
   * Updated MongoDB Driver Async to 3.8.0.
+  * Added type aliases for builders, makes imports simpler when using MongoClientSettings [SCALA-421](https://jira.mongodb.org/browse/SCALA-421)
   * Deprecated `MongoCollection.count` and added `MongoCollection.countDocuments` and `MongoCollection.estimatedDocumentCount` [SCALA-422](https://jira.mongodb.org/browse/SCALA-422)
   * Added method to disable computing MD5 checksums when uploading files [SCALA-373](https://jira.mongodb.org/browse/SCALA-373)
   * Added cluster and database wide change stream support [SCALA-405](https://jira.mongodb.org/browse/SCALA-405)

@@ -32,7 +32,7 @@ object MongoClientSettings {
    * Creates a the default builder
    * @return a MongoClientSettings builder
    */
-  def builder(): JMongoClientSettings.Builder = JMongoClientSettings.builder().codecRegistry(MongoClient.DEFAULT_CODEC_REGISTRY)
+  def builder(): Builder = JMongoClientSettings.builder().codecRegistry(MongoClient.DEFAULT_CODEC_REGISTRY)
 
   /**
    * Creates a builder from an existing `MongoClientSettings`.
@@ -40,12 +40,17 @@ object MongoClientSettings {
    * @param settings the settings to create the builder from
    * @return a MongoClientSettings builder
    */
-  def builder(settings: MongoClientSettings): JMongoClientSettings.Builder = {
+  def builder(settings: MongoClientSettings): Builder = {
     val builder = JMongoClientSettings.builder(settings)
     if (settings.getCodecRegistry == JMongoClients.getDefaultCodecRegistry) {
       builder.codecRegistry(MongoClient.DEFAULT_CODEC_REGISTRY)
     }
     builder
   }
+
+  /**
+   * MongoClientSettings builder type
+   */
+  type Builder = JMongoClientSettings.Builder
 
 }

@@ -31,7 +31,7 @@ object MongoDriverInformation {
    *
    * @return a new Builder for creating the MongoDriverInformation.
    */
-  def builder(): JMongoDriverInformation.Builder = JMongoDriverInformation.builder()
+  def builder(): Builder = JMongoDriverInformation.builder()
 
   /**
    * Creates a builder for creating the MongoDriverInformation.
@@ -39,7 +39,12 @@ object MongoDriverInformation {
    * @param mongoDriverInformation existing MongoDriverInformation to be extended.
    * @return a new Builder for creating the MongoDriverInformation.
    */
-  def builder(mongoDriverInformation: MongoDriverInformation): JMongoDriverInformation.Builder =
+  def builder(mongoDriverInformation: MongoDriverInformation): Builder =
     JMongoDriverInformation.builder(mongoDriverInformation)
+
+  /**
+   * MongoDriverInformation builder type
+   */
+  type Builder = JMongoDriverInformation.Builder
 
 }

@@ -32,5 +32,10 @@ object NettyStreamFactoryFactory {
    * @return the builder
    * @since 2.2
    */
-  def builder(): NettyStreamFactoryFactoryBuilder = JNettyStreamFactoryFactory.builder()
+  def builder(): Builder = JNettyStreamFactoryFactory.builder()
+
+  /**
+   * NettyStreamFactoryFactory builder type
+   */
+  type Builder = JNettyStreamFactoryFactory.Builder
 }

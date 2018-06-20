@@ -31,6 +31,11 @@ object TransactionOptions {
    *
    * @return a builder instance
    */
-  def builder: JTransactionOptions.Builder = JTransactionOptions.builder
+  def builder(): Builder = JTransactionOptions.builder()
+
+  /**
+   * TransactionOptions builder type
+   */
+  type Builder = JTransactionOptions.Builder
 
 }

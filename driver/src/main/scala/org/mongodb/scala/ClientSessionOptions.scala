@@ -31,6 +31,11 @@ object ClientSessionOptions {
    *
    * @return a builder instance
    */
-  def builder: JClientSessionOptions.Builder = JClientSessionOptions.builder
+  def builder: Builder = JClientSessionOptions.builder
+
+  /**
+   * ClientSession builder
+   */
+  type Builder = JClientSessionOptions.Builder
 
 }

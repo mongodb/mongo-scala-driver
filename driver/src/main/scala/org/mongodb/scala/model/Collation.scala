@@ -31,6 +31,11 @@ object Collation {
    *
    * @return a new Builder for creating the Collation.
    */
-  def builder(): JCollation.Builder = JCollation.builder()
+  def builder(): Builder = JCollation.builder()
+
+  /**
+   * Collation builder type
+   */
+  type Builder = JCollation.Builder
 
 }

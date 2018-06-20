@@ -36,5 +36,10 @@ object AsynchronousSocketChannelStreamFactoryFactory {
    * @return the builder
    * @since 2.2
    */
-  def builder(): AsynchronousSocketChannelStreamFactoryFactoryBuilder = JAsynchronousSocketChannelStreamFactoryFactory.builder()
+  def builder(): Builder = JAsynchronousSocketChannelStreamFactoryFactory.builder()
+
+  /**
+   * AsynchronousSocketChannelStreamFactoryFactory builder type
+   */
+  type Builder = JAsynchronousSocketChannelStreamFactoryFactory.Builder
 }

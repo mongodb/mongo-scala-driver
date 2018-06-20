@@ -16,11 +16,13 @@
 
 package org.mongodb.scala
 
+import com.mongodb.Block
 import org.bson.codecs.configuration.CodecRegistries._
-
 import org.mongodb.scala.bson.codecs.{DEFAULT_CODEC_REGISTRY, DocumentCodecProvider}
+import org.mongodb.scala.connection.ConnectionPoolSettings.Builder
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalatest.{FlatSpec, Matchers}
+import org.mongodb.scala.connection._
 
 class MongoClientSettingsSpec extends FlatSpec with Matchers with MockFactory {
 
@@ -37,6 +39,26 @@ class MongoClientSettingsSpec extends FlatSpec with Matchers with MockFactory {
     val codecRegistry = fromProviders(DocumentCodecProvider())
     val settings = MongoClientSettings.builder().codecRegistry(codecRegistry).build()
     MongoClientSettings.builder(settings).build().getCodecRegistry should equal(codecRegistry)
+  }
+
+  it should "allow local Builder types" in {
+    MongoClientSettings.builder()
+      .applyToClusterSettings(new Block[ClusterSettings.Builder] {
+        override def apply(t: ClusterSettings.Builder): Unit = {}
+      })
+      .applyToConnectionPoolSettings(new Block[ConnectionPoolSettings.Builder] {
+        override def apply(t: Builder): Unit = {}
+      })
+      .applyToServerSettings(new Block[ServerSettings.Builder] {
+        override def apply(t: ServerSettings.Builder): Unit = {}
+      })
+      .applyToSocketSettings(new Block[SocketSettings.Builder] {
+        override def apply(t: SocketSettings.Builder): Unit = {}
+      })
+      .applyToSslSettings(new Block[SslSettings.Builder] {
+        override def apply(t: SslSettings.Builder): Unit = {}
+      })
+      .build()
   }
 
 }

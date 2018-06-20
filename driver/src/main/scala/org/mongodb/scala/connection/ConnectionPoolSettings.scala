@@ -30,6 +30,11 @@ object ConnectionPoolSettings {
    *
    * @return a new Builder for creating ClusterSettings.
    */
-  def builder(): JConnectionPoolSettings.Builder = JConnectionPoolSettings.builder()
+  def builder(): Builder = JConnectionPoolSettings.builder()
+
+  /**
+   * ConnectionPoolSettings builder type
+   */
+  type Builder = JConnectionPoolSettings.Builder
 
 }

@@ -30,6 +30,11 @@ object ServerSettings {
    *
    * @return a new Builder for creating ServerSettings.
    */
-  def builder(): JServerSettings.Builder = JServerSettings.builder()
+  def builder(): Builder = JServerSettings.builder()
+
+  /**
+   * ServerSettings builder type
+   */
+  type Builder = JServerSettings.Builder
 
 }
