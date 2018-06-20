@@ -204,4 +204,20 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
     mongoDatabase.createView(clientSession, "viewName", "collectionName", pipeline).subscribe(observer[Completed])
     mongoDatabase.createView(clientSession, "viewName", "collectionName", pipeline, options).subscribe(observer[Completed])
   }
+
+  it should "call the underlying watch" in {
+    val pipeline = List(Document("$match" -> 1))
+
+    wrapped.expects('watch)(classOf[Document]).once()
+    wrapped.expects('watch)(pipeline.asJava, classOf[Document]).once()
+    wrapped.expects('watch)(pipeline.asJava, classOf[BsonDocument]).once()
+    wrapped.expects('watch)(clientSession, pipeline.asJava, classOf[Document]).once()
+    wrapped.expects('watch)(clientSession, pipeline.asJava, classOf[BsonDocument]).once()
+
+    mongoDatabase.watch() shouldBe a[ChangeStreamObservable[_]]
+    mongoDatabase.watch(pipeline) shouldBe a[ChangeStreamObservable[_]]
+    mongoDatabase.watch[BsonDocument](pipeline) shouldBe a[ChangeStreamObservable[_]]
+    mongoDatabase.watch(clientSession, pipeline) shouldBe a[ChangeStreamObservable[_]]
+    mongoDatabase.watch[BsonDocument](clientSession, pipeline) shouldBe a[ChangeStreamObservable[_]]
+  }
 }

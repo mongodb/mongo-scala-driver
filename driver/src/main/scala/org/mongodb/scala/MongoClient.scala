@@ -23,8 +23,10 @@ import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.{MongoClients, MongoClient => JMongoClient, MongoClientSettings => LegacyMongoClientSettings}
 import org.bson.codecs.configuration.CodecRegistry
 import org.mongodb.scala.bson.DefaultHelper.DefaultsTo
+import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.internal.ObservableHelper.observe
 
+import scala.collection.JavaConverters._
 import scala.reflect.ClassTag
 
 /**
@@ -209,5 +211,53 @@ case class MongoClient(private val wrapped: JMongoClient) extends Closeable {
    */
   def listDatabases[TResult](clientSession: ClientSession)(implicit e: TResult DefaultsTo Document, ct: ClassTag[TResult]): ListDatabasesObservable[TResult] =
     ListDatabasesObservable(wrapped.listDatabases(clientSession, ct))
+
+
+  /**
+   * Creates a change stream for this collection.
+   *
+   * @tparam C   the target document type of the observable.
+   * @return the change stream observable
+   * @since 2.4
+   * @note Requires MongoDB 4.0 or greater
+   */
+  def watch[C]()(implicit e: C DefaultsTo Document, ct: ClassTag[C]): ChangeStreamObservable[C] = ChangeStreamObservable(wrapped.watch(ct))
+
+  /**
+   * Creates a change stream for this collection.
+   *
+   * @param pipeline the aggregation pipeline to apply to the change stream
+   * @tparam C   the target document type of the observable.
+   * @return the change stream observable
+   * @since 2.4
+   * @note Requires MongoDB 4.0 or greater
+   */
+  def watch[C](pipeline: Seq[Bson])(implicit e: C DefaultsTo Document, ct: ClassTag[C]): ChangeStreamObservable[C] =
+    ChangeStreamObservable(wrapped.watch(pipeline.asJava, ct))
+
+  /**
+   * Creates a change stream for this collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @tparam C   the target document type of the observable.
+   * @return the change stream observable
+   * @since 2.4
+   * @note Requires MongoDB 4.0 or greater
+   */
+  def watch[C](clientSession: ClientSession)(implicit e: C DefaultsTo Document, ct: ClassTag[C]): ChangeStreamObservable[C] =
+    ChangeStreamObservable(wrapped.watch(clientSession, ct))
+
+  /**
+   * Creates a change stream for this collection.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param pipeline the aggregation pipeline to apply to the change stream
+   * @tparam C   the target document type of the observable.
+   * @return the change stream observable
+   * @since 2.4
+   * @note Requires MongoDB 4.0 or greater
+   */
+  def watch[C](clientSession: ClientSession, pipeline: Seq[Bson])(implicit e: C DefaultsTo Document, ct: ClassTag[C]): ChangeStreamObservable[C] =
+    ChangeStreamObservable(wrapped.watch(clientSession, pipeline.asJava, ct))
 
 }

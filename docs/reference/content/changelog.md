@@ -12,6 +12,7 @@ Changes between released versions
 
 ### 2.4.0
   * Updated MongoDB Driver Async to 3.8.0.
+  * Added cluster and database wide change stream support [SCALA-405](https://jira.mongodb.org/browse/SCALA-405)
   * Added transaction support. [SCALA-388](https://jira.mongodb.org/browse/SCALA-388)
   * Added `MongoCredential.createScramSha256Credential`. [SCALA-375](https://jira.mongodb.org/browse/SCALA-375)
   * Updated CaseClassCodec error catching for unsupported types. [SCALA-343](https://jira.mongodb.org/browse/SCALA-343)

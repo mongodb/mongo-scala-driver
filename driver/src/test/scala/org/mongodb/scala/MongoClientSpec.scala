@@ -130,4 +130,20 @@ class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
     mongoClient.listDatabaseNames(clientSession)
   }
 
+  it should "call the underlying watch" in {
+    val pipeline = List(Document("$match" -> 1))
+
+    wrapped.expects('watch)(classOf[Document]).once()
+    wrapped.expects('watch)(pipeline.asJava, classOf[Document]).once()
+    wrapped.expects('watch)(pipeline.asJava, classOf[BsonDocument]).once()
+    wrapped.expects('watch)(clientSession, pipeline.asJava, classOf[Document]).once()
+    wrapped.expects('watch)(clientSession, pipeline.asJava, classOf[BsonDocument]).once()
+
+    mongoClient.watch() shouldBe a[ChangeStreamObservable[_]]
+    mongoClient.watch(pipeline) shouldBe a[ChangeStreamObservable[_]]
+    mongoClient.watch[BsonDocument](pipeline) shouldBe a[ChangeStreamObservable[_]]
+    mongoClient.watch(clientSession, pipeline) shouldBe a[ChangeStreamObservable[_]]
+    mongoClient.watch[BsonDocument](clientSession, pipeline) shouldBe a[ChangeStreamObservable[_]]
+  }
+
 }

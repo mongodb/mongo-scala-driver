@@ -19,6 +19,7 @@ package org.mongodb.scala
 import java.util.concurrent.TimeUnit
 
 import com.mongodb.async.client.{ChangeStreamIterable, MongoIterable}
+import org.mongodb.scala.bson.BsonTimestamp
 import org.mongodb.scala.internal.ObservableHelper._
 import org.mongodb.scala.model.Collation
 import org.mongodb.scala.model.changestream.{ChangeStreamDocument, FullDocument}
@@ -58,6 +59,22 @@ case class ChangeStreamObservable[TResult](private val wrapped: ChangeStreamIter
    */
   def resumeAfter(resumeToken: Document): ChangeStreamObservable[TResult] = {
     wrapped.resumeAfter(resumeToken.underlying)
+    this
+  }
+
+  /**
+   * The change stream will only provide changes that occurred at or after the specified timestamp.
+   *
+   * Any command run against the server will return an operation time that can be used here.
+   * The default value is an operation time obtained from the server before the change stream was created.
+   *
+   * @param startAtOperationTime the start at operation time
+   * @return this
+   * @since 2.4
+   * @note Requires MongoDB 4.0 or greater
+   */
+  def startAtOperationTime(startAtOperationTime: BsonTimestamp): ChangeStreamObservable[TResult] = {
+    wrapped.startAtOperationTime(startAtOperationTime)
     this
   }
 
