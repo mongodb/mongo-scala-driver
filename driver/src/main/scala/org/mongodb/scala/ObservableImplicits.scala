@@ -335,11 +335,7 @@ trait ObservableImplicits {
      *       If the underlying Observable is infinite this Observable will never complete.
      * @return a future representation of the whole Observable
      */
-    def toFuture(): Future[Seq[T]] = {
-      val promise = Promise[Seq[T]]()
-      collect().subscribe((l: Seq[T]) => promise.success(l), (t: Throwable) => promise.failure(t))
-      promise.future
-    }
+    def toFuture(): Future[Seq[T]] = collect().head()
 
     /**
      * Returns the head of the [[Observable]] in a [[scala.concurrent.Future]].
@@ -365,21 +361,29 @@ trait ObservableImplicits {
       observable.subscribe(new Observer[T]() {
         @volatile
         var subscription: Option[Subscription] = None
-
-        override def onError(throwable: Throwable): Unit = promise.failure(throwable)
+        @volatile
+        var terminated: Boolean = false
 
         override def onSubscribe(sub: Subscription): Unit = {
           subscription = Some(sub)
           sub.request(1)
         }
 
-        override def onComplete(): Unit = promise.complete(Success(None))
+        override def onError(throwable: Throwable): Unit = completeWith("onError", { () => promise.failure(throwable) })
+
+        override def onComplete(): Unit = {
+          if (!terminated) completeWith("onComplete", { () => promise.success(None) }) // Completed with no values
+        }
 
         override def onNext(tResult: T): Unit = {
-          subscription.getOrElse {
-            throw new IllegalStateException("The Observable has not been subscribed to.")
-          }.unsubscribe()
-          promise.success(Some(tResult))
+          completeWith("onNext", { () => promise.success(Some(tResult)) })
+        }
+
+        private def completeWith(method: String, action: () => Any): Unit = {
+          if (terminated) throw new IllegalStateException(s"$method called after the Observer has already completed or errored.")
+          terminated = true
+          subscription.foreach((sub: Subscription) => sub.unsubscribe())
+          action()
         }
       })
       promise.future
@@ -429,27 +433,42 @@ trait ObservableImplicits {
 
     override def subscribe(observer: Observer[_ >: T]): Unit = {
       observable.subscribe(
-        new Observer[T] {
+        SubscriptionCheckingObserver(new Observer[T]() {
           @volatile
-          var subscription: Option[Subscription] = None
+          var results: Option[T] = None
 
-          override def onError(throwable: Throwable): Unit = observer.onError(throwable)
+          @volatile
+          var terminated: Boolean = false
 
-          override def onSubscribe(sub: Subscription): Unit = {
-            subscription = Some(sub)
-            observer.onSubscribe(sub)
+          override def onSubscribe(subscription: Subscription): Unit = {
+            observer.onSubscribe(subscription)
+            subscription.request(1)
           }
 
-          override def onComplete(): Unit = observer.onComplete()
+          override def onError(throwable: Throwable): Unit = completeWith("onError", () => observer.onError(throwable))
+
+          override def onComplete(): Unit = {
+            completeWith("onComplete", { () =>
+              results.foreach { (result: T) => observer.onNext(result) }
+              observer.onComplete()
+            })
+          }
 
           override def onNext(tResult: T): Unit = {
-            subscription.getOrElse {
-              throw new IllegalStateException("The Observable has not been subscribed to.")
-            }.unsubscribe()
-            observer.onNext(tResult)
-            onComplete()
+            check(results.isEmpty, "SingleObservable.onNext cannot be called with multiple results.")
+            results = Some(tResult)
           }
-        }
+
+          private def completeWith(method: String, action: () => Any): Unit = {
+            check(!terminated, s"$method called after the Observer has already completed or errored. $observer")
+            terminated = true
+            action()
+          }
+
+          private def check(requirement: Boolean, message: String): Unit = {
+            if (!requirement) throw new IllegalStateException(message)
+          }
+        })
       )
     }
   }

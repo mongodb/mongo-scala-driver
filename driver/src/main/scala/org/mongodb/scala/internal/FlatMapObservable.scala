@@ -35,7 +35,6 @@ private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: 
         private var onCompleteCalled: Boolean = false
 
         override def onSubscribe(subscription: Subscription): Unit = {
-
           val masterSub = new Subscription() {
             override def isUnsubscribed: Boolean = subscription.isUnsubscribed
 
@@ -115,5 +114,6 @@ private[scala] case class FlatMapObservable[T, S](observable: Observable[T], f: 
       }
     ))
   }
+
   // scalastyle:on cyclomatic.complexity method.length
 }

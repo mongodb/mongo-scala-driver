@@ -266,11 +266,11 @@ class ObservableImplementationSpec extends FlatSpec with Matchers with TableDriv
       ), TestObserver[Int](), 10)
     )
 
-  case class OverRequestedObservable(delegate: TestObservable[Int] = TestObservable[Int]()) extends Observable[Int] {
+  case class OverRequestedObservable(observable: TestObservable[Int] = TestObservable[Int]()) extends Observable[Int] {
 
     var totalRequested = 0L
     override def subscribe(observer: Observer[_ >: Int]): Unit = {
-      delegate.subscribe(SubscriptionCheckingObserver(
+      observable.subscribe(SubscriptionCheckingObserver(
         new Observer[Int] {
 
           var completed = false

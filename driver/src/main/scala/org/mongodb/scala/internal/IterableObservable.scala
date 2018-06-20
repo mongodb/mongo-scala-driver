@@ -27,20 +27,23 @@ private[scala] case class IterableObservable[A](from: Iterable[A]) extends Obser
         private var left: Iterable[A] = from
         @volatile
         private var subscribed: Boolean = true
+        @volatile
+        private var completed: Boolean = false
 
         override def isUnsubscribed: Boolean = !subscribed
 
         override def request(n: Long): Unit = {
           require(n > 0L, s"Number requested must be greater than zero: $n")
           var counter = n
-          while (subscribed && counter > 0 && left.nonEmpty) {
+          while (!completed && subscribed && counter > 0 && left.nonEmpty) {
             val head = left.head
             left = left.tail
             observer.onNext(head)
             counter -= 1
           }
 
-          if (subscribed && left.isEmpty) {
+          if (!completed && subscribed && left.isEmpty) {
+            completed = true
             observer.onComplete()
           }
         }

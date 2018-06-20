@@ -18,22 +18,32 @@ package org.mongodb.scala.internal
 
 import org.mongodb.scala.{Observer, Subscription}
 
-private[internal] case class SubscriptionCheckingObserver[T](wrapped: Observer[T]) extends Observer[T] {
-
+private[scala] case class SubscriptionCheckingObserver[T](wrapped: Observer[T]) extends Observer[T] {
   @volatile
   private var subscription: Option[Subscription] = None
 
   override def onSubscribe(sub: Subscription): Unit = {
+    check(subscription.isEmpty, "The Observable has already been subscribed to.")
     subscription = Some(sub)
     wrapped.onSubscribe(sub)
   }
 
   override def onNext(result: T): Unit = {
-    if (subscription.isEmpty) throw new IllegalStateException("The Observable has not been subscribed to.")
+    check(subscription.isDefined, "The Observable has not been subscribed to.")
     wrapped.onNext(result)
   }
 
-  override def onError(e: Throwable): Unit = wrapped.onError(e)
+  override def onError(e: Throwable): Unit = {
+    check(subscription.isDefined, "The Observable has not been subscribed to.")
+    wrapped.onError(e)
+  }
 
-  override def onComplete(): Unit = wrapped.onComplete()
+  override def onComplete(): Unit = {
+    check(subscription.isDefined, "The Observable has not been subscribed to.")
+    wrapped.onComplete()
+  }
+
+  private def check(requirement: Boolean, message: String): Unit = {
+    if (!requirement) throw new IllegalStateException(message)
+  }
 }

@@ -61,7 +61,9 @@ private[scala] case class ZipObservable[T, U](
           }
         }
 
-        override def onComplete(): Unit = observer.onComplete()
+        override def onComplete(): Unit = {
+          if (!firstSub) observer.onComplete()
+        }
 
         override def onNext(tResult: A): Unit = {
           counter += 1

@@ -40,24 +40,31 @@ case class TestObserver[A](delegate: Observer[A]) extends Observer[A] {
   var subscription: Option[Subscription] = None
   var error: Option[Throwable] = None
   var completed: Boolean = false
+  var terminated: Boolean = false
   val results: mutable.ListBuffer[A] = mutable.ListBuffer[A]()
 
   override def onError(throwable: Throwable): Unit = {
+    require(!terminated, "onError called after the observer has already been terminated")
+    terminated = true
     error = Some(throwable)
     delegate.onError(throwable)
   }
 
   override def onSubscribe(sub: Subscription): Unit = {
+    require(subscription.isEmpty, "bserver already subscribed to")
     subscription = Some(sub)
     delegate.onSubscribe(sub)
   }
 
   override def onComplete(): Unit = {
+    require(!terminated, "onComplete called after the observer has already been terminated")
+    terminated = true
     delegate.onComplete()
     completed = true
   }
 
   override def onNext(result: A): Unit = {
+    require(!terminated, "onNext called after the observer has already been terminated")
     this.synchronized {
       results.append(result)
     }

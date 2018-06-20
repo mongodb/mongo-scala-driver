@@ -407,7 +407,7 @@ class ScalaObservableSpec extends FlatSpec with Matchers {
   }
 
   it should "not stackoverflow when using flatMap with execution contexts" in {
-    val altContextObservable = observable(1 to 10000).observeOn(ExecutionContext.global).flatMap((res: Int) => Observable(Seq(res)))
+    val altContextObservable = Observable(1 to 10000).observeOn(ExecutionContext.global).flatMap((res: Int) => Observable(Seq(res)))
     Await.result(altContextObservable.toFuture(), Duration(10, TimeUnit.SECONDS)) should equal(1 to 10000)
   }
 
