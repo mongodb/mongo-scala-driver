@@ -212,7 +212,6 @@ case class MongoClient(private val wrapped: JMongoClient) extends Closeable {
   def listDatabases[TResult](clientSession: ClientSession)(implicit e: TResult DefaultsTo Document, ct: ClassTag[TResult]): ListDatabasesObservable[TResult] =
     ListDatabasesObservable(wrapped.listDatabases(clientSession, ct))
 
-
   /**
    * Creates a change stream for this collection.
    *

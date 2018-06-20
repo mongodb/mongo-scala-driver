@@ -68,7 +68,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     )
 
     val exceptions = new Reflections(packageName).getSubTypesOf(classOf[MongoException]).asScala.map(_.getSimpleName).toSet +
-      "MongoException" - "MongoGridFSException" - "MongoConfigurationException"
+      "MongoException" - "MongoGridFSException" - "MongoConfigurationException" - "MongoWriteConcernWithResponseException"
 
     val objects = new Reflections(new ConfigurationBuilder()
       .setUrls(ClasspathHelper.forPackage(packageName))
@@ -143,7 +143,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val localPackage = currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet
     val localObjects = new Reflections(scalaPackageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
       .asScala.filter(classFilter).map(_.getSimpleName).toSet
-    val scalaExclusions = Set("package")
+    val scalaExclusions = Set("package", "FullDocument")
     val local = (localPackage ++ localObjects) -- scalaExclusions
 
     diff(local, wrapped) shouldBe empty
