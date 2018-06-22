@@ -41,7 +41,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
     val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "ScalaObservable",
       "ScalaWriteConcern", "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription",
       "classTagToClassOf", "ReadConcernLevel", "bsonDocumentToDocument", "bsonDocumentToUntypedDocument", "documentToUntypedDocument",
-      "BuildInfo", "SingleObservable", "ToSingleObservable", "ScalaSingleObservable")
+      "BuildInfo", "SingleObservable", "ToSingleObservable", "ScalaSingleObservable", "ScalaClientSession", "ClientSessionImplicits")
 
     val classFilter = (f: Class[_ <: Object]) => {
       isPublic(f.getModifiers) &&
