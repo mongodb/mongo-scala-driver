@@ -19,7 +19,7 @@ package org.mongodb.scala
 import org.bson.BsonString
 
 
-class SmokeTestISpec extends RequiresMongoDBISpec {
+class SmokeTestISpec extends RequiresMongoDBISpec with FuturesSpec {
 
   "The Scala driver" should "handle common scenarios without error" in withDatabase(databaseName) {
     database =>

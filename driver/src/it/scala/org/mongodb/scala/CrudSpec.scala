@@ -28,7 +28,7 @@ import org.mongodb.scala.bson.{BsonArray, BsonDocument, BsonInt32, BsonNull, Bso
 import org.mongodb.scala.result.UpdateResult
 import org.scalatest.Inspectors.forEvery
 
-class CrudSpec extends RequiresMongoDBISpec {
+class CrudSpec extends RequiresMongoDBISpec with FuturesSpec {
   lazy val readTests = new File(getClass.getResource("/crud/read").toURI).listFiles
   lazy val writeTests = new File(getClass.getResource("/crud/write").toURI).listFiles
   lazy val files = (readTests ++ writeTests).filter(_.getName.endsWith(".json"))

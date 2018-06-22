@@ -37,7 +37,7 @@ import org.mongodb.scala.model.Updates.{combine, currentDate, set}
 
 
 //scalastyle:off magic.number
-class DocumentationExampleSpec extends RequiresMongoDBISpec {
+class DocumentationExampleSpec extends RequiresMongoDBISpec with FuturesSpec {
 
   // Implicit functions that execute the Observable and return the results
   val waitDuration = Duration(5, "seconds")

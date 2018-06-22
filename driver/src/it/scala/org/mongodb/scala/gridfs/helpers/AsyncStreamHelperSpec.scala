@@ -19,12 +19,12 @@ package org.mongodb.scala.gridfs.helpers
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 import java.nio.ByteBuffer
 
-import org.mongodb.scala.RequiresMongoDBISpec
+import org.mongodb.scala.{FuturesSpec, RequiresMongoDBISpec}
 import org.mongodb.scala.gridfs.helpers.AsyncStreamHelper._
 import org.mongodb.scala.gridfs.{AsyncInputStream, AsyncOutputStream, GridFSBucket}
 import org.scalatest.Inspectors.forEvery
 
-class AsyncStreamHelperSpec extends RequiresMongoDBISpec {
+class AsyncStreamHelperSpec extends RequiresMongoDBISpec with FuturesSpec {
 
   val content = "Hello GridFS Round Trip".getBytes()
 

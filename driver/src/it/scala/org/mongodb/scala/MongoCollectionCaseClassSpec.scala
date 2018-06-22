@@ -20,7 +20,7 @@ import org.mongodb.scala.bson.codecs.Macros.createCodecProvider
 import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
 import org.bson.codecs.configuration.CodecRegistry
 
-class MongoCollectionCaseClassSpec  extends RequiresMongoDBISpec {
+class MongoCollectionCaseClassSpec  extends RequiresMongoDBISpec with FuturesSpec {
 
   case class Contact(phone: String)
   case class User(_id: Int, username: String, age: Int, hobbies: List[String], contacts: List[Contact])

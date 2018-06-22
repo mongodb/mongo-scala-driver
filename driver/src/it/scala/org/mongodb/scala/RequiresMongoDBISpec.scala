@@ -26,23 +26,18 @@
 package org.mongodb.scala
 
 import com.mongodb.ConnectionString
-
-import scala.collection.JavaConverters._
-import scala.concurrent.ExecutionContext
-import scala.concurrent.duration.Duration
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
-import scala.language.implicitConversions
-import scala.util.{Failure, Properties, Success, Try}
 import com.mongodb.connection.ServerVersion
 import org.mongodb.scala.bson.BsonString
 import org.scalatest._
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.time.{Millis, Seconds, Span}
 
-trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with BeforeAndAfterAll {
+import scala.collection.JavaConverters._
+import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.duration.{Duration, _}
+import scala.language.implicitConversions
+import scala.util.{Properties, Try}
 
-  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(60, Seconds), interval = Span(5, Millis))
+trait RequiresMongoDBISpec extends FlatSpec with Matchers with BeforeAndAfterAll {
+
   implicit val ec: ExecutionContext = ExecutionContext.Implicits.global
 
   private val DEFAULT_URI: String = "mongodb://localhost:27017/"
@@ -73,7 +68,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
   def mongoClient(): MongoClient = MongoClient(mongoClientURI)
 
   def isMongoDBOnline(): Boolean = {
-    Try(Await.result(MongoClient(mongoClientURI).listDatabaseNames(), WAIT_DURATION)).isSuccess
+    Try(Await.result(MongoClient(mongoClientURI).listDatabaseNames().toFuture(), WAIT_DURATION)).isSuccess
   }
 
   def hasSingleHost(): Boolean = {
@@ -86,37 +81,43 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
     }
   }
 
-  def withDatabase(dbName: String)(testCode: MongoDatabase => Any) {
-    checkMongoDB()
-    val client = mongoClient()
-    val databaseName = if (dbName.startsWith(DB_PREFIX)) dbName.take(63) else s"$DB_PREFIX$dbName".take(63)
-    val mongoDatabase = client.getDatabase(databaseName)
-    try testCode(mongoDatabase) // "loan" the fixture to the test
+  def withClient(testCode: MongoClient => Any): Unit = {
+    checkMongoDB ()
+    val client = mongoClient ()
+    try testCode(client) // loan the client
     finally {
-      // clean up the fixture
-      Await.result(mongoDatabase.drop(), WAIT_DURATION)
       client.close()
+    }
+  }
+
+  def withDatabase(dbName: String)(testCode: MongoDatabase => Any) {
+    withClient{ client =>
+      val databaseName = if (dbName.startsWith(DB_PREFIX)) dbName.take(63) else s"$DB_PREFIX$dbName".take(63) // scalastyle:ignore
+      val mongoDatabase = client.getDatabase(databaseName)
+      try testCode(mongoDatabase) // "loan" the fixture to the test
+      finally {
+        // clean up the fixture
+        Await.result(mongoDatabase.drop().toFuture(), WAIT_DURATION)
+      }
     }
   }
 
   def withDatabase(testCode: MongoDatabase => Any): Unit = withDatabase(databaseName)(testCode: MongoDatabase => Any)
 
   def withCollection(testCode: MongoCollection[Document] => Any) {
-    checkMongoDB()
-    val client = mongoClient()
-    val mongoDatabase = client.getDatabase(databaseName)
-    val mongoCollection = mongoDatabase.getCollection(collectionName)
-    try testCode(mongoCollection) // "loan" the fixture to the test
-    finally {
+    withDatabase(databaseName){ mongoDatabase =>
+      val mongoCollection = mongoDatabase.getCollection(collectionName)
+      try testCode(mongoCollection) // "loan" the fixture to the test
+      finally {
       // clean up the fixture
-      Await.result(mongoCollection.drop(), WAIT_DURATION)
-      client.close()
+      Await.result(mongoCollection.drop().toFuture(), WAIT_DURATION)
+      }
     }
   }
 
   lazy val buildInfo: Document = {
     if (mongoDBOnline) {
-      mongoClient().getDatabase("admin").runCommand(Document("buildInfo" -> 1)).futureValue
+      Await.result(mongoClient().getDatabase("admin").runCommand(Document("buildInfo" -> 1)).toFuture(), WAIT_DURATION)
     } else {
       Document()
     }
@@ -145,7 +146,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
   override def beforeAll() {
     if (mongoDBOnline) {
       val client = mongoClient()
-      Await.result(client.getDatabase(databaseName).drop(), WAIT_DURATION)
+      Await.result(client.getDatabase(databaseName).drop().toFuture(), WAIT_DURATION)
       client.close()
     }
   }
@@ -153,7 +154,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
   override def afterAll() {
     if (mongoDBOnline) {
       val client = mongoClient()
-      Await.result(client.getDatabase(databaseName).drop(), WAIT_DURATION)
+      Await.result(client.getDatabase(databaseName).drop().toFuture(), WAIT_DURATION)
       client.close()
     }
   }
@@ -163,41 +164,6 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with ScalaFutures with
   private[mongodb] class ShutdownHook extends Thread {
     override def run() {
       mongoClient().getDatabase(databaseName).drop()
-    }
-  }
-
-  implicit def observableToFuture[TResult](observable: Observable[TResult]): Future[Seq[TResult]] = observable.toFuture()
-
-  implicit def observableToFutureConcept[T](observable: Observable[T]): FutureConcept[Seq[T]] = {
-    val future: Future[Seq[T]] = observable
-    new FutureConcept[Seq[T]] {
-      def eitherValue: Option[Either[Throwable, Seq[T]]] = {
-        future.value.map {
-          case Success(o) => Right(o)
-          case Failure(e) => Left(e)
-        }
-      }
-      def isExpired: Boolean = false
-
-      // Scala Futures themselves don't support the notion of a timeout
-      def isCanceled: Boolean = false // Scala Futures don't seem to be cancelable either
-    }
-  }
-
-  implicit def observableToFuture[TResult](observable: SingleObservable[TResult]): Future[TResult] = observable.toFuture()
-  implicit def observableToFutureConcept[T](observable: SingleObservable[T]): FutureConcept[T] = {
-    val future: Future[T] = observable.toFuture()
-    new FutureConcept[T] {
-      def eitherValue: Option[Either[Throwable, T]] = {
-        future.value.map {
-          case Success(o) => Right(o)
-          case Failure(e) => Left(e)
-        }
-      }
-      def isExpired: Boolean = false
-
-      // Scala Futures themselves don't support the notion of a timeout
-      def isCanceled: Boolean = false // Scala Futures don't seem to be cancelable either
     }
   }
 

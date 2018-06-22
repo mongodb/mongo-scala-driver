@@ -32,7 +32,7 @@ import org.mongodb.scala.bson.{BsonDocument, BsonInt64, BsonObjectId, BsonString
 import org.mongodb.scala.gridfs.helpers.AsyncStreamHelper
 import org.scalatest.Inspectors.forEvery
 
-class GridFSSpec extends RequiresMongoDBISpec {
+class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
   private val filesCollectionName = "fs.files"
   private val chunksCollectionName = "fs.chunks"
   lazy val files = new File(getClass.getResource("/gridfs-tests").toURI).listFiles.filter(_.getName.endsWith(".json"))

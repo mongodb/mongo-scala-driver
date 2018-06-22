@@ -12,7 +12,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 //scalastyle:off magic.number regex
-class DocumentationChangeStreamExampleSpec extends RequiresMongoDBISpec {
+class DocumentationChangeStreamExampleSpec extends RequiresMongoDBISpec with FuturesSpec {
 
   "The Scala driver" should "be able to use $changeStreams" in withDatabase { database: MongoDatabase =>
     assume(serverVersionAtLeast(List(3, 6, 0)) && !hasSingleHost())
