@@ -182,7 +182,7 @@ package object scala extends ClientSessionImplicits with ObservableImplicits wit
      *
      * @since 2.4
      */
-    val UNKNOWN_TRANSACTION_COMMIT_RESULT_LABEL: String  = com.mongodb.MongoException.UNKNOWN_TRANSACTION_COMMIT_RESULT_LABEL
+    val UNKNOWN_TRANSACTION_COMMIT_RESULT_LABEL: String = com.mongodb.MongoException.UNKNOWN_TRANSACTION_COMMIT_RESULT_LABEL
   }
 
   /**

@@ -72,7 +72,7 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec with FuturesSpec {
     )).execute()
     // End Example 3
 
-    collection.count().execute() shouldEqual 4
+    collection.countDocuments().execute() shouldEqual 4
   }
 
   it should "be able to query top level" in withCollection { collection =>
@@ -87,7 +87,7 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec with FuturesSpec {
     )).execute()
     // End Example 6
 
-    collection.count().execute() shouldEqual 5
+    collection.countDocuments().execute() shouldEqual 5
 
     // Start Example 7
     var findObservable = collection.find(Document())
@@ -147,7 +147,7 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec with FuturesSpec {
     )).execute()
     // End Example 14
 
-    collection.count().execute() shouldEqual 5
+    collection.countDocuments().execute() shouldEqual 5
 
     // Start Example 15
     var findObservable = collection.find(equal("size", Document("h" -> 14, "w" -> 21, "uom" -> "cm")))
@@ -196,7 +196,7 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec with FuturesSpec {
     )).execute()
     //End Example 20
 
-    collection.count().execute() shouldEqual 5
+    collection.countDocuments().execute() shouldEqual 5
 
     //Start Example 21
     var findObservable = collection.find(equal("tags", Seq("red", "blank")))
@@ -260,7 +260,7 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec with FuturesSpec {
     )).execute()
     //End Example 29
 
-    collection.count().execute() shouldEqual 5
+    collection.countDocuments().execute() shouldEqual 5
 
     //Start Example 30
     var findObservable = collection.find(equal("instock", Document("warehouse" -> "A", "qty" -> 5)))
@@ -320,7 +320,7 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec with FuturesSpec {
     )).execute()
     //End Example 38
 
-    collection.count().execute() shouldEqual 2
+    collection.countDocuments().execute() shouldEqual 2
 
     //Start Example 39
     var findObservable = collection.find(equal("item", BsonNull()))
@@ -355,7 +355,7 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec with FuturesSpec {
     )).execute()
     //End Example 42
 
-    collection.count().execute() shouldEqual 5
+    collection.countDocuments().execute() shouldEqual 5
 
     //Start Example 43
     var findObservable = collection.find(equal("status", "A"))
@@ -438,7 +438,7 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec with FuturesSpec {
     )).execute()
     //End Example 51
 
-    collection.count().execute() shouldEqual 10
+    collection.countDocuments().execute() shouldEqual 10
 
     //Start Example 52
     collection.updateOne(equal("item", "paper"),
@@ -487,25 +487,25 @@ class DocumentationExampleSpec extends RequiresMongoDBISpec with FuturesSpec {
     )).execute()
     //End Example 55
 
-    collection.count().execute() shouldEqual 5
+    collection.countDocuments().execute() shouldEqual 5
 
     //Start Example 57
     collection.deleteMany(equal("status", "A")).execute()
     //End Example 57
 
-    collection.count().execute() shouldEqual 2
+    collection.countDocuments().execute() shouldEqual 2
 
     //Start Example 58
     collection.deleteOne(equal("status", "D")).execute()
     //End Example 58
 
-    collection.count().execute() shouldEqual 1
+    collection.countDocuments().execute() shouldEqual 1
 
     //Start Example 56
     collection.deleteMany(Document()).execute()
     //End Example 56
 
-    collection.count().execute() shouldEqual 0
+    collection.countDocuments().execute() shouldEqual 0
   }
 
   it should "be able to watch" in withCollection { collection =>

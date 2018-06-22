@@ -33,7 +33,6 @@ import org.scalatest._
 import scala.collection.JavaConverters._
 import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration.{Duration, _}
-import scala.language.implicitConversions
 import scala.util.{Properties, Try}
 
 trait RequiresMongoDBISpec extends FlatSpec with Matchers with BeforeAndAfterAll {
