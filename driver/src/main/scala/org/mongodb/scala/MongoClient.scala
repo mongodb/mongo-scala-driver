@@ -140,11 +140,22 @@ case class MongoClient(private val wrapped: JMongoClient) extends Closeable {
    *
    * '''Note:''' A ClientSession instance can not be used concurrently in multiple asynchronous operations.
    *
+   * @since 2.4
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def startSession(): SingleObservable[ClientSession] =
+    observe(wrapped.startSession(_: SingleResultCallback[ClientSession]))
+
+  /**
+   * Creates a client session.
+   *
+   * '''Note:''' A ClientSession instance can not be used concurrently in multiple asynchronous operations.
+   *
    * @param options  the options for the client session
    * @since 2.2
    * @note Requires MongoDB 3.6 or greater
    */
-  def startSession(options: ClientSessionOptions): Observable[ClientSession] =
+  def startSession(options: ClientSessionOptions): SingleObservable[ClientSession] =
     observe(wrapped.startSession(options, _: SingleResultCallback[ClientSession]))
 
   /**

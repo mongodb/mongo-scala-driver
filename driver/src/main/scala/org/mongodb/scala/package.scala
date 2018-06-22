@@ -29,7 +29,7 @@ import org.mongodb.scala.internal.WriteConcernImplicits
  *
  * @since 1.0
  */
-package object scala extends ObservableImplicits with WriteConcernImplicits {
+package object scala extends ClientSessionImplicits with ObservableImplicits with WriteConcernImplicits {
 
   /**
    * An immutable Document implementation.
@@ -165,6 +165,25 @@ package object scala extends ObservableImplicits with WriteConcernImplicits {
    * Top level Exception for all Exceptions, server-side or client-side, that come from the driver.
    */
   type MongoException = com.mongodb.MongoException
+
+  /**
+   * Top level Exception for all Exceptions, server-side or client-side, that come from the driver.
+   */
+  object MongoException {
+    /**
+     * An error label indicating that the exception can be treated as a transient transaction error.
+     *
+     * @since 2.4
+     */
+    val TRANSIENT_TRANSACTION_ERROR_LABEL: String = com.mongodb.MongoException.TRANSIENT_TRANSACTION_ERROR_LABEL
+
+    /**
+     * An error label indicating that the exception can be treated as an unknown transaction commit result.
+     *
+     * @since 2.4
+     */
+    val UNKNOWN_TRANSACTION_COMMIT_RESULT_LABEL: String  = com.mongodb.MongoException.UNKNOWN_TRANSACTION_COMMIT_RESULT_LABEL
+  }
 
   /**
    * An exception that represents all errors associated with a bulk write operation.
