@@ -41,20 +41,24 @@ class DocumentationTransactionsExampleSpec extends RequiresMongoDBISpec {
     client.getDatabase("hr").drop().execute()
 
     // Start Example
+
     val database = client.getDatabase("hr")
     val employeesCollection = database.getCollection("employees")
     val eventsCollection = database.getCollection("events")
 
-    val operationsObservable: Observable[ClientSession] = client.startSession().map(clientSession => {
+    // Update Employee Info
+    val updateEmployeeInfoObservable: Observable[ClientSession] = client.startSession().map(clientSession => {
         clientSession.startTransaction()
         employeesCollection.updateOne(clientSession, Filters.eq("employee", 3), Updates.set("status", "Inactive"))
         eventsCollection.insertOne(clientSession, Document("employee" -> 3, "status" -> Document("new" -> "Inactive", "old" -> "Active")))
         clientSession
       })
 
+    // Commit Transaction
     val commitTransactionObservable: SingleObservable[Completed] =
-      operationsObservable.flatMap(clientSession => clientSession.commitTransaction())
+      updateEmployeeInfoObservable.flatMap(clientSession => clientSession.commitTransaction())
 
+    // Commit Transaction and Retry
     val commitAndRetryObservable: SingleObservable[Completed] = commitTransactionObservable.recoverWith({
       case e: MongoException if e.hasErrorLabel(MongoException.UNKNOWN_TRANSACTION_COMMIT_RESULT_LABEL) => {
         println("UnknownTransactionCommitResult, retrying commit operation ...")
