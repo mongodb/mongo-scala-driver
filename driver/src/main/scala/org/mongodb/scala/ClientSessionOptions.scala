@@ -31,7 +31,16 @@ object ClientSessionOptions {
    *
    * @return a builder instance
    */
-  def builder: Builder = JClientSessionOptions.builder
+  def builder(): Builder = JClientSessionOptions.builder
+
+  /**
+   * Gets an instance of a builder initialized with the given options
+   *
+   * @param clientSessionOptions the options with which to initialize the builder
+   * @return a builder instance
+   * @since 2.4
+   */
+  def builder(clientSessionOptions: ClientSessionOptions): Builder = JClientSessionOptions.builder(clientSessionOptions)
 
   /**
    * ClientSession builder
