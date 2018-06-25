@@ -29,7 +29,7 @@ import org.mongodb.scala.internal.ObservableHelper._
 import org.mongodb.scala.model._
 import org.mongodb.scala.result._
 
-// scalastyle:off number.of.methods
+// scalastyle:off number.of.methods file.size.limit
 
 /**
  * The MongoCollection representation.
@@ -1511,4 +1511,4 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
 
 }
 
-// scalastyle:on number.of.methods
+// scalastyle:on number.of.methods file.size.limit
