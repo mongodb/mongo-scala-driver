@@ -213,6 +213,20 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
   /**
    * Counts the number of documents in the collection.
    *
+   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   *
+   * {{{
+   * +-------------+--------------------------------+
+   * | Operator    | Replacement                    |
+   * +=============+================================+
+   * | \$where      |  \$expr                         |
+   * +-------------+--------------------------------+
+   * | \$near       |  \$geoWithin with \$center       |
+   * +-------------+--------------------------------+
+   * | \$nearSphere |  \$geoWithin with \$centerSphere |
+   * +-------------+--------------------------------+
+   * }}}
+   *
    * @return a publisher with a single element indicating the number of documents
    * @since 2.4
    */
@@ -221,6 +235,20 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
 
   /**
    * Counts the number of documents in the collection according to the given options.
+   *
+   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   *
+   * {{{
+   * +-------------+--------------------------------+
+   * | Operator    | Replacement                    |
+   * +=============+================================+
+   * | \$where      |  \$expr                         |
+   * +-------------+--------------------------------+
+   * | \$near       |  \$geoWithin with \$center       |
+   * +-------------+--------------------------------+
+   * | \$nearSphere |  \$geoWithin with \$centerSphere |
+   * +-------------+--------------------------------+
+   * }}}
    *
    * @param filter the query filter
    * @return a publisher with a single element indicating the number of documents
@@ -231,6 +259,20 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
 
   /**
    * Counts the number of documents in the collection according to the given options.
+   *
+   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   *
+   * {{{
+   * +-------------+--------------------------------+
+   * | Operator    | Replacement                    |
+   * +=============+================================+
+   * | \$where      |  \$expr                         |
+   * +-------------+--------------------------------+
+   * | \$near       |  \$geoWithin with \$center       |
+   * +-------------+--------------------------------+
+   * | \$nearSphere |  \$geoWithin with \$centerSphere |
+   * +-------------+--------------------------------+
+   * }}}
    *
    * @param filter  the query filter
    * @param options the options describing the count
@@ -243,6 +285,20 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
   /**
    * Counts the number of documents in the collection.
    *
+   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   *
+   * {{{
+   * +-------------+--------------------------------+
+   * | Operator    | Replacement                    |
+   * +=============+================================+
+   * | \$where      |  \$expr                         |
+   * +-------------+--------------------------------+
+   * | \$near       |  \$geoWithin with \$center       |
+   * +-------------+--------------------------------+
+   * | \$nearSphere |  \$geoWithin with \$centerSphere |
+   * +-------------+--------------------------------+
+   * }}}
+   *
    * @param clientSession the client session with which to associate this operation
    * @return a publisher with a single element indicating the number of documents
    * @since 2.4
@@ -253,6 +309,20 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
 
   /**
    * Counts the number of documents in the collection according to the given options.
+   *
+   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   *
+   * {{{
+   * +-------------+--------------------------------+
+   * | Operator    | Replacement                    |
+   * +=============+================================+
+   * | \$where      |  \$expr                         |
+   * +-------------+--------------------------------+
+   * | \$near       |  \$geoWithin with \$center       |
+   * +-------------+--------------------------------+
+   * | \$nearSphere |  \$geoWithin with \$centerSphere |
+   * +-------------+--------------------------------+
+   * }}}
    *
    * @param clientSession the client session with which to associate this operation
    * @param filter        the query filter
@@ -265,6 +335,20 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
 
   /**
    * Counts the number of documents in the collection according to the given options.
+   *
+   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   *
+   * {{{
+   * +-------------+--------------------------------+
+   * | Operator    | Replacement                    |
+   * +=============+================================+
+   * | \$where      |  \$expr                         |
+   * +-------------+--------------------------------+
+   * | \$near       |  \$geoWithin with \$center       |
+   * +-------------+--------------------------------+
+   * | \$nearSphere |  \$geoWithin with \$centerSphere |
+   * +-------------+--------------------------------+
+   * }}}
    *
    * @param clientSession the client session with which to associate this operation
    * @param filter        the query filter
