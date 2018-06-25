@@ -17,6 +17,7 @@
 package org.mongodb.scala
 
 import org.mongodb.scala.model.{Filters, Updates}
+import org.mongodb.scala.result.UpdateResult
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -39,39 +40,61 @@ class DocumentationTransactionsExampleSpec extends RequiresMongoDBISpec {
   "The Scala driver" should "be able to commit a transaction" in withClient { client =>
     assume(serverVersionAtLeast(List(4, 0, 0)) && !hasSingleHost())
     client.getDatabase("hr").drop().execute()
+    client.getDatabase("hr").createCollection("employees").execute()
+    client.getDatabase("hr").createCollection("events").execute()
 
     // Start Example
-
     val database = client.getDatabase("hr")
-    val employeesCollection = database.getCollection("employees")
-    val eventsCollection = database.getCollection("events")
 
-    // Update Employee Info
-    val updateEmployeeInfoObservable: Observable[ClientSession] = client.startSession().map(clientSession => {
-        clientSession.startTransaction()
-        employeesCollection.updateOne(clientSession, Filters.eq("employee", 3), Updates.set("status", "Inactive"))
-        eventsCollection.insertOne(clientSession, Document("employee" -> 3, "status" -> Document("new" -> "Inactive", "old" -> "Active")))
-        clientSession
-      })
+    val updateEmployeeInfoObservable: Observable[ClientSession] = updateEmployeeInfo(database, client.startSession())
 
-    // Commit Transaction
     val commitTransactionObservable: SingleObservable[Completed] =
       updateEmployeeInfoObservable.flatMap(clientSession => clientSession.commitTransaction())
 
-    // Commit Transaction and Retry
-    val commitAndRetryObservable: SingleObservable[Completed] = commitTransactionObservable.recoverWith({
+    val commitAndRetryObservable: SingleObservable[Completed] = commitAndRetry(commitTransactionObservable)
+
+    val runTransactionAndRetryObservable: SingleObservable[Completed] = runTransactionAndRetry(commitAndRetryObservable)
+    // End example
+
+    runTransactionAndRetryObservable.execute() should equal(Completed())
+    database.drop().execute() should equal(Completed())
+  }
+
+  def updateEmployeeInfo(database: MongoDatabase, observable: SingleObservable[ClientSession]): SingleObservable[ClientSession] = {
+    observable.map(clientSession => {
+      val employeesCollection = database.getCollection("employees")
+      val eventsCollection = database.getCollection("events")
+
+      val transactionOptions = TransactionOptions.builder().readConcern(ReadConcern.SNAPSHOT).writeConcern(WriteConcern.MAJORITY).build()
+      clientSession.startTransaction(transactionOptionsq)
+      employeesCollection.updateOne(clientSession, Filters.eq("employee", 3), Updates.set("status", "Inactive"))
+        .subscribe((res: UpdateResult) => println(res))
+      eventsCollection.insertOne(clientSession, Document("employee" -> 3, "status" -> Document("new" -> "Inactive", "old" -> "Active")))
+        .subscribe((res: Completed) => println(res))
+
+      clientSession
+    })
+  }
+
+  def commitAndRetry(observable: SingleObservable[Completed]): SingleObservable[Completed] = {
+    observable.recoverWith({
       case e: MongoException if e.hasErrorLabel(MongoException.UNKNOWN_TRANSACTION_COMMIT_RESULT_LABEL) => {
         println("UnknownTransactionCommitResult, retrying commit operation ...")
-        commitTransactionObservable
+        commitAndRetry(observable)
       }
       case e: Exception => {
-        println("Exception during commit ...")
+        println(s"Exception during commit ...: $e")
         throw e
       }
     })
+  }
 
-    // End example
-    commitAndRetryObservable.execute() should equal(Completed())
-    database.drop().execute() should equal(Completed())
+  def runTransactionAndRetry(observable: SingleObservable[Completed]): SingleObservable[Completed] = {
+    observable.recoverWith({
+      case e: MongoException if e.hasErrorLabel(MongoException.TRANSIENT_TRANSACTION_ERROR_LABEL) => {
+        println("TransientTransactionError, aborting transaction and retrying ...")
+        runTransactionAndRetry(observable)
+      }
+    })
   }
 }
