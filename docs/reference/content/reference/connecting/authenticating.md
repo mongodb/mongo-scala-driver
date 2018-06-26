@@ -29,10 +29,13 @@ completeness, the driver accepts a list of credentials.
 
 ## Default authentication mechanism
 
-MongoDB 3.0 changed the default authentication mechanism from
-[MONGODB-CR](http://docs.mongodb.org/manual/core/authentication/#mongodb-cr-authentication) to
-[SCRAM-SHA-1](http://docs.mongodb.org/manual/core/authentication/#scram-sha-1-authentication).  To create a credential that will
-authenticate properly regardless of server version, create a credential using the following static factory method:
+In MongoDB 3.0, MongoDB changed the default authentication mechanism from [`MONGODB-CR`]({{<docsref "core/security-mongodb-cr">}}) to
+[`SCRAM-SHA-1`]({{<docsref "core/security-scram">}}). In MongoDB 4.0 support for the deprecated
+[`MONGODB-CR`]({{<docsref "core/security-mongodb-cr">}}) mechanism was removed and
+[`SCRAM-SHA-256`]({{<docsref "core/security-scram">}}) support was added. 
+
+To create a credential that will authenticate properly regardless of server version, create a credential using the following static 
+factory method:
 
  ```scala
 import com.mongodb.MongoCredential._
@@ -40,38 +43,79 @@ import com.mongodb.MongoCredential._
 // ...
 
 val user: String = "userName"                       // the user name
-val database: String = "databaseName"               // the name of the database in which the user is defined
+val source: String = "databaseName"                 // the source where the user is defined
 val password: Array[Char] = "password".toCharArray  // the password as a character array
 // ...
-val credential: MongoCredential = createCredential(user, database, password)
+val credential: MongoCredential = createCredential(user, source, password)
+
+val settings: MongoClientSettings = MongoClientSettings.builder()
+    .applyToClusterSettings(b => b.hosts(List(new ServerAddress("host1")).asJava)
+    .credential(credential)
+    .build()
+val mongoClient: MongoClient = MongoClient(settings)
+
 ```
 
 or with a connection string:
 
 ```scala
-val uri: String = "mongodb://user1:pwd1@host1/?authSource=db1"
+val connectionString: String = "mongodb://user1:pwd1@host1/?authSource=db1"
+
+val mongoClient: MongoClient = MongoClient(connectionString)
 ```
 
-This is the recommended approach as it will make upgrading from MongoDB 2.6 to MongoDB 3.0 seamless, even after [upgrading the
-authentication schema](http://docs.mongodb.org/manual/release-notes/3.0-scram/#upgrade-mongodb-cr-to-scram).
+For challenge and response mechanisms, using the default authentication mechanism is the recommended approach as it will make upgrading
+from MongoDB 2.6 to MongoDB 3.0 seamless, even after [upgrading the authentication schema]({{<docsref "release-notes/3.0-scram/">}}).
+For MongoDB 4.0 users it is also recommended as the supported authentication mechanisms are checked and the correct hashing algorithm is
+used.
 
+## SCRAM
 
-## SCRAM-SHA-1
+Salted Challenge Response Authentication Mechanism (`SCRAM`) has been the default authentication mechanism for MongoDB since 3.0. `SCRAM` is
+based on the [IETF RFC 5802](https://tools.ietf.org/html/rfc5802) standard that defines best practices for implementation of
+challenge-response mechanisms for authenticating users with passwords.
 
-To explicitly create a credential of type [SCRAM-SHA-1](http://docs.mongodb .org/manual/core/authentication/#scram-sha-1-authentication)
-use the following static factory method:
+MongoDB 3.0 introduced support for `SCRAM-SHA-1` which uses the `SHA-1` hashing function. MongoDB 4.0 introduced support for `SCRAM-SHA-256`
+which uses the `SHA-256` hashing function.
+
+### SCRAM-SHA-256
+
+Requires MongoDB 4.0 and `featureCompatibilityVersion` to be set to 4.0.
+
+To explicitly create a credential of type [`SCRAM-SHA-256`]({{<docsref "core/security-scram/">}}) use the following static factory method:
 
 ```scala
-val credential: MongoCredential = createScramSha1Credential(user, database, password)
+val credential: MongoCredential = createScramSha256Credential(user, source, password)
 ```
 
 or with a connection string:
 
 ```scala
-val uri: String = "mongodb://user1:pwd1@host1/?authSource=db1&authMechanism=SCRAM-SHA-1"
+val connectionString: String = "mongodb://user1:pwd1@host1/?authSource=db1&authMechanism=SCRAM-SHA-256"
+```
+
+### SCRAM-SHA-1
+
+To explicitly create a credential of type [`SCRAM-SHA-1`]({{<docsref "core/security-scram/">}}) use the following static factory method:
+
+```scala
+val credential: MongoCredential = createScramSha1Credential(user, source, password)
+```
+
+or with a connection string:
+
+```scala
+val connectionString: String = "mongodb://user1:pwd1@host1/?authSource=db1&authMechanism=SCRAM-SHA-1"
 ```
 
 ## MONGODB-CR
+
+{{% note class="important" %}}
+Starting in version 4.0, MongoDB removes support for the deprecated MongoDB Challenge-Response (`MONGODB-CR`) authentication mechanism.
+
+If your deployment has user credentials stored in `MONGODB-CR` schema, you must upgrade to `SCRAM` before you upgrade to version 4.0.
+For information on upgrading to `SCRAM`, see Upgrade to [SCRAM]({{<docsref "release-notes/3.0-scram/">}}).
+{{% /note %}}
 
 To explicitly create a credential of type [MONGODB-CR](http://docs.mongodb.org/manual/core/authentication/#mongodb-cr-authentication)
 use the following static factory method:
@@ -83,7 +127,7 @@ val credential: MongoCredential = createMongoCRCredential(user, database, passwo
 or with a connection string:
 
 ```scala
-val uri: String = "mongodb://user1:pwd1@host1/?authSource=db1&authMechanism=MONGODB-CR"
+val connectionString: String = "mongodb://user1:pwd1@host1/?authSource=db1&authMechanism=MONGODB-CR"
 ```
 
 Note that this is not recommended as a credential created in this way will fail to authenticate after an authentication schema upgrade
@@ -104,7 +148,7 @@ val credential: MongoCredential = createMongoX509Credential(user)
 or with a connection string:
 
 ```scala
-val uri: String = "mongodb://subjectName@host1/?authMechanism=MONGODB-X509"
+val connectionString: String = "mongodb://subjectName@host1/?authMechanism=MONGODB-X509"
 ```
 
 See the MongoDB server
@@ -126,7 +170,7 @@ val credential: MongoCredential = createGSSAPICredential(user)
 or with a connection string:
 
 ```scala
-val uri: String = "mongodb://username%40REALM.com@host1/?authMechanism=GSSAPI"
+val connectionString: String = "mongodb://username%40REALM.com@host1/?authMechanism=GSSAPI"
 ```
 
 {{% note %}}
@@ -165,7 +209,7 @@ val credential: MongoCredential = createPlainCredential(user, "$external", passw
 or with a connection string:
 
 ```scala
-val uri: String = "mongodb://user1@host1/?authSource=$external&authMechanism=PLAIN"
+val connectionString: String = "mongodb://user1@host1/?authSource=$external&authMechanism=PLAIN"
 ```
 
 {{% note %}}
