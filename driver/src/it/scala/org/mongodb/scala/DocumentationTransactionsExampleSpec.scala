@@ -43,21 +43,8 @@ class DocumentationTransactionsExampleSpec extends RequiresMongoDBISpec {
     client.getDatabase("hr").createCollection("employees").execute()
     client.getDatabase("hr").createCollection("events").execute()
 
-    // Start Example
-    val database = client.getDatabase("hr")
-
-    val updateEmployeeInfoObservable: Observable[ClientSession] = updateEmployeeInfo(database, client.startSession())
-
-    val commitTransactionObservable: SingleObservable[Completed] =
-      updateEmployeeInfoObservable.flatMap(clientSession => clientSession.commitTransaction())
-
-    val commitAndRetryObservable: SingleObservable[Completed] = commitAndRetry(commitTransactionObservable)
-
-    val runTransactionAndRetryObservable: SingleObservable[Completed] = runTransactionAndRetry(commitAndRetryObservable)
-    // End example
-
-    runTransactionAndRetryObservable.execute() should equal(Completed())
-    database.drop().execute() should equal(Completed())
+    updateEmployeeInfoWithRetry(client).execute() should equal(Completed())
+    client.getDatabase("hr").drop().execute() should equal(Completed())
   }
 
   def updateEmployeeInfo(database: MongoDatabase, observable: SingleObservable[ClientSession]): SingleObservable[ClientSession] = {
@@ -96,5 +83,16 @@ class DocumentationTransactionsExampleSpec extends RequiresMongoDBISpec {
         runTransactionAndRetry(observable)
       }
     })
+  }
+
+  def updateEmployeeInfoWithRetry(client: MongoClient): SingleObservable[Completed] = {
+
+    val database = client.getDatabase("hr")
+    val updateEmployeeInfoObservable: Observable[ClientSession] = updateEmployeeInfo(database, client.startSession())
+    val commitTransactionObservable: SingleObservable[Completed] =
+      updateEmployeeInfoObservable.flatMap(clientSession => clientSession.commitTransaction())
+    val commitAndRetryObservable: SingleObservable[Completed] = commitAndRetry(commitTransactionObservable)
+
+    runTransactionAndRetry(commitAndRetryObservable)
   }
 }
