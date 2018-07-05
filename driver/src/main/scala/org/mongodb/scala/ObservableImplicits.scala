@@ -18,10 +18,8 @@ package org.mongodb.scala
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.{ExecutionContext, Future, Promise}
-import scala.util.{Success, Try}
-
+import scala.util.Try
 import com.mongodb.async.client.{Observable => JObservable, Observer => JObserver, Subscription => JSubscription}
-
 import org.mongodb.scala.internal._
 
 /**
@@ -343,11 +341,10 @@ trait ObservableImplicits {
      * @return the head result of the [[Observable]].
      */
     def head(): Future[T] = {
-      import scala.concurrent.ExecutionContext.Implicits.global
       headOption().map {
         case Some(result) => result
         case None         => null.asInstanceOf[T] // scalastyle:ignore null
-      }
+      }(Helpers.DirectExecutionContext)
     }
 
     /**
