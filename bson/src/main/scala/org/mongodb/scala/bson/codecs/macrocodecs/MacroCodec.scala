@@ -194,7 +194,11 @@ trait MacroCodec[T] extends Codec[T] {
       list.append(readValue(reader, decoderContext, typeArgs.head, typeArgs.tail, fieldTypeArgsMap))
     }
     reader.readEndArray()
-    list.toList.asInstanceOf[V]
+    if (clazz.isAssignableFrom(classOf[scala.collection.immutable.Set[_]])) {
+      list.toSet.asInstanceOf[V]
+    } else {
+      list.toList.asInstanceOf[V]
+    }
   }
 
   protected def readDocument[V](reader: BsonReader, decoderContext: DecoderContext, clazz: Class[V], typeArgs: List[Class[_]],

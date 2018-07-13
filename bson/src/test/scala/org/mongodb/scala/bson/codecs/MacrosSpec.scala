@@ -78,6 +78,8 @@ class MacrosSpec extends FlatSpec with Matchers {
   case class OptionalCaseClass(name: String, value: Option[Person])
   case class OptionalRecursive(name: String, value: Option[OptionalRecursive])
 
+  case class SetValue(value: Set[String])
+
   sealed class Tree
   case class Branch(b1: Tree, b2: Tree, value: Int) extends Tree
   case class Leaf(value: Int) extends Tree
@@ -203,6 +205,10 @@ class MacrosSpec extends FlatSpec with Matchers {
       OptionalRecursive("Bob", Some(OptionalRecursive("Charlie", None))),
       """{name: "Bob", value: {name: "Charlie", value: null}}""", classOf[OptionalRecursive]
     )
+  }
+
+  it should "be able to round trip Set values" in {
+    roundTrip(SetValue(Set("value")), """{value: ["value"]}""", classOf[SetValue])
   }
 
   it should "be able to round trip Map values where the top level implementations don't include type information" in {
