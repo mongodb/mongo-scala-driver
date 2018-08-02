@@ -63,6 +63,9 @@ class MacrosSpec extends FlatSpec with Matchers {
   case class SeqOfMapOfStrings(name: String, value: Seq[Map[String, String]])
   case class RecursiveMapOfStrings(name: String, value: Seq[Map[String, RecursiveMapOfStrings]])
 
+  type StringAlias = String
+  case class MapOfStringAliases(name: String, value: Map[StringAlias, StringAlias])
+
   case class ContainsCaseClass(name: String, friend: Person)
   case class ContainsSeqCaseClass(name: String, friends: Seq[Person])
   case class ContainsNestedSeqCaseClass(name: String, friends: Seq[Seq[Person]])
@@ -168,6 +171,7 @@ class MacrosSpec extends FlatSpec with Matchers {
     roundTrip(RecursiveSeq("Bob", Seq(RecursiveSeq("Charlie", Seq.empty[RecursiveSeq]))), """{name: "Bob", value: [{name: "Charlie", value: []}]}""", classOf[RecursiveSeq])
     roundTrip(AnnotatedClass("Bob"), """{annotated_name: "Bob"}""", classOf[AnnotatedClass])
     roundTrip(MapOfStrings("Bob", Map("brother" -> "Tom Jones")), """{name: "Bob", value: {brother: "Tom Jones"}}""", classOf[MapOfStrings])
+    roundTrip(MapOfStringAliases("Bob", Map("brother" -> "Tom Jones")), """{name: "Bob", value: {brother: "Tom Jones"}}""", classOf[MapOfStringAliases])
     roundTrip(SeqOfMapOfStrings("Bob", Seq(Map("brother" -> "Tom Jones"))), """{name: "Bob", value: [{brother: "Tom Jones"}]}""", classOf[SeqOfMapOfStrings])
   }
 
