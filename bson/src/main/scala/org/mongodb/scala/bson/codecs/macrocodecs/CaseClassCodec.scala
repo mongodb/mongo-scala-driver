@@ -145,7 +145,8 @@ private[codecs] object CaseClassCodec {
     def flattenTypeArgs(at: Type): List[c.universe.Type] = {
       val t = at.dealias
       val typeArgs = t.typeArgs match {
-        case head :: _ if isMap(t) && head != stringType => c.abort(c.enclosingPosition, "Maps must contain string types for keys")
+        case head :: _ if isMap(t) && !(head =:= stringType) =>
+          c.abort(c.enclosingPosition, "Maps must contain string types for keys")
         case _ :: tail if isMap(t) /* head == stringType */ => tail
         case args => args
       }
