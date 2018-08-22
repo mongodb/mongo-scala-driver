@@ -1211,7 +1211,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @param models the list of indexes to create
    * @return a Observable with the names of the indexes
    */
-  def createIndexes(models: Seq[IndexModel]): SingleObservable[String] =
+  def createIndexes(models: Seq[IndexModel]): Observable[String] =
     observeAndFlatten(wrapped.createIndexes(models.asJava, _: SingleResultCallback[util.List[String]]))
 
   /**
@@ -1223,7 +1223,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @return a Observable with the names of the indexes
    * @since 2.2
    */
-  def createIndexes(models: Seq[IndexModel], createIndexOptions: CreateIndexOptions): SingleObservable[String] =
+  def createIndexes(models: Seq[IndexModel], createIndexOptions: CreateIndexOptions): Observable[String] =
     observeAndFlatten(wrapped.createIndexes(models.asJava, createIndexOptions, _: SingleResultCallback[util.List[String]]))
 
   /**
@@ -1236,7 +1236,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @since 2.2
    * @note Requires MongoDB 3.6 or greater
    */
-  def createIndexes(clientSession: ClientSession, models: Seq[IndexModel]): SingleObservable[String] =
+  def createIndexes(clientSession: ClientSession, models: Seq[IndexModel]): Observable[String] =
     observeAndFlatten(wrapped.createIndexes(clientSession, models.asJava, _: SingleResultCallback[util.List[String]]))
 
   /**
@@ -1250,7 +1250,7 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * @since 2.2
    * @note Requires MongoDB 3.6 or greater
    */
-  def createIndexes(clientSession: ClientSession, models: Seq[IndexModel], createIndexOptions: CreateIndexOptions): SingleObservable[String] =
+  def createIndexes(clientSession: ClientSession, models: Seq[IndexModel], createIndexOptions: CreateIndexOptions): Observable[String] =
     observeAndFlatten(wrapped.createIndexes(clientSession, models.asJava, createIndexOptions, _: SingleResultCallback[util.List[String]]))
 
   /**
