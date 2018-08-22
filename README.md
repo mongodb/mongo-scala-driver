@@ -63,6 +63,12 @@ $ cd mongo-scala-driver
 $ ./sbt check
 ```
 
+To publish the signed jars:
+
+```
+$ ./sbt +publish-signed
+```
+
 ## Maintainers
 
 * Ross Lawley          ross@mongodb.com
