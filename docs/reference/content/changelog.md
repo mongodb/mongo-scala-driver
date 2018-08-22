@@ -12,6 +12,7 @@ Changes between released versions
 
 ### 2.4.1
   * Updated MongoDB Driver Async to 3.8.1 [SCALA-441](https://jira.mongodb.org/browse/SCALA-441)
+  * Map ObservableImplicits.head execution context to the executing thread [SCALA-430](https://jira.mongodb.org/browse/SCALA-430)
   * Support tagged types in codec generator macro for case classes [SCALA-414](https://jira.mongodb.org/browse/SCALA-414)
   * Fix MongoCollection.createIndexes signature [SCALA-431](https://jira.mongodb.org/browse/SCALA-431)
 

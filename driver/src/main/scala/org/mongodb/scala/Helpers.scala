@@ -16,6 +16,9 @@
 
 package org.mongodb.scala
 
+import java.util.concurrent.Executor
+
+import scala.concurrent.ExecutionContext
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
@@ -33,4 +36,10 @@ private[scala] object Helpers {
    */
   implicit def classTagToClassOf[C](ct: ClassTag[C]): Class[C] = ct.runtimeClass.asInstanceOf[Class[C]]
 
+  /**
+   * Direct Execution Context uses the current context to run the command in.
+   */
+  final val DirectExecutionContext: ExecutionContext = ExecutionContext.fromExecutor(new Executor {
+    override def execute(command: Runnable): Unit = command.run()
+  })
 }
