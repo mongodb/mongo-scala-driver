@@ -2,6 +2,7 @@
 .#*
 .git
 *#
+.java-version
 
 # os x stuff
 *Thumbs.db*
