@@ -11,6 +11,7 @@ title = "Changelog"
 Changes between released versions
 
 ### 2.4.2
+  * Updated MongoDB Driver Async to 3.8.2 [SCALA-449](https://jira.mongodb.org/browse/SCALA-449)
   * Allow value classes with codecs to be supported by the macro codecs [SCALA-447](https://jira.mongodb.org/browse/SCALA-447)
 
 ### 2.4.1
