@@ -10,6 +10,9 @@ title = "Changelog"
 
 Changes between released versions
 
+### 2.4.2
+  * Allow value classes with codecs to be supported by the macro codecs [SCALA-447](https://jira.mongodb.org/browse/SCALA-447)
+
 ### 2.4.1
   * Updated MongoDB Driver Async to 3.8.1 [SCALA-441](https://jira.mongodb.org/browse/SCALA-441)
   * Map ObservableImplicits.head execution context to the executing thread [SCALA-430](https://jira.mongodb.org/browse/SCALA-430)

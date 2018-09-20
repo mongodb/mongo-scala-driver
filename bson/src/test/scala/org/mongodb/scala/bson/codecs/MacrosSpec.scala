@@ -328,6 +328,25 @@ class MacrosSpec extends FlatSpec with Matchers {
     roundTrip(ContainsTaggedTypes(a, b, c, d), """{a: 1, b: "b", c: {c: 0}, d: {}}""", classOf[ContainsTaggedTypes], classOf[Empty])
   }
 
+  it should "be able to support value classes" in {
+    val valueClassCodecProvider = new CodecProvider {
+      override def get[T](clazz: Class[T], registry: CodecRegistry): Codec[T] = {
+        if (clazz == classOf[IsValueClass]) {
+          new Codec[IsValueClass] {
+            override def encode(writer: BsonWriter, value: IsValueClass, encoderContext: EncoderContext): Unit = writer.writeInt32(value.id)
+
+            override def getEncoderClass: Class[IsValueClass] = classOf[IsValueClass]
+
+            override def decode(reader: BsonReader, decoderContext: DecoderContext): IsValueClass = IsValueClass(reader.readInt32())
+          }.asInstanceOf[Codec[T]]
+        } else {
+          null // scalastyle:ignore
+        }
+      }
+    }
+    roundTrip(ContainsValueClass(IsValueClass(1), "string value"), """{id: 1, myString: 'string value'}""", classOf[ContainsValueClass], valueClassCodecProvider)
+  }
+
   it should "support extra fields in the document" in {
     val json = """{firstName: "Bob", lastName: "Jones", address: {number: 1, street: "Acacia Avenue"}, aliases: ["Robert", "Rob"]}"""
     decode(Person("Bob", "Jones"), json, Macros.createCodec[Person]())
@@ -440,3 +459,6 @@ class MacrosSpec extends FlatSpec with Matchers {
   }
 
 }
+
+case class IsValueClass(id: Int) extends AnyVal
+case class ContainsValueClass(id: IsValueClass, myString: String)

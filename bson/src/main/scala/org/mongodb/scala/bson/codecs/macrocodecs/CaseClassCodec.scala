@@ -151,7 +151,7 @@ private[codecs] object CaseClassCodec {
       }
       val types = t +: typeArgs.flatMap(x => flattenTypeArgs(x))
       if (types.exists(isTuple)) c.abort(c.enclosingPosition, "Tuples currently aren't supported in case classes")
-      types.filterNot(isOption).map(x => primitiveTypesMap.getOrElse(x.erasure, x))
+      types.filterNot(isOption).map(x => if (isCaseClass(x)) x else primitiveTypesMap.getOrElse(x.erasure, x))
     }
 
     /*
@@ -171,7 +171,7 @@ private[codecs] object CaseClassCodec {
           q"""
             typeArgs += ($key -> {
               val tpeArgs = mutable.ListBuffer.empty[Class[_]]
-              ..${flattenTypeArgs(f).map(t => q"tpeArgs += classOf[${t.finalResultType.erasure}]")}
+              ..${flattenTypeArgs(f).map(t => q"tpeArgs += classOf[${if (isCaseClass(t)) t.finalResultType else t.finalResultType.erasure}]")}
               tpeArgs.toList
             })"""
       })
