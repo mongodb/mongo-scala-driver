@@ -105,7 +105,8 @@ object MongoScalaBuild extends Build {
   val checkAlias = addCommandAlias("check", ";clean;scalastyle;coverage;test;it:test;coverageAggregate;coverageReport")
 
   // Documentation Settings to link to the async JavaDoc
-  val mongodbApiURL = "http://api.mongodb.org/java/current/"
+  val driverDocsVersion = mongodbDriverVersion.split("\\.").dropRight(1).mkString(".")
+  val mongodbApiURL = s"http://mongodb.github.io/mongo-java-driver/$driverDocsVersion/javadoc"
   val scalaApiURL = s"http://scala-lang.org/api/$scalaCoreVersion"
   val docSettings = Seq(
     autoAPIMappings := true,
