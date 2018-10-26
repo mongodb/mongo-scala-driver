@@ -35,10 +35,9 @@ private[scala] case class ZipObservable[T, U](
     private val thisQueue: ConcurrentLinkedQueue[(Long, T)] = new ConcurrentLinkedQueue[(Long, T)]()
     private val thatQueue: ConcurrentLinkedQueue[(Long, U)] = new ConcurrentLinkedQueue[(Long, U)]()
 
-    @volatile
-    private var observable1Subscription: Option[Subscription] = None
-    @volatile
-    private var observable2Subscription: Option[Subscription] = None
+    @volatile private var terminated: Boolean = false
+    @volatile private var observable1Subscription: Option[Subscription] = None
+    @volatile private var observable2Subscription: Option[Subscription] = None
 
     def createFirstObserver: Observer[T] = createSubObserver[T](thisQueue, observer, firstSub = true)
 
@@ -46,8 +45,11 @@ private[scala] case class ZipObservable[T, U](
 
     private def createSubObserver[A](queue: ConcurrentLinkedQueue[(Long, A)], observer: Observer[_ >: (T, U)], firstSub: Boolean): Observer[A] = {
       new Observer[A] {
-        var counter: Long = 0
-        override def onError(throwable: Throwable): Unit = observer.onError(throwable)
+        @volatile private var counter: Long = 0
+        override def onError(throwable: Throwable): Unit = {
+          terminated = true
+          observer.onError(throwable)
+        }
 
         override def onSubscribe(subscription: Subscription): Unit = {
           if (firstSub) {
@@ -62,13 +64,16 @@ private[scala] case class ZipObservable[T, U](
         }
 
         override def onComplete(): Unit = {
-          if (!firstSub) observer.onComplete()
+          if (!firstSub) {
+            terminated = true
+            observer.onComplete()
+          }
         }
 
         override def onNext(tResult: A): Unit = {
           counter += 1
           queue.add((counter, tResult))
-          processNext(observer)
+          if (!firstSub) processNext(observer)
         }
       }
     }
@@ -76,11 +81,12 @@ private[scala] case class ZipObservable[T, U](
     private def processNext(observer: Observer[_ >: (T, U)]): Unit = {
       (thisQueue.peek, thatQueue.peek) match {
         case ((k1: Long, _), (k2: Long, _)) if k1 == k2 => observer.onNext((thisQueue.poll()._2, thatQueue.poll()._2))
-        case _ => // Do nothing counters don't match
+        case _ => if (!terminated && !jointSubscription.isUnsubscribed) jointSubscription.request(1) // Uneven queues request more data
+        // from downstream so to honor the original request for data.
       }
     }
 
-    private val jointSubscription = new Subscription() {
+    private val jointSubscription: Subscription = new Subscription() {
       var subscribed: Boolean = true
       override def isUnsubscribed: Boolean = !subscribed
 
@@ -95,7 +101,6 @@ private[scala] case class ZipObservable[T, U](
         observable2Subscription.foreach(_.unsubscribe())
       }
     }
-
   }
 
 }

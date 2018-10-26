@@ -37,10 +37,10 @@ object TestObserver {
 }
 
 case class TestObserver[A](delegate: Observer[A]) extends Observer[A] {
-  var subscription: Option[Subscription] = None
-  var error: Option[Throwable] = None
-  var completed: Boolean = false
-  var terminated: Boolean = false
+  @volatile var subscription: Option[OneAtATimeSubscription] = None
+  @volatile var error: Option[Throwable] = None
+  @volatile var completed: Boolean = false
+  @volatile var terminated: Boolean = false
   val results: mutable.ListBuffer[A] = mutable.ListBuffer[A]()
 
   override def onError(throwable: Throwable): Unit = {
@@ -51,9 +51,10 @@ case class TestObserver[A](delegate: Observer[A]) extends Observer[A] {
   }
 
   override def onSubscribe(sub: Subscription): Unit = {
-    require(subscription.isEmpty, "bserver already subscribed to")
-    subscription = Some(sub)
-    delegate.onSubscribe(sub)
+    require(subscription.isEmpty, "observer already subscribed to")
+    val oneAtATimeSubscription = OneAtATimeSubscription(sub)
+    subscription = Some(oneAtATimeSubscription)
+    delegate.onSubscribe(oneAtATimeSubscription)
   }
 
   override def onComplete(): Unit = {
@@ -69,5 +70,41 @@ case class TestObserver[A](delegate: Observer[A]) extends Observer[A] {
       results.append(result)
     }
     delegate.onNext(result)
+    subscription.foreach(_.innerRequestNext())
+  }
+
+  case class OneAtATimeSubscription(inner: Subscription) extends Subscription {
+
+    @volatile var demand: Long = 0
+
+    override def request(n: Long): Unit = {
+      require(n > 0L, s"Number requested must be greater than zero: $n")
+      addDemand(n)
+      innerRequestNext()
+    }
+
+    override def unsubscribe(): Unit = inner.unsubscribe()
+
+    override def isUnsubscribed: Boolean = inner.isUnsubscribed
+
+    def innerRequestNext(): Unit = {
+      if (!terminated && !isUnsubscribed && addDemand(-1) > 0) {
+        inner.request(1)
+      }
+    }
+
+    private def addDemand(extraDemand: Long): Long = {
+      this.synchronized {
+        demand += extraDemand
+        if (demand > 0) {
+          demand
+        } else if (demand < 0 && extraDemand > 0) {
+          demand = Long.MaxValue
+          demand
+        } else {
+          0
+        }
+      }
+    }
   }
 }

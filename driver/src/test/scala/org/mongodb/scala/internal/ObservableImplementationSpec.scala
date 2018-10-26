@@ -41,7 +41,7 @@ class ObservableImplementationSpec extends FlatSpec with Matchers with TableDriv
     }
   }
 
-  it should "Consuming observables should handl over requesting observables as expected" in {
+  it should "Consuming observables should handle over requesting observables as expected" in {
     forAll(overRequestingObservables) {
       (observable: Observable[Int], observer: TestObserver[Int], expected: Int) =>
         {
@@ -170,7 +170,7 @@ class ObservableImplementationSpec extends FlatSpec with Matchers with TableDriv
           val observer = TestObserver[(Int, Int)]()
           observable.subscribe(observer)
 
-          observer.subscription.get.request(100)
+          observer.subscription.foreach(_.request(100))
 
           observer.results should equal((1 to 50).map(i => (i, i)))
           observer.completed should equal(true)
