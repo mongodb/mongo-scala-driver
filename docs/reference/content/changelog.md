@@ -10,6 +10,11 @@ title = "Changelog"
 
 Changes between released versions
 
+### 2.5.0
+  * Updated MongoDB Driver Async to 3.9.0
+  * Fixed Filter and Zip observables requesting the correct number of results [SCALA-457](https://jira.mongodb.org/browse/SCALA-457)
+  * Updated the Aggregates.lookup helper to match the Java API [SCALA-446](https://jira.mongodb.org/browse/SCALA-446)
+
 ### 2.4.2
   * Updated MongoDB Driver Async to 3.8.2 [SCALA-449](https://jira.mongodb.org/browse/SCALA-449)
   * Allow value classes with codecs to be supported by the macro codecs [SCALA-447](https://jira.mongodb.org/browse/SCALA-447)
