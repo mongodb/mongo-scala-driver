@@ -19,8 +19,8 @@ The MongoDB Scala Driver
 
 ### Scala 2.12
 
-{{< install artifactId="mongo-scala-driver" version="2.4.2" mongoDriverVersion="3.9.0" scalaVersion="2.12">}}
+{{< install artifactId="mongo-scala-driver" version="2.5.0" mongoDriverVersion="3.9.0" scalaVersion="2.12">}}
 
 ### Scala 2.11
 
-{{< install artifactId="mongo-scala-driver" version="2.4.2" mongoDriverVersion="3.9.0" scalaVersion="2.11">}}
+{{< install artifactId="mongo-scala-driver" version="2.5.0" mongoDriverVersion="3.9.0" scalaVersion="2.11">}}
