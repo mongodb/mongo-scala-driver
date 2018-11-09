@@ -304,8 +304,8 @@ object Aggregates {
    * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/lookup/ \$lookup]]
    * @note Requires MongoDB 3.6 or greater
    */
-  def lookup(from: String, let: Seq[Variable[_]], pipeline: Seq[_ <: Bson], as: String): Bson =
-    JAggregates.lookup(from, let.asJava, pipeline.asJava, as)
+  def lookup[T](from: String, let: Seq[Variable[T]], pipeline: Seq[_ <: Bson], as: String): Bson =
+    JAggregates.lookup[T](from, let.asJava, pipeline.asJava, as)
 
   /**
    * Creates a `\$group` pipeline stage for the specified filter
