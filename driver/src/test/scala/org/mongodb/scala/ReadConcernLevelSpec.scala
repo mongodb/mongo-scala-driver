@@ -39,6 +39,7 @@ class ReadConcernLevelSpec extends FlatSpec with Matchers {
   it should "return the expected ReadConcerns" in {
     forAll(readConcernLevels) { (stringValue: String, expectedValue: Try[ReadConcernLevel]) =>
       ReadConcernLevel.fromString(stringValue) should equal(expectedValue)
+      ReadConcernLevel.fromString(stringValue.toUpperCase()) should equal(expectedValue)
     }
   }
 
@@ -52,11 +53,10 @@ class ReadConcernLevelSpec extends FlatSpec with Matchers {
     Table(
       ("stringValue", "JavaValue"),
       ("local", Success(ReadConcernLevel.LOCAL)),
-      ("LOCAL", Success(ReadConcernLevel.LOCAL)),
       ("linearizable", Success(ReadConcernLevel.LINEARIZABLE)),
-      ("LINEARIZABLE", Success(ReadConcernLevel.LINEARIZABLE)),
       ("majority", Success(ReadConcernLevel.MAJORITY)),
-      ("majority", Success(ReadConcernLevel.MAJORITY))
+      ("snapshot", Success(ReadConcernLevel.SNAPSHOT)),
+      ("available", Success(ReadConcernLevel.AVAILABLE))
     )
 
   val invalidReadConcernLevels = Table("invalid strings", "all", "none")

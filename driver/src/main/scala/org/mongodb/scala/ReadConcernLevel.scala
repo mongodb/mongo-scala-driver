@@ -53,7 +53,15 @@ object ReadConcernLevel {
    * @note Requires MongoDB 4.0 or greater
    * @since 2.4
    */
-  val SNAPSHOT = JReadConcernLevel.SNAPSHOT
+  val SNAPSHOT: ReadConcernLevel = JReadConcernLevel.SNAPSHOT
+
+  /**
+   * The available read concern level.
+   *
+   * @note Requires MongoDB 4.0 or greater
+   * @since 2.5
+   */
+  val AVAILABLE = JReadConcernLevel.AVAILABLE
 
   /**
    * Returns the ReadConcern from the string read concern level.

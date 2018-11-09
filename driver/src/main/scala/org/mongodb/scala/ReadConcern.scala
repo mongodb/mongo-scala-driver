@@ -64,4 +64,12 @@ object ReadConcern {
    * @since 2.4
    */
   val SNAPSHOT: ReadConcern = JReadConcern.SNAPSHOT
+
+  /**
+   * The available read concern level.
+   *
+   * @note Requires MongoDB 4.0 or greater
+   * @since 2.5
+   */
+  val AVAILABLE: ReadConcern = JReadConcern.AVAILABLE
 }
