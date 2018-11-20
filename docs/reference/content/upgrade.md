@@ -8,6 +8,10 @@ title = "Upgrading"
 
 ## Upgrade
 
+### 2.5.0
+
+No expected upgrade issues from previous release.
+
 ### 2.4.0
 
 #### ClientSession support for transactions
@@ -26,6 +30,14 @@ supported class and the `MongoClientSettings.builder()` helper points to the sup
 
 The legacy settings are still supported and can be imported from `com.mongodb.async.client.MongoClientSettings`. It is only required if you
 need multiple credentials or custom `heartbeatSocketSettings`, both of which have been deprecated.
+
+### 2.2.0
+
+No expected upgrade issues from previous release.
+
+### 2.1.0
+
+No expected upgrade issues from previous release.
 
 ### 2.0.0
 
