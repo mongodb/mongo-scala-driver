@@ -97,12 +97,12 @@ contains a field `info` which is an embedded document:
 }
 ```
 
-To create the document using the Scala driver, use the [`Document`]({{< apiref "org/mongodb/scala/collection/immutable/Document">}}) class. You
+To create the document using the Scala driver, use the [`Document`]({{< apiref "org/mongodb/scala/bson/collection/immutable/Document">}}) class. You
 can use this class to create the embedded document as well.
 
 {{% note class="warning" %}}
-The Scala driver provides two document types - an immutable [`Document`]({{< apiref "org/mongodb/scala/collection/immutable/Document">}}) 
-and a mutable [`Document`]({{< apiref "org/mongodb/scala/collection/mutable/Document">}}).
+The Scala driver provides two document types - an immutable [`Document`]({{< apiref "org/mongodb/scala/bson/collection/immutable/Document">}}) 
+and a mutable [`Document`]({{< apiref "org/mongodb/scala/bson/collection/mutable/Document">}}).
 
 When using an immutable document then you should explicitly add an `_id` value, if you need to know that `_id` value in the future.
 
