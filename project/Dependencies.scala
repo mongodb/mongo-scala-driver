@@ -30,7 +30,6 @@ object Dependencies {
   val javaxServeletApiVersion = "2.5"
   val nettyVersion            = "4.1.17.Final"
 
-  val rxScalaVersion          = "0.26.4"
   val rxStreamsVersion        = "1.0.0"
 
   // Libraries
@@ -47,11 +46,10 @@ object Dependencies {
   val nettyIt             = "io.netty" % "netty-all" % nettyVersion % "it"
 
   // Examples
-  val rxScala           = "io.reactivex" %% "rxscala" % rxScalaVersion
   val rxStreams         = "org.reactivestreams" % "reactive-streams" % rxStreamsVersion
 
   // Projects
   val coreDependencies     = Seq(mongodbDriver)
   val testDependencies     = Seq(scalaTest, scalaMock, logback, reflections, javaxServeletApi, nettyTest, nettyIt)
-  val examplesDependencies = Seq(rxScala, rxStreams, nettyTest)
+  val examplesDependencies = Seq(rxStreams, nettyTest)
 }

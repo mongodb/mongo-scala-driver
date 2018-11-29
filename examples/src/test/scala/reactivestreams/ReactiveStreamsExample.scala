@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package rxStreams
+package reactivestreams
 
 import scala.collection.immutable.IndexedSeq
 import scala.concurrent.duration.Duration
 
 import org.mongodb.scala.{ Document, _ }
-import rxStreams.Implicits._
+import reactivestreams.Implicits._
 
-object RxStreamsExample {
+object ReactiveStreamsExample {
   /**
    * Run this main method to see the output of this quick example.
    *
@@ -39,7 +39,7 @@ object RxStreamsExample {
     // get a handle to the "test" collection
     val collection: MongoCollection[Document] = database.getCollection("test")
 
-    // Now an rxObservable!
+    // Now an reactive streams subscriber!
     println("Dropping the test collection")
     val dropSubscriber = TestSubscriber[Completed]()
     collection.drop().subscribe(dropSubscriber)

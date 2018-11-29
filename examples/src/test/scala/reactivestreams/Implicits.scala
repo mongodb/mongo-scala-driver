@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package rxStreams
+package reactivestreams
 
 import java.util.concurrent.atomic.AtomicBoolean
 
