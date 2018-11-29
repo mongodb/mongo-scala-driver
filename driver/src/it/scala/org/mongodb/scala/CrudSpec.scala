@@ -123,7 +123,7 @@ class CrudSpec extends RequiresMongoDBISpec with FuturesSpec {
     if (arguments.containsKey("skip")) options.skip(arguments.getNumber("skip").intValue)
     if (arguments.containsKey("limit")) options.limit(arguments.getNumber("limit").intValue)
     if (arguments.containsKey("collation")) options.collation(getCollation(arguments.getDocument("collation")))
-    BsonInt32(collection.get.count(arguments.getDocument("filter"), options).futureValue.toInt)
+    BsonInt32(collection.get.countDocuments(arguments.getDocument("filter"), options).futureValue.toInt)
   }
 
   private def doDistinct(arguments: BsonDocument): BsonValue = {

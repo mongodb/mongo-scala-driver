@@ -17,18 +17,17 @@
 package org.mongodb.scala.gridfs
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, InputStream}
+
 import javax.xml.bind.DatatypeConverter
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
 import scala.util.Try
-
 import org.bson.{BsonArray, BsonBinary, BsonInt32}
-
 import org.mongodb.scala._
 import org.mongodb.scala.bson.collection.mutable
-import org.mongodb.scala.bson.{BsonDocument, BsonInt64, BsonObjectId, BsonString}
+import org.mongodb.scala.bson.{BsonBoolean, BsonDocument, BsonInt64, BsonObjectId, BsonString}
 import org.mongodb.scala.gridfs.helpers.AsyncStreamHelper
 import org.scalatest.Inspectors.forEvery
 
@@ -198,8 +197,13 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
     val options: GridFSUploadOptions = new GridFSUploadOptions()
     rawOptions.get[BsonInt32]("chunkSizeBytes").map(chunkSize => options.chunkSizeBytes(chunkSize.getValue))
     rawOptions.get[BsonDocument]("metadata").map(doc => options.metadata(doc))
+    val disableMD5: Boolean = rawOptions.get[BsonBoolean]("disableMD5").getOrElse(BsonBoolean(false)).getValue
 
-    val result = Try(gridFSBucket.map(_.uploadFromStream(filename, AsyncStreamHelper.toAsyncInputStream(inputStream), options).head()).get.futureValue)
+    val result = Try(
+      gridFSBucket.map(bucket =>
+        bucket.withDisableMD5(disableMD5)
+              .uploadFromStream(filename, AsyncStreamHelper.toAsyncInputStream(inputStream), options).head()).get.futureValue
+    )
 
     assertion.containsKey("error") match {
       case true =>
@@ -244,8 +248,8 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
   }
   //scalastyle:on method.length
 
-  private def getChunksCount(filter: BsonDocument): Long = chunksCollection.map(col => col.count(filter).head()).get.futureValue
-  private def getFilesCount(filter: BsonDocument): Long = filesCollection.map(col => col.count(filter).head()).get.futureValue
+  private def getChunksCount(filter: BsonDocument): Long = chunksCollection.map(col => col.countDocuments(filter).head()).get.futureValue
+  private def getFilesCount(filter: BsonDocument): Long = filesCollection.map(col => col.countDocuments(filter).head()).get.futureValue
 
   private def processFiles(bsonArray: BsonArray): List[Document] = {
     val documents = ListBuffer[Document]()

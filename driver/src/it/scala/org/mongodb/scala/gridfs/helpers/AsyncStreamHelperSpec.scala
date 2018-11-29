@@ -83,8 +83,8 @@ class AsyncStreamHelperSpec extends RequiresMongoDBISpec with FuturesSpec {
         info("Testing uploading data")
         val objectId = gridFSBucket.uploadFromStream("myfile", data.inputStream).head().futureValue
 
-        filesCollection.count().head().futureValue should equal(1)
-        chunksCollection.count().head().futureValue should equal(1)
+        filesCollection.countDocuments().head().futureValue should equal(1)
+        chunksCollection.countDocuments().head().futureValue should equal(1)
 
         info("Testing downloading data")
         gridFSBucket.downloadToStream(objectId, data.outputStream).head().futureValue
