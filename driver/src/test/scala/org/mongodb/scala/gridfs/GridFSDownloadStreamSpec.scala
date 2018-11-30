@@ -44,11 +44,13 @@ class GridFSDownloadStreamSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects('batchSize)(batchSize).once()
     wrapper.expects('getGridFSFile)(*).once()
     wrapper.expects('read)(dst, *).once()
+    wrapper.expects('skip)(10L, *).once()
     wrapper.expects('close)(*).once()
 
     gridFSDownloadStream.batchSize(batchSize)
     gridFSDownloadStream.gridFSFile().head()
     gridFSDownloadStream.read(dst).head()
+    gridFSDownloadStream.skip(10L).head()
     gridFSDownloadStream.close().head()
   }
 

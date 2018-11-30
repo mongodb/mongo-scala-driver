@@ -21,7 +21,7 @@ import java.nio.ByteBuffer
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.gridfs.{GridFSDownloadStream => JGridFSDownloadStream}
 
-import org.mongodb.scala.internal.ObservableHelper.{observe, observeCompleted, observeInt}
+import org.mongodb.scala.internal.ObservableHelper.{observe, observeCompleted, observeInt, observeLong}
 import org.mongodb.scala.{Completed, Observable}
 
 /**
@@ -62,6 +62,15 @@ case class GridFSDownloadStream(private val wrapped: JGridFSDownloadStream) exte
    *         `-1` if there is no more data because the end of the stream has been reached.
    */
   override def read(dst: ByteBuffer): Observable[Int] = observeInt(wrapped.read(dst, _: SingleResultCallback[java.lang.Integer]))
+
+  /**
+   * Skips over and discards n bytes of data from this input stream.
+   *
+   * @param bytesToSkip the number of bytes to skip
+   * @return an Observable with a single element indicating the total number of bytes skipped
+   * @since 2.6
+   */
+  override def skip(bytesToSkip: Long): Observable[Long] = observeLong(wrapped.skip(bytesToSkip, _: SingleResultCallback[java.lang.Long]))
 
   /**
    * Closes the input stream

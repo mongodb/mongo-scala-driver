@@ -38,6 +38,15 @@ trait AsyncInputStream {
   def read(dst: ByteBuffer): Observable[Int]
 
   /**
+   * Skips over and discards n bytes of data from this input stream.
+   *
+   * @param bytesToSkip the number of bytes to skip
+   * @return an Observable with a single element indicating the total number of bytes skipped
+   * @since 2.6
+   */
+  def skip(bytesToSkip: Long): Observable[Long]
+
+  /**
    * Closes the input stream
    *
    * @return a Observable with a single element indicating when the operation has completed

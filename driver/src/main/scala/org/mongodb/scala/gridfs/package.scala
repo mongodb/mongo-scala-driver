@@ -16,12 +16,12 @@
 
 package org.mongodb.scala
 
+import java.lang
 import java.nio.ByteBuffer
 
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.gridfs.{AsyncInputStream => JAsyncInputStream, AsyncOutputStream => JAsyncOutputStream}
-
-import org.mongodb.scala.internal.ObservableHelper.{observeCompleted, observeInt}
+import org.mongodb.scala.internal.ObservableHelper.{observeCompleted, observeInt, observeLong}
 
 package object gridfs {
 
@@ -53,6 +53,8 @@ package object gridfs {
     override def close(): Observable[Completed] = observeCompleted(wrapped.close(_: SingleResultCallback[Void]))
 
     override def read(dst: ByteBuffer): Observable[Int] = observeInt(wrapped.read(dst, _: SingleResultCallback[java.lang.Integer]))
+
+    override def skip(bytesToSkip: Long): Observable[Long] = observeLong(wrapped.skip(bytesToSkip, _: SingleResultCallback[java.lang.Long]))
   }
 
   implicit class JavaAsyncOutputStreamToScala(wrapped: JAsyncOutputStream) extends AsyncOutputStream {
@@ -78,6 +80,14 @@ package object gridfs {
         override def onComplete(): Unit = bytesRead.foreach(callback.onResult(_, null))
 
         override def onNext(result: Int): Unit = bytesRead = Some(result)
+      }
+    )
+    override def skip(bytesToSkip: Long, callback: SingleResultCallback[java.lang.Long]): Unit = wrapped.skip(bytesToSkip).subscribe(
+      new Observer[Long] {
+        var bytesSkipped: Option[Long] = None
+        override def onError(e: Throwable): Unit = callback.onResult(null, e)
+        override def onComplete(): Unit = callback.onResult(bytesSkipped.getOrElse(0L).asInstanceOf[java.lang.Long], null)
+        override def onNext(result: Long): Unit = bytesSkipped = Some(result)
       }
     )
     // scalastyle:on null
