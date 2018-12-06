@@ -11,7 +11,7 @@ title = "Macros"
 
 New in 2.0, the Scala driver allows you to use case classes to represent documents in a collection via the 
 [`Macros`]({{< apiref "org/mongodb/scala/bson/codecs/Macros$" >}}) helper.  Simple case classes and nested case classes are supported. 
-Hierarchical modelling can be achieve by using a sealed trait and having case classes implement the parent trait.
+Hierarchical modelling can be achieve by using a sealed trait or class and having case classes implement the parent trait.
 
 Many simple Scala types are supported and they will be marshaled into their corresponding 
 `BsonValue` type. Below is a list of Scala types and their type-safe BSON representation:
@@ -72,8 +72,8 @@ val codecRegistry = fromRegistries( fromProviders(classOf[ClubMember], classOf[P
 
 ## Sealed classes and ADTs
 
-Hierarchical class structures are supported via sealed classes. Each subclass is handled specifically by the generated codec, so you only 
-need create a `CodecProvider` for the parent sealed class. Internally an extra field (`_t`) is stored alongside the data so that 
+Hierarchical class structures are supported via sealed traits and classes. Each subclass is handled specifically by the generated codec, so you only 
+need create a `CodecProvider` for the parent sealed trait/class. Internally an extra field (`_t`) is stored alongside the data so that 
 the correct subclass can be hydrated when decoding the data.  Below is an example of a tree like structure containing branch and leaf nodes:
 
 
