@@ -76,6 +76,7 @@ private[codecs] object CaseClassCodec {
     def isOption(t: Type): Boolean = t.typeSymbol == definitions.OptionClass
     def isTuple(t: Type): Boolean = definitions.TupleClass.seq.contains(t.typeSymbol)
     def isSealed(t: Type): Boolean = t.typeSymbol.isClass && t.typeSymbol.asClass.isSealed
+    def isAbstractSealed(t: Type): Boolean = isSealed(t) && t.typeSymbol.isAbstract
     def isCaseClassOrSealed(t: Type): Boolean = isCaseClass(t) || isSealed(t)
 
     def allSubclasses(s: Symbol): Set[Symbol] = {
@@ -83,15 +84,21 @@ private[codecs] object CaseClassCodec {
       directSubClasses ++ directSubClasses.flatMap({ s: Symbol => allSubclasses(s) })
     }
     val subClasses: List[Type] = allSubclasses(mainType.typeSymbol).map(_.asClass.toType).filter(isCaseClass).toList
-    if (isSealed(mainType) && subClasses.isEmpty) c.abort(c.enclosingPosition, "No known subclasses of the sealed class")
-    val knownTypes = (mainType +: subClasses).reverse
+    if (isSealed(mainType) && subClasses.isEmpty) {
+      c.abort(c.enclosingPosition, s"No known subclasses of the sealed ${if (mainType.typeSymbol.asClass.isTrait) "trait" else "class"}")
+    }
+    val knownTypes = (mainType +: subClasses).filterNot(_.typeSymbol.isAbstract).reverse
 
     val terms = {
-      val constructor = mainType.decl(termNames.CONSTRUCTOR)
-      if (!constructor.isMethod) c.abort(c.enclosingPosition, "No constructor unsupported class type")
-      constructor.asMethod.paramLists match {
-        case h :: _ => h.map(_.asTerm)
-        case _ => List.empty
+      if (!isAbstractSealed(mainType)) {
+        val constructor = mainType.decl(termNames.CONSTRUCTOR)
+        if (!constructor.isMethod) c.abort(c.enclosingPosition, "No constructor, unsupported class type")
+        constructor.asMethod.paramLists match {
+          case h :: _ => h.map(_.asTerm)
+          case _ => List.empty
+        }
+      } else {
+        List.empty
       }
     }
 

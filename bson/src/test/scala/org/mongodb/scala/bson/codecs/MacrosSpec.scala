@@ -92,7 +92,8 @@ class MacrosSpec extends FlatSpec with Matchers {
   sealed class Graph
   case class Node(name: String, value: Option[Graph]) extends Graph
 
-  sealed class NotImplemented
+  sealed class NotImplementedSealedClass
+  sealed trait NotImplementedSealedTrait
   case class UnsupportedTuple(value: (String, String))
   case class UnsupportedMap(value: Map[Int, Int])
 
@@ -119,6 +120,31 @@ class MacrosSpec extends FlatSpec with Matchers {
     case object Bravo extends CaseObjectEnum
     case object Charlie extends CaseObjectEnum
   }
+
+  sealed class SealedClass
+  case class SealedClassA(stringField: String) extends SealedClass
+  case class SealedClassB(intField: Int) extends SealedClass
+  case class ContainsSealedClass(list: List[SealedClass])
+
+  sealed abstract class SealedAbstractClass
+  case class SealedAbstractClassA(stringField: String) extends SealedAbstractClass
+  case class SealedAbstractClassB(intField: Int) extends SealedAbstractClass
+  case class ContainsSealedAbstractClass(list: List[SealedAbstractClass])
+
+  sealed class SealedClassWithParams(val superField: String)
+  case class SealedClassWithParamsA(stringField: String, override val superField: String) extends SealedClassWithParams(superField)
+  case class SealedClassWithParamsB(intField: Int, override val superField: String) extends SealedClassWithParams(superField)
+  case class ContainsSealedClassWithParams(list: List[SealedClassWithParams])
+
+  sealed abstract class SealedAbstractClassWithParams(val superField: String)
+  case class SealedAbstractClassWithParamsA(stringField: String, override val superField: String) extends SealedAbstractClassWithParams(superField)
+  case class SealedAbstractClassWithParamsB(intField: Int, override val superField: String) extends SealedAbstractClassWithParams(superField)
+  case class ContainsSealedAbstractClassWithParams(list: List[SealedAbstractClassWithParams])
+
+  sealed trait SealedTrait
+  case class SealedTraitA(stringField: String) extends SealedTrait
+  case class SealedTraitB(intField: Int) extends SealedTrait
+  case class ContainsSealedTrait(list: List[SealedTrait])
 
   object CaseObjectEnumCodecProvider extends CodecProvider {
     def isCaseObjectEnum[T](clazz: Class[T]): Boolean = {
@@ -173,6 +199,46 @@ class MacrosSpec extends FlatSpec with Matchers {
     roundTrip(MapOfStrings("Bob", Map("brother" -> "Tom Jones")), """{name: "Bob", value: {brother: "Tom Jones"}}""", classOf[MapOfStrings])
     roundTrip(MapOfStringAliases("Bob", Map("brother" -> "Tom Jones")), """{name: "Bob", value: {brother: "Tom Jones"}}""", classOf[MapOfStringAliases])
     roundTrip(SeqOfMapOfStrings("Bob", Seq(Map("brother" -> "Tom Jones"))), """{name: "Bob", value: [{brother: "Tom Jones"}]}""", classOf[SeqOfMapOfStrings])
+  }
+
+  it should "be able to round trip polymorphic nested case classes in a sealed class" in {
+    roundTrip(
+      ContainsSealedClass(List(SealedClassA("test"), SealedClassB(12))),
+      """{"list" : [{"_t" : "SealedClassA", "stringField" : "test"}, {"_t" : "SealedClassB", "intField" : 12}]}""",
+      classOf[ContainsSealedClass], classOf[SealedClass]
+    )
+  }
+
+  it should "be able to round trip polymorphic nested case classes in a sealed abstract class" in {
+    roundTrip(
+      ContainsSealedAbstractClass(List(SealedAbstractClassA("test"), SealedAbstractClassB(12))),
+      """{"list" : [{"_t" : "SealedAbstractClassA", "stringField" : "test"}, {"_t" : "SealedAbstractClassB", "intField" : 12}]}""",
+      classOf[ContainsSealedAbstractClass], classOf[SealedAbstractClass]
+    )
+  }
+
+  it should "be able to round trip polymorphic nested case classes in a sealed class with parameters" in {
+    roundTrip(
+      ContainsSealedClassWithParams(List(SealedClassWithParamsA("test", "tested1"), SealedClassWithParamsB(12, "tested2"))),
+      """{"list" : [{"_t" : "SealedClassWithParamsA", "stringField" : "test", "superField" : "tested1"}, {"_t" : "SealedClassWithParamsB", "intField" : 12, "superField" : "tested2"}]}""",
+      classOf[ContainsSealedClassWithParams], classOf[SealedClassWithParams]
+    )
+  }
+
+  it should "be able to round trip polymorphic nested case classes in a sealed abstract class with parameters" in {
+    roundTrip(
+      ContainsSealedAbstractClassWithParams(List(SealedAbstractClassWithParamsA("test", "tested1"), SealedAbstractClassWithParamsB(12, "tested2"))),
+      """{"list" : [{"_t" : "SealedAbstractClassWithParamsA", "stringField" : "test", "superField" : "tested1"}, {"_t" : "SealedAbstractClassWithParamsB", "intField" : 12, "superField" : "tested2"}]}""",
+      classOf[ContainsSealedAbstractClassWithParams], classOf[SealedAbstractClassWithParams]
+    )
+  }
+
+  it should "be able to round trip polymorphic nested case classes in a sealed trait" in {
+    roundTrip(
+      ContainsSealedTrait(List(SealedTraitA("test"), SealedTraitB(12))),
+      """{"list" : [{"_t" : "SealedTraitA", "stringField" : "test"}, {"_t" : "SealedTraitB", "intField" : 12}]}""",
+      classOf[ContainsSealedTrait], classOf[SealedTrait]
+    )
   }
 
   it should "be able to round trip nested case classes" in {
@@ -389,8 +455,9 @@ class MacrosSpec extends FlatSpec with Matchers {
     "Macros.createCodecProvider(classOf[UnsupportedMap])" shouldNot compile
   }
 
-  it should "not compile if there are no concrete implementations of a sealed class" in {
-    "Macros.createCodecProvider(classOf[NotImplemented])" shouldNot compile
+  it should "not compile if there are no concrete implementations of a sealed class or trait" in {
+    "Macros.createCodecProvider(classOf[NotImplementedSealedClass])" shouldNot compile
+    "Macros.createCodecProvider(classOf[NotImplementedSealedTrait])" shouldNot compile
     "Macros.createCodecProvider(classOf[SealedClassCaseObject])" shouldNot compile
   }
 

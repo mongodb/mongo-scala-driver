@@ -48,12 +48,12 @@ trait MacroCodec[T] extends Codec[T] {
   val classFieldTypeArgsMap: Map[String, Map[String, List[Class[_]]]]
 
   /**
-   * The case class type for the codec
+   * The case class type for the codec.
    */
   val encoderClass: Class[T]
 
   /**
-   * The `CodecRegistry` for use with the codec
+   * The `CodecRegistry` for use with the codec.
    */
   val codecRegistry: CodecRegistry
 
