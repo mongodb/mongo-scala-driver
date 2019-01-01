@@ -233,4 +233,76 @@ intersects the given Point:
 geoIntersects("geo", Point(Position(4, 0)))
 ```
 
+## FiltersDsl
 
+It is also possible to use FiltersDsl, which allows the use of operators with a syntax that is more close to real queries in MongoDB, as was implemented in [Casbah Query DSL](http://mongodb.github.io/casbah/3.1/reference/query_dsl/).
+
+For brevity, you may choose to import the methods of the `FiltersDsl` class statically:
+
+```scala
+import org.mongodb.scala.model.Filters.FiltersDsl._
+```
+
+#### Examples
+
+This example creates a filter that selects all documents where the value of the `qty` field equals `20`:
+
+```scala
+"qty" $eq 20
+"qty" $equal 20
+```
+
+which is equal to regular Filters operators:
+
+```scala
+`eq`("qty", 20)
+equal("qty", 20)
+```
+
+and will render as:
+
+```json
+{
+   "qty" : 20
+}
+```
+
+Following example creates a filter that selects all documents where the `price` field value not equals `0.99`; and the `expired` field is equal to `false` or the `qty` field value is less than `20`:
+```scala
+$and(
+  "price" $not {_ $eq 0.99},
+  $or(
+    "expired" $eq false,
+    "qty" $lt 20
+  )
+)
+$and(
+  $not("price" $eq 0.99),
+  $or(
+    "expired" $eq false,
+    "qty" $lt 20
+  )
+)
+```
+
+which is equal to regular Filters operators:
+```scala
+and(
+  not(eq("price", 0.99)),
+  or(
+    eq("expired", false),
+    lt("qty", 20)
+  )
+)
+```
+and will render as:
+
+```json
+{
+  "price" : { "$not" : { "$eq" : 0.99 } },
+  "$or" : [
+    { "expired" : false },
+    { "qty" : { "$lt" : 20 } }
+  ]
+}
+```
