@@ -220,4 +220,17 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
     mongoDatabase.watch(clientSession, pipeline) shouldBe a[ChangeStreamObservable[_]]
     mongoDatabase.watch[BsonDocument](clientSession, pipeline) shouldBe a[ChangeStreamObservable[_]]
   }
+
+  it should "call the underlying aggregate" in {
+    val pipeline = List(Document("$match" -> 1))
+    wrapped.expects('aggregate)(pipeline.asJava, classOf[Document]).once()
+    wrapped.expects('aggregate)(pipeline.asJava, classOf[BsonDocument]).once()
+    wrapped.expects('aggregate)(clientSession, pipeline.asJava, classOf[Document]).once()
+    wrapped.expects('aggregate)(clientSession, pipeline.asJava, classOf[BsonDocument]).once()
+
+    mongoDatabase.aggregate(pipeline) shouldBe a[AggregateObservable[_]]
+    mongoDatabase.aggregate[BsonDocument](pipeline) shouldBe a[AggregateObservable[_]]
+    mongoDatabase.aggregate(clientSession, pipeline) shouldBe a[AggregateObservable[_]]
+    mongoDatabase.aggregate[BsonDocument](clientSession, pipeline) shouldBe a[AggregateObservable[_]]
+  }
 }

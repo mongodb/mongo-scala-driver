@@ -390,4 +390,28 @@ case class MongoDatabase(private[scala] val wrapped: JMongoDatabase) {
   def watch[C](clientSession: ClientSession, pipeline: Seq[Bson])(implicit e: C DefaultsTo Document, ct: ClassTag[C]): ChangeStreamObservable[C] =
     ChangeStreamObservable(wrapped.watch(clientSession, pipeline.asJava, ct))
 
+  /**
+   * Aggregates documents according to the specified aggregation pipeline.
+   *
+   * @param pipeline the aggregate pipeline
+   * @return a Observable containing the result of the aggregation operation
+   *         [[http://docs.mongodb.org/manual/aggregation/ Aggregation]]
+   * @since 2.6
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def aggregate[C](pipeline: Seq[Bson])(implicit e: C DefaultsTo Document, ct: ClassTag[C]): AggregateObservable[C] =
+    AggregateObservable(wrapped.aggregate[C](pipeline.asJava, ct))
+
+  /**
+   * Aggregates documents according to the specified aggregation pipeline.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param pipeline the aggregate pipeline
+   * @return a Observable containing the result of the aggregation operation
+   *         [[http://docs.mongodb.org/manual/aggregation/ Aggregation]]
+   * @since 2.6
+   * @note Requires MongoDB 3.6 or greater
+   */
+  def aggregate[C](clientSession: ClientSession, pipeline: Seq[Bson])(implicit e: C DefaultsTo Document, ct: ClassTag[C]): AggregateObservable[C] =
+    AggregateObservable(wrapped.aggregate[C](clientSession, pipeline.asJava, ct))
 }

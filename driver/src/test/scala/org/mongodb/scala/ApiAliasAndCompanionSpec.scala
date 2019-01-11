@@ -128,7 +128,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
   }
 
   it should "mirror all com.mongodb.client.model in org.mongdb.scala.model" in {
-    val javaExclusions = Set("ParallelCollectionScanOptions")
+    val javaExclusions = Set("ParallelCollectionScanOptions", "AggregationLevel")
     val packageName = "com.mongodb.client.model"
 
     val objectsAndEnums = new Reflections(packageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object]).asScala ++
