@@ -5,7 +5,6 @@ scala:
   - 2.12.2
 
 jdk:
-  - oraclejdk7
   - oraclejdk8
 
 # Branches to test
@@ -22,13 +21,10 @@ notifications:
 
 matrix:
     fast_finish: true
-    exclude:
-      - scala: 2.12.2
-        jdk: oraclejdk7
 
 env:
   matrix:
-    - MONGODB=3.4.3
+    - MONGODB=4.0.5
 
 
 install:
