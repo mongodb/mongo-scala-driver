@@ -21,7 +21,6 @@ import java.util
 import com.mongodb.Block
 import com.mongodb.async.SingleResultCallback
 import com.mongodb.async.client.{MongoIterable, Observables}
-
 import org.mongodb.scala._
 
 /**
@@ -41,7 +40,7 @@ private[scala] object ObservableHelper {
       override def apply(callback: SingleResultCallback[Completed]): Unit =
         block(new SingleResultCallback[Void]() {
           def onResult(result: Void, t: Throwable): Unit =
-            callback.onResult(Completed(), t)
+            if (t != null) callback.onResult(null, t) else callback.onResult(Completed(), t) // scalastyle:ignore
         })
     })
 

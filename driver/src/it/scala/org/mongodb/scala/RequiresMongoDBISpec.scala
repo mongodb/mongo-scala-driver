@@ -31,8 +31,8 @@ import org.mongodb.scala.bson.BsonString
 import org.scalatest._
 
 import scala.collection.JavaConverters._
-import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration.{Duration, _}
+import scala.concurrent.{Await, ExecutionContext}
 import scala.util.{Properties, Try}
 
 trait RequiresMongoDBISpec extends FlatSpec with Matchers with BeforeAndAfterAll {
@@ -82,7 +82,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with BeforeAndAfterAll
 
   def withClient(testCode: MongoClient => Any): Unit = {
     checkMongoDB ()
-    val client = mongoClient ()
+    val client = mongoClient()
     try testCode(client) // loan the client
     finally {
       client.close()
@@ -112,6 +112,13 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with BeforeAndAfterAll
       Await.result(mongoCollection.drop().toFuture(), WAIT_DURATION)
       }
     }
+  }
+
+  lazy val isSharded: Boolean = if (!mongoDBOnline) {
+    false
+  } else {
+    Await.result(mongoClient().getDatabase("admin").runCommand(Document("isMaster" -> 1)).toFuture(), WAIT_DURATION)
+      .getOrElse("msg", BsonString("")).asString().getValue == "isdbgrid"
   }
 
   lazy val buildInfo: Document = {
