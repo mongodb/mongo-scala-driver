@@ -79,6 +79,25 @@ case class ChangeStreamObservable[TResult](private val wrapped: ChangeStreamIter
   }
 
   /**
+   * Sets the logical starting point for the new change stream.
+   *
+   *
+   * This will allow users to watch collections that have been dropped and recreated or newly renamed collections without missing
+   * any notifications.
+   *
+   * @param startAfter the resume token
+   * @return this
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   * @note The server will report an error if both `startAfter` and `resumeAfter` are specified.
+   * @see [[http://docs.mongodb.org/manual/changeStreams/#change-stream-start-after Change stream start after]]
+   */
+  def startAfter(startAfter: Document): ChangeStreamObservable[TResult] = {
+    wrapped.startAfter(startAfter.underlying)
+    this
+  }
+
+  /**
    * Sets the number of documents to return per batch.
    *
    * @param batchSize the batch size

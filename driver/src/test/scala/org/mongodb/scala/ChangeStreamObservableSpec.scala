@@ -52,6 +52,7 @@ class ChangeStreamObservableSpec extends FlatSpec with Matchers with MockFactory
 
     wrapper.expects('fullDocument)(fullDocument).once()
     wrapper.expects('resumeAfter)(resumeToken.underlying).once()
+    wrapper.expects('startAfter)(resumeToken.underlying).once()
     wrapper.expects('startAtOperationTime)(startAtTime).once()
     wrapper.expects('maxAwaitTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
     wrapper.expects('collation)(collation).once()
@@ -59,6 +60,7 @@ class ChangeStreamObservableSpec extends FlatSpec with Matchers with MockFactory
 
     observable.fullDocument(fullDocument)
     observable.resumeAfter(resumeToken)
+    observable.startAfter(resumeToken)
     observable.startAtOperationTime(startAtTime)
     observable.maxAwaitTime(duration)
     observable.collation(collation)
