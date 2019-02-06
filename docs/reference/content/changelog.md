@@ -10,6 +10,11 @@ title = "Changelog"
 
 Changes between released versions
 
+### 2.6.0
+  * Updated MongoDB Driver Async to 3.10.0
+  * Support Skipping in GridFS [SCALA-477](https://jira.mongodb.org/browse/SCALA-477)
+  * Support running commands as aggregation	[SCALA-481](https://jira.mongodb.org/browse/SCALA-481)
+
 ### 2.5.0
   * Updated MongoDB Driver Async to 3.9.0
   * Fixed Filter and Zip observables requesting the correct number of results [SCALA-457](https://jira.mongodb.org/browse/SCALA-457)
