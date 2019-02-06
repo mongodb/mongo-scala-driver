@@ -82,4 +82,11 @@ package object connection {
    * @since 2.2
    */
   type NettyStreamFactoryFactoryBuilder = com.mongodb.connection.netty.NettyStreamFactoryFactory.Builder
+
+  /**
+   * A `StreamFactoryFactory` that supports TLS/SSL.
+   *
+   * @since 2.6
+   */
+  type TlsChannelStreamFactoryFactory = com.mongodb.connection.TlsChannelStreamFactoryFactory
 }
