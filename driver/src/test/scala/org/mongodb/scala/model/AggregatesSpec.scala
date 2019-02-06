@@ -200,6 +200,9 @@ class AggregatesSpec extends FlatSpec with Matchers {
 
   it should "render $out" in {
     toBson(out("authors")) should equal(Document("""{ $out : "authors" }"""))
+    toBson(out("authors", AggregateOutStageOptions().databaseName("foo"))) should equal(
+      Document("""{ $out : {mode: "replaceCollection", to: "authors", db: "foo" } }""")
+    )
   }
 
   it should "render $group" in {
