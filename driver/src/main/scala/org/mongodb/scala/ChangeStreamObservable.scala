@@ -18,7 +18,7 @@ package org.mongodb.scala
 
 import java.util.concurrent.TimeUnit
 
-import com.mongodb.async.client.{ChangeStreamIterable, MongoIterable}
+import com.mongodb.async.client.ChangeStreamIterable
 import org.mongodb.scala.bson.BsonTimestamp
 import org.mongodb.scala.internal.ObservableHelper._
 import org.mongodb.scala.model.Collation

@@ -16,7 +16,6 @@
 
 package org.mongodb.scala
 
-import java.lang
 import java.nio.ByteBuffer
 
 import com.mongodb.async.SingleResultCallback
