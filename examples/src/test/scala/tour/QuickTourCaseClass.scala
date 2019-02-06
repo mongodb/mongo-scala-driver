@@ -24,7 +24,7 @@ import org.mongodb.scala.model.Updates._
 import tour.Helpers._
 
 /**
- * The QuickTour code example see: https://mongodb.github.io/mongo-scala-driver/2.0/getting-started
+ * The QuickTour code example
  */
 object QuickTourCaseClass {
   //scalastyle:off method.length
