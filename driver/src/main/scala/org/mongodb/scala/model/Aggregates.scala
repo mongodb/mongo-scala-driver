@@ -339,21 +339,11 @@ object Aggregates {
   def unwind(fieldName: String, unwindOptions: UnwindOptions): Bson = JAggregates.unwind(fieldName, unwindOptions)
 
   /**
-   * Creates a `\$out` pipeline stage that writes to the collection with the specified name
+   * Creates a `\$out` pipeline stage for the specified filter
    *
    * @param collectionName the collection name
    * @return the `\$out` pipeline stage
    * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/out/  \$out]]
    */
   def out(collectionName: String): Bson = JAggregates.out(collectionName)
-
-  /**
-   * Creates a `\$out` pipeline stage that writes to the collection with the specified name, using the specified options
-   *
-   * @param collectionName the collection name
-   * @param options the options
-   * @return the `\$out` pipeline stage
-   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/out/  \$out]]
-   */
-  def out(collectionName: String, options: AggregateOutStageOptions): Bson = JAggregates.out(collectionName, options)
 }
