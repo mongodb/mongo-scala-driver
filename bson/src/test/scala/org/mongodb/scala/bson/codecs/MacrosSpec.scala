@@ -73,6 +73,11 @@ class MacrosSpec extends FlatSpec with Matchers {
   case class ContainsMapOfMapOfCaseClasses(name: String, friends: Map[String, Map[String, Person]])
   case class ContainsCaseClassWithDefault(name: String, friend: Person = Person("Frank", "Sinatra"))
 
+  case class ContainsSet(name: String, friends: Set[String])
+  case class ContainsVector(name: String, friends: Vector[String])
+  case class ContainsList(name: String, friends: List[String])
+  case class ContainsStream(name: String, friends: Stream[String])
+
   case class CaseClassWithVal(_id: ObjectId, name: String) {
     val id: String = _id.toString
   }
@@ -173,6 +178,10 @@ class MacrosSpec extends FlatSpec with Matchers {
     roundTrip(MapOfStrings("Bob", Map("brother" -> "Tom Jones")), """{name: "Bob", value: {brother: "Tom Jones"}}""", classOf[MapOfStrings])
     roundTrip(MapOfStringAliases("Bob", Map("brother" -> "Tom Jones")), """{name: "Bob", value: {brother: "Tom Jones"}}""", classOf[MapOfStringAliases])
     roundTrip(SeqOfMapOfStrings("Bob", Seq(Map("brother" -> "Tom Jones"))), """{name: "Bob", value: [{brother: "Tom Jones"}]}""", classOf[SeqOfMapOfStrings])
+    roundTrip(ContainsSet("Bob", Set("Tom", "Charlie")), """{name: "Bob", friends: ["Tom","Charlie"]}""", Macros.createCodecProvider(classOf[ContainsSet]))
+    roundTrip(ContainsVector("Bob", Vector("Tom", "Charlie")), """{name: "Bob", friends: ["Tom","Charlie"]}""", Macros.createCodecProvider(classOf[ContainsVector]))
+    roundTrip(ContainsList("Bob", List("Tom", "Charlie")), """{name: "Bob", friends: ["Tom","Charlie"]}""", Macros.createCodecProvider(classOf[ContainsList]))
+    roundTrip(ContainsStream("Bob", Stream("Tom", "Charlie")), """{name: "Bob", friends: ["Tom","Charlie"]}""", Macros.createCodecProvider(classOf[ContainsStream]))
   }
 
   it should "be able to round trip nested case classes" in {

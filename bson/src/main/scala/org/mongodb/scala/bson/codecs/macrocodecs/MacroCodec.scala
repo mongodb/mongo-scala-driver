@@ -194,7 +194,20 @@ trait MacroCodec[T] extends Codec[T] {
       list.append(readValue(reader, decoderContext, typeArgs.head, typeArgs.tail, fieldTypeArgsMap))
     }
     reader.readEndArray()
-    list.toList.asInstanceOf[V]
+    if (classOf[scala.collection.Set[_]].isAssignableFrom(clazz)) {
+      val result = list.toSet
+      if (list.size != result.size) {
+        throw new IllegalStateException(s"can not deserialize [${list.mkString(",")}] as Set")
+      } else {
+        result.asInstanceOf[V]
+      }
+    } else if (classOf[Vector[_]].isAssignableFrom(clazz)) {
+      list.toVector.asInstanceOf[V]
+    } else if (classOf[Stream[_]].isAssignableFrom(clazz)) {
+      list.toStream.asInstanceOf[V]
+    } else {
+      list.toList.asInstanceOf[V]
+    }
   }
 
   protected def readDocument[V](reader: BsonReader, decoderContext: DecoderContext, clazz: Class[V], typeArgs: List[Class[_]],
