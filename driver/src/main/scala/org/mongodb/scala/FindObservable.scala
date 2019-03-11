@@ -200,6 +200,18 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
   }
 
   /**
+   * Sets the number of documents to return per batch.
+   *
+   * [[http://docs.mongodb.org/manual/reference/method/cursor.batchSize/#cursor.batchSize Batch Size]]
+   * @param batchSize the batch size
+   * @return this
+   */
+  def batchSize(batchSize: Int): FindObservable[TResult] = {
+    wrapped.batchSize(batchSize)
+    this
+  }
+
+  /**
    * Sets the collation options
    *
    * @param collation the collation options to use
