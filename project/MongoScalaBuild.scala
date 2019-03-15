@@ -47,7 +47,7 @@ object MongoScalaBuild extends Build {
     scalacOptions in IntegrationTest := scalacOptionsTest
   )
 
-  val scalacOptionsTest: Seq[String] = Seq( "-unchecked", "-deprecation", "-feature", "-Xlint:-missing-interpolator,_")
+  val scalacOptionsTest: Seq[String] = Seq( "-unchecked", "-deprecation", "-feature", "-Xlint:-missing-interpolator,_", "-Xcheckinit")
 
   def scalacOptionsVersion(scalaVersion: String): Seq[String] = {
     Seq( "-unchecked", "-deprecation", "-feature", "-Ywarn-dead-code"
