@@ -307,11 +307,12 @@ private[codecs] object CaseClassCodec {
         import org.bson.codecs.configuration.CodecRegistry
         import org.mongodb.scala.bson.codecs.macrocodecs.MacroCodec
 
-        case class $codecName(codecRegistry: CodecRegistry) extends MacroCodec[$classTypeName] {
+        final case class $codecName(codecRegistry: CodecRegistry) extends {
+          val encoderClass = classOf[$classTypeName]
+        } with MacroCodec[$classTypeName] {
           val caseClassesMap = $caseClassesMap
           val classToCaseClassMap = $classToCaseClassMap
           val classFieldTypeArgsMap = $createClassFieldTypeArgsMap
-          val encoderClass = classOf[$classTypeName]
           def getInstance(className: String, fieldData: Map[String, Any]) = $getInstance
           def writeCaseClassData(className: String, writer: BsonWriter, value: $mainType, encoderContext: EncoderContext) = $writeValue
         }
