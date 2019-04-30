@@ -67,8 +67,8 @@ An overload of the `getCollection` method allows clients to specify a different 
 users my wish their own class with the CRUD API directly. Below we use the `BsonDocument` class from the Scala driver directly:
 
 ```scala
-// Pass BsonDocument.class as the second argument
-val collection: MongoCollection[BsonDocument] = database.getCollection("mycoll", BsonDocument.class)
+// Pass BsonDocument class as the second argument
+val collection: MongoCollection[BsonDocument] = database.getCollection("mycoll", classOf[BsonDocument])
 
 // insert a document
 val document: BsonDocument = new BsonDocument("_id", new BsonInt32(2)).append("x", new BsonInt32(1))
