@@ -34,7 +34,7 @@ This guide uses the `Helper` implicits as covered in the [Quick Tour Primer]({{<
 ## Async Streams
 
 As there are multiple API's for Asynchronous I/O on the JVM the GridFS library uses a flexible interfaces for asynchronous input and output.
-The [`AsyncInputStream`]({{< apiref "org/mongodbs/scala/gridfs/AsyncInputStream" >}}) interface represents an `InputStream`
+The [`AsyncInputStream`]({{< apiref "org/mongodb/scala/gridfs/AsyncInputStream" >}}) interface represents an `InputStream`
 and the [`AsyncOutputStream`]({{< apiref "org/mongodb/scala/gridfs/AsyncOutputStream" >}}) interface represents an `OutputStream`.
 
 In addition to these interfaces there are the following helpers:
