@@ -28,12 +28,12 @@ class BsonValueSpec extends FlatSpec with Matchers {
     BsonArray() should equal(new BsonArray())
 
     val values: List[BsonNumber] = List(BsonInt32(1), BsonInt64(2), new BsonDouble(3.0))
-    val bsonArray = BsonArray(values)
+    val bsonArray = BsonArray.fromIterable(values)
     val expected = new BsonArray(values.asJava)
 
     bsonArray should equal(expected)
 
-    val implicitBsonArray = BsonArray(1, 2L, 3.0)
+    val implicitBsonArray = BsonArray(List(1, 2L, 3.0))
     implicitBsonArray should equal(expected)
   }
 
