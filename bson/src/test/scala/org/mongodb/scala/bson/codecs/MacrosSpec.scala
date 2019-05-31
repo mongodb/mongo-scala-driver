@@ -197,18 +197,18 @@ class MacrosSpec extends FlatSpec with Matchers {
   }
 
   it should "be able to round trip optional values" in {
-    roundTrip(OptionalValue("Bob", None), """{name: "Bob", value: null}""", classOf[OptionalValue])
+    roundTrip(OptionalValue("Bob", None), """{name: "Bob"}""", classOf[OptionalValue])
     roundTrip(OptionalValue("Bob", Some("value")), """{name: "Bob", value: "value"}""", classOf[OptionalValue])
-    roundTrip(OptionalCaseClass("Bob", None), """{name: "Bob", value: null}""", classOf[OptionalCaseClass])
+    roundTrip(OptionalCaseClass("Bob", None), """{name: "Bob"}""", classOf[OptionalCaseClass])
     roundTrip(
       OptionalCaseClass("Bob", Some(Person("Charlie", "Jones"))),
       """{name: "Bob", value: {firstName: "Charlie", lastName: "Jones"}}""", classOf[OptionalCaseClass], classOf[Person]
     )
 
-    roundTrip(OptionalRecursive("Bob", None), """{name: "Bob", value: null}""", classOf[OptionalRecursive])
+    roundTrip(OptionalRecursive("Bob", None), """{name: "Bob"}""", classOf[OptionalRecursive])
     roundTrip(
       OptionalRecursive("Bob", Some(OptionalRecursive("Charlie", None))),
-      """{name: "Bob", value: {name: "Charlie", value: null}}""", classOf[OptionalRecursive]
+      """{name: "Bob", value: {name: "Charlie"}}""", classOf[OptionalRecursive]
     )
   }
 
@@ -276,7 +276,7 @@ class MacrosSpec extends FlatSpec with Matchers {
         Binary(Array[Byte](123)), None),
       """{"documentMap" : { "a" : "b" }, "array" : ["a", "b", "c"], "date" : { "$date" : 123 }, "boolean" : true,
       | "double" : 1.0, "int32" : 10, "int64" : { "$numberLong" : "100" }, "string" : "string",
-      | "binary" : { "binary": { "$binary" : "ew==", "$type" : "00" } }, "none" : null }""".stripMargin,
+      | "binary" : { "binary": { "$binary" : "ew==", "$type" : "00" } } }""".stripMargin,
       classOf[Binary], classOf[AllTheBsonTypes]
     )
   }
@@ -302,7 +302,7 @@ class MacrosSpec extends FlatSpec with Matchers {
     val nodeA = Node("nodeA", None)
     val nodeB = Node("nodeB", Some(nodeA))
 
-    val nodeAJson = """{_t: "Node", name: "nodeA", value: null}"""
+    val nodeAJson = """{_t: "Node", name: "nodeA"}"""
     val nodeBJson = s"""{_t: "Node", name: "nodeB", value: $nodeAJson}"""
 
     roundTrip(nodeA, nodeAJson, classOf[Graph])
