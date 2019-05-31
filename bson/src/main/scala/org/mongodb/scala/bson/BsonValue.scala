@@ -43,7 +43,16 @@ object BsonArray {
    * @param elems the `BsonValues` to become the `BsonArray`
    * @return the BsonArray
    */
+  @deprecated("Use fromIterable instead", "2.6.1")
   def apply(elems: Iterable[BsonValue]): BsonArray = new BsonArray(elems.toList.asJava)
+  
+  /**
+   * Create a BsonArray from the provided values
+   *
+   * @param elems the `BsonValues` to become the `BsonArray`
+   * @return the BsonArray
+   */
+  def fromIterable(elems: Iterable[BsonValue]): BsonArray = new BsonArray(elems.toList.asJava)
 
   /**
    * Creates a BsonArray from the provided values
