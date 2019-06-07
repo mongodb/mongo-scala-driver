@@ -327,6 +327,8 @@ For [`$group`]({{< relref "builders/aggregation.md#group" >}}) operations use th
 [`Accumulators.sum`]({{< apiref "com/mongodb/client/model/Accumulators#sum-java.lang.String-TExpression-" >}}) helper:
 
 ```scala
+import org.mongodb.scala.model.Accumulators._
+
 collection.aggregate(List(group(null, sum("total", "$i")))).printHeadResult()
 ```
 
