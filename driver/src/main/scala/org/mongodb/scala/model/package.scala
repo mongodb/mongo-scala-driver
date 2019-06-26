@@ -82,14 +82,14 @@ package object model {
   /**
    * The options for a \$out aggregation pipeline stage
    *
-   * @since 2.7
+   * @since 2.6
    */
   type AggregateOutStageOptions = com.mongodb.client.model.AggregateOutStageOptions
 
   /**
    * The options for a \$out aggregation pipeline stage
    *
-   * @since 2.7
+   * @since 2.6
    */
   object AggregateOutStageOptions {
     def apply(): AggregateOutStageOptions = new com.mongodb.client.model.AggregateOutStageOptions()
