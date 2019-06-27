@@ -10,6 +10,10 @@ title = "Changelog"
 
 Changes between released versions
 
+### 2.7.0
+  * Updated MongoDB Driver Async to 3.11.0
+  * Updated DEFAULT_CODEC_REGISTRY order, as upstream BsonCodec captures all Bson instances and priority needs to be lower.
+
 ### 2.6.0
   * Updated MongoDB Driver Async to 3.10.0
   * Support Skipping in GridFS [SCALA-477](https://jira.mongodb.org/browse/SCALA-477)

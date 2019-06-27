@@ -22,8 +22,8 @@ import com.mongodb.async.client.MongoClients
 
 package object codecs {
   val DEFAULT_CODEC_REGISTRY: CodecRegistry = fromRegistries(
-    MongoClients.getDefaultCodecRegistry,
-    fromProviders(DocumentCodecProvider(), IterableCodecProvider())
+    fromProviders(DocumentCodecProvider(), IterableCodecProvider()),
+    MongoClients.getDefaultCodecRegistry
   )
 
   /**
