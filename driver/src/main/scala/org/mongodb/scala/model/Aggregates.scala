@@ -17,9 +17,8 @@
 package org.mongodb.scala.model
 
 import scala.collection.JavaConverters._
-
 import com.mongodb.client.model.{Aggregates => JAggregates}
-
+import org.mongodb.scala.MongoNamespace
 import org.mongodb.scala.bson.conversions.Bson
 
 /**
@@ -348,12 +347,45 @@ object Aggregates {
   def out(collectionName: String): Bson = JAggregates.out(collectionName)
 
   /**
-   * Creates a `\$out` pipeline stage that writes to the collection with the specified name, using the specified options
+   * Creates a `\$merge` pipeline stage that merges into the specified collection using the specified options.
    *
-   * @param collectionName the collection name
-   * @param options the options
-   * @return the `\$out` pipeline stage
-   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/out/  \$out]]
+   * @param collectionName the name of the collection to merge into
+   * @return the `\$merge` pipeline stage
+   * @since 2.7
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/merge/]]
    */
-  def out(collectionName: String, options: AggregateOutStageOptions): Bson = JAggregates.out(collectionName, options)
+  def merge(collectionName: String): Bson = JAggregates.merge(collectionName)
+
+  /**
+   * Creates a `\$merge` pipeline stage that merges into the specified collection using the specified options.
+   *
+   * @param collectionName the name of the collection to merge into
+   * @param mergeOptions the mergeOptions
+   * @return the `\$merge` pipeline stage
+   * @since 2.7
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/merge/]]
+   */
+  def merge(collectionName: String, mergeOptions: MergeOptions): Bson = JAggregates.merge(collectionName, mergeOptions.wrapped)
+
+  /**
+   * Creates a `\$merge` pipeline stage that merges into the specified collection using the specified options.
+   *
+   * @param namespace the namespace to merge into
+   * @return the `\$merge` pipeline stage
+   * @since 2.7
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/merge/]]
+   */
+  def merge(namespace: MongoNamespace): Bson = JAggregates.merge(namespace)
+
+  /**
+   * Creates a `\$merge` pipeline stage that merges into the specified collection using the specified options.
+   *
+   * @param namespace the namespace to merge into
+   * @param mergeOptions the mergeOptions
+   * @return the `\$merge` pipeline stage
+   * @since 2.7
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/merge/]]
+   */
+  def merge(namespace: MongoNamespace, mergeOptions: MergeOptions): Bson = JAggregates.merge(namespace, mergeOptions.wrapped)
+
 }

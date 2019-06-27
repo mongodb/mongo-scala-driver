@@ -37,7 +37,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
       "MongoIterable", "Observables", "SingleResultCallback", "GridFSBuckets", "DBRefCodec", "DBRefCodecProvider", "DBRef",
       "DocumentToDBRefTransformer", "ServerSession", "SessionContext", "DBObject", "BSONTimestampCodec", "UnixServerAddress", "Nullable",
       "BasicDBList", "NonNull", "DBObjectCodec", "DBObjectCodecProvider", "BasicDBObject", "BasicDBObjectBuilder",
-      "NonNullApi")
+      "NonNullApi", "AutoEncryptionSettings", "ClientEncryptionSettings")
     val scalaExclusions = Set("package", "internal", "result", "Helpers", "Document", "BulkWriteResult", "ScalaObservable",
       "ScalaWriteConcern", "ObservableImplicits", "Completed", "BoxedObservable", "BoxedObserver", "BoxedSubscription",
       "classTagToClassOf", "ReadConcernLevel", "bsonDocumentToDocument", "bsonDocumentToUntypedDocument", "documentToUntypedDocument",

@@ -19,8 +19,7 @@ package org.mongodb.scala.model
 import java.lang.reflect.Modifier._
 
 import org.bson.BsonDocument
-
-import org.mongodb.scala.MongoClient
+import org.mongodb.scala.{MongoClient, MongoNamespace}
 import org.mongodb.scala.bson.collection.immutable.Document
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model.Accumulators._
@@ -200,8 +199,71 @@ class AggregatesSpec extends FlatSpec with Matchers {
 
   it should "render $out" in {
     toBson(out("authors")) should equal(Document("""{ $out : "authors" }"""))
-    toBson(out("authors", AggregateOutStageOptions().databaseName("foo"))) should equal(
-      Document("""{ $out : {mode: "replaceCollection", to: "authors", db: "foo" } }""")
+  }
+
+  it should "render $merge" in {
+    toBson(merge("authors")) should equal(Document("""{ $merge : {into: "authors" }}"""))
+    toBson(merge(MongoNamespace("db1", "authors"))) should equal(
+      Document("""{ $merge : {into: {db: "db1", coll: "authors" }}}""")
+    )
+
+    toBson(merge("authors", MergeOptions().uniqueIdentifier("ssn"))) should equal(Document("""{ $merge : {into: "authors", on: "ssn" }}"""))
+
+    toBson(merge("authors", MergeOptions().uniqueIdentifier("ssn", "otherId"))) should equal(
+      Document("""{ $merge : {into: "authors", on: ["ssn", "otherId"] }}""")
+    )
+
+    toBson(merge(
+      "authors",
+      MergeOptions().whenMatched(MergeOptions.WhenMatched.REPLACE)
+    )) should equal(
+      Document("""{ $merge : {into: "authors", whenMatched: "replace" }}""")
+    )
+    toBson(merge(
+      "authors",
+      MergeOptions().whenMatched(MergeOptions.WhenMatched.KEEP_EXISTING)
+    )) should equal(
+      Document("""{ $merge : {into: "authors", whenMatched: "keepExisting" }}""")
+    )
+    toBson(merge(
+      "authors",
+      MergeOptions().whenMatched(MergeOptions.WhenMatched.MERGE)
+    )) should equal(
+      Document("""{ $merge : {into: "authors", whenMatched: "merge" }}""")
+    )
+    toBson(merge(
+      "authors",
+      MergeOptions().whenMatched(MergeOptions.WhenMatched.FAIL)
+    )) should equal(
+      Document("""{ $merge : {into: "authors", whenMatched: "fail" }}""")
+    )
+
+    toBson(merge(
+      "authors",
+      MergeOptions().whenNotMatched(MergeOptions.WhenNotMatched.INSERT)
+    )) should equal(
+      Document("""{ $merge : {into: "authors", whenNotMatched: "insert" }}""")
+    )
+    toBson(merge(
+      "authors",
+      MergeOptions().whenNotMatched(MergeOptions.WhenNotMatched.DISCARD)
+    )) should equal(
+      Document("""{ $merge : {into: "authors", whenNotMatched: "discard" }}""")
+    )
+    toBson(merge(
+      "authors",
+      MergeOptions().whenNotMatched(MergeOptions.WhenNotMatched.FAIL)
+    )) should equal(
+      Document("""{ $merge : {into: "authors", whenNotMatched: "fail" }}""")
+    )
+
+    toBson(merge(
+      "authors",
+      MergeOptions().whenMatched(MergeOptions.WhenMatched.PIPELINE)
+        .variables(Variable("y", 2), Variable("z", 3))
+        .whenMatchedPipeline(addFields(Field("x", 1)))
+    )) should equal(
+      Document("""{ $merge : {into: "authors", let: {y: 2, z: 3}, whenMatched: [{$addFields: {x: 1}}]}}""")
     )
   }
 
