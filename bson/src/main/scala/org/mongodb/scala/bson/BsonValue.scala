@@ -45,7 +45,7 @@ object BsonArray {
    */
   @deprecated("Use `fromIterable` instead", "2.7.0")
   def apply(elems: Iterable[BsonValue]): BsonArray = fromIterable(elems)
-  
+
   /**
    * Create a BsonArray from the provided values
    *

@@ -33,7 +33,7 @@ class BsonValueSpec extends FlatSpec with Matchers {
 
     bsonArray should equal(expected)
 
-    val implicitBsonArray = BsonArray(List(1, 2L, 3.0))
+    val implicitBsonArray = BsonArray(1, 2L, 3.0)
     implicitBsonArray should equal(expected)
   }
 
