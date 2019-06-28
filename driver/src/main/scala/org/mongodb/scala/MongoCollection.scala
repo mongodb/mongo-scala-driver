@@ -213,7 +213,9 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
   /**
    * Counts the number of documents in the collection.
    *
-   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   * '''Note:'''
+   * For a fast count of the total documents in a collection see [[estimatedDocumentCount()]]
+   * When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
    *
    * {{{
    * +-------------+--------------------------------+
@@ -236,7 +238,9 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
   /**
    * Counts the number of documents in the collection according to the given options.
    *
-   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   * '''Note:'''
+   * For a fast count of the total documents in a collection see [[estimatedDocumentCount()]]
+   * When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
    *
    * {{{
    * +-------------+--------------------------------+
@@ -260,7 +264,9 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
   /**
    * Counts the number of documents in the collection according to the given options.
    *
-   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   * '''Note:'''
+   * For a fast count of the total documents in a collection see [[estimatedDocumentCount()]]
+   * When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
    *
    * {{{
    * +-------------+--------------------------------+
@@ -285,7 +291,9 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
   /**
    * Counts the number of documents in the collection.
    *
-   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   * '''Note:'''
+   * For a fast count of the total documents in a collection see [[estimatedDocumentCount()]]
+   * When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
    *
    * {{{
    * +-------------+--------------------------------+
@@ -310,7 +318,9 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
   /**
    * Counts the number of documents in the collection according to the given options.
    *
-   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   * '''Note:'''
+   * For a fast count of the total documents in a collection see [[estimatedDocumentCount()]]
+   * When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
    *
    * {{{
    * +-------------+--------------------------------+
@@ -336,7 +346,9 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
   /**
    * Counts the number of documents in the collection according to the given options.
    *
-   * '''Note:''' When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
+   * '''Note:'''
+   * For a fast count of the total documents in a collection see [[estimatedDocumentCount()]]
+   * When migrating from `count()` to `countDocuments()` the following query operators must be replaced:
    *
    * {{{
    * +-------------+--------------------------------+
