@@ -47,8 +47,8 @@ class CrudSpec extends RequiresMongoDBISpec with FuturesSpec {
         val definition = BsonDocument(Source.fromFile(file).getLines.mkString)
         database = Some(client.getDatabase(definition.getString("database_name", BsonString(databaseName)).getValue))
         collection = Some(database.get.getCollection(collectionName))
-        val data = definition.getArray("data").asScala.map(_.asDocument())
-        val tests = definition.getArray("tests").asScala.map(_.asDocument())
+        val data = definition.getArray("data").asScala.map(_.asDocument()).toSeq
+        val tests = definition.getArray("tests").asScala.map(_.asDocument()).toSeq
 
         if (serverAtLeastMinVersion(definition) && serverLessThanMaxVersion(definition)) forEvery(tests) { (test: BsonDocument) =>
           val description = test.getString("description").getValue
@@ -74,7 +74,7 @@ class CrudSpec extends RequiresMongoDBISpec with FuturesSpec {
 
           if (expectedOutcome.containsKey("collection")) {
             val collectionData = expectedOutcome.getDocument("collection")
-            val expectedDocuments = collectionData.getArray("data").asScala.map(_.asDocument())
+            val expectedDocuments = collectionData.getArray("data").asScala.map(_.asDocument()).toSeq
             var coll = collection.get
             if (collectionData.containsKey("name")) {
               coll = database.get.getCollection[BsonDocument](collectionData.getString("name").getValue)
@@ -89,7 +89,7 @@ class CrudSpec extends RequiresMongoDBISpec with FuturesSpec {
 
   def collectionValues(database: MongoDatabase, outcome: BsonDocument): (Seq[BsonDocument], Seq[BsonDocument]) = {
     val collectionData = outcome.getDocument("collection")
-    val expectedDocuments = collectionData.getArray("data").asScala.map(_.asDocument())
+    val expectedDocuments = collectionData.getArray("data").asScala.map(_.asDocument()).toSeq
     val coll = if (collectionData.containsKey("name")) {
       database.getCollection[BsonDocument](collectionData.getString("name").getValue)
     } else {
@@ -171,7 +171,7 @@ class CrudSpec extends RequiresMongoDBISpec with FuturesSpec {
         arrayFilters.append(cur.asDocument)
       }
     }
-    arrayFilters
+    arrayFilters.toSeq
   }
 
   private def toResult(bulkWriteResult: BulkWriteResult, writeModels: Seq[_ <: WriteModel[BsonDocument]],
@@ -202,7 +202,7 @@ class CrudSpec extends RequiresMongoDBISpec with FuturesSpec {
   }
 
   private def doAggregation(arguments: BsonDocument) = {
-    val pipeline = arguments.getArray("pipeline").asScala.map(_.asDocument())
+    val pipeline = arguments.getArray("pipeline").asScala.map(_.asDocument()).toSeq
     val observable = collection.get.aggregate[BsonDocument](pipeline)
     if (arguments.containsKey("collation")) observable.collation(getCollation(arguments.getDocument("collation")))
     BsonArray(observable.futureValue)
@@ -210,7 +210,7 @@ class CrudSpec extends RequiresMongoDBISpec with FuturesSpec {
 
   private def doDatabaseAggregate(arguments: BsonDocument) = {
     assume(!isSharded)
-    val pipeline = arguments.getArray("pipeline").asScala.map(_.asDocument())
+    val pipeline = arguments.getArray("pipeline").asScala.map(_.asDocument()).toSeq
     val observable = database.get.aggregate[BsonDocument](pipeline)
 
     if (arguments.containsKey("allowDiskUse")) observable.allowDiskUse(arguments.getBoolean("allowDiskUse").getValue)
@@ -251,34 +251,36 @@ class CrudSpec extends RequiresMongoDBISpec with FuturesSpec {
   }
 
   private def doBulkWrite(arguments: BsonDocument): BsonDocument = {
-    val writeModels = mutable.ListBuffer[WriteModel[BsonDocument]]()
+    val mutableWriteModels = mutable.ListBuffer[WriteModel[BsonDocument]]()
     for (bsonValue: BsonValue <- arguments.getArray("requests").asScala) {
       val cur: BsonDocument = bsonValue.asDocument
       val name: String = cur.getString("name").getValue
       val requestArguments: BsonDocument = cur.getDocument("arguments")
 
       name match {
-        case "insertOne" => writeModels.append(new InsertOneModel[BsonDocument](requestArguments.getDocument("document")))
-        case "updateOne" => writeModels.append(new UpdateOneModel[BsonDocument](requestArguments.getDocument("filter"),
+        case "insertOne" => mutableWriteModels.append(new InsertOneModel[BsonDocument](requestArguments.getDocument("document")))
+        case "updateOne" => mutableWriteModels.append(new UpdateOneModel[BsonDocument](requestArguments.getDocument("filter"),
           requestArguments.getDocument("update"), getUpdateOptions(requestArguments)))
-        case "updateMany" => writeModels.append(new UpdateManyModel[BsonDocument](requestArguments.getDocument("filter"),
+        case "updateMany" => mutableWriteModels.append(new UpdateManyModel[BsonDocument](requestArguments.getDocument("filter"),
           requestArguments.getDocument("update"), getUpdateOptions(requestArguments)))
-        case "deleteOne" => writeModels.append(new DeleteOneModel[BsonDocument](requestArguments.getDocument("filter"),
+        case "deleteOne" => mutableWriteModels.append(new DeleteOneModel[BsonDocument](requestArguments.getDocument("filter"),
           getDeleteOptions(requestArguments)))
-        case "deleteMany" => writeModels.append(new DeleteManyModel[BsonDocument](requestArguments.getDocument("filter"),
+        case "deleteMany" => mutableWriteModels.append(new DeleteManyModel[BsonDocument](requestArguments.getDocument("filter"),
           getDeleteOptions(requestArguments)))
-        case "replaceOne" => writeModels.append(new ReplaceOneModel[BsonDocument](requestArguments.getDocument("filter"),
+        case "replaceOne" => mutableWriteModels.append(new ReplaceOneModel[BsonDocument](requestArguments.getDocument("filter"),
           requestArguments.getDocument("replacement"), getReplaceOptions(requestArguments)))
         case _ => throw new UnsupportedOperationException(s"Unsupported write request type: $name")
       }
     }
+
+    val writeModels = mutableWriteModels.toSeq
 
     Try( collection.get.bulkWrite(writeModels, new BulkWriteOptions().ordered(arguments.getDocument("options", BsonDocument())
       .getBoolean("ordered", BsonBoolean(true)).getValue)).futureValue) match {
       case Success(bulkWriteResult: BulkWriteResult) =>  toResult(bulkWriteResult, writeModels, Seq[BulkWriteError]())
       case Failure(e: TestFailedException) if e.getCause.isInstanceOf[MongoBulkWriteException] => {
         val exception = e.getCause.asInstanceOf[MongoBulkWriteException]
-        val result: BsonDocument = toResult(exception.getWriteResult, writeModels, exception.getWriteErrors.asScala)
+        val result: BsonDocument = toResult(exception.getWriteResult, writeModels, exception.getWriteErrors.asScala.toSeq)
         result.put("error", BsonBoolean(true))
         result
       }
@@ -360,7 +362,7 @@ class CrudSpec extends RequiresMongoDBISpec with FuturesSpec {
   }
 
   private def doInsertMany(arguments: BsonDocument): BsonValue = {
-    val documents = arguments.getArray("documents").asScala.map(_.asDocument())
+    val documents = arguments.getArray("documents").asScala.map(_.asDocument()).toSeq
     val options = new InsertManyOptions().ordered(arguments.getDocument("options", BsonDocument())
       .getBoolean("ordered", BsonBoolean(true)).getValue)
     Try(collection.get.insertMany(documents, options).futureValue) match {
@@ -372,8 +374,8 @@ class CrudSpec extends RequiresMongoDBISpec with FuturesSpec {
         // Test results are expecting this to look just like bulkWrite error, so translate to InsertOneModel so the result
         // translation code can be reused.
         val exception = e.getCause.asInstanceOf[MongoBulkWriteException]
-        val writeModels = arguments.getArray("documents").asScala.map(doc => new InsertOneModel[BsonDocument](doc.asDocument))
-        val result: BsonDocument = toResult(exception.getWriteResult, writeModels, exception.getWriteErrors.asScala)
+        val writeModels = arguments.getArray("documents").asScala.map(doc => new InsertOneModel[BsonDocument](doc.asDocument)).toSeq
+        val result: BsonDocument = toResult(exception.getWriteResult, writeModels, exception.getWriteErrors.asScala.toSeq)
         result.put("error", BsonBoolean(true))
         result
       }
