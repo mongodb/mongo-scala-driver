@@ -16,7 +16,6 @@
 
 package org.mongodb.scala.bson.codecs.macrocodecs
 
-import scala.collection.MapLike
 import scala.reflect.macros.whitebox
 
 import org.bson.codecs.Codec
@@ -64,7 +63,7 @@ private[codecs] object CaseClassCodec {
     val mainType = weakTypeOf[T]
 
     val stringType = typeOf[String]
-    val mapTypeSymbol = typeOf[MapLike[_, _, _]].typeSymbol
+    val mapTypeSymbol = typeOf[collection.Map[_, _]].typeSymbol
 
     // Names
     val classTypeName = mainType.typeSymbol.name.toTypeName

@@ -68,7 +68,7 @@ object BsonTransformer extends DefaultBsonTransformers {}
 /**
  * Default BsonTransformers for native types.
  */
-trait DefaultBsonTransformers {
+trait DefaultBsonTransformers extends LowPrio {
 
   /**
    * Noop transformer for `BsonValue`s
@@ -162,6 +162,21 @@ trait DefaultBsonTransformers {
   }
 
   /**
+   * Transforms `Option[T]` to `BsonValue`
+   */
+  implicit def transformOption[T](implicit transformer: BsonTransformer[T]): BsonTransformer[Option[T]] = {
+    new BsonTransformer[Option[T]] {
+      def apply(value: Option[T]): BsonValue = value match {
+        case Some(transformable) => transformer(transformable)
+        case None => BsonNull()
+      }
+    }
+  }
+
+}
+
+trait LowPrio {
+  /**
    * Transforms `immutable.Document` to `BsonDocument`
    */
   implicit object TransformImmutableDocument extends BsonTransformer[IDocument] {
@@ -173,18 +188,6 @@ trait DefaultBsonTransformers {
    */
   implicit object TransformMutableDocument extends BsonTransformer[MDocument] {
     def apply(value: MDocument): BsonDocument = value.underlying
-  }
-
-  /**
-   * Transforms `Option[T]` to `BsonValue`
-   */
-  implicit def transformOption[T](implicit transformer: BsonTransformer[T]): BsonTransformer[Option[T]] = {
-    new BsonTransformer[Option[T]] {
-      def apply(value: Option[T]): BsonValue = value match {
-        case Some(transformable) => transformer(transformable)
-        case None => BsonNull()
-      }
-    }
   }
 
   /**

@@ -19,12 +19,12 @@ import sbt._
 
 object Dependencies {
   // Versions
-  val scalaVersions           = Seq("2.11.12", "2.12.8")
-  val scalaCoreVersion        = "2.12.7"
-  val mongodbDriverVersion    = "3.11.0-SNAPSHOT"
+  val scalaVersions           = Seq("2.11.12", "2.12.8", "2.13.0")
+  val scalaCoreVersion        = "2.13.0"
+  val mongodbDriverVersion    = "3.11.0-beta4"
 
-  val scalaTestVersion        = "3.0.1"
-  val scalaMockVersion        = "3.4.1"
+  val scalaTestVersion        = "3.0.8"
+  val scalaMockVersion        = "4.3.0"
   val logbackVersion          = "1.1.3"
   val reflectionsVersion      = "0.9.10"
   val javaxServeletApiVersion = "2.5"
@@ -38,7 +38,7 @@ object Dependencies {
 
   // Test
   val scalaTest         = "org.scalatest" %% "scalatest" % scalaTestVersion % "it,test"
-  val scalaMock         = "org.scalamock" %% "scalamock-scalatest-support" % scalaMockVersion % "test"
+  val scalaMock         = "org.scalamock" %% "scalamock" % scalaMockVersion % "test"
   val logback           = "ch.qos.logback" % "logback-classic" % logbackVersion % "it,test"
   val reflections       = "org.reflections" % "reflections" % reflectionsVersion % "test"
   val javaxServeletApi  = "javax.servlet" % "servlet-api" % javaxServeletApiVersion % "test"

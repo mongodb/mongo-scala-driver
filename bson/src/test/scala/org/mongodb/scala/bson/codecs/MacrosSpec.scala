@@ -46,13 +46,13 @@ class MacrosSpec extends FlatSpec with Matchers {
     /**
      * Custom equals
      *
-     * Because `Array[Byte]` only does equality based on identity we use the implicit `deep` helper to compare the actual values.
+     * Because `Array[Byte]` only does equality based on identity we use toSeq helper to compare the actual values.
      *
      * @param arg the other value
      * @return true if equal else false
      */
     override def equals(arg: Any): Boolean = arg match {
-      case that: Binary => that.binary.deep == binary.deep
+      case that: Binary => that.binary.toSeq == binary.toSeq
       case _ => false
     }
   }
