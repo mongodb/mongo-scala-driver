@@ -114,7 +114,7 @@ class DocumentationChangeStreamExampleSpec extends RequiresMongoDBISpec with Fut
   }
 
   // Implicit functions that execute the Observable and return the results
-  val waitDuration = Duration(5, "seconds")
+  val waitDuration = Duration(60, "seconds")
 
   implicit class ObservableExecutor[T](observable: Observable[T]) {
     def execute(): Seq[T] = Await.result(observable, waitDuration)

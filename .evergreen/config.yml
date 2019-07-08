@@ -257,15 +257,6 @@ functions:
           ${PREPARE_SHELL}
           echo '{"results": [{ "status": "FAIL", "test_file": "Build", "log_raw": "No test-results.json found was created"  } ]}' > ${PROJECT_DIRECTORY}/test-results.json
 
-  "install dependencies":
-    type: test
-    params:
-      working_dir: "src"
-      script: |
-        ${PREPARE_SHELL}
-        file="${PROJECT_DIRECTORY}/.evergreen/install-dependencies.sh"
-        [ -f ${file} ] && sh ${file} || echo "${file} not available, skipping"
-
   "run static checks":
     - command: shell.exec
       type: test
@@ -313,7 +304,7 @@ functions:
           PROJECT_DIRECTORY=${PROJECT_DIRECTORY} NEXUS_USERNAME=${nexus_username} NEXUS_PASSWORD=${nexus_password} SIGNING_PASSWORD=${signing_password} SIGNING_KEY_ID=${signing_key_id} RING_FILE_GPG_BASE64=${ring_file_gpg_base64} .evergreen/publish-snapshots.sh
 
 hosts: &hosts
- - "rhel62-small"
+ - "rhel70-small"
 
 pre:
   - func: "fetch source"
@@ -322,7 +313,6 @@ pre:
   - func: "fix absolute paths"
   - func: "init test-results"
   - func: "make files executable"
-  - func: "install dependencies"
 
 post:
   # Removed, causing timeouts
@@ -401,11 +391,15 @@ axes:
       - id: "2.11"
         display_name: "2.11"
         variables:
-           SCALA_VERSION: "2.11.11"
+           SCALA_VERSION: "2.11.12"
       - id: "2.12"
         display_name: "2.12"
         variables:
-           SCALA_VERSION: "2.12.2"
+           SCALA_VERSION: "2.12.8"
+      - id: "2.13"
+        display_name: "2.13"
+        variables:
+          SCALA_VERSION: "2.13.0"
 
   - id: "streamType"
     display_name: "streamType"

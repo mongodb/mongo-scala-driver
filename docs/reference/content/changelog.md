@@ -12,6 +12,7 @@ Changes between released versions
 
 ### 2.7.0
   * Updated MongoDB Driver Async to 3.11.0
+  * Added support for Scala 2.13 [SCALA-506](https://jira.mongodb.org/browse/SCALA-506)
   * Updated DEFAULT_CODEC_REGISTRY order, as upstream BsonCodec captures all Bson instances and priority needs to be lower.
   * Support $merge pipeline stage in aggregations [SCALA-473](https://jira.mongodb.org/browse/SCALA-473)
   * Deprecated BsonArray.apply(Iterable[BsonValue]) added BsonArray.fromIterable [SCALA-531](https://jira.mongodb.org/browse/SCALA-531)
