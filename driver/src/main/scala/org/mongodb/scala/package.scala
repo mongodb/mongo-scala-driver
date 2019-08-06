@@ -324,6 +324,41 @@ package object scala extends ClientSessionImplicits with ObservableImplicits wit
   type DuplicateKeyException = com.mongodb.DuplicateKeyException
 
   /**
+   * The client-side automatic encryption settings. Client side encryption enables an application to specify what fields in a collection
+   * must be encrypted, and the driver automatically encrypts commands sent to MongoDB and decrypts responses.
+   *
+   * Automatic encryption is an enterprise only feature that only applies to operations on a collection. Automatic encryption is not
+   * supported for operations on a database or view and will result in error. To bypass automatic encryption,
+   * set bypassAutoEncryption=true in `AutoEncryptionSettings`.
+   *
+   * Explicit encryption/decryption and automatic decryption is a community feature, enabled with the new
+   * `com.mongodb.client.vault.ClientEncryption` type.
+   *
+   * A MongoClient configured with bypassAutoEncryption=true will still automatically decrypt.
+   *
+   * If automatic encryption fails on an operation, use a MongoClient configured with bypassAutoEncryption=true and use
+   * ClientEncryption#encrypt to manually encrypt values.
+   *
+   * Enabling client side encryption reduces the maximum document and message size (using a maxBsonObjectSize of 2MiB and
+   * maxMessageSizeBytes of 6MB) and may have a negative performance impact.
+   *
+   * Automatic encryption requires the authenticated user to have the listCollections privilege action.
+   *
+   * @since 2.7
+   */
+  type AutoEncryptionSettings = com.mongodb.AutoEncryptionSettings
+
+  /**
+   * The client-side settings for data key creation and explicit encryption.
+   *
+   * Explicit encryption/decryption is a community feature, enabled with the new `com.mongodb.client.vault.ClientEncryption` type,
+   * for which this is the settings.
+   *
+   * @since 2.7
+   */
+  type ClientEncryptionSettings = com.mongodb.ClientEncryptionSettings
+
+  /**
    * Helper to get the class from a classTag
    *
    * @param ct the classTag we want to implicitly get the class of
