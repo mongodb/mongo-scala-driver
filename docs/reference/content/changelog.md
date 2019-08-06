@@ -15,6 +15,7 @@ Changes between released versions
   * Added support for Scala 2.13 [SCALA-506](https://jira.mongodb.org/browse/SCALA-506)
   * Updated DEFAULT_CODEC_REGISTRY order, as upstream BsonCodec captures all Bson instances and priority needs to be lower.
   * Support $merge pipeline stage in aggregations [SCALA-473](https://jira.mongodb.org/browse/SCALA-473)
+  * Support $replaceWith pipeline stage in aggregations
   * Deprecated BsonArray.apply(Iterable[BsonValue]) added BsonArray.fromIterable [SCALA-531](https://jira.mongodb.org/browse/SCALA-531)
   * Fix `UninitializedFieldError` in MacroCodecs under `-Xcheckinit` [SCALA-542](https://jira.mongodb.org/browse/SCALA-542)
 

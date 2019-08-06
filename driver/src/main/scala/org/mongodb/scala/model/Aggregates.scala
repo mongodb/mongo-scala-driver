@@ -212,6 +212,22 @@ object Aggregates {
   def replaceRoot[TExpression](value: TExpression): Bson = JAggregates.replaceRoot(value)
 
   /**
+   * Creates a $replaceRoot pipeline stage
+   *
+   * With \$replaceWith, you can promote an embedded document to the top-level.
+   * You can also specify a new document as the replacement.
+   *
+   * The \$replaceWith is an alias for [[replaceRoot]].</p>
+   *
+   * @param value the new root value
+   * @tparam TExpression the new root type
+   * @return the \$replaceRoot pipeline stage
+   * @see [[http://docs.mongodb.org/manual/reference/operator/aggregation/replaceWith/ \$replaceWith]]
+   * @since 2.7
+   */
+  def replaceWith[TExpression](value: TExpression): Bson = JAggregates.replaceWith(value)
+
+  /**
    * Creates a `\$sort` pipeline stage for the specified sort specification
    *
    * @param sort the sort specification
