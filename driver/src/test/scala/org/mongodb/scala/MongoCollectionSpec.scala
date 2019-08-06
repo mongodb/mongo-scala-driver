@@ -330,6 +330,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
   it should "wrap the underlying updateOne correctly" in {
     val update = Document("$set" -> Document("a" -> 2))
+    val pipeline = Seq(update)
     val updateOptions = new UpdateOptions().upsert(true)
 
     wrapped.expects('updateOne)(filter, update, *).once()
@@ -337,14 +338,25 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     wrapped.expects('updateOne)(clientSession, filter, update, *).once()
     wrapped.expects('updateOne)(clientSession, filter, update, updateOptions, *).once()
 
+    wrapped.expects('updateOne)(filter, pipeline.asJava, *).once()
+    wrapped.expects('updateOne)(filter, pipeline.asJava, updateOptions, *).once()
+    wrapped.expects('updateOne)(clientSession, filter, pipeline.asJava, *).once()
+    wrapped.expects('updateOne)(clientSession, filter, pipeline.asJava, updateOptions, *).once()
+
     mongoCollection.updateOne(filter, update).subscribe(observer[UpdateResult])
     mongoCollection.updateOne(filter, update, updateOptions).subscribe(observer[UpdateResult])
     mongoCollection.updateOne(clientSession, filter, update).subscribe(observer[UpdateResult])
     mongoCollection.updateOne(clientSession, filter, update, updateOptions).subscribe(observer[UpdateResult])
+
+    mongoCollection.updateOne(filter, pipeline).subscribe(observer[UpdateResult])
+    mongoCollection.updateOne(filter, pipeline, updateOptions).subscribe(observer[UpdateResult])
+    mongoCollection.updateOne(clientSession, filter, pipeline).subscribe(observer[UpdateResult])
+    mongoCollection.updateOne(clientSession, filter, pipeline, updateOptions).subscribe(observer[UpdateResult])
   }
 
   it should "wrap the underlying updateMany correctly" in {
     val update = Document("$set" -> Document("a" -> 2))
+    val pipeline = Seq(update)
     val updateOptions = new UpdateOptions().upsert(true)
 
     wrapped.expects('updateMany)(filter, update, *).once()
@@ -352,10 +364,20 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     wrapped.expects('updateMany)(clientSession, filter, update, *).once()
     wrapped.expects('updateMany)(clientSession, filter, update, updateOptions, *).once()
 
+    wrapped.expects('updateMany)(filter, pipeline.asJava, *).once()
+    wrapped.expects('updateMany)(filter, pipeline.asJava, updateOptions, *).once()
+    wrapped.expects('updateMany)(clientSession, filter, pipeline.asJava, *).once()
+    wrapped.expects('updateMany)(clientSession, filter, pipeline.asJava, updateOptions, *).once()
+
     mongoCollection.updateMany(filter, update).subscribe(observer[UpdateResult])
     mongoCollection.updateMany(filter, update, updateOptions).subscribe(observer[UpdateResult])
     mongoCollection.updateMany(clientSession, filter, update).subscribe(observer[UpdateResult])
     mongoCollection.updateMany(clientSession, filter, update, updateOptions).subscribe(observer[UpdateResult])
+
+    mongoCollection.updateMany(filter, pipeline).subscribe(observer[UpdateResult])
+    mongoCollection.updateMany(filter, pipeline, updateOptions).subscribe(observer[UpdateResult])
+    mongoCollection.updateMany(clientSession, filter, pipeline).subscribe(observer[UpdateResult])
+    mongoCollection.updateMany(clientSession, filter, pipeline, updateOptions).subscribe(observer[UpdateResult])
   }
 
   it should "wrap the underlying findOneAndDelete correctly" in {
@@ -389,6 +411,7 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
 
   it should "wrap the underlying findOneAndUpdate correctly" in {
     val update = Document("a" -> 2)
+    val pipeline = Seq(update)
     val options = new FindOneAndUpdateOptions().sort(Document("sort" -> 1))
 
     wrapped.expects('findOneAndUpdate)(filter, update, *).once()
@@ -396,10 +419,20 @@ class MongoCollectionSpec extends FlatSpec with Matchers with MockFactory {
     wrapped.expects('findOneAndUpdate)(clientSession, filter, update, *).once()
     wrapped.expects('findOneAndUpdate)(clientSession, filter, update, options, *).once()
 
+    wrapped.expects('findOneAndUpdate)(filter, pipeline.asJava, *).once()
+    wrapped.expects('findOneAndUpdate)(filter, pipeline.asJava, options, *).once()
+    wrapped.expects('findOneAndUpdate)(clientSession, filter, pipeline.asJava, *).once()
+    wrapped.expects('findOneAndUpdate)(clientSession, filter, pipeline.asJava, options, *).once()
+
     mongoCollection.findOneAndUpdate(filter, update).subscribe(observer[Document])
     mongoCollection.findOneAndUpdate(filter, update, options).subscribe(observer[Document])
     mongoCollection.findOneAndUpdate(clientSession, filter, update).subscribe(observer[Document])
     mongoCollection.findOneAndUpdate(clientSession, filter, update, options).subscribe(observer[Document])
+
+    mongoCollection.findOneAndUpdate(filter, pipeline).subscribe(observer[Document])
+    mongoCollection.findOneAndUpdate(filter, pipeline, options).subscribe(observer[Document])
+    mongoCollection.findOneAndUpdate(clientSession, filter, pipeline).subscribe(observer[Document])
+    mongoCollection.findOneAndUpdate(clientSession, filter, pipeline, options).subscribe(observer[Document])
   }
 
   it should "wrap the underlying drop correctly" in {

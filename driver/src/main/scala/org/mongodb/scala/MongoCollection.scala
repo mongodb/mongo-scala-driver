@@ -929,6 +929,70 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    * [[http://docs.mongodb.org/manual/reference/operator/update/ Update Operators]]
    * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
    *                registered
+   * @param update  a pipeline describing the update.
+   * @return a Observable with a single element the UpdateResult
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def updateOne(filter: Bson, update: Seq[Bson]): SingleObservable[UpdateResult] =
+    observe(wrapped.updateOne(filter, update.asJava, _: SingleResultCallback[UpdateResult]))
+
+  /**
+   * Update a single document in the collection according to the specified arguments.
+   *
+   * [[http://docs.mongodb.org/manual/tutorial/modify-documents/ Updates]]
+   * [[http://docs.mongodb.org/manual/reference/operator/update/ Update Operators]]
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
+   * @param update  a pipeline describing the update.
+   * @param options the options to apply to the update operation
+   * @return a Observable with a single element the UpdateResult
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def updateOne(filter: Bson, update: Seq[Bson], options: UpdateOptions): SingleObservable[UpdateResult] =
+    observe(wrapped.updateOne(filter, update.asJava, options, _: SingleResultCallback[UpdateResult]))
+
+  /**
+   * Update a single document in the collection according to the specified arguments.
+   *
+   * [[http://docs.mongodb.org/manual/tutorial/modify-documents/ Updates]]
+   * [[http://docs.mongodb.org/manual/reference/operator/update/ Update Operators]]
+   * @param clientSession the client session with which to associate this operation
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
+   * @param update  a pipeline describing the update.
+   * @return a Observable with a single element the UpdateResult
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def updateOne(clientSession: ClientSession, filter: Bson, update: Seq[Bson]): SingleObservable[UpdateResult] =
+    observe(wrapped.updateOne(clientSession, filter, update.asJava, _: SingleResultCallback[UpdateResult]))
+
+  /**
+   * Update a single document in the collection according to the specified arguments.
+   *
+   * [[http://docs.mongodb.org/manual/tutorial/modify-documents/ Updates]]
+   * [[http://docs.mongodb.org/manual/reference/operator/update/ Update Operators]]
+   * @param clientSession the client session with which to associate this operation
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
+   * @param update  a pipeline describing the update.
+   * @param options the options to apply to the update operation
+   * @return a Observable with a single element the UpdateResult
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def updateOne(clientSession: ClientSession, filter: Bson, update: Seq[Bson], options: UpdateOptions): SingleObservable[UpdateResult] =
+    observe(wrapped.updateOne(clientSession, filter, update.asJava, options, _: SingleResultCallback[UpdateResult]))
+
+  /**
+   * Update a single document in the collection according to the specified arguments.
+   *
+   * [[http://docs.mongodb.org/manual/tutorial/modify-documents/ Updates]]
+   * [[http://docs.mongodb.org/manual/reference/operator/update/ Update Operators]]
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
    * @param update  a document describing the update, which may not be null. The update to apply must include only update operators. This
    *                can be of any type for which a `Codec` is registered
    * @return a Observable with a single element the UpdateResult
@@ -985,6 +1049,70 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    */
   def updateMany(clientSession: ClientSession, filter: Bson, update: Bson, options: UpdateOptions): SingleObservable[UpdateResult] =
     observe(wrapped.updateMany(clientSession, filter, update, options, _: SingleResultCallback[UpdateResult]))
+
+  /**
+   * Update a single document in the collection according to the specified arguments.
+   *
+   * [[http://docs.mongodb.org/manual/tutorial/modify-documents/ Updates]]
+   * [[http://docs.mongodb.org/manual/reference/operator/update/ Update Operators]]
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
+   * @param update  a pipeline describing the update.
+   * @return a Observable with a single element the UpdateResult
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def updateMany(filter: Bson, update: Seq[Bson]): SingleObservable[UpdateResult] =
+    observe(wrapped.updateMany(filter, update.asJava, _: SingleResultCallback[UpdateResult]))
+
+  /**
+   * Update a single document in the collection according to the specified arguments.
+   *
+   * [[http://docs.mongodb.org/manual/tutorial/modify-documents/ Updates]]
+   * [[http://docs.mongodb.org/manual/reference/operator/update/ Update Operators]]
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
+   * @param update  a pipeline describing the update.
+   * @param options the options to apply to the update operation
+   * @return a Observable with a single element the UpdateResult
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def updateMany(filter: Bson, update: Seq[Bson], options: UpdateOptions): SingleObservable[UpdateResult] =
+    observe(wrapped.updateMany(filter, update.asJava, options, _: SingleResultCallback[UpdateResult]))
+
+  /**
+   * Update a single document in the collection according to the specified arguments.
+   *
+   * [[http://docs.mongodb.org/manual/tutorial/modify-documents/ Updates]]
+   * [[http://docs.mongodb.org/manual/reference/operator/update/ Update Operators]]
+   * @param clientSession the client session with which to associate this operation
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
+   * @param update  a pipeline describing the update.
+   * @return a Observable with a single element the UpdateResult
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def updateMany(clientSession: ClientSession, filter: Bson, update: Seq[Bson]): SingleObservable[UpdateResult] =
+    observe(wrapped.updateMany(clientSession, filter, update.asJava, _: SingleResultCallback[UpdateResult]))
+
+  /**
+   * Update a single document in the collection according to the specified arguments.
+   *
+   * [[http://docs.mongodb.org/manual/tutorial/modify-documents/ Updates]]
+   * [[http://docs.mongodb.org/manual/reference/operator/update/ Update Operators]]
+   * @param clientSession the client session with which to associate this operation
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
+   * @param update  a pipeline describing the update.
+   * @param options the options to apply to the update operation
+   * @return a Observable with a single element the UpdateResult
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def updateMany(clientSession: ClientSession, filter: Bson, update: Seq[Bson], options: UpdateOptions): SingleObservable[UpdateResult] =
+    observe(wrapped.updateMany(clientSession, filter, update.asJava, options, _: SingleResultCallback[UpdateResult]))
 
   /**
    * Atomically find a document and remove it.
@@ -1152,6 +1280,70 @@ case class MongoCollection[TResult](private val wrapped: JMongoCollection[TResul
    */
   def findOneAndUpdate(clientSession: ClientSession, filter: Bson, update: Bson, options: FindOneAndUpdateOptions): SingleObservable[TResult] =
     observe(wrapped.findOneAndUpdate(clientSession, filter, update, options, _: SingleResultCallback[TResult]))
+
+  /**
+   * Atomically find a document and update it.
+   *
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
+   * @param update  a pipeline describing the update.
+   * @return a Observable with a single element the document that was updated.  Depending on the value of the `returnOriginal`
+   *         property, this will either be the document as it was before the update or as it is after the update.  If no documents matched the
+   *         query filter, then null will be returned
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def findOneAndUpdate(filter: Bson, update: Seq[Bson]): SingleObservable[TResult] =
+    observe(wrapped.findOneAndUpdate(filter, update.asJava, _: SingleResultCallback[TResult]))
+
+  /**
+   * Atomically find a document and update it.
+   *
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
+   * @param update  a pipeline describing the update.
+   * @param options the options to apply to the operation
+   * @return a Observable with a single element the document that was updated.  Depending on the value of the `returnOriginal`
+   *         property, this will either be the document as it was before the update or as it is after the update.  If no documents matched the
+   *         query filter, then null will be returned
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def findOneAndUpdate(filter: Bson, update: Seq[Bson], options: FindOneAndUpdateOptions): SingleObservable[TResult] =
+    observe(wrapped.findOneAndUpdate(filter, update.asJava, options, _: SingleResultCallback[TResult]))
+
+  /**
+   * Atomically find a document and update it.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
+   * @param update  a pipeline describing the update.
+   * @return a Observable with a single element the document that was updated.  Depending on the value of the `returnOriginal`
+   *         property, this will either be the document as it was before the update or as it is after the update.  If no documents matched the
+   *         query filter, then null will be returned
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def findOneAndUpdate(clientSession: ClientSession, filter: Bson, update: Seq[Bson]): SingleObservable[TResult] =
+    observe(wrapped.findOneAndUpdate(clientSession, filter, update.asJava, _: SingleResultCallback[TResult]))
+
+  /**
+   * Atomically find a document and update it.
+   *
+   * @param clientSession the client session with which to associate this operation
+   * @param filter  a document describing the query filter, which may not be null. This can be of any type for which a `Codec` is
+   *                registered
+   * @param update  a pipeline describing the update.
+   * @param options the options to apply to the operation
+   * @return a Observable with a single element the document that was updated.  Depending on the value of the `returnOriginal`
+   *         property, this will either be the document as it was before the update or as it is after the update.  If no documents matched the
+   *         query filter, then null will be returned
+   * @since 2.7
+   * @note Requires MongoDB 4.2 or greater
+   */
+  def findOneAndUpdate(clientSession: ClientSession, filter: Bson, update: Seq[Bson], options: FindOneAndUpdateOptions): SingleObservable[TResult] =
+    observe(wrapped.findOneAndUpdate(clientSession, filter, update.asJava, options, _: SingleResultCallback[TResult]))
 
   /**
    * Drops this collection from the Database.
