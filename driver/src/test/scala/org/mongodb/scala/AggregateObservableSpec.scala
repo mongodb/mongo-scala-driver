@@ -53,6 +53,7 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
     val duration = Duration(1, TimeUnit.SECONDS)
     val collation = Collation.builder().locale("en").build()
     val hint = Document("{hint: 1}")
+    val batchSize = 10
 
     wrapper.expects('allowDiskUse)(true).once()
     wrapper.expects('useCursor)(true).once()
@@ -76,6 +77,12 @@ class AggregateObservableSpec extends FlatSpec with Matchers with MockFactory {
     observable.comment("comment")
     observable.hint(hint)
     observable.toCollection().subscribe(observer[Completed])
+    observable.subscribe(observer[Document])
+
+    wrapper.expects('batchSize)(batchSize).once()
+    wrapper.expects('getBatchSize)().once()
+
+    observable.batchSize(batchSize)
     observable.subscribe(observer[Document])
   }
 }

@@ -45,6 +45,7 @@ class DistinctObservableSpec extends FlatSpec with Matchers with MockFactory {
     val filter = Document("a" -> 1)
     val duration = Duration(1, TimeUnit.SECONDS)
     val collation = Collation.builder().locale("en").build()
+    val batchSize = 10
     val observer = new Observer[Document]() {
       override def onError(throwable: Throwable): Unit = {}
       override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
@@ -63,6 +64,12 @@ class DistinctObservableSpec extends FlatSpec with Matchers with MockFactory {
     observable.filter(filter)
     observable.maxTime(duration)
     observable.collation(collation)
+    observable.subscribe(observer)
+
+    wrapper.expects('batchSize)(batchSize).once()
+    wrapper.expects('getBatchSize)().once()
+
+    observable.batchSize(batchSize)
     observable.subscribe(observer)
   }
 }

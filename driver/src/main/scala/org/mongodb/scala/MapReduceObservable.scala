@@ -228,6 +228,18 @@ case class MapReduceObservable[TResult](wrapped: MapReduceIterable[TResult]) ext
   }
 
   /**
+   * Sets the number of documents to return per batch.
+   *
+   * @param batchSize the batch size
+   * @return this
+   * @since 2.7
+   */
+  def batchSize(batchSize: Int): MapReduceObservable[TResult] = {
+    wrapped.batchSize(batchSize)
+    this
+  }
+
+  /**
    * Aggregates documents to a collection according to the specified map-reduce function with the given options, which must specify a
    * non-inline result.
    *

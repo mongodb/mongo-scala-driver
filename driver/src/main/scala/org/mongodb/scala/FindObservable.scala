@@ -301,6 +301,18 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
   }
 
   /**
+   * Sets the number of documents to return per batch.
+   *
+   * @param batchSize the batch size
+   * @return this
+   * @since 2.7
+   */
+  def batchSize(batchSize: Int): FindObservable[TResult] = {
+    wrapped.batchSize(batchSize)
+    this
+  }
+
+  /**
    * Sets the snapshot.
    *
    * If true it prevents the cursor from returning a document more than once because of an intervening write operation.

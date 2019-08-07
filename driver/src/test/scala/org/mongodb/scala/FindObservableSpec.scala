@@ -51,6 +51,7 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     val projection = Document("proj" -> 1)
     val sort = Document("sort" -> 1)
     val collation = Collation.builder().locale("en").build()
+    val batchSize = 10
 
     val observer = new Observer[Document]() {
       override def onError(throwable: Throwable): Unit = {}
@@ -98,6 +99,12 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     observable.skip(1)
     observable.snapshot(true)
     observable.sort(sort)
+    observable.subscribe(observer)
+
+    wrapper.expects('batchSize)(batchSize).once()
+    wrapper.expects('getBatchSize)().once()
+
+    observable.batchSize(batchSize)
     observable.subscribe(observer)
   }
 }

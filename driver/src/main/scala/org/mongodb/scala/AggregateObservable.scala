@@ -147,6 +147,18 @@ case class AggregateObservable[TResult](private val wrapped: AggregateIterable[T
   }
 
   /**
+   * Sets the number of documents to return per batch.
+   *
+   * @param batchSize the batch size
+   * @return this
+   * @since 2.7
+   */
+  def batchSize(batchSize: Int): AggregateObservable[TResult] = {
+    wrapped.batchSize(batchSize)
+    this
+  }
+
+  /**
    * Aggregates documents according to the specified aggregation pipeline, which must end with a `\$out` stage.
    *
    * [[http://docs.mongodb.org/manual/aggregation/ Aggregation]]

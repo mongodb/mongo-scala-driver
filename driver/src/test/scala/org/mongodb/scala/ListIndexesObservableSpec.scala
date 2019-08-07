@@ -40,8 +40,9 @@ class ListIndexesObservableSpec extends FlatSpec with Matchers with MockFactory 
   it should "call the underlying methods" in {
     val wrapper = mock[ListIndexesIterable[Document]]
     val observable = ListIndexesObservable(wrapper)
-
     val duration = Duration(1, TimeUnit.SECONDS)
+    val batchSize = 10
+
     val observer = new Observer[Document]() {
       override def onError(throwable: Throwable): Unit = {}
       override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
@@ -55,6 +56,12 @@ class ListIndexesObservableSpec extends FlatSpec with Matchers with MockFactory 
     wrapper.expects('batchCursor)(*).once()
 
     observable.maxTime(duration)
+    observable.subscribe(observer)
+
+    wrapper.expects('batchSize)(batchSize).once()
+    wrapper.expects('getBatchSize)().once()
+
+    observable.batchSize(batchSize)
     observable.subscribe(observer)
   }
 }

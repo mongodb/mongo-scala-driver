@@ -49,7 +49,9 @@ class ChangeStreamObservableSpec extends FlatSpec with Matchers with MockFactory
     val fullDocument = FullDocument.DEFAULT
     val startAtTime = BsonTimestamp()
     val collation = Collation.builder().locale("en").build()
+    val batchSize = 10
 
+    wrapper.expects('batchSize)(batchSize).once()
     wrapper.expects('fullDocument)(fullDocument).once()
     wrapper.expects('resumeAfter)(resumeToken.underlying).once()
     wrapper.expects('startAfter)(resumeToken.underlying).once()
@@ -58,6 +60,7 @@ class ChangeStreamObservableSpec extends FlatSpec with Matchers with MockFactory
     wrapper.expects('collation)(collation).once()
     wrapper.expects('withDocumentClass)(classOf[Int]).once()
 
+    observable.batchSize(batchSize)
     observable.fullDocument(fullDocument)
     observable.resumeAfter(resumeToken)
     observable.startAfter(resumeToken)

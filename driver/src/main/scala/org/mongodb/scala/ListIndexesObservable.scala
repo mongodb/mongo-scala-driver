@@ -45,5 +45,17 @@ case class ListIndexesObservable[TResult](wrapped: ListIndexesIterable[TResult])
     this
   }
 
+  /**
+   * Sets the number of documents to return per batch.
+   *
+   * @param batchSize the batch size
+   * @return this
+   * @since 2.7
+   */
+  def batchSize(batchSize: Int): ListIndexesObservable[TResult] = {
+    wrapped.batchSize(batchSize)
+    this
+  }
+
   override def subscribe(observer: Observer[_ >: TResult]): Unit = observe(wrapped).subscribe(observer)
 }

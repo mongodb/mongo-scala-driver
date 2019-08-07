@@ -72,5 +72,17 @@ case class DistinctObservable[TResult](private val wrapped: DistinctIterable[TRe
     this
   }
 
+  /**
+   * Sets the number of documents to return per batch.
+   *
+   * @param batchSize the batch size
+   * @return this
+   * @since 2.7
+   */
+  def batchSize(batchSize: Int): DistinctObservable[TResult] = {
+    wrapped.batchSize(batchSize)
+    this
+  }
+
   override def subscribe(observer: Observer[_ >: TResult]): Unit = observe(wrapped).subscribe(observer)
 }

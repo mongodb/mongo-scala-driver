@@ -41,8 +41,8 @@ class ListDatabasesObservableSpec extends FlatSpec with Matchers with MockFactor
     val wrapper = mock[ListDatabasesIterable[Document]]
     val observable = ListDatabasesObservable(wrapper)
     val filter = Document("{a: 1}")
-
     val duration = Duration(1, TimeUnit.SECONDS)
+    val batchSize = 10
     val observer = new Observer[Document]() {
       override def onError(throwable: Throwable): Unit = {}
       override def onSubscribe(subscription: Subscription): Unit = subscription.request(Long.MaxValue)
@@ -60,6 +60,12 @@ class ListDatabasesObservableSpec extends FlatSpec with Matchers with MockFactor
     observable.maxTime(duration)
     observable.filter(filter)
     observable.nameOnly(true)
+    observable.subscribe(observer)
+
+    wrapper.expects('batchSize)(batchSize).once()
+    wrapper.expects('getBatchSize)().once()
+
+    observable.batchSize(batchSize)
     observable.subscribe(observer)
   }
 }

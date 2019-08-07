@@ -55,6 +55,7 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
     val sort = Document("sort" -> 1)
     val scope = Document("mod" -> 1)
     val collation = Collation.builder().locale("en").build()
+    val batchSize = 10
 
     wrapper.expects('filter)(filter).once()
     wrapper.expects('scope)(scope).once()
@@ -92,6 +93,12 @@ class MapReduceObservableSpec extends FlatSpec with Matchers with MockFactory {
     observable.bypassDocumentValidation(true)
     observable.collation(collation)
     observable.toCollection().subscribe(observer[Completed])
+    observable.subscribe(observer[Document])
+
+    wrapper.expects('batchSize)(batchSize).once()
+    wrapper.expects('getBatchSize)().once()
+
+    observable.batchSize(batchSize)
     observable.subscribe(observer[Document])
   }
 }

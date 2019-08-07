@@ -18,6 +18,7 @@ Changes between released versions
   * Support $replaceWith pipeline stage in aggregations
   * Added the ability to specify a pipeline to an update command [SCALA-513](https://jira.mongodb.org/browse/SCALA-513)
   * Added client side encryption support [SCALA-468](https://jira.mongodb.org/browse/SCALA-468)
+  * Added batchSize support for MongoIterable based Observables [SCALA-552](https://jira.mongodb.org/browse/SCALA-552)
   * Deprecated BsonArray.apply(Iterable[BsonValue]) added BsonArray.fromIterable [SCALA-531](https://jira.mongodb.org/browse/SCALA-531)
   * Fix `UninitializedFieldError` in MacroCodecs under `-Xcheckinit` [SCALA-542](https://jira.mongodb.org/browse/SCALA-542)
 
