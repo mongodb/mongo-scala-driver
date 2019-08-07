@@ -1,4 +1,5 @@
-# See http://about.travis-ci.org/docs/user/build-configuration/
+dist: trusty
+sudo: true
 language: scala
 scala:
   - 2.11.12
