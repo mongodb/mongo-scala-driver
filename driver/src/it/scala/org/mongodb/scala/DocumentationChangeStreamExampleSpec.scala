@@ -114,7 +114,7 @@ class DocumentationChangeStreamExampleSpec extends RequiresMongoDBISpec with Fut
   }
 
   // Implicit functions that execute the Observable and return the results
-  val waitDuration = Duration(60, "seconds")
+  val waitDuration = Duration(120, "seconds")
 
   implicit class ObservableExecutor[T](observable: Observable[T]) {
     def execute(): Seq[T] = Await.result(observable, waitDuration)
@@ -162,7 +162,7 @@ class DocumentationChangeStreamExampleSpec extends RequiresMongoDBISpec with Fut
     def results(): List[T] = resultsBuffer.toList
 
     def await(): Unit = {
-      if (!latch.await(60, SECONDS)) throw new MongoTimeoutException("observable timed out")
+      if (!latch.await(120, SECONDS)) throw new MongoTimeoutException("observable timed out")
       if (error.isDefined) throw error.get
     }
 
