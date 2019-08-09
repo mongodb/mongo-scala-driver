@@ -17,13 +17,17 @@
 package org.mongodb.scala.vault
 
 import com.mongodb.ClientEncryptionSettings
+import com.mongodb.annotations.Beta
 import com.mongodb.async.client.vault.{ClientEncryptions => JClientEncryptions}
 
 /**
  * Factory for ClientEncryption implementations.
  *
+ * @note: support for client-side encryption should be considered as beta.  Backwards-breaking changes may be made before the final
+ * release.
  * @since 2.7
  */
+@Beta
 object ClientEncryptions {
 
   /**
