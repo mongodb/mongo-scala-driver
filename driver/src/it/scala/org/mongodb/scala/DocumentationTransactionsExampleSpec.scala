@@ -52,7 +52,11 @@ class DocumentationTransactionsExampleSpec extends RequiresMongoDBISpec {
       val employeesCollection = database.getCollection("employees")
       val eventsCollection = database.getCollection("events")
 
-      val transactionOptions = TransactionOptions.builder().readConcern(ReadConcern.SNAPSHOT).writeConcern(WriteConcern.MAJORITY).build()
+      val transactionOptions = TransactionOptions.builder()
+        .readPreference(ReadPreference.primary())
+        .readConcern(ReadConcern.SNAPSHOT)
+        .writeConcern(WriteConcern.MAJORITY)
+        .build()
       clientSession.startTransaction(transactionOptions)
       employeesCollection.updateOne(clientSession, Filters.eq("employee", 3), Updates.set("status", "Inactive"))
         .subscribe((res: UpdateResult) => println(res))
