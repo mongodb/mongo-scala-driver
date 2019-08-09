@@ -87,7 +87,7 @@ class MacrosSpec extends FlatSpec with Matchers {
   case class OptionalRecursive(name: String, value: Option[OptionalRecursive])
 
   sealed class Tree
-  case class Branch(b1: Tree, b2: Tree, value: Int) extends Tree
+  case class Branch(@BsonProperty("l1") b1: Tree, @BsonProperty("r1") b2: Tree, value: Int) extends Tree
   case class Leaf(value: Int) extends Tree
 
   case class ContainsADT(name: String, tree: Tree)
@@ -529,7 +529,7 @@ class MacrosSpec extends FlatSpec with Matchers {
   def createTreeJson(tree: Tree): String = {
     tree match {
       case l: Leaf => s"""{_t: "Leaf", value: ${l.value}}"""
-      case b: Branch => s"""{_t: "Branch", b1: ${createTreeJson(b.b1)}, b2: ${createTreeJson(b.b2)}, value: ${b.value}}"""
+      case b: Branch => s"""{_t: "Branch", l1: ${createTreeJson(b.b1)}, r1: ${createTreeJson(b.b2)}, value: ${b.value}}"""
       case _ => "{}"
     }
   }

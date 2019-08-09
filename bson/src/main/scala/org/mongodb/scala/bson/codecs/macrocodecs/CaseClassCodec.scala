@@ -86,11 +86,11 @@ private[codecs] object CaseClassCodec {
     if (isSealed(mainType) && subClasses.isEmpty) {
       c.abort(c.enclosingPosition, s"No known subclasses of the sealed ${if (mainType.typeSymbol.asClass.isTrait) "trait" else "class"}")
     }
-    val knownTypes = (mainType +: subClasses).filterNot(_.typeSymbol.isAbstract).reverse
+    val knownTypes: List[Type] = (mainType +: subClasses).filterNot(_.typeSymbol.isAbstract).reverse
 
-    val terms = {
-      if (!isAbstractSealed(mainType)) {
-        val constructor = mainType.decl(termNames.CONSTRUCTOR)
+    def createTerms(t: Type): List[TermSymbol] = {
+      if (!isAbstractSealed(t)) {
+        val constructor = t.decl(termNames.CONSTRUCTOR)
         if (!constructor.isMethod) c.abort(c.enclosingPosition, "No constructor, unsupported class type")
         constructor.asMethod.paramLists match {
           case h :: _ => h.map(_.asTerm)
@@ -100,6 +100,8 @@ private[codecs] object CaseClassCodec {
         List.empty
       }
     }
+
+    val terms = knownTypes.flatMap(t => createTerms(t))
 
     val fields: Map[Type, List[(TermName, Type)]] = {
       knownTypes.map(
