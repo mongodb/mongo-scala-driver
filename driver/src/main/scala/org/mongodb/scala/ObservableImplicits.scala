@@ -442,7 +442,10 @@ trait ObservableImplicits {
             subscription.request(1)
           }
 
-          override def onError(throwable: Throwable): Unit = completeWith("onError", () => observer.onError(throwable))
+          override def onError(throwable: Throwable): Unit = throwable match {
+            case npe: NullPointerException => onComplete()
+            case _                         => completeWith("onError", () => observer.onError(throwable))
+          }
 
           override def onComplete(): Unit = {
             completeWith("onComplete", { () =>

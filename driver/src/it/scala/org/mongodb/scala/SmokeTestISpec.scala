@@ -49,6 +49,9 @@ class SmokeTestISpec extends RequiresMongoDBISpec with FuturesSpec {
       info("find first should return null if no documents")
       collection.find().first().futureValue shouldBe null // scalastyle:ignore
 
+      info("find should return an empty list")
+      collection.find().futureValue shouldBe empty
+
       info("Insert a document")
       collection.insertOne(document).futureValue should equal(Completed())
 
