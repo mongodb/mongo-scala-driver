@@ -50,16 +50,16 @@ class ListIndexesObservableSpec extends FlatSpec with Matchers with MockFactory 
       override def onNext(doc: Document): Unit = {}
     }
 
-    wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
-    wrapper.expects('getBatchSize)().once()
-    wrapper.expects('batchSize)(Int.MaxValue).once()
-    wrapper.expects('batchCursor)(*).once()
+    wrapper.expects(Symbol("maxTime"))(duration.toMillis, TimeUnit.MILLISECONDS).once()
+    wrapper.expects(Symbol("getBatchSize"))().once()
+    wrapper.expects(Symbol("batchSize"))(Int.MaxValue).once()
+    wrapper.expects(Symbol("batchCursor"))(*).once()
 
     observable.maxTime(duration)
     observable.subscribe(observer)
 
-    wrapper.expects('batchSize)(batchSize).once()
-    wrapper.expects('getBatchSize)().once()
+    wrapper.expects(Symbol("batchSize"))(batchSize).once()
+    wrapper.expects(Symbol("getBatchSize"))().once()
 
     observable.batchSize(batchSize)
     observable.subscribe(observer)

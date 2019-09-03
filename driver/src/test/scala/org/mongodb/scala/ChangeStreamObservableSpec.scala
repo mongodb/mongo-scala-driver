@@ -51,14 +51,14 @@ class ChangeStreamObservableSpec extends FlatSpec with Matchers with MockFactory
     val collation = Collation.builder().locale("en").build()
     val batchSize = 10
 
-    wrapper.expects('batchSize)(batchSize).once()
-    wrapper.expects('fullDocument)(fullDocument).once()
-    wrapper.expects('resumeAfter)(resumeToken.underlying).once()
-    wrapper.expects('startAfter)(resumeToken.underlying).once()
-    wrapper.expects('startAtOperationTime)(startAtTime).once()
-    wrapper.expects('maxAwaitTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
-    wrapper.expects('collation)(collation).once()
-    wrapper.expects('withDocumentClass)(classOf[Int]).once()
+    wrapper.expects(Symbol("batchSize"))(batchSize).once()
+    wrapper.expects(Symbol("fullDocument"))(fullDocument).once()
+    wrapper.expects(Symbol("resumeAfter"))(resumeToken.underlying).once()
+    wrapper.expects(Symbol("startAfter"))(resumeToken.underlying).once()
+    wrapper.expects(Symbol("startAtOperationTime"))(startAtTime).once()
+    wrapper.expects(Symbol("maxAwaitTime"))(duration.toMillis, TimeUnit.MILLISECONDS).once()
+    wrapper.expects(Symbol("collation"))(collation).once()
+    wrapper.expects(Symbol("withDocumentClass"))(classOf[Int]).once()
 
     observable.batchSize(batchSize)
     observable.fullDocument(fullDocument)

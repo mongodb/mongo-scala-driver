@@ -41,11 +41,11 @@ class GridFSDownloadStreamSpec extends FlatSpec with Matchers with MockFactory {
     val dst = ByteBuffer.allocate(2)
     val batchSize = 10
 
-    wrapper.expects('batchSize)(batchSize).once()
-    wrapper.expects('getGridFSFile)(*).once()
-    wrapper.expects('read)(dst, *).once()
-    wrapper.expects('skip)(10L, *).once()
-    wrapper.expects('close)(*).once()
+    wrapper.expects(Symbol("batchSize"))(batchSize).once()
+    wrapper.expects(Symbol("getGridFSFile"))(*).once()
+    wrapper.expects(Symbol("read"))(dst, *).once()
+    wrapper.expects(Symbol("skip"))(10L, *).once()
+    wrapper.expects(Symbol("close"))(*).once()
 
     gridFSDownloadStream.batchSize(batchSize)
     gridFSDownloadStream.gridFSFile().head()

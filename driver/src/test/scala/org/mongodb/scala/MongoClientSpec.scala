@@ -86,35 +86,35 @@ class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "call the underlying getSettings" in {
-    wrapped.expects('getSettings)().once()
+    wrapped.expects(Symbol("getSettings"))().once()
 
     mongoClient.settings
   }
 
   it should "call the underlying getDatabase" in {
-    wrapped.expects('getDatabase)("dbName").once()
+    wrapped.expects(Symbol("getDatabase"))("dbName").once()
 
     mongoClient.getDatabase("dbName")
   }
 
   it should "call the underlying close" in {
-    wrapped.expects('close)().once()
+    wrapped.expects(Symbol("close"))().once()
 
     mongoClient.close()
   }
 
   it should "call the underlying startSession" in {
     val clientSessionOptions = ClientSessionOptions.builder.build()
-    wrapped.expects('startSession)(clientSessionOptions, *).once()
+    wrapped.expects(Symbol("startSession"))(clientSessionOptions, *).once()
 
     mongoClient.startSession(clientSessionOptions).subscribe(observer[ClientSession])
   }
 
   it should "call the underlying listDatabases[T]" in {
-    wrapped.expects('listDatabases)(classOf[Document]).once()
-    wrapped.expects('listDatabases)(clientSession, classOf[Document]).once()
-    wrapped.expects('listDatabases)(classOf[BsonDocument]).once()
-    wrapped.expects('listDatabases)(clientSession, classOf[BsonDocument]).once()
+    wrapped.expects(Symbol("listDatabases"))(classOf[Document]).once()
+    wrapped.expects(Symbol("listDatabases"))(clientSession, classOf[Document]).once()
+    wrapped.expects(Symbol("listDatabases"))(classOf[BsonDocument]).once()
+    wrapped.expects(Symbol("listDatabases"))(clientSession, classOf[BsonDocument]).once()
 
     mongoClient.listDatabases()
     mongoClient.listDatabases(clientSession)
@@ -123,8 +123,8 @@ class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "call the underlying listDatabaseNames" in {
-    wrapped.expects('listDatabaseNames)().once()
-    wrapped.expects('listDatabaseNames)(clientSession).once()
+    wrapped.expects(Symbol("listDatabaseNames"))().once()
+    wrapped.expects(Symbol("listDatabaseNames"))(clientSession).once()
 
     mongoClient.listDatabaseNames()
     mongoClient.listDatabaseNames(clientSession)
@@ -133,11 +133,11 @@ class MongoClientSpec extends FlatSpec with Matchers with MockFactory {
   it should "call the underlying watch" in {
     val pipeline = List(Document("$match" -> 1))
 
-    wrapped.expects('watch)(classOf[Document]).once()
-    wrapped.expects('watch)(pipeline.asJava, classOf[Document]).once()
-    wrapped.expects('watch)(pipeline.asJava, classOf[BsonDocument]).once()
-    wrapped.expects('watch)(clientSession, pipeline.asJava, classOf[Document]).once()
-    wrapped.expects('watch)(clientSession, pipeline.asJava, classOf[BsonDocument]).once()
+    wrapped.expects(Symbol("watch"))(classOf[Document]).once()
+    wrapped.expects(Symbol("watch"))(pipeline.asJava, classOf[Document]).once()
+    wrapped.expects(Symbol("watch"))(pipeline.asJava, classOf[BsonDocument]).once()
+    wrapped.expects(Symbol("watch"))(clientSession, pipeline.asJava, classOf[Document]).once()
+    wrapped.expects(Symbol("watch"))(clientSession, pipeline.asJava, classOf[BsonDocument]).once()
 
     mongoClient.watch() shouldBe a[ChangeStreamObservable[_]]
     mongoClient.watch(pipeline) shouldBe a[ChangeStreamObservable[_]]

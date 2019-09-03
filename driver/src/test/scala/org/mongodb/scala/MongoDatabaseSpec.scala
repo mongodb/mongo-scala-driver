@@ -54,39 +54,39 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "return the underlying getCollection[T]" in {
-    wrapped.expects('getCollection)("collectionName", classOf[Document]).once()
-    wrapped.expects('getCollection)("collectionName", classOf[BsonDocument]).once()
+    wrapped.expects(Symbol("getCollection"))("collectionName", classOf[Document]).once()
+    wrapped.expects(Symbol("getCollection"))("collectionName", classOf[BsonDocument]).once()
 
     mongoDatabase.getCollection("collectionName")
     mongoDatabase.getCollection[BsonDocument]("collectionName")
   }
 
   it should "return the underlying getName" in {
-    wrapped.expects('getName)().once()
+    wrapped.expects(Symbol("getName"))().once()
 
     mongoDatabase.name
   }
 
   it should "return the underlying getCodecRegistry" in {
-    wrapped.expects('getCodecRegistry)().once()
+    wrapped.expects(Symbol("getCodecRegistry"))().once()
 
     mongoDatabase.codecRegistry
   }
 
   it should "return the underlying getReadPreference" in {
-    wrapped.expects('getReadPreference)().once()
+    wrapped.expects(Symbol("getReadPreference"))().once()
 
     mongoDatabase.readPreference
   }
 
   it should "return the underlying getWriteConcern" in {
-    wrapped.expects('getWriteConcern)().once()
+    wrapped.expects(Symbol("getWriteConcern"))().once()
 
     mongoDatabase.writeConcern
   }
 
   it should "return the underlying getReadConcern" in {
-    wrapped.expects('getReadConcern)().once()
+    wrapped.expects(Symbol("getReadConcern"))().once()
 
     mongoDatabase.readConcern
   }
@@ -94,36 +94,36 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   it should "return the underlying withCodecRegistry" in {
     val codecRegistry = fromProviders(new BsonValueCodecProvider())
 
-    wrapped.expects('withCodecRegistry)(codecRegistry).once()
+    wrapped.expects(Symbol("withCodecRegistry"))(codecRegistry).once()
 
     mongoDatabase.withCodecRegistry(codecRegistry)
   }
 
   it should "return the underlying withReadPreference" in {
-    wrapped.expects('withReadPreference)(readPreference).once()
+    wrapped.expects(Symbol("withReadPreference"))(readPreference).once()
 
     mongoDatabase.withReadPreference(readPreference)
   }
 
   it should "return the underlying withWriteConcern" in {
     val writeConcern = WriteConcern.MAJORITY
-    wrapped.expects('withWriteConcern)(writeConcern).once()
+    wrapped.expects(Symbol("withWriteConcern"))(writeConcern).once()
 
     mongoDatabase.withWriteConcern(writeConcern)
   }
 
   it should "return the underlying withReadConcern" in {
     val readConcern = ReadConcern.MAJORITY
-    wrapped.expects('withReadConcern)(readConcern).once()
+    wrapped.expects(Symbol("withReadConcern"))(readConcern).once()
 
     mongoDatabase.withReadConcern(readConcern)
   }
 
   it should "call the underlying runCommand[T] when writing" in {
-    wrapped.expects('runCommand)(command, classOf[Document], *).once()
-    wrapped.expects('runCommand)(command, classOf[BsonDocument], *).once()
-    wrapped.expects('runCommand)(clientSession, command, classOf[Document], *).once()
-    wrapped.expects('runCommand)(clientSession, command, classOf[BsonDocument], *).once()
+    wrapped.expects(Symbol("runCommand"))(command, classOf[Document], *).once()
+    wrapped.expects(Symbol("runCommand"))(command, classOf[BsonDocument], *).once()
+    wrapped.expects(Symbol("runCommand"))(clientSession, command, classOf[Document], *).once()
+    wrapped.expects(Symbol("runCommand"))(clientSession, command, classOf[BsonDocument], *).once()
 
     mongoDatabase.runCommand(command).subscribe(observer[Document])
     mongoDatabase.runCommand[BsonDocument](command).subscribe(observer[BsonDocument])
@@ -132,10 +132,10 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "call the underlying runCommand[T] when reading" in {
-    wrapped.expects('runCommand)(command, readPreference, classOf[Document], *).once()
-    wrapped.expects('runCommand)(command, readPreference, classOf[BsonDocument], *).once()
-    wrapped.expects('runCommand)(clientSession, command, readPreference, classOf[Document], *).once()
-    wrapped.expects('runCommand)(clientSession, command, readPreference, classOf[BsonDocument], *).once()
+    wrapped.expects(Symbol("runCommand"))(command, readPreference, classOf[Document], *).once()
+    wrapped.expects(Symbol("runCommand"))(command, readPreference, classOf[BsonDocument], *).once()
+    wrapped.expects(Symbol("runCommand"))(clientSession, command, readPreference, classOf[Document], *).once()
+    wrapped.expects(Symbol("runCommand"))(clientSession, command, readPreference, classOf[BsonDocument], *).once()
 
     mongoDatabase.runCommand(command, readPreference).subscribe(observer[Document])
     mongoDatabase.runCommand[BsonDocument](command, readPreference).subscribe(observer[BsonDocument])
@@ -144,26 +144,26 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "call the underlying drop()" in {
-    wrapped.expects('drop)(*).once()
-    wrapped.expects('drop)(clientSession, *).once()
+    wrapped.expects(Symbol("drop"))(*).once()
+    wrapped.expects(Symbol("drop"))(clientSession, *).once()
 
     mongoDatabase.drop().subscribe(observer[Completed])
     mongoDatabase.drop(clientSession).subscribe(observer[Completed])
   }
 
   it should "call the underlying listCollectionNames()" in {
-    wrapped.expects('listCollectionNames)().once()
-    wrapped.expects('listCollectionNames)(clientSession).once()
+    wrapped.expects(Symbol("listCollectionNames"))().once()
+    wrapped.expects(Symbol("listCollectionNames"))(clientSession).once()
 
     mongoDatabase.listCollectionNames()
     mongoDatabase.listCollectionNames(clientSession)
   }
 
   it should "call the underlying listCollections()" in {
-    wrapped.expects('listCollections)(*).returns(stub[ListCollectionsIterable[Document]]).once()
-    wrapped.expects('listCollections)(classOf[BsonDocument]).returns(stub[ListCollectionsIterable[BsonDocument]]).once()
-    wrapped.expects('listCollections)(clientSession, *).returns(stub[ListCollectionsIterable[Document]]).once()
-    wrapped.expects('listCollections)(clientSession, classOf[BsonDocument]).returns(stub[ListCollectionsIterable[BsonDocument]]).once()
+    wrapped.expects(Symbol("listCollections"))(*).returns(stub[ListCollectionsIterable[Document]]).once()
+    wrapped.expects(Symbol("listCollections"))(classOf[BsonDocument]).returns(stub[ListCollectionsIterable[BsonDocument]]).once()
+    wrapped.expects(Symbol("listCollections"))(clientSession, *).returns(stub[ListCollectionsIterable[Document]]).once()
+    wrapped.expects(Symbol("listCollections"))(clientSession, classOf[BsonDocument]).returns(stub[ListCollectionsIterable[BsonDocument]]).once()
 
     mongoDatabase.listCollections().subscribe(observer[Document])
     mongoDatabase.listCollections[BsonDocument]().subscribe(observer[BsonDocument])
@@ -179,10 +179,10 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
     ).indexOptionDefaults(IndexOptionDefaults().storageEngine(Document("""{storageEngine: { mmapv1: {}}}""")))
       .storageEngineOptions(Document("""{ wiredTiger: {}}"""))
 
-    wrapped.expects('createCollection)("collectionName", *).once()
-    wrapped.expects('createCollection)("collectionName", options, *).once()
-    wrapped.expects('createCollection)(clientSession, "collectionName", *).once()
-    wrapped.expects('createCollection)(clientSession, "collectionName", options, *).once()
+    wrapped.expects(Symbol("createCollection"))("collectionName", *).once()
+    wrapped.expects(Symbol("createCollection"))("collectionName", options, *).once()
+    wrapped.expects(Symbol("createCollection"))(clientSession, "collectionName", *).once()
+    wrapped.expects(Symbol("createCollection"))(clientSession, "collectionName", options, *).once()
 
     mongoDatabase.createCollection("collectionName").subscribe(observer[Completed])
     mongoDatabase.createCollection("collectionName", options).subscribe(observer[Completed])
@@ -194,10 +194,10 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
     val options = CreateViewOptions().collation(Collation.builder().locale("en").build())
     val pipeline = List.empty[Bson]
 
-    wrapped.expects('createView)("viewName", "collectionName", pipeline.asJava, *).once()
-    wrapped.expects('createView)("viewName", "collectionName", pipeline.asJava, options, *).once()
-    wrapped.expects('createView)(clientSession, "viewName", "collectionName", pipeline.asJava, *).once()
-    wrapped.expects('createView)(clientSession, "viewName", "collectionName", pipeline.asJava, options, *).once()
+    wrapped.expects(Symbol("createView"))("viewName", "collectionName", pipeline.asJava, *).once()
+    wrapped.expects(Symbol("createView"))("viewName", "collectionName", pipeline.asJava, options, *).once()
+    wrapped.expects(Symbol("createView"))(clientSession, "viewName", "collectionName", pipeline.asJava, *).once()
+    wrapped.expects(Symbol("createView"))(clientSession, "viewName", "collectionName", pipeline.asJava, options, *).once()
 
     mongoDatabase.createView("viewName", "collectionName", pipeline).subscribe(observer[Completed])
     mongoDatabase.createView("viewName", "collectionName", pipeline, options).subscribe(observer[Completed])
@@ -208,11 +208,11 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
   it should "call the underlying watch" in {
     val pipeline = List(Document("$match" -> 1))
 
-    wrapped.expects('watch)(classOf[Document]).once()
-    wrapped.expects('watch)(pipeline.asJava, classOf[Document]).once()
-    wrapped.expects('watch)(pipeline.asJava, classOf[BsonDocument]).once()
-    wrapped.expects('watch)(clientSession, pipeline.asJava, classOf[Document]).once()
-    wrapped.expects('watch)(clientSession, pipeline.asJava, classOf[BsonDocument]).once()
+    wrapped.expects(Symbol("watch"))(classOf[Document]).once()
+    wrapped.expects(Symbol("watch"))(pipeline.asJava, classOf[Document]).once()
+    wrapped.expects(Symbol("watch"))(pipeline.asJava, classOf[BsonDocument]).once()
+    wrapped.expects(Symbol("watch"))(clientSession, pipeline.asJava, classOf[Document]).once()
+    wrapped.expects(Symbol("watch"))(clientSession, pipeline.asJava, classOf[BsonDocument]).once()
 
     mongoDatabase.watch() shouldBe a[ChangeStreamObservable[_]]
     mongoDatabase.watch(pipeline) shouldBe a[ChangeStreamObservable[_]]
@@ -223,10 +223,10 @@ class MongoDatabaseSpec extends FlatSpec with Matchers with MockFactory {
 
   it should "call the underlying aggregate" in {
     val pipeline = List(Document("$match" -> 1))
-    wrapped.expects('aggregate)(pipeline.asJava, classOf[Document]).once()
-    wrapped.expects('aggregate)(pipeline.asJava, classOf[BsonDocument]).once()
-    wrapped.expects('aggregate)(clientSession, pipeline.asJava, classOf[Document]).once()
-    wrapped.expects('aggregate)(clientSession, pipeline.asJava, classOf[BsonDocument]).once()
+    wrapped.expects(Symbol("aggregate"))(pipeline.asJava, classOf[Document]).once()
+    wrapped.expects(Symbol("aggregate"))(pipeline.asJava, classOf[BsonDocument]).once()
+    wrapped.expects(Symbol("aggregate"))(clientSession, pipeline.asJava, classOf[Document]).once()
+    wrapped.expects(Symbol("aggregate"))(clientSession, pipeline.asJava, classOf[BsonDocument]).once()
 
     mongoDatabase.aggregate(pipeline) shouldBe a[AggregateObservable[_]]
     mongoDatabase.aggregate[BsonDocument](pipeline) shouldBe a[AggregateObservable[_]]

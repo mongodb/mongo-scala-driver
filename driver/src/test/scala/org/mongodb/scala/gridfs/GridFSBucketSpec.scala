@@ -40,12 +40,12 @@ class GridFSBucketSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "call the underlying methods to get bucket values" in {
-    wrapper.expects('getBucketName)().once()
-    wrapper.expects('getDisableMD5)().returning(false).once()
-    wrapper.expects('getChunkSizeBytes)().returning(1).once()
-    wrapper.expects('getReadConcern)().once()
-    wrapper.expects('getReadPreference)().once()
-    wrapper.expects('getWriteConcern)().once()
+    wrapper.expects(Symbol("getBucketName"))().once()
+    wrapper.expects(Symbol("getDisableMD5"))().returning(false).once()
+    wrapper.expects(Symbol("getChunkSizeBytes"))().returning(1).once()
+    wrapper.expects(Symbol("getReadConcern"))().once()
+    wrapper.expects(Symbol("getReadPreference"))().once()
+    wrapper.expects(Symbol("getWriteConcern"))().once()
 
     gridFSBucket.bucketName
     gridFSBucket.disableMD5
@@ -61,11 +61,11 @@ class GridFSBucketSpec extends FlatSpec with Matchers with MockFactory {
     val readPreference = ReadPreference.secondaryPreferred()
     val writeConcern = WriteConcern.W2
 
-    wrapper.expects('withDisableMD5)(true).once()
-    wrapper.expects('withChunkSizeBytes)(chunkSizeInBytes).once()
-    wrapper.expects('withReadConcern)(readConcern).once()
-    wrapper.expects('withReadPreference)(readPreference).once()
-    wrapper.expects('withWriteConcern)(writeConcern).once()
+    wrapper.expects(Symbol("withDisableMD5"))(true).once()
+    wrapper.expects(Symbol("withChunkSizeBytes"))(chunkSizeInBytes).once()
+    wrapper.expects(Symbol("withReadConcern"))(readConcern).once()
+    wrapper.expects(Symbol("withReadPreference"))(readPreference).once()
+    wrapper.expects(Symbol("withWriteConcern"))(writeConcern).once()
 
     gridFSBucket.withDisableMD5(true)
     gridFSBucket.withChunkSizeBytes(chunkSizeInBytes)
@@ -78,10 +78,10 @@ class GridFSBucketSpec extends FlatSpec with Matchers with MockFactory {
     val objectId = new ObjectId()
     val bsonValue = new BsonObjectId(objectId)
 
-    wrapper.expects('delete)(objectId, *).once()
-    wrapper.expects('delete)(bsonValue, *).once()
-    wrapper.expects('delete)(clientSession, objectId, *).once()
-    wrapper.expects('delete)(clientSession, bsonValue, *).once()
+    wrapper.expects(Symbol("delete"))(objectId, *).once()
+    wrapper.expects(Symbol("delete"))(bsonValue, *).once()
+    wrapper.expects(Symbol("delete"))(clientSession, objectId, *).once()
+    wrapper.expects(Symbol("delete"))(clientSession, bsonValue, *).once()
 
     gridFSBucket.delete(objectId).head()
     gridFSBucket.delete(bsonValue).head()
@@ -90,8 +90,8 @@ class GridFSBucketSpec extends FlatSpec with Matchers with MockFactory {
   }
 
   it should "call the underlying drop method" in {
-    wrapper.expects('drop)(*).once()
-    wrapper.expects('drop)(clientSession, *).once()
+    wrapper.expects(Symbol("drop"))(*).once()
+    wrapper.expects(Symbol("drop"))(clientSession, *).once()
 
     gridFSBucket.drop().head()
     gridFSBucket.drop(clientSession).head()
@@ -102,10 +102,10 @@ class GridFSBucketSpec extends FlatSpec with Matchers with MockFactory {
     val bsonValue = new BsonObjectId(objectId)
     val newName = "newName"
 
-    wrapper.expects('rename)(objectId, newName, *).once()
-    wrapper.expects('rename)(bsonValue, newName, *).once()
-    wrapper.expects('rename)(clientSession, objectId, newName, *).once()
-    wrapper.expects('rename)(clientSession, bsonValue, newName, *).once()
+    wrapper.expects(Symbol("rename"))(objectId, newName, *).once()
+    wrapper.expects(Symbol("rename"))(bsonValue, newName, *).once()
+    wrapper.expects(Symbol("rename"))(clientSession, objectId, newName, *).once()
+    wrapper.expects(Symbol("rename"))(clientSession, bsonValue, newName, *).once()
 
     gridFSBucket.rename(objectId, newName).head()
     gridFSBucket.rename(bsonValue, newName).head()
@@ -116,10 +116,10 @@ class GridFSBucketSpec extends FlatSpec with Matchers with MockFactory {
   it should "return the expected findObservable" in {
     val filter = Document("{a: 1}")
 
-    wrapper.expects('find)().once()
-    wrapper.expects('find)(filter).once()
-    wrapper.expects('find)(clientSession).once()
-    wrapper.expects('find)(clientSession, filter).once()
+    wrapper.expects(Symbol("find"))().once()
+    wrapper.expects(Symbol("find"))(filter).once()
+    wrapper.expects(Symbol("find"))(clientSession).once()
+    wrapper.expects(Symbol("find"))(clientSession, filter).once()
 
     gridFSBucket.find().head()
     gridFSBucket.find(filter).head()
@@ -133,14 +133,14 @@ class GridFSBucketSpec extends FlatSpec with Matchers with MockFactory {
     val objectId = new ObjectId()
     val bsonValue = new BsonObjectId(objectId)
 
-    wrapper.expects('openDownloadStream)(filename)
-    wrapper.expects('openDownloadStream)(filename, options)
-    wrapper.expects('openDownloadStream)(objectId)
-    wrapper.expects('openDownloadStream)(bsonValue)
-    wrapper.expects('openDownloadStream)(clientSession, filename)
-    wrapper.expects('openDownloadStream)(clientSession, filename, options)
-    wrapper.expects('openDownloadStream)(clientSession, objectId)
-    wrapper.expects('openDownloadStream)(clientSession, bsonValue)
+    wrapper.expects(Symbol("openDownloadStream"))(filename)
+    wrapper.expects(Symbol("openDownloadStream"))(filename, options)
+    wrapper.expects(Symbol("openDownloadStream"))(objectId)
+    wrapper.expects(Symbol("openDownloadStream"))(bsonValue)
+    wrapper.expects(Symbol("openDownloadStream"))(clientSession, filename)
+    wrapper.expects(Symbol("openDownloadStream"))(clientSession, filename, options)
+    wrapper.expects(Symbol("openDownloadStream"))(clientSession, objectId)
+    wrapper.expects(Symbol("openDownloadStream"))(clientSession, bsonValue)
 
     gridFSBucket.openDownloadStream(filename)
     gridFSBucket.openDownloadStream(filename, options)
@@ -159,14 +159,14 @@ class GridFSBucketSpec extends FlatSpec with Matchers with MockFactory {
     val bsonValue = new BsonObjectId(objectId)
     val outputStream = mock[AsyncOutputStream]
 
-    wrapper.expects('downloadToStream)(filename, *, *)
-    wrapper.expects('downloadToStream)(filename, *, options, *)
-    wrapper.expects('downloadToStream)(objectId, *, *)
-    wrapper.expects('downloadToStream)(bsonValue, *, *)
-    wrapper.expects('downloadToStream)(clientSession, filename, *, *)
-    wrapper.expects('downloadToStream)(clientSession, filename, *, options, *)
-    wrapper.expects('downloadToStream)(clientSession, objectId, *, *)
-    wrapper.expects('downloadToStream)(clientSession, bsonValue, *, *)
+    wrapper.expects(Symbol("downloadToStream"))(filename, *, *)
+    wrapper.expects(Symbol("downloadToStream"))(filename, *, options, *)
+    wrapper.expects(Symbol("downloadToStream"))(objectId, *, *)
+    wrapper.expects(Symbol("downloadToStream"))(bsonValue, *, *)
+    wrapper.expects(Symbol("downloadToStream"))(clientSession, filename, *, *)
+    wrapper.expects(Symbol("downloadToStream"))(clientSession, filename, *, options, *)
+    wrapper.expects(Symbol("downloadToStream"))(clientSession, objectId, *, *)
+    wrapper.expects(Symbol("downloadToStream"))(clientSession, bsonValue, *, *)
 
     gridFSBucket.downloadToStream(filename, outputStream).head()
     gridFSBucket.downloadToStream(filename, outputStream, options).head()
@@ -183,14 +183,14 @@ class GridFSBucketSpec extends FlatSpec with Matchers with MockFactory {
     val options = new GridFSUploadOptions()
     val bsonValue = new BsonObjectId()
 
-    wrapper.expects('openUploadStream)(filename)
-    wrapper.expects('openUploadStream)(filename, options)
-    wrapper.expects('openUploadStream)(bsonValue, filename)
-    wrapper.expects('openUploadStream)(bsonValue, filename, options)
-    wrapper.expects('openUploadStream)(clientSession, filename)
-    wrapper.expects('openUploadStream)(clientSession, filename, options)
-    wrapper.expects('openUploadStream)(clientSession, bsonValue, filename)
-    wrapper.expects('openUploadStream)(clientSession, bsonValue, filename, options)
+    wrapper.expects(Symbol("openUploadStream"))(filename)
+    wrapper.expects(Symbol("openUploadStream"))(filename, options)
+    wrapper.expects(Symbol("openUploadStream"))(bsonValue, filename)
+    wrapper.expects(Symbol("openUploadStream"))(bsonValue, filename, options)
+    wrapper.expects(Symbol("openUploadStream"))(clientSession, filename)
+    wrapper.expects(Symbol("openUploadStream"))(clientSession, filename, options)
+    wrapper.expects(Symbol("openUploadStream"))(clientSession, bsonValue, filename)
+    wrapper.expects(Symbol("openUploadStream"))(clientSession, bsonValue, filename, options)
 
     gridFSBucket.openUploadStream(filename)
     gridFSBucket.openUploadStream(filename, options)
@@ -208,14 +208,14 @@ class GridFSBucketSpec extends FlatSpec with Matchers with MockFactory {
     val bsonValue = new BsonObjectId()
     val inputStream = mock[AsyncInputStream]
 
-    wrapper.expects('uploadFromStream)(filename, *, *)
-    wrapper.expects('uploadFromStream)(filename, *, options, *)
-    wrapper.expects('uploadFromStream)(bsonValue, filename, *, *)
-    wrapper.expects('uploadFromStream)(bsonValue, filename, *, options, *)
-    wrapper.expects('uploadFromStream)(clientSession, filename, *, *)
-    wrapper.expects('uploadFromStream)(clientSession, filename, *, options, *)
-    wrapper.expects('uploadFromStream)(clientSession, bsonValue, filename, *, *)
-    wrapper.expects('uploadFromStream)(clientSession, bsonValue, filename, *, options, *)
+    wrapper.expects(Symbol("uploadFromStream"))(filename, *, *)
+    wrapper.expects(Symbol("uploadFromStream"))(filename, *, options, *)
+    wrapper.expects(Symbol("uploadFromStream"))(bsonValue, filename, *, *)
+    wrapper.expects(Symbol("uploadFromStream"))(bsonValue, filename, *, options, *)
+    wrapper.expects(Symbol("uploadFromStream"))(clientSession, filename, *, *)
+    wrapper.expects(Symbol("uploadFromStream"))(clientSession, filename, *, options, *)
+    wrapper.expects(Symbol("uploadFromStream"))(clientSession, bsonValue, filename, *, *)
+    wrapper.expects(Symbol("uploadFromStream"))(clientSession, bsonValue, filename, *, options, *)
 
     gridFSBucket.uploadFromStream(filename, inputStream).head()
     gridFSBucket.uploadFromStream(filename, inputStream, options).head()

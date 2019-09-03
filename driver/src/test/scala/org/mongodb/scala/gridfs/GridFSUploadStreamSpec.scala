@@ -40,11 +40,11 @@ class GridFSUploadStreamSpec extends FlatSpec with Matchers with MockFactory {
   it should "call the underlying methods" in {
     val src = ByteBuffer.allocate(2)
 
-    wrapper.expects('getObjectId)().once()
-    wrapper.expects('getId)().once()
-    wrapper.expects('abort)(*).once()
-    wrapper.expects('write)(src, *).once()
-    wrapper.expects('close)(*).once()
+    wrapper.expects(Symbol("getObjectId"))().once()
+    wrapper.expects(Symbol("getId"))().once()
+    wrapper.expects(Symbol("abort"))(*).once()
+    wrapper.expects(Symbol("write"))(src, *).once()
+    wrapper.expects(Symbol("close"))(*).once()
 
     gridFSUploadStream.objectId
     gridFSUploadStream.id

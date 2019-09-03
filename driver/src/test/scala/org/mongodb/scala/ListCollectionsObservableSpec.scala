@@ -51,18 +51,18 @@ class ListCollectionsObservableSpec extends FlatSpec with Matchers with MockFact
       override def onNext(doc: Document): Unit = {}
     }
 
-    wrapper.expects('filter)(filter).once()
-    wrapper.expects('maxTime)(duration.toMillis, TimeUnit.MILLISECONDS).once()
-    wrapper.expects('getBatchSize)().once()
-    wrapper.expects('batchSize)(Int.MaxValue).once()
-    wrapper.expects('batchCursor)(*).once()
+    wrapper.expects(Symbol("filter"))(filter).once()
+    wrapper.expects(Symbol("maxTime"))(duration.toMillis, TimeUnit.MILLISECONDS).once()
+    wrapper.expects(Symbol("getBatchSize"))().once()
+    wrapper.expects(Symbol("batchSize"))(Int.MaxValue).once()
+    wrapper.expects(Symbol("batchCursor"))(*).once()
 
     observable.filter(filter)
     observable.maxTime(duration)
     observable.subscribe(observer)
 
-    wrapper.expects('batchSize)(batchSize).once()
-    wrapper.expects('getBatchSize)().once()
+    wrapper.expects(Symbol("batchSize"))(batchSize).once()
+    wrapper.expects(Symbol("getBatchSize"))().once()
 
     observable.batchSize(batchSize)
     observable.subscribe(observer)

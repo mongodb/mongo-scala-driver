@@ -48,21 +48,21 @@ class ClientEncryptionSpec extends FlatSpec with Matchers with MockFactory {
   it should "call createDataKey" in {
     val kmsProvider = "kmsProvider"
     val options = DataKeyOptions()
-    wrapped.expects('createDataKey)(kmsProvider, options, *).once()
+    wrapped.expects(Symbol("createDataKey"))(kmsProvider, options, *).once()
     clientEncryption.createDataKey(kmsProvider, options).subscribe(observer[BsonBinary])
   }
 
   it should "call encrypt" in {
     val bsonValue = BsonString("")
     val options = EncryptOptions("algorithm")
-    wrapped.expects('encrypt)(bsonValue, options, *).once()
+    wrapped.expects(Symbol("encrypt"))(bsonValue, options, *).once()
 
     clientEncryption.encrypt(bsonValue, options).subscribe(observer[BsonBinary])
   }
 
   it should "call decrypt" in {
     val bsonBinary = BsonBinary(Array[Byte](1, 2, 3))
-    wrapped.expects('decrypt)(bsonBinary, *).once()
+    wrapped.expects(Symbol("decrypt"))(bsonBinary, *).once()
 
     clientEncryption.decrypt(bsonBinary).subscribe(observer[BsonValue])
   }
