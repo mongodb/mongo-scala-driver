@@ -45,7 +45,7 @@ class ValidationLevelSpec extends FlatSpec with Matchers {
 
   it should "handle invalid strings" in {
     forAll(invalidValidationLevels) { (stringValue: String) =>
-      ValidationLevel.fromString(stringValue) should be a 'failure
+      ValidationLevel.fromString(stringValue) should be a Symbol("failure")
     }
   }
 

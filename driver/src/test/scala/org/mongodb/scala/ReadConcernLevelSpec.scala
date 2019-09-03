@@ -45,7 +45,7 @@ class ReadConcernLevelSpec extends FlatSpec with Matchers {
 
   it should "handle invalid strings" in {
     forAll(invalidReadConcernLevels) { (stringValue: String) =>
-      ReadConcernLevel.fromString(stringValue) should be a 'failure
+      ReadConcernLevel.fromString(stringValue) should be a Symbol("failure")
     }
   }
 

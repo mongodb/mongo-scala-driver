@@ -45,7 +45,7 @@ class CollationStrengthSpec extends FlatSpec with Matchers {
 
   it should "handle invalid values" in {
     forAll(invalidCollationStrengths) { (value: Int) =>
-      CollationStrength.fromInt(value) should be a 'failure
+      CollationStrength.fromInt(value) should be a Symbol("failure")
     }
   }
 

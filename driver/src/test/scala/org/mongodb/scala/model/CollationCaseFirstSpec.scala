@@ -45,7 +45,7 @@ class CollationCaseFirstSpec extends FlatSpec with Matchers {
 
   it should "handle invalid values" in {
     forAll(invalidCollationCaseFirsts) { (value: String) =>
-      CollationCaseFirst.fromString(value) should be a 'failure
+      CollationCaseFirst.fromString(value) should be a Symbol("failure")
     }
   }
 

@@ -45,7 +45,7 @@ class CollationAlternateSpec extends FlatSpec with Matchers {
 
   it should "handle invalid values" in {
     forAll(invalidCollationAlternates) { (value: String) =>
-      CollationAlternate.fromString(value) should be a 'failure
+      CollationAlternate.fromString(value) should be a Symbol("failure")
     }
   }
 

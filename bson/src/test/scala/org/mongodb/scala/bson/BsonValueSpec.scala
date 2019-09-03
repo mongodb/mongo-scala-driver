@@ -139,7 +139,7 @@ class BsonValueSpec extends FlatSpec with Matchers {
   }
 
   "BsonSymbol companion" should "create a BsonSymbol" in {
-    BsonSymbol('sym) should equal(new BsonSymbol("sym"))
+    BsonSymbol(Symbol("sym")) should equal(new BsonSymbol("sym"))
   }
 
   "BsonTimestamp companion" should "create a BsonTimestamp" in {

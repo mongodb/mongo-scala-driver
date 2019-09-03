@@ -45,7 +45,7 @@ class ValidationActionSpec extends FlatSpec with Matchers {
 
   it should "handle invalid strings" in {
     forAll(invalidValidationActions) { (stringValue: String) =>
-      ValidationAction.fromString(stringValue) should be a 'failure
+      ValidationAction.fromString(stringValue) should be a Symbol("failure")
     }
   }
 

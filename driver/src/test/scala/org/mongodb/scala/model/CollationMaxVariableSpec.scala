@@ -45,7 +45,7 @@ class CollationMaxVariableSpec extends FlatSpec with Matchers {
 
   it should "handle invalid values" in {
     forAll(invalidCollationMaxVariables) { (value: String) =>
-      CollationMaxVariable.fromString(value) should be a 'failure
+      CollationMaxVariable.fromString(value) should be a Symbol("failure")
     }
   }
 

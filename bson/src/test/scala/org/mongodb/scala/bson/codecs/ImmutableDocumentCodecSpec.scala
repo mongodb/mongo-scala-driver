@@ -46,7 +46,7 @@ class ImmutableDocumentCodecSpec extends FlatSpec with Matchers {
       "objectId" -> new BsonObjectId(new ObjectId()),
       "regEx" -> new BsonRegularExpression("^bson".r.regex),
       "string" -> new BsonString("string"),
-      "symbol" -> new BsonSymbol('bson.name),
+      "symbol" -> new BsonSymbol(Symbol("bson").name),
       "bsonDocument" -> new BsonDocument("a", new BsonString("string")),
       "array" -> new BsonArray(List(new BsonString("string"), new BsonBoolean(false)).asJava)
     )

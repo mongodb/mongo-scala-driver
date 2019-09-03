@@ -45,7 +45,7 @@ class BucketGranularitySpec extends FlatSpec with Matchers {
 
   it should "handle invalid values" in {
     forAll(invalidBucketGranularitys) { (value: String) =>
-      BucketGranularity.fromString(value) should be a 'failure
+      BucketGranularity.fromString(value) should be a Symbol("failure")
     }
   }
 

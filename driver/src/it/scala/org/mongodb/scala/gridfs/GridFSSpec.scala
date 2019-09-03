@@ -131,9 +131,9 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
   private def doDelete(arguments: BsonDocument, assertion: BsonDocument) {
     val result = Try(gridFSBucket.map(_.delete(arguments.getObjectId("id").getValue)).get.futureValue)
     assertion.containsKey("error") match {
-      case true => result should be a 'failure
+      case true => result should be a Symbol("failure")
       case false =>
-        result should be a 'success
+        result should be a Symbol("success")
         for (rawDataItem <- assertion.getArray("data").asScala) {
         val dataItem: BsonDocument = rawDataItem.asDocument
         for (deletedItem <- dataItem.getArray("deletes", new BsonArray).asScala) {
@@ -161,9 +161,9 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
 
     assertion.containsKey("error") match {
       case true =>
-        result should be a 'failure
+        result should be a Symbol("failure")
       case false =>
-        result should be a 'success
+        result should be a Symbol("success")
         DatatypeConverter.printHexBinary(outputStream.toByteArray).toLowerCase should equal(assertion.getDocument("result").getString("$hex").getValue)
     }
   }
@@ -179,9 +179,9 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
 
     assertion.containsKey("error") match {
       case true =>
-        result should be a 'failure
+        result should be a Symbol("failure")
       case false =>
-        result should be a 'success
+        result should be a Symbol("success")
         DatatypeConverter.printHexBinary(outputStream.toByteArray).toLowerCase should equal(assertion.getDocument("result").getString("$hex").getValue)
     }
   }
@@ -207,13 +207,13 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
 
     assertion.containsKey("error") match {
       case true =>
-        result should be a 'failure
+        result should be a Symbol("failure")
         /*
          // We don't need to read anything more so don't see the extra chunk
          if (!assertion.getString("error").getValue == "ExtraChunk") assertNotNull("Should have thrown an exception", error)
          */
       case false =>
-        result should be a 'success
+        result should be a Symbol("success")
         val objectId = result.get
         for (rawDataItem <- assertion.getArray("data", new BsonArray).asScala) {
           val dataItem: BsonDocument = rawDataItem.asDocument
