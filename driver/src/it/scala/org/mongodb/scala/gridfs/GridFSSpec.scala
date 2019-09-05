@@ -116,7 +116,7 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
   }
   // scalastyle:on cyclomatic.complexity
 
-  private def actionGridFS(action: BsonDocument, assertion: BsonDocument) {
+  private def actionGridFS(action: BsonDocument, assertion: BsonDocument): Unit = {
     if (!action.isEmpty) {
       action.getString("operation").getValue match {
         case "delete" => doDelete(action.getDocument("arguments"), assertion)
@@ -128,7 +128,7 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
     }
   }
 
-  private def doDelete(arguments: BsonDocument, assertion: BsonDocument) {
+  private def doDelete(arguments: BsonDocument, assertion: BsonDocument): Unit = {
     val result = Try(gridFSBucket.map(_.delete(arguments.getObjectId("id").getValue)).get.futureValue)
     assertion.containsKey("error") match {
       case true => result should be a Symbol("failure")
@@ -168,7 +168,7 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
     }
   }
 
-  private def doDownloadByName(arguments: BsonDocument, assertion: BsonDocument) {
+  private def doDownloadByName(arguments: BsonDocument, assertion: BsonDocument): Unit = {
     val outputStream: ByteArrayOutputStream = new ByteArrayOutputStream
     val options: GridFSDownloadOptions = new GridFSDownloadOptions()
     Option(arguments.get("options")).map(opts => options.revision(opts.asDocument().getInt32("revision").getValue))
@@ -187,7 +187,7 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
   }
 
   //scalastyle:off method.length
-  private def doUpload(rawArguments: BsonDocument, assertion: BsonDocument) {
+  private def doUpload(rawArguments: BsonDocument, assertion: BsonDocument): Unit = {
 
     val arguments: BsonDocument = parseHexDocument(rawArguments, "source")
 

@@ -60,7 +60,7 @@ case class IterableCodec(registry: CodecRegistry, bsonTypeClassMap: BsonTypeClas
   override def getEncoderClass: Class[Iterable[_]] = classOf[Iterable[_]]
 
   @SuppressWarnings(Array("unchecked", "rawtypes"))
-  private def writeValue[T](writer: BsonWriter, encoderContext: EncoderContext, value: T) {
+  private def writeValue[T](writer: BsonWriter, encoderContext: EncoderContext, value: T): Unit = {
     value match {
       case isNull if value == null => writer.writeNull() // scalastyle:ignore
       case map: Map[_, _] =>
@@ -73,7 +73,7 @@ case class IterableCodec(registry: CodecRegistry, bsonTypeClassMap: BsonTypeClas
     }
   }
 
-  private def writeMap(writer: BsonWriter, map: Map[String, Any], encoderContext: EncoderContext) {
+  private def writeMap(writer: BsonWriter, map: Map[String, Any], encoderContext: EncoderContext): Unit = {
     writer.writeStartDocument()
     map.foreach(kv => {
       writer.writeName(kv._1)
@@ -82,7 +82,7 @@ case class IterableCodec(registry: CodecRegistry, bsonTypeClassMap: BsonTypeClas
     writer.writeEndDocument()
   }
 
-  private def writeIterable(writer: BsonWriter, list: Iterable[_], encoderContext: EncoderContext) {
+  private def writeIterable(writer: BsonWriter, list: Iterable[_], encoderContext: EncoderContext): Unit = {
     writer.writeStartArray()
     list.foreach(value => writeValue(writer, encoderContext, value))
     writer.writeEndArray()
