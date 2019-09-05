@@ -9,7 +9,7 @@
  <check level="error" class="org.scalastyle.file.HeaderMatchesChecker" enabled="true">
   <parameters>
    <parameter name="regex">true</parameter>
-   <parameter name="header">/\*\n \* Copyright \d{4} MongoDB, Inc.</parameter>
+   <parameter name="header">/\*\n \* Copyright 2008-present MongoDB, Inc.</parameter>
   </parameters>
  </check>
  <check level="error" class="org.scalastyle.scalariform.SpacesAfterPlusChecker" enabled="true"></check>
