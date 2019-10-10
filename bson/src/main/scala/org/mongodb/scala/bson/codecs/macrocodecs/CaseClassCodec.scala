@@ -311,7 +311,7 @@ private[codecs] object CaseClassCodec {
       q"""
         import scala.collection.mutable
         import org.bson.{ BsonInvalidOperationException, BsonWriter }
-        import org.bson.codecs.EncoderContext
+        import org.bson.codecs.{ EncoderContext, Codec }
         import org.bson.codecs.configuration.CodecRegistry
         import org.mongodb.scala.bson.codecs.macrocodecs.MacroCodec
 
