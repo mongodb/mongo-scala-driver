@@ -71,18 +71,18 @@ private[codecs] object CaseClassCodec {
 
     // Type checkers
     def isCaseClass(t: Type): Boolean = t.typeSymbol.isClass && t.typeSymbol.asClass.isCaseClass && !t.typeSymbol.isModuleClass
+    def isCaseObject(t: Type): Boolean = t.typeSymbol.isModuleClass && t.typeSymbol.asClass.isCaseClass
     def isMap(t: Type): Boolean = t.baseClasses.contains(mapTypeSymbol)
     def isOption(t: Type): Boolean = t.typeSymbol == definitions.OptionClass
     def isTuple(t: Type): Boolean = definitions.TupleClass.seq.contains(t.typeSymbol)
     def isSealed(t: Type): Boolean = t.typeSymbol.isClass && t.typeSymbol.asClass.isSealed
     def isAbstractSealed(t: Type): Boolean = isSealed(t) && t.typeSymbol.isAbstract
-    def isCaseClassOrSealed(t: Type): Boolean = isCaseClass(t) || isSealed(t)
 
     def allSubclasses(s: Symbol): Set[Symbol] = {
       val directSubClasses = s.asClass.knownDirectSubclasses
       directSubClasses ++ directSubClasses.flatMap({ s: Symbol => allSubclasses(s) })
     }
-    val subClasses: List[Type] = allSubclasses(mainType.typeSymbol).map(_.asClass.toType).filter(isCaseClass).toList
+    val subClasses: List[Type] = allSubclasses(mainType.typeSymbol).map(_.asClass.toType).filter(t => isCaseClass(t) || isCaseObject(t)).toList
     if (isSealed(mainType) && subClasses.isEmpty) {
       c.abort(c.enclosingPosition, s"No known subclasses of the sealed ${if (mainType.typeSymbol.asClass.isTrait) "trait" else "class"}")
     }
@@ -230,7 +230,7 @@ private[codecs] object CaseClassCodec {
       val flattenedFieldTypes = fields.flatMap({ case (t, types) => types.map(f => f._2) :+ t })
       val setClassToCaseClassMap = flattenedFieldTypes.map(t => q"""classToCaseClassMap ++= ${
         flattenTypeArgs(t).map(t =>
-          q"(classOf[${t.finalResultType.erasure}], ${isCaseClassOrSealed(t)})")
+          q"(classOf[${t.finalResultType.erasure}], ${isCaseClass(t) || isCaseObject(t) || isSealed(t)})")
       }""")
 
       q"""
@@ -274,9 +274,13 @@ private[codecs] object CaseClassCodec {
      */
     def writeValue: Tree = {
       val cases: Seq[Tree] = {
-        fields.map(field => cq""" ${keyName(field._1)} =>
-            val instanceValue = value.asInstanceOf[${field._1}]
-            ..${writeClassValues(field._2)}""").toSeq
+        fields.map {
+          case (classType, _) if isCaseObject(classType) => cq""" ${keyName(classType)} =>"""
+          case (classType, fields) =>
+            cq""" ${keyName(classType)} =>
+                  val instanceValue = value.asInstanceOf[${classType}]
+                  ..${writeClassValues(fields)}"""
+        }.toSeq
       }
 
       q"""
@@ -302,7 +306,12 @@ private[codecs] object CaseClassCodec {
 
     def getInstance = {
       val cases = knownTypes.map { st =>
-        cq"${keyName(st)} => new $st(..${fieldSetters(fields(st))})"
+        if (isCaseObject(st)) {
+          val instance = st.typeSymbol.asClass.module
+          cq"${keyName(st)} => $instance"
+        } else {
+          cq"${keyName(st)} => new $st(..${fieldSetters(fields(st))})"
+        }
       } :+ cq"""_ => throw new BsonInvalidOperationException("Unexpected class type: " + className)"""
       q"className match { case ..$cases }"
     }
