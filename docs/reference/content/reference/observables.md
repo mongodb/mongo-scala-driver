@@ -15,7 +15,7 @@ The MongoDB Scala Driver is an asynchronous and non blocking driver. Using the `
 For asynchronous operations there are three interfaces [`Observable`]({{< apiref "org/mongodb/scala/Observable" >}}), [`Subscription`]({{< apiref "org/mongodb/scala/Subscription" >}}) and [`Observer`]({{< apiref "org/mongodb/scala/Observer" >}}).
 
 {{% note %}}
-The interfaces are similar to `Publisher`, `Subscription` and `Subscriber` interfaces from the [reactive streams](http://www.reactive-streams.org/) JVM implementation.  However, we prefer the name `Observerable` to `Publisher` and `Observer` to `Subscriber` for readability purposes.
+The interfaces are similar to `Publisher`, `Subscription` and `Subscriber` interfaces from the [reactive streams](http://www.reactive-streams.org/) JVM implementation.  However, we prefer the name `Observable` to `Publisher` and `Observer` to `Subscriber` for readability purposes.
 {{% /note %}}
 
 ## Observable
