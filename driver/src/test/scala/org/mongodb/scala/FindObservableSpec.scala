@@ -45,6 +45,8 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     val observable = FindObservable(wrapper)
 
     val filter = Document("a" -> 1)
+    val hint = Document("a" -> 1)
+    val hintString = "a_1"
     val duration = Duration(1, TimeUnit.SECONDS)
     val maxDuration = Duration(10, TimeUnit.SECONDS)
     val modifiers = Document("mod" -> 1)
@@ -66,6 +68,8 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     wrapper.expects(Symbol("collation"))(collation).once()
     wrapper.expects(Symbol("cursorType"))(CursorType.NonTailable).once()
     wrapper.expects(Symbol("filter"))(filter).once()
+    wrapper.expects(Symbol("hint"))(hint).once()
+    wrapper.expects(Symbol("hintString"))(hintString).once()
     wrapper.expects(Symbol("getBatchSize"))().once()
     wrapper.expects(Symbol("limit"))(1).once()
     wrapper.expects(Symbol("maxAwaitTime"))(maxDuration.toMillis, TimeUnit.MILLISECONDS).once()
@@ -87,6 +91,8 @@ class FindObservableSpec extends FlatSpec with Matchers with MockFactory {
     observable.collation(collation)
     observable.cursorType(CursorType.NonTailable)
     observable.filter(filter)
+    observable.hint(hint)
+    observable.hintString(hintString)
     observable.limit(1)
     observable.maxAwaitTime(maxDuration)
     observable.maxScan(10L)

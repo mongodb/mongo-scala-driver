@@ -238,6 +238,20 @@ case class FindObservable[TResult](private val wrapped: FindIterable[TResult]) e
   }
 
   /**
+   * Sets the hint to apply.
+   *
+   * Note: If [[hint]] is set that will be used instead of any hint string.
+   *
+   * @param hint the name of the index which should be used for the operation
+   * @return this
+   * @since 2.8
+   */
+  def hintString(hint: String): FindObservable[TResult] = {
+    wrapped.hintString(hint)
+    this
+  }
+
+  /**
    * Sets the exclusive upper bound for a specific index. A null value means no max is set.
    *
    * @param max the max
