@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bsons on MongoDB Scala Driver</title>
+    <link>/mongo-scala-driver/2.8/bson/</link>
+    <description>Recent content in Bsons on MongoDB Scala Driver</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 20 Nov 2016 14:14:00 +0000</lastBuildDate>
+    <atom:link href="/mongo-scala-driver/2.8/bson/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Macros</title>
+      <link>/mongo-scala-driver/2.8/bson/macros/</link>
+      <pubDate>Sun, 20 Nov 2016 14:14:00 +0000</pubDate>
+      
+      <guid>/mongo-scala-driver/2.8/bson/macros/</guid>
+      <description>
+
+&lt;h2 id=&#34;macros&#34;&gt;Macros&lt;/h2&gt;
+
+&lt;p&gt;New in 2.0, the Scala driver allows you to use case classes to represent documents in a collection via the
+&lt;a href=&#34;/mongo-scala-driver/2.8/mongo-scala-driver/2.8/scaladoc/org/mongodb/scala/bson/codecs/Macros$.html
+&#34;&gt;&lt;code&gt;Macros&lt;/code&gt;&lt;/a&gt; helper.  Simple case classes and nested case classes are supported.
+Hierarchical modelling can be achieve by using a sealed trait or class and having case classes implement the parent trait.&lt;/p&gt;
+
+&lt;p&gt;Many simple Scala types are supported and they will be marshaled into their corresponding
+&lt;code&gt;BsonValue&lt;/code&gt; type. Below is a list of Scala types and their type-safe BSON representation:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Scala type&lt;/th&gt;
+&lt;th&gt;BSON type&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;case class&lt;/td&gt;
+&lt;td&gt;Document&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Iterable&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Array&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Date&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Date&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Boolean&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Boolean&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Double&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Double&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Int&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Int32&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Long&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Int64&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;String&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;String&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Array[Byte]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Binary&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;None&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Null&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;creating-codecs&#34;&gt;Creating Codecs&lt;/h2&gt;
+
+&lt;p&gt;To create a codec for your case class use the &lt;code&gt;Macros&lt;/code&gt; object helper methods. Unless there is a good reason you should use the
+&lt;code&gt;Macros.createCodecProvider&lt;/code&gt; method to create a &lt;a href=&#34;http://mongodb.github.io/mongo-java-driver/3.12/javadoc?org/bson/codecs/configuration/CodecProvider.html
+&#34;&gt;&lt;code&gt;CodecProvider&lt;/code&gt;&lt;/a&gt;.
+A &lt;code&gt;CodecProvider&lt;/code&gt; will pass the configured &lt;a href=&#34;http://mongodb.github.io/mongo-java-driver/3.12/javadoc?org/bson/codecs/configuration/CodecRegistry.html
+&#34;&gt;&lt;code&gt;CodecRegistry&lt;/code&gt;&lt;/a&gt; to the
+underlying &lt;a href=&#34;http://mongodb.github.io/mongo-java-driver/3.12/javadoc?org/bson/codecs/configuration/Codec.html
+&#34;&gt;&lt;code&gt;Codec&lt;/code&gt;&lt;/a&gt; and provide access to all the configured codecs.&lt;/p&gt;
+
+&lt;p&gt;To create a &lt;code&gt;CodecProvider&lt;/code&gt; all you need to do is to set the case class type when calling &lt;code&gt;createCodecProvider&lt;/code&gt; like so:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import org.mongodb.scala.bson.codecs.Macros
+
+case class Person(firstName: String, secondName: String)
+
+val personCodecProvider = Macros.createCodecProvider[Person]()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;personCodecProvider&lt;/code&gt; can then be used when converted into a &lt;code&gt;CodecRegistry&lt;/code&gt; by using the &lt;a href=&#34;http://mongodb.github.io/mongo-java-driver/3.12/javadoc?org/bson/codecs/configuration/CodecRegistries.html
+&#34;&gt;&lt;code&gt;CodecRegistries&lt;/code&gt;&lt;/a&gt; static helpers. Below we create a new codec registry combining the new &lt;code&gt;personCodecProvider&lt;/code&gt; and the the default codec registry:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
+import org.bson.codecs.configuration.CodecRegistries.{fromRegistries, fromProviders}
+
+val codecRegistry = fromRegistries( fromProviders(personCodecProvider), DEFAULT_CODEC_REGISTRY )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;Macros&lt;/code&gt; helper also has an implicit &lt;code&gt;createCodecProvider&lt;/code&gt; method that takes the &lt;code&gt;Class[T]&lt;/code&gt; and will create a &lt;code&gt;CodecProvider&lt;/code&gt; from that.
+As you can see in the example below it&amp;rsquo;s much more concise especially when defining multiple providers:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import org.mongodb.scala.bson.codecs.Macros._
+import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
+import org.bson.codecs.configuration.CodecRegistries.{fromRegistries, fromProviders}
+
+case class Address(firstLine: String, secondLine: String, thirdLine: String, town: String, zipCode: String)
+case class ClubMember(person: Person, address: Address, paid: Boolean)
+
+val codecRegistry = fromRegistries( fromProviders(classOf[ClubMember], classOf[Person], classOf[Address]), DEFAULT_CODEC_REGISTRY )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;sealed-classes-and-adts&#34;&gt;Sealed classes and ADTs&lt;/h2&gt;
+
+&lt;p&gt;Hierarchical class structures are supported via sealed traits and classes. Each subclass is handled specifically by the generated codec, so you only
+need create a &lt;code&gt;CodecProvider&lt;/code&gt; for the parent sealed trait/class. Internally an extra field (&lt;code&gt;_t&lt;/code&gt;) is stored alongside the data so that
+the correct subclass can be hydrated when decoding the data.  Below is an example of a tree like structure containing branch and leaf nodes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;sealed class Tree
+case class Branch(b1: Tree, b2: Tree, value: Int) extends Tree
+case class Leaf(value: Int) extends Tree
+
+val codecRegistry = fromRegistries( fromProviders(classOf[Tree]), DEFAULT_CODEC_REGISTRY )
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;options-and-none-values&#34;&gt;Options and None values.&lt;/h2&gt;
+
+&lt;p&gt;By default &lt;code&gt;Option&lt;/code&gt; values are always stored. In 2.1.0 a new macro helpers were added so that &lt;code&gt;None&lt;/code&gt; values would not be stored in the
+database. In the following example only if an address is present will it be stored in the database:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import org.mongodb.scala.bson.codecs.Macros
+
+case class Person(firstName: String, secondName: String, address: Option[Address])
+
+val personCodecProvider = Macros.createCodecProviderIgnoreNone[Person]()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;alternative-field-names&#34;&gt;Alternative field names&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&#34;/mongo-scala-driver/2.8/mongo-scala-driver/2.8/scaladoc/org/mongodb/scala/bson/annotations$$BsonProperty.html
+&#34;&gt;&lt;code&gt;BsonProperty&lt;/code&gt;&lt;/a&gt; annotation can be used to configure a the bson
+field key to be used for a given property. In the following example uses the &lt;code&gt;BsonProperty&lt;/code&gt; annotation to change how the &lt;code&gt;firstName&lt;/code&gt;
+property is stored:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;
+case class Person(@BsonProperty(&amp;quot;first_name&amp;quot;) firstName: String, secondName: String)
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Documents</title>
+      <link>/mongo-scala-driver/2.8/bson/documents/</link>
+      <pubDate>Thu, 19 Mar 2015 14:27:51 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/2.8/bson/documents/</guid>
+      <description>
+
+&lt;h2 id=&#34;documents&#34;&gt;Documents&lt;/h2&gt;
+
+&lt;p&gt;The scala driver includes two scala specific representations for BSON documents. Following convention from the scala collections library,
+there are immutable and mutable implementations of documents. The underlying implementations of the scala Document use the type safe
+&lt;a href=&#34;http://mongodb.github.io/mongo-java-driver/3.12/javadoc?org/bson/BsonDocument.html
+&#34;&gt;&lt;code&gt;BsonDocument&lt;/code&gt;&lt;/a&gt; class. The scala bson classes are available from the &lt;code&gt;org.mongodb.scala.bson&lt;/code&gt;
+namespace, which includes type aliases and companion objects.  In general this should suffice but for advanced use cases you may need to
+use &lt;code&gt;org.bson&lt;/code&gt; directly.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;The scala &lt;code&gt;Document&lt;/code&gt; classes implement &lt;code&gt;TraversableLike[(String, BsonValue)]&lt;/code&gt; and the general API mirrors that of a &lt;code&gt;Map[String, BsonValue]&lt;/code&gt;.
+However, unlike &lt;code&gt;Map&lt;/code&gt; implementations of &lt;code&gt;TraversableLike&lt;/code&gt; enables strict type safety as there is no variance in the value type.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;/mongo-scala-driver/2.8/mongo-scala-driver/2.8/scaladoc/org/mongodb/scala/bson/index.html
+&#34;&gt;&lt;code&gt;BsonValue&lt;/code&gt;&lt;/a&gt; is the type safe representation of a Bson type from the &lt;code&gt;org.bson&lt;/code&gt; library, it represents specific value types. The most commonly used value types are:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;BSON type&lt;/th&gt;
+&lt;th&gt;Scala type&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Document&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;org.mongodb.scala.bson.Document&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Array&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;List&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Date&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Date&lt;/code&gt; or &lt;code&gt;int&lt;/code&gt; (ms since epoch)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Boolean&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Boolean&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Double&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Double&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Int32&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Integer&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Int64&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Long&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;String&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;String&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Binary&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Array[Byte]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;ObjectId&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ObjectId&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Null&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;None&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;It is actually possible to change or extend these mappings, this will be covered in detail below.&lt;/p&gt;
+
+&lt;p&gt;There are two main &lt;code&gt;Document&lt;/code&gt; classes:&lt;/p&gt;
+
+&lt;h2 id=&#34;immutable-documents&#34;&gt;Immutable Documents&lt;/h2&gt;
+
+&lt;p&gt;Like the Scala collections library the immutable class is the favoured class.  For convenience it is aliased to &lt;code&gt;org.mongodb.scala.Document&lt;/code&gt;
+and &lt;code&gt;org.mongodb.scala.bson.Document&lt;/code&gt; as well as being available from &lt;code&gt;org.mongodb.scala.bson.collection.immutable.Document&lt;/code&gt;. Instances of
+this type are guaranteed to be immutable for everyone. Such a collection will never change after it is created. Therefore, you can rely on
+the fact that accessing the same collection value repeatedly at different points in time will always yield a collection with the same elements.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import org.mongodb.scala.bson._
+
+val doc1 = Document(&amp;quot;AL&amp;quot; -&amp;gt; BsonString(&amp;quot;Alabama&amp;quot;))
+val doc2 = doc1 + (&amp;quot;AK&amp;quot; -&amp;gt; BsonString(&amp;quot;Alaska&amp;quot;))
+val doc3 = doc2 ++ Document(&amp;quot;AR&amp;quot; -&amp;gt; BsonString(&amp;quot;Arkansas&amp;quot;), &amp;quot;AZ&amp;quot; -&amp;gt; BsonString(&amp;quot;Arizona&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;mutable-documents&#34;&gt;Mutable Documents&lt;/h2&gt;
+
+&lt;p&gt;To get the mutable &lt;code&gt;Document&lt;/code&gt; version, you need to import it explicitly from &lt;code&gt;org.mongodb.scala.collections.mutable.Document&lt;/code&gt;.  The mutable
+&lt;code&gt;Document&lt;/code&gt; can be updated or extended in place. This means you can change, add, or remove elements of the &lt;code&gt;Document&lt;/code&gt; as a side effect. Like
+scala collections, when dealing with mutable types you need to understand which code changes which collection and when.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import org.mongodb.scala.bson._
+import org.mongodb.scala.bson.collection.mutable.Document
+
+val doc = Document(&amp;quot;AL&amp;quot; -&amp;gt; BsonString(&amp;quot;Alabama&amp;quot;))
+val doc1 = doc + (&amp;quot;AK&amp;quot; -&amp;gt; BsonString(&amp;quot;Alaska&amp;quot;))   // doc not mutated but new doc created
+doc1 ++= Document(&amp;quot;AR&amp;quot; -&amp;gt; BsonString(&amp;quot;Arkansas&amp;quot;), 
+                  &amp;quot;AZ&amp;quot; -&amp;gt; BsonString(&amp;quot;Arizona&amp;quot;))  // doc1 mutated as ++= changes in place. 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;implicit-conversions&#34;&gt;Implicit conversions&lt;/h2&gt;
+
+&lt;p&gt;For many of the &lt;code&gt;BsonValue&lt;/code&gt; types there are obvious direct mappings from a Scala type. For example, a &lt;code&gt;String&lt;/code&gt; maps to &lt;code&gt;BsonString&lt;/code&gt;, an &lt;code&gt;Int&lt;/code&gt;
+maps to &lt;code&gt;BsonInt32&lt;/code&gt; and a &lt;code&gt;Long&lt;/code&gt; maps to a &lt;code&gt;BsonInt64&lt;/code&gt;.  For convenience these types can be used directly with &lt;code&gt;Documents&lt;/code&gt; and they are
+converted by the contract traits in the &lt;a href=&#34;/mongo-scala-driver/2.8/mongo-scala-driver/2.8/scaladoc/org/mongodb/scala/bson/BsonMagnets$.html
+&#34;&gt;&lt;code&gt;BsonMagnets&lt;/code&gt;&lt;/a&gt; object. As long as there is
+an implicit &lt;a href=&#34;/mongo-scala-driver/2.8/mongo-scala-driver/2.8/scaladoc/org/mongodb/scala/bson/BsonTransformer.html
+&#34;&gt;&lt;code&gt;BsonTransformer&lt;/code&gt;&lt;/a&gt; in scope for any given type, then that type can be
+converted into a &lt;code&gt;BsonValue&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The following &lt;code&gt;BsonTransformers&lt;/code&gt; are in scope by default:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Scala type&lt;/th&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;BsonValue&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Boolean&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonBoolean&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;String&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonString&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Array[Byte]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonBinary&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Regex&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonRegex&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Date&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonDateTime&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ObjectId&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonObjectId&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Int&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonInt32&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Long&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonInt64&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Double&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonDouble&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;None&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonNull&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;immutable.Document&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonDocument&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;mutable.Document&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonDocument&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Option[T]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonValue&lt;/code&gt; where &lt;code&gt;T&lt;/code&gt; has a &lt;code&gt;BsonTransformer&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Seq[(String, T)]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonDocument&lt;/code&gt; where &lt;code&gt;T&lt;/code&gt; has a &lt;code&gt;BsonTransformer&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Seq[T]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonArray&lt;/code&gt; where &lt;code&gt;T&lt;/code&gt; has a &lt;code&gt;BsonTransformer&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;BsonValue&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;=&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;BsonValue&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import org.mongodb.scala.Document
+
+val doc1 = Document(&amp;quot;AL&amp;quot; -&amp;gt; &amp;quot;Alabama&amp;quot;)
+val doc2 = doc1 + (&amp;quot;AK&amp;quot; -&amp;gt; &amp;quot;Alaska&amp;quot;)
+val doc3 = doc2 ++ Document(&amp;quot;AR&amp;quot; -&amp;gt; &amp;quot;Arkansas&amp;quot;, &amp;quot;population&amp;quot; -&amp;gt; 2.966)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is achieved by making use of the &lt;em&gt;&amp;ldquo;Magnet Pattern&amp;rdquo;&lt;/em&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;The magnet pattern is an alternative approach to method overloading. Rather than defining several identically named methods with different parameter lists you define only one method with only one parameter.
+&lt;br&gt;&lt;br&gt;
+This parameter is called the magnet. Its type is the magnet type, a dedicated type constructed purely as the target of a number of implicit conversions defined in the magnets companion object, which are called the magnet branches and which model the various “overloads”.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Source: &lt;a href=&#34;http://spray.io/blog/2012-12-13-the-magnet-pattern/&#34;&gt;The Magnet Pattern&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;In the API where we would normally expect a single value or a key value pair or many key value pairs eg: (&lt;code&gt;BsonValue&lt;/code&gt;, &lt;code&gt;(String, BsonValue)&lt;/code&gt;
+or &lt;code&gt;Iterable[(String, BsonValue)]&lt;/code&gt;) we require anything that can become those types via &lt;em&gt;&amp;ldquo;&lt;code&gt;CanBeX&lt;/code&gt;&amp;ldquo;&lt;/em&gt; traits that handle the implicit
+conversions necessary to conform to the correct types. These traits are &lt;a href=&#34;/mongo-scala-driver/2.8/mongo-scala-driver/2.8/scaladoc/org/mongodb/scala/bson/BsonMagnets$$CanBeBsonValue.html
+&#34;&gt;&lt;code&gt;CanBeBsonValue&lt;/code&gt;&lt;/a&gt;,
+[&lt;code&gt;CanBeBsonElement&lt;/code&gt;](&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Extended JSON</title>
+      <link>/mongo-scala-driver/2.8/bson/extended-json/</link>
+      <pubDate>Thu, 19 Mar 2015 14:27:51 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/2.8/bson/extended-json/</guid>
+      <description>
+
+&lt;h2 id=&#34;mongodb-extended-json&#34;&gt;MongoDB Extended JSON&lt;/h2&gt;
+
+&lt;p&gt;The Scala driver supports reading and writing BSON documents represented as&lt;br /&gt;
+&lt;a href=&#34;http://docs.mongodb.org/manual/reference/mongodb-extended-json/&#34;&gt;MongoDB Extended JSON&lt;/a&gt;.  Both variants are supported:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Strict Mode: representations of BSON types that conform to the &lt;a href=&#34;http://www.json.org/&#34;&gt;JSON RFC&lt;/a&gt;. This is the
+format that &lt;a href=&#34;http://docs.mongodb.org/manual/reference/program/mongoexport/&#34;&gt;mongoexport&lt;/a&gt; produces and
+&lt;a href=&#34;http://docs.mongodb.org/manual/reference/program/mongoimport/&#34;&gt;mongoimport&lt;/a&gt; consumes.&lt;/li&gt;
+&lt;li&gt;Shell Mode: a superset of JSON that the
+&lt;a href=&#34;http://docs.mongodb.org/manual/tutorial/getting-started-with-the-mongo-shell/&#34;&gt;MongoDB shell&lt;/a&gt; can parse.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Furthermore, the &lt;code&gt;Document&lt;/code&gt; provides two sets of convenience methods for this purpose:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Document.toJson(): a set of overloaded methods that convert a &lt;code&gt;Document&lt;/code&gt; instance to a JSON string&lt;/li&gt;
+&lt;li&gt;Document(json): a set of overloaded static factory methods that convert a JSON string to a &lt;code&gt;Document&lt;/code&gt; instance&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;writing-json&#34;&gt;Writing JSON&lt;/h2&gt;
+
+&lt;p&gt;Consider the task of implementing a &lt;a href=&#34;http://docs.mongodb.org/manual/reference/program/mongoexport/&#34;&gt;mongoexport&lt;/a&gt;-like tool using the
+Scala driver.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;val fileName =    // initialize to the path of the file to write to
+val collection =  // initialize the collection from which you want to query
+
+val writer: PrintWriter = new PrintWriter(fileName)
+collection.find().subscribe(
+      (doc: Document) =&amp;gt; output.write(s&amp;quot;${doc.toJson}\r\n&amp;quot;),
+      (t: Throwable) =&amp;gt; // handle failure,
+      () =&amp;gt; output.close())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;Document.toJson()&lt;/code&gt; method constructs an instance of a &lt;code&gt;JsonWriter&lt;/code&gt; with its default settings, which will write in strict mode with no new lines or indentation.&lt;/p&gt;
+
+&lt;p&gt;You can override this default behavior by using one of the overloads of &lt;code&gt;toJson()&lt;/code&gt;.  As an example, consider the task of writing a JSON string
+that can be copied and pasted into the MongoDB shell:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import java.text.SimpleDateFormat
+
+val fmt = new SimpleDateFormat(&amp;quot;dd/MM/yy&amp;quot;)
+val first = fmt.parse(&amp;quot;01/01/2014&amp;quot;)
+val second = fmt.parse(&amp;quot;01/01/2015&amp;quot;)
+val doc = Document(&amp;quot;startDate&amp;quot; -&amp;gt; Document(&amp;quot;$gt&amp;quot; -&amp;gt; first, &amp;quot;$lt&amp;quot; -&amp;gt; second))
+println(doc.toJson(new JsonWriterSettings(JsonMode.SHELL)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This code snippet will print out MongoDB shell-compatible JSON, which can then be pasted into the shell:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;{ &amp;quot;startDate&amp;quot; : { &amp;quot;$gt&amp;quot; : ISODate(&amp;quot;2014-01-01T05:00:00.000Z&amp;quot;), &amp;quot;$lt&amp;quot; : ISODate(&amp;quot;2015-01-01T05:00:00.000Z&amp;quot;) } }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;reading-json&#34;&gt;Reading JSON&lt;/h2&gt;
+
+&lt;p&gt;Consider the task of implementing a &lt;a href=&#34;http://docs.mongodb.org/manual/reference/program/mongoimport/&#34;&gt;mongoimport&lt;/a&gt;-like tool using the
+Java driver.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scala&#34;&gt;import scala.io.Source
+val fileName =    // initialize to the path of the file to read from
+val collection =  // initialize the collection from which you want to import to
+
+try {
+  for (json &amp;lt;- Source.fromFile(fileName).getLines()) {
+    collection.insertOne(Document(json)).head()
+  }
+} catch {
+  case ex: Exception =&amp;gt; println(&amp;quot;Bummer, an exception happened.&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;Document(json)&lt;/code&gt; companion helper method constructs an instance of a &lt;code&gt;JsonReader&lt;/code&gt; with the given string and returns an instance of an
+equivalent Document instance. &lt;code&gt;JsonReader&lt;/code&gt; automatically detects the JSON flavor in the string, so you do not need to specify it.&lt;/p&gt;
+
+&lt;p&gt;&lt;div class=&#34;admonition note&#34;&gt;
+&lt;h5 class=&#34;admonition-title&#34;&gt;Note&lt;/h5&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://github.com/mongodb/mongo-scala-driver/blob/2.8.x/src/examples/scripts&#34;&gt;tools&lt;/a&gt; examples directory, there is sample code for &lt;code&gt;mongoimport&lt;/code&gt; and &lt;code&gt;mongoexport&lt;/code&gt;.
+These examples are more fully featured than the above code snippets. They also provide an example of asynchronous error handling, as well
+as chaining observables to enforce insertion order on import.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>BSON</title>
+      <link>/mongo-scala-driver/2.8/bson/</link>
+      <pubDate>Thu, 19 Mar 2015 12:53:30 -0400</pubDate>
+      
+      <guid>/mongo-scala-driver/2.8/bson/</guid>
+      <description>
+
+&lt;h2 id=&#34;bson&#34;&gt;BSON&lt;/h2&gt;
+
+&lt;p&gt;The BSON library comprehensively supports &lt;a href=&#34;http://www.bsonspec.org&#34;&gt;BSON&lt;/a&gt;, the data storage and network transfer format that MongoDB uses for
+“documents&amp;rdquo;. BSON, short for Binary &lt;a href=&#34;http://json.org/&#34;&gt;JSON&lt;/a&gt;, is a binary-encoded serialization of JSON-like documents.&lt;/p&gt;
+
+&lt;p&gt;For everyday usage there are type aliases and companion objects available from the &lt;a href=&#34;/mongo-scala-driver/2.8/mongo-scala-driver/2.8/scaladoc/
+&#34;&gt;&lt;code&gt;org.mongodb.scala.bson&lt;/code&gt;&lt;/a&gt; package.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/2.8/mongo-scala-driver/2.8/bson/documents/&#34;&gt;Documents&lt;/a&gt;: Documentation of the driver&amp;rsquo;s support for BSON document representations&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/mongo-scala-driver/2.8/mongo-scala-driver/2.8/bson/extended-json/&#34;&gt;Extended JSON&lt;/a&gt;: Documentation of the driver&amp;rsquo;s support for MongoDB Extended JSON&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For advanced usage you may need to use &lt;code&gt;org.bson&lt;/code&gt; directly. See the core Java driver documentation for:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://mongodb.github.io/mongo-java-driver/3.12/bson/readers-and-writers
+&#34;&gt;Readers and Writers&lt;/a&gt;: Documentation of the driver&amp;rsquo;s support for stream-based reading and writing
+of BSON documents&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://mongodb.github.io/mongo-java-driver/3.12/bson/codecs
+&#34;&gt;Codec and CodecRegistry&lt;/a&gt;: Documentation of the driver&amp;rsquo;s &lt;code&gt;Codec&lt;/code&gt; API, an abstraction for producing and
+consuming  BSON document representations using the stream-based readers and writers&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
