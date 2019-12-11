@@ -17,10 +17,14 @@ The recommended way to get started using the driver in your project is with a de
 ## MongoDB Scala Driver
 The MongoDB Scala Driver
 
+### Scala 2.13
+
+{{< install artifactId="mongo-scala-driver" version="2.8.0" mongoDriverVersion="3.12.0" scalaVersion="2.13">}}
+
 ### Scala 2.12
 
-{{< install artifactId="mongo-scala-driver" version="2.7.0" mongoDriverVersion="3.11.0" scalaVersion="2.12">}}
+{{< install artifactId="mongo-scala-driver" version="2.8.0" mongoDriverVersion="3.12.0" scalaVersion="2.12">}}
 
 ### Scala 2.11
 
-{{< install artifactId="mongo-scala-driver" version="2.7.0" mongoDriverVersion="3.11.0" scalaVersion="2.11">}}
+{{< install artifactId="mongo-scala-driver" version="2.8.0" mongoDriverVersion="3.12.0" scalaVersion="2.11">}}

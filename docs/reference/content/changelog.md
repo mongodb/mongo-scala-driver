@@ -10,6 +10,12 @@ title = "Changelog"
 
 Changes between released versions
 
+### 2.8.0
+  * Updated MongoDB Driver Async to 3.12.0
+  * Refined GridFS binary stream interchange in GridFS [SCALA-569](https://jira.mongodb.org/browse/SCALA-569)
+  * Reintroduced plain String query hint [SCALA-565](https://jira.mongodb.org/browse/SCALA-565)
+  * Deprecated org.mongo.scala.bson.codecs.DEFAULT_CODEC_REGISTRY [SCALA-562](https://jira.mongodb.org/browse/SCALA-562)
+
 ### 2.7.0
   * Updated MongoDB Driver Async to 3.11.0
   * Added support for Scala 2.13 [SCALA-506](https://jira.mongodb.org/browse/SCALA-506)
