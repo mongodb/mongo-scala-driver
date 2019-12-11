@@ -37,6 +37,7 @@ import org.mongodb.scala.gridfs.{AsyncInputStream, AsyncOutputStream}
  *
  * @since 1.2
  */
+@deprecated("Use `Observable[ByteBuffer]` instead", "2.8.0")
 object AsyncStreamHelper {
 
   /**

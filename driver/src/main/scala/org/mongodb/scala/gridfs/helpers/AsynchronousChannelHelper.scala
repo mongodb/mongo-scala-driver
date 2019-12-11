@@ -29,6 +29,7 @@ import org.mongodb.scala.gridfs.{AsyncInputStream, AsyncOutputStream}
  * @note Requires Java 7 or greater.
  * @since 1.2
  */
+@deprecated("Use `Observable[ByteBuffer]` instead", "2.8.0")
 object AsynchronousChannelHelper {
   /**
    * Converts a AsynchronousByteChannel into a AsyncInputStream

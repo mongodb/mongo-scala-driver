@@ -88,8 +88,20 @@ case class TestObserver[A](delegate: Observer[A]) extends Observer[A] {
     override def isUnsubscribed: Boolean = inner.isUnsubscribed
 
     def innerRequestNext(): Unit = {
-      if (!terminated && !isUnsubscribed && addDemand(-1) > 0) {
+      if (!terminated && !isUnsubscribed && reduceDemand() > 0) {
         inner.request(1)
+      }
+    }
+
+    private def reduceDemand(): Long = {
+      this.synchronized {
+        val current = demand
+        demand -= 1
+        if (current > 0) {
+          current
+        } else {
+          0
+        }
       }
     }
 

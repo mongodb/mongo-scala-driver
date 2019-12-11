@@ -25,7 +25,7 @@ import scala.util.{Failure, Success}
 
 trait FuturesSpec extends ScalaFutures {
 
-  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(60, Seconds), interval = Span(5, Millis))
+  implicit val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(60, Seconds), interval = Span(100, Millis))
 
   implicit def observableToFuture[TResult](observable: Observable[TResult]): Future[Seq[TResult]] = observable.toFuture()
 

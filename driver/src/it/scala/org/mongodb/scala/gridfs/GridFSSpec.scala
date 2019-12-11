@@ -17,19 +17,21 @@
 package org.mongodb.scala.gridfs
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, File, InputStream}
+import java.nio.ByteBuffer
+import java.nio.channels.Channels
 
 import javax.xml.bind.DatatypeConverter
+import org.bson.{BsonArray, BsonBinary, BsonInt32}
+import org.mongodb.scala._
+import org.mongodb.scala.bson.collection.mutable
+import org.mongodb.scala.bson.{BsonBoolean, BsonDocument, BsonInt64, BsonObjectId, BsonString, ObjectId}
+import org.mongodb.scala.gridfs.helpers.AsyncStreamHelper
+import org.scalatest.Inspectors.forEvery
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
 import scala.util.Try
-import org.bson.{BsonArray, BsonBinary, BsonInt32}
-import org.mongodb.scala._
-import org.mongodb.scala.bson.collection.mutable
-import org.mongodb.scala.bson.{BsonBoolean, BsonDocument, BsonInt64, BsonObjectId, BsonString}
-import org.mongodb.scala.gridfs.helpers.AsyncStreamHelper
-import org.scalatest.Inspectors.forEvery
 
 class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
   private val filesCollectionName = "fs.files"
@@ -57,7 +59,17 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
           val assertion: BsonDocument = test.getDocument("assert", BsonDocument())
 
           arrangeGridFS(data, arrange)
-          actionGridFS(action, assertion)
+          actionGridFS(action, assertion, false)
+        }
+
+        forEvery(tests) { (test: BsonDocument) =>
+          info(s"Observable API: ${test.getString("description").getValue}")
+          val arrange: BsonDocument = test.getDocument("arrange", BsonDocument())
+          val action: BsonDocument = test.getDocument("act", BsonDocument())
+          val assertion: BsonDocument = test.getDocument("assert", BsonDocument())
+
+          arrangeGridFS(data, arrange)
+          actionGridFS(action, assertion, true)
         }
     }
   }
@@ -116,13 +128,13 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
   }
   // scalastyle:on cyclomatic.complexity
 
-  private def actionGridFS(action: BsonDocument, assertion: BsonDocument): Unit = {
+  private def actionGridFS(action: BsonDocument, assertion: BsonDocument, observableApi: Boolean): Unit = {
     if (!action.isEmpty) {
       action.getString("operation").getValue match {
         case "delete" => doDelete(action.getDocument("arguments"), assertion)
-        case "download" => doDownload(action.getDocument("arguments"), assertion)
-        case "download_by_name" => doDownloadByName(action.getDocument("arguments"), assertion)
-        case "upload" => doUpload(action.getDocument("arguments"), assertion)
+        case "download" => doDownload(action.getDocument("arguments"), assertion, observableApi)
+        case "download_by_name" => doDownloadByName(action.getDocument("arguments"), assertion, observableApi)
+        case "upload" => doUpload(action.getDocument("arguments"), assertion, observableApi)
         case x => throw new IllegalArgumentException(s"Unknown operation: $x")
       }
     }
@@ -153,10 +165,20 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
     }
   }
 
-  private def doDownload(arguments: BsonDocument, assertion: BsonDocument): Unit = {
-    val outputStream: ByteArrayOutputStream = new ByteArrayOutputStream
-    val result = Try(gridFSBucket.map(_.downloadToStream(arguments.getObjectId("id").getValue,
-      AsyncStreamHelper.toAsyncOutputStream(outputStream)).head()).get.futureValue)
+  private def doDownload(arguments: BsonDocument, assertion: BsonDocument, observableApi: Boolean): Unit = {
+    val outputStream = new ByteArrayOutputStream
+    val channel = Channels.newChannel(outputStream)
+
+    val result = if (observableApi) {
+      Try (gridFSBucket.map(_.downloadToObservable(arguments.getObjectId("id").getValue).futureValue
+        .foreach(channel.write))
+      )
+    } else {
+      Try(gridFSBucket.map(_.downloadToStream(arguments.getObjectId("id").getValue,
+        AsyncStreamHelper.toAsyncOutputStream(outputStream)).head()).get.futureValue)
+    }
+
+    channel.close()
     outputStream.close()
 
     assertion.containsKey("error") match {
@@ -168,13 +190,22 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
     }
   }
 
-  private def doDownloadByName(arguments: BsonDocument, assertion: BsonDocument): Unit = {
-    val outputStream: ByteArrayOutputStream = new ByteArrayOutputStream
+  private def doDownloadByName(arguments: BsonDocument, assertion: BsonDocument, observableApi: Boolean): Unit = {
+    val outputStream = new ByteArrayOutputStream
+    val channel = Channels.newChannel(outputStream)
     val options: GridFSDownloadOptions = new GridFSDownloadOptions()
     Option(arguments.get("options")).map(opts => options.revision(opts.asDocument().getInt32("revision").getValue))
 
-    val result = Try(gridFSBucket.map(_.downloadToStream(arguments.getString("filename").getValue,
-      AsyncStreamHelper.toAsyncOutputStream(outputStream), options).head()).get.futureValue)
+    val result = if (observableApi) {
+      Try (gridFSBucket.map(_.downloadToObservable(arguments.getString("filename").getValue, options).futureValue
+        .foreach(channel.write))
+      )
+    } else {
+      Try(gridFSBucket.map(_.downloadToStream(arguments.getString("filename").getValue,
+        AsyncStreamHelper.toAsyncOutputStream(outputStream), options).head()).get.futureValue)
+    }
+
+    channel.close()
     outputStream.close()
 
     assertion.containsKey("error") match {
@@ -187,23 +218,32 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
   }
 
   //scalastyle:off method.length
-  private def doUpload(rawArguments: BsonDocument, assertion: BsonDocument): Unit = {
+  private def doUpload(rawArguments: BsonDocument, assertion: BsonDocument, observableApi: Boolean): Unit = {
 
     val arguments: BsonDocument = parseHexDocument(rawArguments, "source")
 
     val filename: String = arguments.getString("filename").getValue
-    val inputStream: InputStream = new ByteArrayInputStream(arguments.getBinary("source").getData)
     val rawOptions: Document = arguments.getDocument("options", new BsonDocument())
     val options: GridFSUploadOptions = new GridFSUploadOptions()
     rawOptions.get[BsonInt32]("chunkSizeBytes").map(chunkSize => options.chunkSizeBytes(chunkSize.getValue))
     rawOptions.get[BsonDocument]("metadata").map(doc => options.metadata(doc))
     val disableMD5: Boolean = rawOptions.get[BsonBoolean]("disableMD5").getOrElse(BsonBoolean(false)).getValue
 
-    val result = Try(
-      gridFSBucket.map(bucket =>
-        bucket.withDisableMD5(disableMD5)
-              .uploadFromStream(filename, AsyncStreamHelper.toAsyncInputStream(inputStream), options).head()).get.futureValue
-    )
+    val result: Try[BsonObjectId] = if (observableApi) {
+      val source: Observable[ByteBuffer] = Observable(Seq(ByteBuffer.wrap(arguments.getBinary("source").getData)))
+      Try(
+        new BsonObjectId(gridFSBucket.map(bucket =>
+          bucket.withDisableMD5(disableMD5)
+            .uploadFromObservable(filename, source, options).head()).get.futureValue)
+      )
+    } else {
+      val inputStream: InputStream = new ByteArrayInputStream(arguments.getBinary("source").getData)
+      Try(
+        new BsonObjectId(gridFSBucket.map(bucket =>
+          bucket.withDisableMD5(disableMD5)
+            .uploadFromStream(filename, AsyncStreamHelper.toAsyncInputStream(inputStream), options).head()).get.futureValue)
+      )
+    }
 
     assertion.containsKey("error") match {
       case true =>
@@ -238,7 +278,7 @@ class GridFSSpec extends RequiresMongoDBISpec with FuturesSpec {
               val actualDocuments: Seq[Document] = chunksCollection.map(_.find()).get.futureValue
 
               for ((expected, actual) <- documents zip actualDocuments) {
-                new BsonObjectId(objectId) should equal(actual.get[BsonObjectId]("files_id").get)
+                objectId should equal(actual.get[BsonObjectId]("files_id").get)
                 expected.get("n") should equal(actual.get("n"))
                 expected.get("data") should equal(actual.get("data"))
               }

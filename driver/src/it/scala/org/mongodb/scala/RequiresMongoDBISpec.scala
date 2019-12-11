@@ -65,7 +65,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with BeforeAndAfterAll
     new ConnectionString(mongoClientURI).getHosts.size() == 1
   }
 
-  def checkMongoDB() {
+  def checkMongoDB(): Unit = {
     if (!mongoDBOnline) {
       cancel("No Available Database")
     }
@@ -80,7 +80,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with BeforeAndAfterAll
     }
   }
 
-  def withDatabase(dbName: String)(testCode: MongoDatabase => Any) {
+  def withDatabase(dbName: String)(testCode: MongoDatabase => Any): Unit = {
     withClient{ client =>
       val databaseName = if (dbName.startsWith(DB_PREFIX)) dbName.take(63) else s"$DB_PREFIX$dbName".take(63) // scalastyle:ignore
       val mongoDatabase = client.getDatabase(databaseName)
@@ -94,7 +94,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with BeforeAndAfterAll
 
   def withDatabase(testCode: MongoDatabase => Any): Unit = withDatabase(databaseName)(testCode: MongoDatabase => Any)
 
-  def withCollection(testCode: MongoCollection[Document] => Any) {
+  def withCollection(testCode: MongoCollection[Document] => Any): Unit = {
     withDatabase(databaseName){ mongoDatabase =>
       val mongoCollection = mongoDatabase.getCollection(collectionName)
       try testCode(mongoCollection) // "loan" the fixture to the test
@@ -140,7 +140,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with BeforeAndAfterAll
     }
   }
 
-  override def beforeAll() {
+  override def beforeAll(): Unit = {
     if (mongoDBOnline) {
       val client = mongoClient()
       Await.result(client.getDatabase(databaseName).drop().toFuture(), WAIT_DURATION)
@@ -148,7 +148,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with BeforeAndAfterAll
     }
   }
 
-  override def afterAll() {
+  override def afterAll(): Unit = {
     if (mongoDBOnline) {
       val client = mongoClient()
       Await.result(client.getDatabase(databaseName).drop().toFuture(), WAIT_DURATION)
@@ -159,7 +159,7 @@ trait RequiresMongoDBISpec extends FlatSpec with Matchers with BeforeAndAfterAll
   Runtime.getRuntime.addShutdownHook(new ShutdownHook())
 
   private[mongodb] class ShutdownHook extends Thread {
-    override def run() {
+    override def run(): Unit = {
       mongoClient().getDatabase(databaseName).drop()
     }
   }

@@ -27,6 +27,7 @@ import org.mongodb.scala.{Completed, Observable}
  *
  * @since 1.2
  */
+@deprecated("Use `Observable[ByteBuffer]` instead", "2.8.0")
 trait AsyncInputStream {
   /**
    * Reads a sequence of bytes from this stream into the given buffer.

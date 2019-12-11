@@ -217,7 +217,7 @@ class ApiAliasAndCompanionSpec extends FlatSpec with Matchers {
 
     val scalaPackageName = "org.mongodb.scala.gridfs"
     val scalaExclusions = Set("package", "ScalaAsyncInputStreamToJava", "ScalaAsyncOutputStreamToJava", "JavaAsyncOutputStreamToScala",
-      "JavaAsyncInputStreamToScala")
+      "JavaAsyncInputStreamToScala", "GridFSDownloadObservable", "GridFSUploadObservable", "GridFSUploadObservableImpl")
     val local = new Reflections(scalaPackageName, new SubTypesScanner(false)).getSubTypesOf(classOf[Object])
       .asScala.filter(classFilter).filter(f => f.getPackage.getName == scalaPackageName)
       .map(_.getSimpleName).toSet ++ currentMirror.staticPackage(scalaPackageName).info.decls.map(_.name.toString).toSet -- scalaExclusions
