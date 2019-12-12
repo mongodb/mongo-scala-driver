@@ -10,6 +10,9 @@ title = "Changelog"
 
 Changes between released versions
 
+### 2.9.0
+  * Revert Handle NPE caused by SingleResultCallback based Observables [SCALA-568](https://jira.mongodb.org/browse/SCALA-568F)
+
 ### 2.8.0
   * Updated MongoDB Driver Async to 3.12.0
   * Refined GridFS binary stream interchange in GridFS [SCALA-569](https://jira.mongodb.org/browse/SCALA-569)
