@@ -32,7 +32,7 @@ trait ObservableImplicits {
   /**
    * Extends the Java [[Observable]] and adds helpers to make Observables composable and simple to Subscribe to.
    *
-   * @param observable the original Observable
+   * @param obs the original Observable
    * @tparam T the type of result the Observable emits
    *
    * @define forComprehensionExamples
@@ -53,7 +53,8 @@ trait ObservableImplicits {
    *            f flatMap { (x: Int) => g map { (y: Int) => x + y } }
    *         }}}
    */
-  implicit class ScalaObservable[T](observable: Observable[T]) {
+  implicit class ScalaObservable[T](obs: => Observable[T]) {
+    val observable = obs
 
     /**
      * Subscribes to the [[Observable]] and requests `Long.MaxValue`.
@@ -399,11 +400,13 @@ trait ObservableImplicits {
   /**
    * Extends [[SingleObservable]] to provide simple conversion to a future.
    *
-   * @param observable the single result observable
+   * @param obs the single result observable
    * @tparam T the type of result
    * @since 2.0
    */
-  implicit class ScalaSingleObservable[T](observable: SingleObservable[T]) {
+  implicit class ScalaSingleObservable[T](obs: => SingleObservable[T]) {
+    val observable = obs
+
     /**
      * Collects the [[Observable]] result and converts to a [[scala.concurrent.Future]].
      * @return a future representation of the Observable
@@ -422,11 +425,12 @@ trait ObservableImplicits {
   /**
    * Converts an observable to a SingleObservable
    *
-   * @param observable the observable
+   * @param obs the observable
    * @tparam T the type of element signaled.
    * @since 2.0
    */
-  implicit class ToSingleObservable[T](observable: Observable[T]) extends SingleObservable[T] {
+  implicit class ToSingleObservable[T](obs: => Observable[T]) extends SingleObservable[T] {
+    val observable = obs
 
     override def subscribe(observer: Observer[_ >: T]): Unit = {
       observable.subscribe(
