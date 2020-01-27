@@ -21,6 +21,8 @@ import org.bson.codecs.configuration.CodecRegistry
 import com.mongodb.async.client.MongoClients
 
 package object codecs {
+
+  @deprecated("Please use org.mongodb.scala.MongoClient.DEFAULT_CODEC_REGISTRY instead", "2.9.0")
   val DEFAULT_CODEC_REGISTRY: CodecRegistry = fromRegistries(
     fromProviders(DocumentCodecProvider(), IterableCodecProvider()),
     MongoClients.getDefaultCodecRegistry

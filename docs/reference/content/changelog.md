@@ -11,7 +11,8 @@ title = "Changelog"
 Changes between released versions
 
 ### 2.9.0
-  * Revert Handle NPE caused by SingleResultCallback based Observables [SCALA-568](https://jira.mongodb.org/browse/SCALA-568F)
+  * Marked `org.mongodb.scala.bson.DEFAULT_CODEC_REGISTRY` as deprecated [SCALA-562](https://jira.mongodb.org/browse/SCALA-562)
+  * Revert Handle NPE caused by SingleResultCallback based Observables [SCALA-568](https://jira.mongodb.org/browse/SCALA-568)
 
 ### 2.8.0
   * Updated MongoDB Driver Async to 3.12.0
