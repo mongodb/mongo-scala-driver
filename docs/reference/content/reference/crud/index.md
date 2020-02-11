@@ -64,7 +64,7 @@ See the [`Observables`]({{< relref "reference/observables.md">}}) documentation 
 ### CodecRegistry
 
 An overload of the `getCollection` method allows clients to specify a different class for representing BSON documents.  For example, 
-users my wish their own class with the CRUD API directly. Below we use the `BsonDocument` class from the Scala driver directly:
+users may wish their own class with the CRUD API directly. Below we use the `BsonDocument` class from the Scala driver directly:
 
 ```scala
 // Pass BsonDocument class as the second argument
