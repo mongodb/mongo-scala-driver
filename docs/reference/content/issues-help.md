@@ -10,9 +10,8 @@ title = "Issues & Help"
 
 We are lucky to have a vibrant MongoDB JVM community with lots of varying
 experience of using the JVM drivers.  We often find the quickest way to get support for
-general questions is through the [mongodb-user google group](http://groups.google.com/group/mongodb-user)
-or through [stackoverflow](http://stackoverflow.com/questions/tagged/mongodb+scala).  Please also
-refer to our own [support channels](http://www.mongodb.org/about/support) documentation.
+general questions is through the [MongoDB Community Forums](https://community.mongodb.com/tags/c/drivers-odms-connectors/7/scala-driver) or through [stackoverflow](http://stackoverflow.com/questions/tagged/mongodb+scala).  Please also
+refer to our own [support channels](https://docs.mongodb.com/manual/support) documentation.
 
 ## Bugs / Feature Requests
 
