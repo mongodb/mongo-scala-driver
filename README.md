@@ -11,9 +11,9 @@ Documentation for all the main versions is available on http://mongodb.github.io
 ## Support / Feedback
 
 For issues with, questions about, or feedback for the MongoDB Scala driver, please look into
-our [support channels](http://www.mongodb.org/about/support). Please
+our [support channels](https://docs.mongodb.com/manual/support). Please
 do not email any of the Scala driver developers directly with issues or
-questions - you're more likely to get an answer on the [mongodb-user](http://groups.google.com/group/mongodb-user) list on Google Groups.
+questions - you're more likely to get an answer on the [MongoDB Community Forums](https://community.mongodb.com/tags/c/drivers-odms-connectors/7/scala-driver).
 
 At a minimum, please include in your description the exact version of the driver that you are using.  If you are having
 connectivity issues, it's often also useful to paste in the line of code where you construct the MongoClient instance,
