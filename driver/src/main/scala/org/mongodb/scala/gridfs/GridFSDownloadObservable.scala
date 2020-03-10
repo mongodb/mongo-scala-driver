@@ -158,7 +158,9 @@ case class GridFSDownloadObservable(gridFSDownloadStream: GridFSDownloadStream) 
           }
 
           var byteBufferSize = Math.max(chunkSize, bufferSizeBytes)
-          byteBufferSize = Math.min(remaining.intValue, byteBufferSize)
+          if (remaining < Integer.MAX_VALUE) {
+            byteBufferSize = Math.min(remaining.intValue, byteBufferSize)
+          }
           val byteBuffer = ByteBuffer.allocate(byteBufferSize)
           if (currentBatchSize == 0) {
             currentBatchSize = Math.max(byteBufferSize / chunkSize, 1)
