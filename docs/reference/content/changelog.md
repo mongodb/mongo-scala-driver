@@ -11,8 +11,12 @@ title = "Changelog"
 Changes between released versions
 
 ### 2.9.0
+  * Updated MongoDB Driver Async to 3.12.2
   * Marked `org.mongodb.scala.bson.DEFAULT_CODEC_REGISTRY` as deprecated [SCALA-562](https://jira.mongodb.org/browse/SCALA-562)
   * Revert Handle NPE caused by SingleResultCallback based Observables [SCALA-568](https://jira.mongodb.org/browse/SCALA-568)
+  * Ported GridFSUploadObservable/GridFSDownloadObservable fixes [SCALA-577](https://jira.mongodb.org/browse/SCALA-577)
+  * Added Integer size check to the download publisher [SCALA-576](https://jira.mongodb.org/browse/SCALA-576)
+  * Use pass by name in implicit functions [SCALA-571](https://jira.mongodb.org/browse/SCALA-571)
 
 ### 2.8.0
   * Updated MongoDB Driver Async to 3.12.0
