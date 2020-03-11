@@ -8,9 +8,9 @@ title = "Upgrading"
 
 ## Upgrade
 
-### 2.5.0
+### 2.9.0
 
-No expected upgrade issues from previous release.
+Deprecated `org.mongo.scala.bson.codecs.DEFAULT_CODEC_REGISTRY` use `MongoClient.DEFAULT_CODEC_REGISTRY` instead
 
 ### 2.4.0
 

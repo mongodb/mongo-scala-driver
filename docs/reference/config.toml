@@ -1,4 +1,4 @@
-baseurl = "/mongo-scala-driver/2.8"
+baseurl = "/mongo-scala-driver/2.9"
 languageCode = "en-us"
 title = "MongoDB Scala Driver"
 theme = "mongodb"
