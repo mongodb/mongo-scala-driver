@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="keyword" content="">
+
+    <link rel="shortcut icon" href="/mongo-scala-driver/2.9/img/favicon.png">
+
+    <title>Changelog</title>
+
+    <link rel="stylesheet" href="/mongo-scala-driver/2.9/lib/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="/mongo-scala-driver/2.9/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="/mongo-scala-driver/2.9/css/mongodb-docs.css" type="text/css" />
+<link rel="stylesheet" href="/mongo-scala-driver/2.9/css/overrides.css" type="text/css" />
+<link rel="stylesheet" href="/mongo-scala-driver/2.9/lib/highlight/styles/idea.css" />
+<link rel="stylesheet" href="/mongo-scala-driver/2.9/lib/bootstrap-toggle/bootstrap-toggle.min.css" type="text/css" />
+<link rel="stylesheet" href="/mongo-scala-driver/2.9/css/java.css" type="text/css" />
+
+
+  </head>
+
+  <body>
+  
+  <section id="container" class="">
+      
+      <header id="header-db" class="row" role="navigation">
+  <div class="header-content">
+    <div class="toggle-nav pull-left">
+        <i class="fa fa-bars"></i>
+        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"></div>
+    </div>
+    
+    <div class="logo pull-left">
+      <a href="/mongo-scala-driver/2.9/../">
+        <img src="/mongo-scala-driver/2.9/img/logo-mongodb-header.png", alt="MongoDB.org" />
+      </a>
+    </div>
+    
+    <div>
+<div class="nav-items pull-right">
+  <a href="http://try.mongodb.org/" data-toggle="tooltip" data-placement="bottom" title="Try MongoDB in the browser">Try it Out</a>
+  <a href="http://www.mongodb.org/downloads" data-toggle="tooltip" data-placement="bottom" title="Download MongoDB">Downloads</a>
+  <a href="http://www.mongodb.org/get-involved" data-toggle="tooltip" data-placement="bottom" title="Get involved with MongoDB">Community</a>
+  <a href="http://docs.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Documentation">Docs</a>
+  <a href="http://blog.mongodb.org" data-toggle="tooltip" data-placement="bottom" title="The MongoDB Blog">Blog</a>
+  <div id="search">
+<form method="get" action="//www.google.com/search" target="_blank">
+    <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search docs">
+    <input type="hidden" name="site" value="/mongo-scala-driver/2.9">
+    <input type="hidden" name="q" value="">
+    <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
+</form>
+</div>
+
+</div>
+</div>
+
+  </div>
+</header>
+
+      
+
+      
+<aside id="sidebar" class="sidebar">
+    <div class="ssidebar nav-collapse">
+      <div class="ssidebarwrapper">
+        <h3>
+          <a class="index-link" href="/mongo-scala-driver/2.9/../">MongoDB Scala Driver</a>
+          <a class="version pull-right" href="/mongo-scala-driver/2.9">2.9</a>
+        </h3>
+
+        
+        <ul class="sidebar-menu">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+
+          
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+    
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
+
+
+        
+          
+        
+      
+    
+    
+      
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+  
+
+
+          
+
+          
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/mongo-scala-driver/2.9/getting-started/" class="">
+      <i class='fa fa-road'></i>
+      <span>Getting Started</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/getting-started/installation-guide/">
+        <i class='fa'></i>
+        Installation Guide
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/getting-started/quick-tour-primer/">
+        <i class='fa'></i>
+        Quick Tour Primer
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/getting-started/quick-tour/">
+        <i class='fa'></i>
+        Quick Tour
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/getting-started/quick-tour-case-classes/">
+        <i class='fa'></i>
+        Quick Tour - case classes
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/getting-started/quick-tour-admin/">
+        <i class='fa'></i>
+        Admin Quick Tour
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/mongo-scala-driver/2.9/reference/" class="">
+      <i class='fa fa-book'></i>
+      <span>Reference</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2 ">
+  <a href="/mongo-scala-driver/2.9/reference/connecting/" class="">
+      <i class='fa'></i>
+      <span>Connecting</span>
+      
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongo-scala-driver/2.9/reference/connecting/connection-settings/">
+        <i class='fa'></i>
+        Connection Settings
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongo-scala-driver/2.9/reference/connecting/ssl/">
+        <i class='fa'></i>
+        SSL
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongo-scala-driver/2.9/reference/connecting/authenticating/">
+        <i class='fa'></i>
+        Authenticating
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/reference/crud/">
+        <i class='fa'></i>
+        CRUD Operations
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/reference/gridfs/">
+        <i class='fa'></i>
+        GridFS
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/reference/observables/">
+        <i class='fa'></i>
+        Observables
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l2 ">
+  <a href="/mongo-scala-driver/2.9/reference/management/" class="">
+      <i class='fa'></i>
+      <span>Management</span>
+      
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongo-scala-driver/2.9/reference/management/logging/">
+        <i class='fa'></i>
+        Logging
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l3">
+    <a href="/mongo-scala-driver/2.9/reference/management/monitoring/">
+        <i class='fa'></i>
+        Monitoring
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/mongo-scala-driver/2.9/bson/" class="">
+      <i class='fa fa-th'></i>
+      <span>BSON</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/bson/documents/">
+        <i class='fa'></i>
+        Documents
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/bson/macros/">
+        <i class='fa fa-cog'></i>
+        Macros
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/bson/extended-json/">
+        <i class='fa'></i>
+        Extended JSON
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1 ">
+  <a href="/mongo-scala-driver/2.9/builders/" class="">
+      <i class='fa fa-wrench'></i>
+      <span>Builders</span>
+      <span class="menu-arrow fa fa-angle-right"></span>
+  </a>
+    <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/builders/filters/">
+        <i class='fa'></i>
+        Filters
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/builders/projections/">
+        <i class='fa'></i>
+        Projections
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/builders/sorts/">
+        <i class='fa'></i>
+        Sort Criteria  
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/builders/aggregation/">
+        <i class='fa'></i>
+        Aggregation
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/builders/updates/">
+        <i class='fa'></i>
+        Updates
+    </a>
+  </li>
+
+
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongo-scala-driver/2.9/builders/indexes/">
+        <i class='fa'></i>
+        Indexes
+    </a>
+  </li>
+
+
+        
+        
+    </ul>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/mongo-scala-driver/2.9/integrations/">
+        <i class='fa fa-arrows-h'></i>
+        Integrations
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/mongo-scala-driver/2.9/changelog/">
+        <i class='fa fa-cog'></i>
+        Changelog
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/mongo-scala-driver/2.9/upgrade/">
+        <i class='fa fa-wrench'></i>
+        Upgrading
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/mongo-scala-driver/2.9/scaladoc/">
+        <i class='fa fa-file-text-o'></i>
+        API Documentation
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="/mongo-scala-driver/2.9/issues-help/">
+        <i class='fa fa-life-ring'></i>
+        Issues &amp; Help
+    </a>
+  </li>
+
+
+          
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l1">
+    <a href="https://github.com/mongodb/mongo-scala-driver/tree/master">
+        <i class='fa fa-github'></i>
+        Source Code
+    </a>
+  </li>
+
+
+          
+        </ul>
+        
+    </div>
+  </div>
+  
+</aside>
+
+<div class="option-popup closed hidden" id="optionsVersionsPopup">
+<div class="option-header">
+  <i class="fa fa-gear"></i>
+  <span>OPTIONS</span>
+  <i class="fa fa-angle-up pull-right"></i>
+</div>
+<div class="option-body">
+  <ul>
+      
+      <li>
+        <label>Version</label>
+        <div class="btn-group btn-group-xs pull-right">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            Select Version <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" id="optionsVersionsMenu">
+          </ul>
+        </div>
+      </li>
+
+   
+
+
+    
+
+  </ul>
+</div>
+</div>
+
+
+
+      
+      <section id="main-content" class="content">
+          <section class="main-column pull-left">
+            <div class="document">
+              <div class="documentwrapper">
+                <div class="bodywrapper">
+                  <div class="body">
+
+
+   
+<a class="edit-link" href="https://github.com/mongodb/mongo-scala-driver/blob/2.9.x/docs/reference/content/changelog.md" target="_blank" title="Edit changelog.md on GitHub"><i class="fa fa-pencil-square-o"></i></a>
+
+
+
+
+
+
+
+
+
+
+<div class="bc">
+<ul>
+  
+  
+  
+  
+  
+  
+  <li>Changelog</li>
+</ul>
+</div>
+
+
+
+
+<h2 id="changelog">Changelog</h2>
+
+<p>Changes between released versions</p>
+
+<h3 id="2-9-0">2.9.0</h3>
+
+<ul>
+<li>Updated MongoDB Driver Async to 3.12.2</li>
+<li>Marked <code>org.mongodb.scala.bson.DEFAULT_CODEC_REGISTRY</code> as deprecated <a href="https://jira.mongodb.org/browse/SCALA-562">SCALA-562</a></li>
+<li>Revert Handle NPE caused by SingleResultCallback based Observables <a href="https://jira.mongodb.org/browse/SCALA-568">SCALA-568</a></li>
+<li>Ported GridFSUploadObservable/GridFSDownloadObservable fixes <a href="https://jira.mongodb.org/browse/SCALA-577">SCALA-577</a></li>
+<li>Added Integer size check to the download publisher <a href="https://jira.mongodb.org/browse/SCALA-576">SCALA-576</a></li>
+<li>Use pass by name in implicit functions <a href="https://jira.mongodb.org/browse/SCALA-571">SCALA-571</a></li>
+</ul>
+
+<h3 id="2-8-0">2.8.0</h3>
+
+<ul>
+<li>Updated MongoDB Driver Async to 3.12.0</li>
+<li>Refined GridFS binary stream interchange in GridFS <a href="https://jira.mongodb.org/browse/SCALA-569">SCALA-569</a></li>
+<li>Reintroduced plain String query hint <a href="https://jira.mongodb.org/browse/SCALA-565">SCALA-565</a></li>
+</ul>
+
+<h3 id="2-7-0">2.7.0</h3>
+
+<ul>
+<li>Updated MongoDB Driver Async to 3.11.0</li>
+<li>Added support for Scala 2.13 <a href="https://jira.mongodb.org/browse/SCALA-506">SCALA-506</a></li>
+<li>Updated DEFAULT_CODEC_REGISTRY order, as upstream BsonCodec captures all Bson instances and priority needs to be lower.</li>
+<li>Support $merge pipeline stage in aggregations <a href="https://jira.mongodb.org/browse/SCALA-473">SCALA-473</a></li>
+<li>Support $replaceWith pipeline stage in aggregations</li>
+<li>Added the ability to specify a pipeline to an update command <a href="https://jira.mongodb.org/browse/SCALA-513">SCALA-513</a></li>
+<li>Added client side encryption support <a href="https://jira.mongodb.org/browse/SCALA-468">SCALA-468</a></li>
+<li>Added batchSize support for MongoIterable based Observables <a href="https://jira.mongodb.org/browse/SCALA-552">SCALA-552</a></li>
+<li>Added support for sealed traits <a href="https://jira.mongodb.org/browse/SCALA-554">SCALA-554</a></li>
+<li>Added caseclass support for Sets, Vectors and Streams <a href="https://jira.mongodb.org/browse/SCALA-346">SCALA-346</a></li>
+<li>Improved support for BsonPropery annotations in ADTs <a href="https://jira.mongodb.org/browse/SCALA-485">SCALA-485</a></li>
+<li>Deprecated BsonArray.apply(Iterable[BsonValue]) added BsonArray.fromIterable <a href="https://jira.mongodb.org/browse/SCALA-531">SCALA-531</a></li>
+<li>Fix <code>UninitializedFieldError</code> in MacroCodecs under <code>-Xcheckinit</code> <a href="https://jira.mongodb.org/browse/SCALA-542">SCALA-542</a></li>
+</ul>
+
+<h3 id="2-6-0">2.6.0</h3>
+
+<ul>
+<li>Updated MongoDB Driver Async to 3.10.0</li>
+<li>Support Skipping in GridFS <a href="https://jira.mongodb.org/browse/SCALA-477">SCALA-477</a></li>
+<li>Support running commands as aggregation <a href="https://jira.mongodb.org/browse/SCALA-481">SCALA-481</a></li>
+<li>The driver now natively supports TLS/SSL without netty <a href="https://jira.mongodb.org/browse/JAVA-3100">JAVA-3100</a></li>
+</ul>
+
+<h3 id="2-5-0">2.5.0</h3>
+
+<ul>
+<li>Updated MongoDB Driver Async to 3.9.0</li>
+<li>Fixed Filter and Zip observables requesting the correct number of results <a href="https://jira.mongodb.org/browse/SCALA-457">SCALA-457</a></li>
+<li>Updated the Aggregates.lookup helper to match the Java API <a href="https://jira.mongodb.org/browse/SCALA-446">SCALA-446</a></li>
+<li>Added support for the available read concern <a href="https://jira.mongodb.org/browse/SCALA-440">SCALA-440</a></li>
+</ul>
+
+<h3 id="2-4-2">2.4.2</h3>
+
+<ul>
+<li>Updated MongoDB Driver Async to 3.8.2 <a href="https://jira.mongodb.org/browse/SCALA-449">SCALA-449</a></li>
+<li>Allow value classes with codecs to be supported by the macro codecs <a href="https://jira.mongodb.org/browse/SCALA-447">SCALA-447</a></li>
+</ul>
+
+<h3 id="2-4-1">2.4.1</h3>
+
+<ul>
+<li>Updated MongoDB Driver Async to 3.8.1 <a href="https://jira.mongodb.org/browse/SCALA-441">SCALA-441</a></li>
+<li>Map ObservableImplicits.head execution context to the executing thread <a href="https://jira.mongodb.org/browse/SCALA-430">SCALA-430</a></li>
+<li>Support tagged types in codec generator macro for case classes <a href="https://jira.mongodb.org/browse/SCALA-414">SCALA-414</a></li>
+<li>Fix MongoCollection.createIndexes signature <a href="https://jira.mongodb.org/browse/SCALA-431">SCALA-431</a></li>
+</ul>
+
+<h3 id="2-4-0">2.4.0</h3>
+
+<ul>
+<li>Updated MongoDB Driver Async to 3.8.0.</li>
+<li>Added type aliases for builders, makes imports simpler when using MongoClientSettings <a href="https://jira.mongodb.org/browse/SCALA-421">SCALA-421</a></li>
+<li>Deprecated <code>MongoCollection.count</code> and added <code>MongoCollection.countDocuments</code> and <code>MongoCollection.estimatedDocumentCount</code> <a href="https://jira.mongodb.org/browse/SCALA-422">SCALA-422</a></li>
+<li>Added method to disable computing MD5 checksums when uploading files <a href="https://jira.mongodb.org/browse/SCALA-373">SCALA-373</a></li>
+<li>Added cluster and database wide change stream support <a href="https://jira.mongodb.org/browse/SCALA-405">SCALA-405</a></li>
+<li>Added transaction support. <a href="https://jira.mongodb.org/browse/SCALA-388">SCALA-388</a></li>
+<li>Added <code>MongoCredential.createScramSha256Credential</code>. <a href="https://jira.mongodb.org/browse/SCALA-375">SCALA-375</a></li>
+<li>Updated CaseClassCodec error catching for unsupported types. <a href="https://jira.mongodb.org/browse/SCALA-343">SCALA-343</a></li>
+<li>Fixed <code>ExecutionContextObservable</code> race condition regarding ordering of Observer calls. [SCALA-405](<a href="https://jira.mongodb.org/browse/SCALA-405]">https://jira.mongodb.org/browse/SCALA-405]</a></li>
+<li><code>FindObservable.maxScan</code> deprecated. <a href="https://jira.mongodb.org/browse/SCALA-385">SCALA-385</a></li>
+<li><code>FindObservable.snapshot</code> deprecated. <a href="https://jira.mongodb.org/browse/SCALA-386">SCALA-386</a></li>
+<li><code>MongoCredential.createMongoCRCredential</code> deprecated. <a href="https://jira.mongodb.org/browse/SCALA-371">SCALA-371</a></li>
+</ul>
+
+<h3 id="2-3-0">2.3.0</h3>
+
+<ul>
+<li>Updated MongoDB Driver Async to 3.7.0. <a href="https://jira.mongodb.org/browse/SCALA-398">SCALA-398</a></li>
+<li>Updated MongoClientSettings to use the new central <code>com.mongodb.MongoClientSettings</code>. <a href="https://jira.mongodb.org/browse/SCALA-394">SCALA-394</a></li>
+<li>Added Aggregates.Variable $lookup helper. <a href="https://jira.mongodb.org/browse/SCALA-399">SCALA-399</a></li>
+<li>Added ReplaceOptions. <a href="https://jira.mongodb.org/browse/SCALA-360">SCALA-360</a></li>
+</ul>
+
+<h3 id="2-2-1">2.2.1</h3>
+
+<ul>
+<li>Updated MongoDB Driver Async to 3.6.3, fixes implicit session leak. <a href="https://jira.mongodb.org/browse/SCALA-378">SCALA-378</a></li>
+</ul>
+
+<h3 id="2-2-0">2.2.0</h3>
+
+<ul>
+<li>Updated MongoDB Driver Async to 3.6.0</li>
+<li>MongoDB 3.6 support <a href="https://jira.mongodb.org/browse/SCALA-336">SCALA-336</a>
+See the <a href="http://mongodb.github.io/mongo-java-driver/3.6/whats-new/">what&rsquo;s new in 3.6 guide</a></li>
+<li>Fixed exception handling in Macro Codecs <a href="https://jira.mongodb.org/browse/SCALA-319">SCALA-319</a></li>
+<li>Added implicit headOption method <a href="https://jira.mongodb.org/browse/SCALA-334">SCALA-334</a></li>
+<li>Added BsonProperty annotation <a href="https://jira.mongodb.org/browse/SCALA-321">SCALA-321</a></li>
+<li>Updated Mongodb Driver Async dependency to <a href="https://jira.mongodb.org/browse/SCALA-335">3.5.0</a></li>
+<li>CaseClassCodec - Added support for internal vals. <a href="https://jira.mongodb.org/browse/SCALA-314">SCALA-314</a></li>
+<li>CaseClassCodec - Added handling of extra values in the document. <a href="https://jira.mongodb.org/browse/SCALA-307">SCALA-307</a> <a href="https://jira.mongodb.org/browse/SCALA-323">SCALA-323</a></li>
+<li>Added support for custom Map implementations that don&rsquo;t include type information. <a href="https://jira.mongodb.org/browse/SCALA-311">SCALA-311</a></li>
+</ul>
+
+<h3 id="2-1-0">2.1.0</h3>
+
+<ul>
+<li>Added support for type aliases in the CaseClassCodec. <a href="https://jira.mongodb.org/browse/SCALA-305">SCALA-305</a></li>
+<li>Added the ability to ignore <code>None</code> values when encoding <code>Option</code> fields. <a href="https://jira.mongodb.org/browse/SCALA-300">SCALA-300</a></li>
+<li>Added the ability to handle missing values for <code>Option</code> fields. <a href="https://jira.mongodb.org/browse/SCALA-299">SCALA-299</a></li>
+<li>Improved the CaseClassCodec handling of <code>null</code> values. <a href="https://jira.mongodb.org/browse/SCALA-301">SCALA-301</a></li>
+</ul>
+
+<h3 id="2-0-0">2.0.0</h3>
+
+<ul>
+<li>Added Case class support. <a href="https://jira.mongodb.org/browse/SCALA-168">SCALA-168</a></li>
+<li>Added <code>observeOn(context: ExecutionContext)</code> so alternative execution contexts can be used with <code>Observables</code>. <a href="https://jira.mongodb.org/browse/SCALA-242">SCALA-242</a></li>
+<li>Improved error message when actioning unsubscribed to Observables. <a href="https://jira.mongodb.org/browse/SCALA-248">SCALA-248</a></li>
+<li>Fixed FoldLeftObservable, ensuring that only one request for data is actioned and that all the data is requested. <a href="https://jira.mongodb.org/browse/SCALA-289">SCALA-289</a></li>
+<li>Added SingleObservable trait and implicits for easy conversion and identification of Observables that return a single result. <a href="https://jira.mongodb.org/browse/SCALA-234">SCALA-234</a></li>
+<li>MongoCollection methods now default to the collection type rather than Document. <a href="https://jira.mongodb.org/browse/SCALA-250">SCALA-250</a></li>
+</ul>
+
+<h3 id="1-2-1">1.2.1</h3>
+
+<ul>
+<li>Removed erroneous scala-reflect dependency. <a href="https://jira.mongodb.org/browse/SCALA-288">SCALA-288</a></li>
+</ul>
+
+<h3 id="1-2-0">1.2.0</h3>
+
+<ul>
+<li>Added support for maxStaleness for secondary reads. <a href="https://jira.mongodb.org/browse/SCALA-251">SCALA-251</a> <a href="https://jira.mongodb.org/browse/SCALA-280">SCALA-280</a></li>
+<li>Added support for MONGODB-X509 auth without username. <a href="https://jira.mongodb.org/browse/SCALA-279">SCALA-279</a></li>
+<li>Added support for library authors to extend the handshake metadata. <a href="https://jira.mongodb.org/browse/SCALA-252">SCALA-252</a></li>
+<li>Added support for the new Aggregation stages in 3.4 <a href="https://jira.mongodb.org/browse/SCALA-258">SCALA-258</a></li>
+<li>Added support for views <a href="https://jira.mongodb.org/browse/SCALA-255">SCALA-255</a></li>
+<li>Added Collation support <a href="https://jira.mongodb.org/browse/SCALA-249">SCALA-249</a></li>
+<li>Added support for BsonDecimal128 <a href="https://jira.mongodb.org/browse/SCALA-241">SCALA-241</a></li>
+<li>Added support for ReadConcern.LINEARIZABLE <a href="https://jira.mongodb.org/browse/SCALA-247">SCALA-247</a></li>
+<li>Fixed bug where some connection string options were not applied <a href="https://jira.mongodb.org/browse/SCALA-253">SCALA-253</a></li>
+<li>Added GridFS Support <a href="https://jira.mongodb.org/browse/SCALA-154">SCALA-154</a></li>
+</ul>
+
+<h3 id="1-1-1">1.1.1</h3>
+
+<ul>
+<li>Updated Mongodb Driver Async dependency to <a href="https://jira.mongodb.org/browse/SCALA-237">3.2.2</a></li>
+<li>Ensure Observables can be subscribed to multiple times <a href="https://jira.mongodb.org/browse/SCALA-239">SCALA-239</a></li>
+</ul>
+
+<h3 id="1-1">1.1</h3>
+
+<ul>
+<li>Updated to support MongoDB 3.2.
+
+<ul>
+<li>Added support for <a href="https://docs.mongodb.org/manual/release-notes/3.2/#document-validation">Document Validation</a>.</li>
+<li>Added support for <a href="https://docs.mongodb.org/manual/release-notes/3.2/#readconcern">ReadConcern</a>.</li>
+<li>Added support for <a href="https://docs.mongodb.org/manual/release-notes/3.2/#partial-indexes">partialIndexes</a>.</li>
+<li>Added new helpers for <a href="https://docs.mongodb.org/manual/release-notes/3.2/#aggregation-framework-enhancements">Aggregation</a>.</li>
+<li>Added new helpers for <a href="https://docs.mongodb.org/manual/release-notes/3.2/#bit-test-query-operators">bitwise filters</a>.</li>
+<li>Added support for version 3 <a href="https://docs.mongodb.org/manual/release-notes/3.2/#text-search-enhancements">text indexes</a>.</li>
+</ul></li>
+<li>Updated Mongodb Driver Async dependency to <a href="https://jira.mongodb.org/browse/SCALA-222">3.2.0</a></li>
+</ul>
+
+<p><a href="https://jira.mongodb.org/issues/?jql=fixVersion%20%3D%201.1%20AND%20project%20%3D%20SCALA">Full issue list</a>.</p>
+
+<h3 id="1-0-1">1.0.1</h3>
+
+<ul>
+<li>Fixed missing scala codec registry issue when using custom MongoSettings</li>
+<li>Removed unnecessary scala dependency</li>
+</ul>
+
+<p><a href="https://jira.mongodb.org/issues/?jql=fixVersion%20%3D%201.0.1%20AND%20project%20%3D%20SCALA">Full issue list</a>.</p>
+
+<h3 id="1-0">1.0</h3>
+
+<ul>
+<li>Initial release</li>
+</ul>
+
+
+
+
+
+
+<div id="btnv">
+  
+  
+</div>
+</div>
+
+
+</div>
+<div class="right-column">
+<div class="wrapper">
+  
+  <div class="toc">
+    <span class="toc-header">On this page</span>
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#changelog">Changelog</a>
+<ul>
+<li><a href="#2-9-0">2.9.0</a></li>
+<li><a href="#2-8-0">2.8.0</a></li>
+<li><a href="#2-7-0">2.7.0</a></li>
+<li><a href="#2-6-0">2.6.0</a></li>
+<li><a href="#2-5-0">2.5.0</a></li>
+<li><a href="#2-4-2">2.4.2</a></li>
+<li><a href="#2-4-1">2.4.1</a></li>
+<li><a href="#2-4-0">2.4.0</a></li>
+<li><a href="#2-3-0">2.3.0</a></li>
+<li><a href="#2-2-1">2.2.1</a></li>
+<li><a href="#2-2-0">2.2.0</a></li>
+<li><a href="#2-1-0">2.1.0</a></li>
+<li><a href="#2-0-0">2.0.0</a></li>
+<li><a href="#1-2-1">1.2.1</a></li>
+<li><a href="#1-2-0">1.2.0</a></li>
+<li><a href="#1-1-1">1.1.1</a></li>
+<li><a href="#1-1">1.1</a></li>
+<li><a href="#1-0-1">1.0.1</a></li>
+<li><a href="#1-0">1.0</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+  
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</section>
+
+
+<script type="text/javascript">
+  var DOCUMENTATION_OPTIONS = {
+   URL_ROOT:    "/mongo-scala-driver/2.9",
+   VERSION:     "2.9",
+   COLLAPSE_INDEX: false,
+   FILE_SUFFIX: '.html',
+   HAS_SOURCE:  true
+  };
+</script>
+<script type="text/javascript" src="/mongo-scala-driver/2.9/js/jquery.js"></script>
+<script type="text/javascript" src="/mongo-scala-driver/2.9/lib/bootstrap.js"></script>
+<script type="text/javascript" src="/mongo-scala-driver/2.9/js/navbar.js"></script>
+<script type="text/javascript" src="/mongo-scala-driver/2.9/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="/mongo-scala-driver/2.9/js/scripts.js"></script>
+<script type="text/javascript" src="/mongo-scala-driver/2.9/lib/bootstrap-toggle/bootstrap-toggle.min.js"></script>
+<script type="text/javascript" src="/mongo-scala-driver/2.9/js/scala.js"></script>
+
+
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K75Z5Q"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
+{'gtm.start': new Date().getTime(),event:'gtm.js'}
+);var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K75Z5Q');</script>
+
+
+<script type="text/javascript">
+var _elqQ = _elqQ || [];
+_elqQ.push(['elqSetSiteId', '413370795']);
+_elqQ.push(['elqTrackPageView']);
+(function () {
+function async_load()
+{ var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '//img03.en25.com/i/elqCfg.min.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x); }
+if (window.addEventListener) window.addEventListener('DOMContentLoaded', async_load, false);
+else if (window.attachEvent) window.attachEvent('onload', async_load);
+})();
+</script>
+
+</body>
+</html>
+
