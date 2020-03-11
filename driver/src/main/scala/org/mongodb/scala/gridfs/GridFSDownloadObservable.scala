@@ -111,7 +111,13 @@ case class GridFSDownloadObservable(gridFSDownloadStream: GridFSDownloadStream) 
     }
 
     override def request(n: Long): Unit = {
-      inLock { () => requested += n }
+      inLock { () =>
+        if (!isUnsubscribed && n < 1) {
+          currentAction = Action.FINISHED
+        } else {
+          requested += n
+        }
+      }
       tryProcess()
     }
 

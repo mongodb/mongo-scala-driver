@@ -63,7 +63,6 @@ private[gridfs] case class GridFSUploadObservableImpl(
 
   private case class GridFSUploadSubscription(outerObserver: Observer[_ >: Completed]) extends Subscription {
     /* protected by `this` */
-    private var requested: Long = 0
     private var hasCompleted = false
     private var currentAction = Action.WAITING
     private var sourceSubscription: Option[Subscription] = None
@@ -86,6 +85,7 @@ private[gridfs] case class GridFSUploadObservableImpl(
       }
 
       override def onNext(byteBuffer: ByteBuffer): Unit = {
+        inLock { () => currentAction = Action.IN_PROGRESS }
         gridFSUploadStream.write(byteBuffer).subscribe(GridFSUploadStreamObserver(byteBuffer))
       }
 
@@ -97,8 +97,9 @@ private[gridfs] case class GridFSUploadObservableImpl(
       override def onComplete(): Unit = {
         inLock { () =>
           hasCompleted = true
-          if (currentAction eq Action.WAITING) {
+          if (currentAction eq Action.REQUESTING_MORE) {
             currentAction = Action.COMPLETE
+            tryProcess()
           }
         }
       }
@@ -138,7 +139,13 @@ private[gridfs] case class GridFSUploadObservableImpl(
     }
 
     override def request(n: Long): Unit = {
-      inLock { () => requested += n }
+      var isUnsubscribed: Boolean = false;
+      inLock { () =>
+        isUnsubscribed = unsubscribed
+        if (!isUnsubscribed && n < 1) {
+          currentAction = Action.FINISHED
+        }
+      }
       tryProcess()
     }
 
@@ -155,15 +162,12 @@ private[gridfs] case class GridFSUploadObservableImpl(
       inLock { () =>
         currentAction match {
           case Action.WAITING =>
-            if (requested == 0) {
-              nextStep = Some(NextStep.DO_NOTHING)
-            } else if (sourceSubscription.isEmpty) {
+            if (sourceSubscription.isEmpty) {
               nextStep = Some(NextStep.SUBSCRIBE)
-              currentAction = Action.IN_PROGRESS
             } else {
-              nextStep = Some(NextStep.WRITE)
-              currentAction = Action.IN_PROGRESS
+              nextStep = Some(NextStep.REQUEST_MORE)
             }
+            currentAction = Action.REQUESTING_MORE
           case Action.COMPLETE =>
             nextStep = Some(NextStep.COMPLETE)
             currentAction = Action.FINISHED
@@ -178,12 +182,11 @@ private[gridfs] case class GridFSUploadObservableImpl(
       nextStep.get match {
         case NextStep.SUBSCRIBE =>
           source.subscribe(sourceObserver)
-        case NextStep.WRITE =>
+        case NextStep.REQUEST_MORE =>
           inLock { () => sourceSubscription.get.request(1) }
         case NextStep.COMPLETE =>
           gridFSUploadStream.close().subscribe(new Observer[Completed]() {
             override def onSubscribe(s: Subscription): Unit = {
-              inLock { () => requested -= 1 }
               s.request(1)
             }
 
@@ -202,7 +205,6 @@ private[gridfs] case class GridFSUploadObservableImpl(
         case NextStep.TERMINATE =>
           gridFSUploadStream.abort().subscribe(new Observer[Completed]() {
             override def onSubscribe(s: Subscription): Unit = {
-              inLock { () => requested -= 1 }
               s.request(1)
             }
 
@@ -253,11 +255,11 @@ private[gridfs] case class GridFSUploadObservableImpl(
 
   private object Action extends Enumeration {
     type Action = Value
-    val WAITING, IN_PROGRESS, TERMINATE, COMPLETE, FINISHED = Value
+    val WAITING, REQUESTING_MORE, IN_PROGRESS, TERMINATE, COMPLETE, FINISHED = Value
   }
 
   private object NextStep extends Enumeration {
     type NextStep = Value
-    val SUBSCRIBE, WRITE, COMPLETE, TERMINATE, DO_NOTHING = Value
+    val SUBSCRIBE, REQUEST_MORE, COMPLETE, TERMINATE, DO_NOTHING = Value
   }
 }

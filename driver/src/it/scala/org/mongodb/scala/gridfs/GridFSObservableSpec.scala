@@ -108,6 +108,32 @@ class GridFSObservableSpec extends RequiresMongoDBISpec with FuturesSpec with Be
     concatByteBuffers(data) should equal(concatByteBuffers(Seq(ByteBuffer.wrap(contentBytes), ByteBuffer.wrap(contentBytes))))
   }
 
+  it should "respect the outer subscription request amount" in {
+    val contentBytes = multiChunkString.getBytes()
+    val options = new GridFSUploadOptions().chunkSizeBytes(contentBytes.length)
+
+    val fileId = gridFSBucket.uploadFromObservable("myFile", Observable(Seq(ByteBuffer.wrap(contentBytes),
+      ByteBuffer.wrap(contentBytes), ByteBuffer.wrap(contentBytes))), options).head().futureValue
+    filesCollection.countDocuments().head().futureValue should equal(1)
+    chunksCollection.countDocuments().head().futureValue should equal(3)
+
+    val data = gridFSBucket.downloadToObservable(fileId).bufferSizeBytes(contentBytes.length * 3).head().futureValue
+    data.array() should equal(concatByteBuffers(Seq(ByteBuffer.wrap(contentBytes), ByteBuffer.wrap(contentBytes),
+      ByteBuffer.wrap(contentBytes))))
+  }
+
+  it should "upload from the source when it contains multiple parts and the total size is smaller than chunksize" in {
+    val contentBytes = singleChunkString.getBytes()
+
+    val fileId = gridFSBucket.uploadFromObservable("myFile", Observable(Seq(ByteBuffer.wrap(contentBytes),
+      ByteBuffer.wrap(contentBytes)))).head().futureValue
+    filesCollection.countDocuments().head().futureValue should equal(1)
+    chunksCollection.countDocuments().head().futureValue should equal(1)
+
+    val data = gridFSBucket.downloadToObservable(fileId).bufferSizeBytes(contentBytes.length * 3).head().futureValue
+    data.array() should equal(concatByteBuffers(Seq(ByteBuffer.wrap(contentBytes), ByteBuffer.wrap(contentBytes))))
+  }
+
   it should "round trip with data larger than the internal bufferSize" in {
     val contentSize = 1024 * 1024 * 5
     val chunkSize = 1024 * 1024
