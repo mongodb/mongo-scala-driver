@@ -391,3 +391,37 @@ code {
   background-color: #ddd;
   color: #494747;
 }
+
+div.admonition {
+    margin: 24px 0;
+    width: auto;
+    max-width: 100%;
+    padding: 2px 12px 22px 12px;
+    border: 5px solid transparent;
+}
+
+.admonition .admonition-title {
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 24px;
+}
+
+.admonition .admonition-title:after {
+    content: ":";
+    font-weight:900;
+}
+
+.admonition > p {
+    margin: 0 0 12.5px 0;
+}
+
+.admonition > p.last {
+    margin-bottom: 0;
+}
+
+.admonition.note {
+    background-color: #edf4e8;
+    border-color: #6ba442;
+}
