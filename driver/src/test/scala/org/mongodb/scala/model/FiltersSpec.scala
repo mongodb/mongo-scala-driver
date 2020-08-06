@@ -135,6 +135,7 @@ class FiltersSpec extends FlatSpec with Matchers {
 
   it should "render $in" in {
     toBson(model.Filters.in("a", 1, 2, 3)) should equal(Document("""{a : {$in : [1, 2, 3]} }"""))
+    toBson(model.Filters.in("a", Seq(1, 2, 3))) should equal(Document("""{a : {$in : [1, 2, 3]} }"""))
   }
 
   it should "render $nin" in {

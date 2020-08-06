@@ -163,6 +163,17 @@ object Filters {
   def in[TItem](fieldName: String, values: TItem*): Bson = JFilters.in(fieldName, values.asJava)
 
   /**
+   * Creates a filter that matches all documents where the value of a field equals any value in the list of specified values.
+   *
+   * @param fieldName the field name
+   * @param values    the list of values
+   * @tparam TItem   the value type
+   * @return the filter
+   * @see [[http://docs.mongodb.org/manual/reference/operator/query/in \$in]]
+   */
+  def in[TItem](fieldName: String, values: Iterable[TItem]): Bson = JFilters.in(fieldName, values.asJava)
+
+  /**
    * Creates a filter that matches all documents where the value of a field does not equal any of the specified values or does not exist.
    *
    * @param fieldName the field name
