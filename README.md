@@ -1,8 +1,9 @@
 ## MongoDB Scala Driver ##
 
-A modern idiomatic MongoDB Scala Driver.
+Development of the MongoDB Scala Driver has moved to https://github.com/mongodb/mongo-java-driver, in the modules:
 
-[![Build Status](https://travis-ci.org/mongodb/mongo-scala-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-scala-driver)
+* [driver-scala](https://github.com/mongodb/mongo-java-driver/tree/master/driver-scala)
+* [bson-scala](https://github.com/mongodb/mongo-java-driver/tree/master/bson-scala)
 
 ## Documentation
 
