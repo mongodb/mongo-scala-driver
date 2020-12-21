@@ -50,7 +50,7 @@ object Publish {
             "oss.sonatype.org",
             props.getProperty(username),
             props.getProperty(password)),
-          publishSnapshot <<= publishSnapshotTask
+          publishSnapshot := publishSnapshotTask.value
         )
         } else {
         Seq.empty
@@ -64,7 +64,7 @@ object Publish {
     test in assembly := {},
     artifact in (Compile, assembly) := {
       val art = (artifact in (Compile, assembly)).value
-      art.copy(`classifier` = Some("alldep"))
+      art.withClassifier(`classifier` = Some("alldep"))
     }
   ) ++ addArtifact(artifact in (Compile, assembly), assembly).settings
 

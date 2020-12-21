@@ -18,16 +18,13 @@ import scala.util.matching.Regex.Match
 import scalariform.formatter.preferences.FormattingPreferences
 
 import com.typesafe.sbt.GitVersioning
-import com.typesafe.sbt.SbtScalariform._
 import org.scalastyle.sbt.ScalastylePlugin._
 import sbt.Keys._
 import sbt._
 import sbtbuildinfo.BuildInfoKeys.{buildInfoKeys, buildInfoPackage}
 import sbtbuildinfo.{BuildInfoKey, BuildInfoPlugin}
-import sbtunidoc.Plugin._
 import scoverage.ScoverageKeys
 
-object MongoScalaBuild extends Build {
 
   import Dependencies._
   import Resolvers._
@@ -40,7 +37,7 @@ object MongoScalaBuild extends Build {
     scalaVersion := scalaCoreVersion,
     crossScalaVersions := scalaVersions,
     libraryDependencies ++= coreDependencies,
-    libraryDependencies <+= scalaReflect,
+    libraryDependencies += scalaReflect.value,
     resolvers := mongoScalaResolvers,
     scalacOptions in Compile := scalacOptionsVersion(scalaVersion.value),
     scalacOptions in Test := scalacOptionsTest,
@@ -94,12 +91,21 @@ object MongoScalaBuild extends Build {
       .setPreference(AlignParameters, true)
       .setPreference(AlignSingleLineCaseStatements, true)
       .setPreference(DoubleIndentClassDeclaration, true)
+      .setPreference(DoubleIndentConstructorArguments, true)
+      .setPreference(DanglingCloseParenthesis, Preserve)
+      .setPreference(SpacesAroundMultiImports, false)
   }
 
-  val customScalariformSettings = scalariformSettings ++ Seq(
-    ScalariformKeys.preferences in Compile := scalariFormFormattingPreferences,
-    ScalariformKeys.preferences in Test := scalariFormFormattingPreferences
-  )
+  def oldscalariFormFormattingPreferences: FormattingPreferences = {
+    import scalariform.formatter.preferences._
+    FormattingPreferences()
+      .setPreference(SpacesAroundMultiImports, true)
+      .setPreference(DoubleIndentClassDeclaration, true)
+      .setPreference(DanglingCloseParenthesis, Preserve)
+  }
+
+  val oldScalariformSettings = scalariformPreferences := oldscalariFormFormattingPreferences
+  val customScalariformSettings = scalariformPreferences := scalariFormFormattingPreferences
 
   val scalaStyleSettings = Seq(
     (scalastyleConfig in Compile) := file("project/scalastyle-config.xml"),
@@ -134,7 +140,7 @@ object MongoScalaBuild extends Build {
 
   lazy val fixJavaLinks = taskKey[Unit]("Fix Java links in scaladoc - replace #java.io.File with ?java/io/File.html" )
   lazy val fixJavaLinksSettings = fixJavaLinks := {
-    val t = (target in UnidocKeys.unidoc).value
+    val t = (target in unidoc).value
     (t ** "*.html").get.filter(hasJavadocApiLink).foreach { f =>
       val newContent = javadocApiLink.replaceAllIn(IO.read(f), fixJavaLinksMatch)
       IO.write(f, newContent)
@@ -147,7 +153,7 @@ object MongoScalaBuild extends Build {
   val rootUnidocSettings = Seq(
     scalacOptions in(Compile, doc) ++= Opts.doc.title("Mongo Scala Driver"),
     scalacOptions in(Compile, doc) ++= Seq("-diagrams", "-unchecked", "-doc-root-content", "rootdoc.txt")
-  ) ++ docSettings ++ unidocSettings ++ Seq(fixJavaLinks <<= fixJavaLinks triggeredBy (doc in ScalaUnidoc))
+  ) ++ docSettings ++ Seq(fixJavaLinks := fixJavaLinks.triggeredBy(doc in ScalaUnidoc).value)
 
   lazy val driver = Project(
     id = "mongo-scala-driver",
@@ -174,6 +180,7 @@ object MongoScalaBuild extends Build {
     .settings(buildSettings)
     .settings(versionSettings)
     .settings(testSettings)
+    .settings(oldScalariformSettings)
     .settings(scalaStyleSettings)
     .settings(docSettings)
     .settings(publishSettings)
@@ -186,6 +193,7 @@ object MongoScalaBuild extends Build {
     .aggregate(bson)
     .aggregate(driver)
     .settings(buildSettings)
+    .settings(oldScalariformSettings)
     .settings(scalaStyleSettings)
     .settings(noPublishSettings)
     .settings(libraryDependencies ++= examplesDependencies)
@@ -197,7 +205,9 @@ object MongoScalaBuild extends Build {
   ).aggregate(bson)
     .aggregate(driver)
     .aggregate(examples)
+    .enablePlugins(ScalaUnidocPlugin)
     .settings(buildSettings)
+    .settings(oldScalariformSettings)
     .settings(scalaStyleSettings)
     .settings(scoverageSettings)
     .settings(rootUnidocSettings)
@@ -206,6 +216,4 @@ object MongoScalaBuild extends Build {
     .settings(initialCommands in console := """import org.mongodb.scala._""")
     .dependsOn(driver)
 
-  override def rootProject: Some[Project] = Some(root)
 
-}
