@@ -114,17 +114,12 @@ class MacrosSpec extends FlatSpec with Matchers {
 
   case class ContainsTypeLessMap(a: BsonDocument)
 
-  sealed class SealedClassCaseObject
-  object SealedClassCaseObject {
-    case object Alpha extends SealedClassCaseObject
-  }
-
   sealed trait CaseObjectEnum
-  object CaseObjectEnum {
-    case object Alpha extends CaseObjectEnum
-    case object Bravo extends CaseObjectEnum
-    case object Charlie extends CaseObjectEnum
-  }
+  case object Alpha extends CaseObjectEnum
+  case object Bravo extends CaseObjectEnum
+  case object Charlie extends CaseObjectEnum
+
+  case class ContainsEnumADT(name: String, enum: CaseObjectEnum)
 
   sealed class SealedClass
   case class SealedClassA(stringField: String) extends SealedClass
@@ -150,49 +145,6 @@ class MacrosSpec extends FlatSpec with Matchers {
   case class SealedTraitA(stringField: String) extends SealedTrait
   case class SealedTraitB(intField: Int) extends SealedTrait
   case class ContainsSealedTrait(list: List[SealedTrait])
-
-  object CaseObjectEnumCodecProvider extends CodecProvider {
-    def isCaseObjectEnum[T](clazz: Class[T]): Boolean = {
-      clazz.isInstance(CaseObjectEnum.Alpha) || clazz.isInstance(CaseObjectEnum.Bravo) || clazz.isInstance(CaseObjectEnum.Charlie)
-    }
-
-    override def get[T](clazz: Class[T], registry: CodecRegistry): Codec[T] = {
-      if (isCaseObjectEnum(clazz)) {
-        CaseObjectEnumCodec.asInstanceOf[Codec[T]]
-      } else {
-        null
-      }
-    }
-
-    object CaseObjectEnumCodec extends Codec[CaseObjectEnum] {
-      val identifier = "_t"
-      override def decode(reader: BsonReader, decoderContext: DecoderContext): CaseObjectEnum = {
-        reader.readStartDocument()
-        val enumName = reader.readString(identifier)
-        reader.readEndDocument()
-        enumName match {
-          case "Alpha" => CaseObjectEnum.Alpha
-          case "Bravo" => CaseObjectEnum.Bravo
-          case "Charlie" => CaseObjectEnum.Charlie
-          case _ => throw new BsonInvalidOperationException(s"$enumName is an invalid value for a MyEnum object")
-        }
-      }
-
-      override def encode(writer: BsonWriter, value: CaseObjectEnum, encoderContext: EncoderContext): Unit = {
-        val name = value match {
-          case CaseObjectEnum.Alpha => "Alpha"
-          case CaseObjectEnum.Bravo => "Bravo"
-          case CaseObjectEnum.Charlie => "Charlie"
-        }
-        writer.writeStartDocument()
-        writer.writeString(identifier, name)
-        writer.writeEndDocument()
-      }
-
-      override def getEncoderClass: Class[CaseObjectEnum] = CaseObjectEnum.getClass.asInstanceOf[Class[CaseObjectEnum]]
-    }
-  }
-  case class ContainsMyEnum(myEnum: CaseObjectEnum)
 
   "Macros" should "be able to round trip simple case classes" in {
     roundTrip(Empty(), "{}", classOf[Empty])
@@ -384,6 +336,14 @@ class MacrosSpec extends FlatSpec with Matchers {
     roundTrip(nodeB, nodeBJson, classOf[Graph])
   }
 
+  it should "support case object enum types" in {
+    roundTrip(Alpha, """{_t:"Alpha"}""", classOf[CaseObjectEnum])
+    roundTrip(Bravo, """{_t:"Bravo"}""", classOf[CaseObjectEnum])
+    roundTrip(Charlie, """{_t:"Charlie"}""", classOf[CaseObjectEnum])
+
+    roundTrip(ContainsEnumADT("Bob", Alpha), """{name:"Bob",enum:{_t:"Alpha"}}""", classOf[ContainsEnumADT], classOf[CaseObjectEnum])
+  }
+
   it should "support type aliases in case classes" in {
     roundTrip(ContainsSimpleTypeAlias("c", Map("d" -> "c")), """{a: "c", b: {d: "c"}}""", classOf[ContainsSimpleTypeAlias])
     roundTrip(ContainsCaseClassTypeAlias("c", Person("Tom", "Jones")), """{a: "c", b: {firstName: "Tom", lastName: "Jones"}}""",
@@ -467,12 +427,6 @@ class MacrosSpec extends FlatSpec with Matchers {
   it should "not compile if there are no concrete implementations of a sealed class or trait" in {
     "Macros.createCodecProvider(classOf[NotImplementedSealedClass])" shouldNot compile
     "Macros.createCodecProvider(classOf[NotImplementedSealedTrait])" shouldNot compile
-    "Macros.createCodecProvider(classOf[SealedClassCaseObject])" shouldNot compile
-  }
-
-  it should "not compile if passing a case object" in {
-    "Macros.createCodecProvider(classOf[CaseObjectEnum])" shouldNot compile
-    "Macros.createCodecProvider(CaseObjectEnum.Alpha.getClass)" shouldNot compile
   }
 
   it should "error when reading unexpected lists" in {
